@@ -1,11 +1,10 @@
-﻿using System;
-using Akkatecture.Aggregates;
+﻿using Akkatecture.Aggregates;
 using Demo.Commands;
 using Demo.Events;
 
 namespace Demo.Domain
 {
-    public class UserAggregate : AggregateRoot<UserAggregate, UserId, UserState>,
+    public class UserAggregate : EventSourcedAggregateRoot<UserAggregate, UserId, UserState>,
     IExecute<CreateUserCommand>
     {
         public UserAggregate(UserId id) : base(id){}

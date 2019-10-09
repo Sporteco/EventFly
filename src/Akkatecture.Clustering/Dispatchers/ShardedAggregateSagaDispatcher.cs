@@ -35,7 +35,7 @@ namespace Akkatecture.Clustering.Dispatchers
 {
     public class ShardedAggregateSagaDispatcher<TAggregateSagaManager, TAggregateSaga, TIdentity, TSagaLocator> : ReceiveActor
         where TAggregateSagaManager : ReceiveActor ,IAggregateSagaManager<TAggregateSaga, TIdentity, TSagaLocator>
-        where TAggregateSaga : ReceivePersistentActor, IAggregateSaga<TIdentity>
+        where TAggregateSaga : ActorBase, IAggregateSaga<TIdentity>
         where TIdentity : SagaId<TIdentity>
         where TSagaLocator : class, ISagaLocator<TIdentity>, new()
     {

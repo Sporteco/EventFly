@@ -24,7 +24,6 @@
 using System;
 using Akka.Actor;
 using Akka.Event;
-using Akka.Persistence;
 using Akkatecture.Commands;
 using Akkatecture.Core;
 using Akkatecture.Extensions;
@@ -32,7 +31,7 @@ using Akkatecture.Extensions;
 namespace Akkatecture.Aggregates
 {
     public abstract class AggregateManager<TAggregate, TIdentity, TCommand> : ReceiveActor, IAggregateManager<TAggregate, TIdentity>
-        where TAggregate : ReceivePersistentActor, IAggregateRoot<TIdentity>
+        where TAggregate : ActorBase, IAggregateRoot<TIdentity>
         where TIdentity : IIdentity
         where TCommand : ICommand<TIdentity>
     {

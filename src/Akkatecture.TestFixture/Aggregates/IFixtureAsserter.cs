@@ -22,6 +22,7 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
+using Akka.Actor;
 using Akka.Persistence;
 using Akkatecture.Aggregates;
 using Akkatecture.Commands;
@@ -30,7 +31,7 @@ using Akkatecture.Core;
 namespace Akkatecture.TestFixture.Aggregates
 {
     public interface IFixtureAsserter<TAggregate, TIdentity>
-        where TAggregate : ReceivePersistentActor, IAggregateRoot<TIdentity>
+        where TAggregate : ActorBase, IAggregateRoot<TIdentity>
         where TIdentity : IIdentity
     {
         IFixtureAsserter<TAggregate, TIdentity> AndWhen(params ICommand<TIdentity>[] commands);

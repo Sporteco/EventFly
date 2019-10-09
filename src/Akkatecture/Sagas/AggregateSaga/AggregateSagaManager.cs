@@ -34,7 +34,7 @@ using Akkatecture.Messages;
 namespace Akkatecture.Sagas.AggregateSaga
 {
     public abstract class AggregateSagaManager<TAggregateSaga, TIdentity, TSagaLocator> : ReceiveActor, IAggregateSagaManager<TAggregateSaga, TIdentity, TSagaLocator>
-        where TAggregateSaga : ReceivePersistentActor, IAggregateSaga<TIdentity>
+        where TAggregateSaga : ActorBase, IAggregateSaga<TIdentity>
         where TIdentity : SagaId<TIdentity>
         where TSagaLocator : class, ISagaLocator<TIdentity>, new()
     {

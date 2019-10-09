@@ -37,7 +37,7 @@ namespace Akkatecture.TestFixture.Aggregates
 {
     
     public class AggregateFixture<TAggregate, TIdentity> : IFixtureArranger<TAggregate, TIdentity> , IFixtureExecutor<TAggregate,TIdentity> , IFixtureAsserter<TAggregate, TIdentity>
-        where TAggregate : ReceivePersistentActor, IAggregateRoot<TIdentity>
+        where TAggregate : ActorBase, IAggregateRoot<TIdentity>
         where TIdentity : IIdentity
     {
         private readonly TestKitBase _testKit;

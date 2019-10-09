@@ -1,5 +1,4 @@
 ﻿using Akkatecture.Aggregates;
-using Demo.Commands;
 using Demo.Events;
 using Demo.ValueObjects;
 

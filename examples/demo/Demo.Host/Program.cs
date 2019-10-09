@@ -8,7 +8,7 @@ namespace Demo.Host
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             //Create actor system
             var system = ActorSystem.Create("user-example");

@@ -36,7 +36,7 @@ namespace Akkatecture.Clustering.Core
 {
     public static class ClusterFactory<TAggregateManager,TAggregate,TIdentity>
         where TAggregateManager : ReceiveActor, IAggregateManager<TAggregate, TIdentity>
-        where TAggregate : ReceivePersistentActor, IAggregateRoot<TIdentity>
+        where TAggregate : ActorBase, IAggregateRoot<TIdentity>
         where TIdentity : IIdentity
     {
         public static IActorRef StartClusteredAggregate(
@@ -98,7 +98,7 @@ namespace Akkatecture.Clustering.Core
 
     public static class ClusterFactory<TAggregateSagaManager, TAggregateSaga, TIdentity, TSagaLocator>
         where TAggregateSagaManager : ReceiveActor ,IAggregateSagaManager<TAggregateSaga, TIdentity, TSagaLocator>
-        where TAggregateSaga : ReceivePersistentActor, IAggregateSaga<TIdentity>
+        where TAggregateSaga : ActorBase, IAggregateSaga<TIdentity>
         where TIdentity : SagaId<TIdentity>
         where TSagaLocator : class, ISagaLocator<TIdentity>, new()
     {

@@ -36,7 +36,7 @@ namespace Akkatecture.Commands
 {
     public abstract class CommandHandler<TAggregate, TIdentity,TResult,TCommand> :
         ICommandHandler<TAggregate, TIdentity,TResult, TCommand>
-        where TAggregate : ReceivePersistentActor, IAggregateRoot<TIdentity>
+        where TAggregate : ActorBase, IAggregateRoot<TIdentity>
         where TIdentity : IIdentity
         where TCommand : ICommand<TIdentity>
     {
@@ -48,7 +48,7 @@ namespace Akkatecture.Commands
 
     public abstract class CommandHandler<TAggregate, TIdentity, TCommand> :
         CommandHandler<TAggregate, TIdentity,bool,TCommand>
-        where TAggregate : ReceivePersistentActor, IAggregateRoot<TIdentity>
+        where TAggregate : ActorBase, IAggregateRoot<TIdentity>
         where TIdentity : IIdentity
         where TCommand : ICommand<TIdentity>
     {

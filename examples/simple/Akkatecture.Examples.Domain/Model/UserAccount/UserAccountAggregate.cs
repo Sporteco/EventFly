@@ -27,7 +27,7 @@ using Akkatecture.Examples.Domain.Model.UserAccount.Events;
 
 namespace Akkatecture.Examples.Domain.Model.UserAccount
 {
-    public class UserAccountAggregate : AggregateRoot<UserAccountAggregate,UserAccountId,UserAccountState>,
+    public class UserAccountAggregate : EventSourcedAggregateRoot<UserAccountAggregate,UserAccountId,UserAccountState>,
         IExecute<CreateUserAccountCommand>,
         IExecute<UserAccountChangeNameCommand>
     {

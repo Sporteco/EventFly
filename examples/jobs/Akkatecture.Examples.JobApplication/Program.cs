@@ -57,6 +57,7 @@ namespace Akkatecture.Examples.JobApplication
 
             var scheduled = await jobManager.Ask<PrintJobResponse>(scheduleMessage);
 
+            // ReSharper disable once UnusedVariable
             var result = scheduled
                 .Match()
                 .With<Success>(x => Console.WriteLine("Job was Scheduled"))

@@ -21,6 +21,7 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using Akka.Actor;
 using Akka.Persistence;
 using Akkatecture.Aggregates;
 using Akkatecture.Aggregates.Snapshot;
@@ -30,7 +31,7 @@ using Akkatecture.Core;
 namespace Akkatecture.TestFixture.Aggregates
 {
     public interface IFixtureArranger<TAggregate, TIdentity>
-        where TAggregate : ReceivePersistentActor, IAggregateRoot<TIdentity>
+        where TAggregate : ActorBase, IAggregateRoot<TIdentity>
         where TIdentity : IIdentity
     {
         IFixtureArranger<TAggregate, TIdentity> For(TIdentity aggregateId);

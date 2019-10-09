@@ -79,7 +79,7 @@ namespace Akkatecture.Tests.UnitTests.Extensions
             }
         }
 
-        public class FooAggregateWithOutAttribute : AggregateRoot<FooAggregateWithOutAttribute, FooId, FooStateWithOutAttribute>
+        public class FooAggregateWithOutAttribute : EventSourcedAggregateRoot<FooAggregateWithOutAttribute, FooId, FooStateWithOutAttribute>
         {
             public FooAggregateWithOutAttribute(FooId id) : base(id)
             {
@@ -87,7 +87,7 @@ namespace Akkatecture.Tests.UnitTests.Extensions
         }
 
         [AggregateName("BetterNameForAggregate")]
-        public class FooAggregateWithAttribute : AggregateRoot<FooAggregateWithAttribute, FooId, FooStateWithAttribute>
+        public class FooAggregateWithAttribute : EventSourcedAggregateRoot<FooAggregateWithAttribute, FooId, FooStateWithAttribute>
         {
             public FooAggregateWithAttribute(FooId id) : base(id)
             {
