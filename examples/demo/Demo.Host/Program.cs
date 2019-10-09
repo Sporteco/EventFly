@@ -1,8 +1,10 @@
 ﻿using System;
 using Akka.Actor;
 using Akkatecture.AggregateStorages;
+using Akkatecture.Storages.EntityFramework;
 using Autofac;
 using Demo.Commands;
+using Demo.Db;
 using Demo.Domain;
 using Demo.ValueObjects;
 
@@ -21,7 +23,8 @@ namespace Demo.Host
             //Create actor system
             var system = ActorSystem.Create("user-example");
             system.AddAggregateStorageFactory()
-                .RegisterDefaultStorage(new InMemoryAggregateStorage());
+                .RegisterDefaultStorage<InMemoryAggregateStorage>()
+                .RegisterStorage<UserAggregate,EntityFrameworkStorage<TestDbContext>>();
 
             system.UseAutofac(container);
 

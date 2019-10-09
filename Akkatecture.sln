@@ -94,6 +94,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo.Domain", "examples\dem
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo.Host", "examples\demo\Demo.Host\Demo.Host.csproj", "{A2D750B4-0C1C-4405-9CA7-2565BBBFE18A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Akkatecture.Storages.EntityFramework", "src\Akkatecture.Storages.EntityFramework\Akkatecture.Storages.EntityFramework.csproj", "{36C23311-942F-4822-A817-6DFBFA260C52}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo.Db", "examples\demo\Demo.Db\Demo.Db.csproj", "{050F4344-9C7A-4184-BBD9-1EE5348BC87F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -180,6 +184,14 @@ Global
 		{A2D750B4-0C1C-4405-9CA7-2565BBBFE18A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A2D750B4-0C1C-4405-9CA7-2565BBBFE18A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A2D750B4-0C1C-4405-9CA7-2565BBBFE18A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36C23311-942F-4822-A817-6DFBFA260C52}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36C23311-942F-4822-A817-6DFBFA260C52}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36C23311-942F-4822-A817-6DFBFA260C52}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36C23311-942F-4822-A817-6DFBFA260C52}.Release|Any CPU.Build.0 = Release|Any CPU
+		{050F4344-9C7A-4184-BBD9-1EE5348BC87F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{050F4344-9C7A-4184-BBD9-1EE5348BC87F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{050F4344-9C7A-4184-BBD9-1EE5348BC87F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{050F4344-9C7A-4184-BBD9-1EE5348BC87F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -213,6 +225,8 @@ Global
 		{9BDF36BD-633D-4D70-937B-EB29C755D947} = {F3CA8C69-92CA-4897-9CB2-4D40811BAAEE}
 		{D4D68713-CEAB-4975-AB4E-FC9540B85403} = {F3CA8C69-92CA-4897-9CB2-4D40811BAAEE}
 		{A2D750B4-0C1C-4405-9CA7-2565BBBFE18A} = {F3CA8C69-92CA-4897-9CB2-4D40811BAAEE}
+		{36C23311-942F-4822-A817-6DFBFA260C52} = {C7A99371-DCC0-4726-A971-E35C8CDF4768}
+		{050F4344-9C7A-4184-BBD9-1EE5348BC87F} = {F3CA8C69-92CA-4897-9CB2-4D40811BAAEE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F5A40806-ED71-4286-A37C-BE0364FA29A6}

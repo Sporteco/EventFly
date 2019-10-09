@@ -30,6 +30,7 @@ namespace Akkatecture.Aggregates
         public long Version => 1;
         public bool IsNew => false;
         public TIdentity Id { get; }
+        private IAggregateStorage _aggregateStorage;
 
         protected readonly ILoggingAdapter Log = Context.GetLogger();
         protected AggregateRoot(TIdentity id)
@@ -68,24 +69,27 @@ namespace Akkatecture.Aggregates
         protected override void PreStart()
         {
             base.PreStart();
+            _aggregateStorage = Context.GetAggregateStorage<TAggregate>() 
+                                ?? throw new InvalidOperationException($"Aggregate [{typeof(TAggregate).PrettyPrint()}] storage not found.");
             State = LoadState();
         }
 
-        protected virtual TAggregateState LoadState()
+        protected override void PostStop()
         {
-            var storage = GetStorage()  ?? throw new InvalidOperationException($"Aggregate [{typeof(TAggregate).PrettyPrint()}] storage not found.");
-            return storage.LoadState<TAggregateState, TIdentity>(Id) ?? new TAggregateState{ Id = Id };
+            base.PostStop();
+            _aggregateStorage?.Dispose();
+            _aggregateStorage = null;
         }
 
-        private IAggregateStorage GetStorage()
+
+        protected virtual TAggregateState LoadState()
         {
-            return Context.GetAggregateStorage<TAggregate>();
+            return _aggregateStorage.LoadState<TAggregateState, TIdentity>(Id) ?? new TAggregateState{ Id = Id };
         }
 
         protected virtual void SaveState()
         {
-            var storage = GetStorage() ?? throw new InvalidOperationException($"Aggregate [{typeof(TAggregate).PrettyPrint()}] storage not found.");
-            storage.SaveState<TAggregateState, TIdentity>(State);
+            _aggregateStorage.SaveState<TAggregateState, TIdentity>(State);
         }
 
         public void InitReceives()

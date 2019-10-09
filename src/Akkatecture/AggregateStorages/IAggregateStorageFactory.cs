@@ -7,9 +7,11 @@ namespace Akkatecture.AggregateStorages
         IAggregateStorage GetAggregateStorage<TAggregate>()
             where TAggregate : IAggregateRoot;
 
-        void RegisterStorage<TAggregate>(IAggregateStorage storage)
-            where TAggregate : IAggregateRoot;
+        void RegisterStorage<TAggregate, TAggregateStorage>()
+            where TAggregate : IAggregateRoot
+            where TAggregateStorage : IAggregateStorage;
 
-        void RegisterDefaultStorage(IAggregateStorage storage);
+        void RegisterDefaultStorage<TAggregateStorage>()
+            where TAggregateStorage : IAggregateStorage;
     }
 }

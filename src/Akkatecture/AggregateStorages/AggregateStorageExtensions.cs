@@ -12,16 +12,18 @@ namespace Akkatecture.AggregateStorages
             _instance = instance;
         }
 
-        public AggregateStoreBuilder RegisterStorage<TAggregate>(IAggregateStorage storage) 
+        public AggregateStoreBuilder RegisterStorage<TAggregate, TAggregateStorage>()
             where TAggregate : IAggregateRoot
+            where TAggregateStorage : IAggregateStorage
         {
-            _instance.RegisterStorage<TAggregate>(storage);
+            _instance.RegisterStorage<TAggregate,TAggregateStorage>();
             return this;
         }
 
-        public AggregateStoreBuilder RegisterDefaultStorage(IAggregateStorage storage) 
+        public AggregateStoreBuilder RegisterDefaultStorage<TAggregateStorage>()
+            where TAggregateStorage : IAggregateStorage 
         {
-            _instance.RegisterDefaultStorage(storage);
+            _instance.RegisterDefaultStorage<TAggregateStorage>();
             return this;
         }
     }

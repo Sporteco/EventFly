@@ -12,10 +12,15 @@ namespace Akkatecture.AggregateStorages
             _stages.AddOrUpdate(state.Id.Value, state, (s, o) => state);
         }
 
-        public TAggregateState LoadState<TAggregateState, TIdentity>(TIdentity id) where TAggregateState : class, IAggregateState<TIdentity> where TIdentity : IIdentity
+        public TAggregateState LoadState<TAggregateState, TIdentity>(TIdentity id) where TAggregateState : class, IAggregateState<TIdentity>, new() where TIdentity : IIdentity
         {
             if (!_stages.ContainsKey(id.Value)) return null;
             return (TAggregateState)_stages[id.Value];
+        }
+
+        public void Dispose()
+        {
+            
         }
     }
 }

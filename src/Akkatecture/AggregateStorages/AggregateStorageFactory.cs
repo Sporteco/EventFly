@@ -6,21 +6,30 @@ namespace Akkatecture.AggregateStorages
 {
     public class AggregateStorageFactory : IAggregateStorageFactory
     {
-        private readonly ConcurrentDictionary<Type,IAggregateStorage> _items = new ConcurrentDictionary<Type, IAggregateStorage>();
-        private IAggregateStorage _defaultStorage;
+        private readonly ConcurrentDictionary<Type,Type> _items = new ConcurrentDictionary<Type, Type>();
+        private Type _defaultStorage;
         public IAggregateStorage GetAggregateStorage<TAggregate>() where TAggregate : IAggregateRoot
         {
-            if (!_items.ContainsKey(typeof(TAggregate))) return _defaultStorage;
-            return _items[typeof(TAggregate)];
-        }
-        public void RegisterStorage<TAggregate>(IAggregateStorage storage) where TAggregate : IAggregateRoot
-        {
-            _items[typeof(TAggregate)] = storage;
+            if (!_items.ContainsKey(typeof(TAggregate))) return CreateStorage(_defaultStorage);
+            return CreateStorage(_items[typeof(TAggregate)]);
         }
 
-        public void RegisterDefaultStorage(IAggregateStorage storage)
+        private IAggregateStorage CreateStorage(Type storageType)
         {
-            _defaultStorage = storage;
+            return (IAggregateStorage)Activator.CreateInstance(storageType);
+        }
+
+        public void RegisterStorage<TAggregate,TAggregateStorage>() 
+            where TAggregate : IAggregateRoot
+            where TAggregateStorage : IAggregateStorage
+        {
+            _items[typeof(TAggregate)] = typeof(TAggregateStorage);
+        }
+
+        public void RegisterDefaultStorage<TAggregateStorage>()
+            where TAggregateStorage : IAggregateStorage
+        {
+            _defaultStorage = typeof(TAggregateStorage);
         }
     }
 }
