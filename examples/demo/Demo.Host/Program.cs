@@ -1,5 +1,7 @@
 ﻿using System;
 using Akka.Actor;
+using Akkatecture.AggregateStorages;
+using Autofac;
 using Demo.Commands;
 using Demo.Domain;
 using Demo.ValueObjects;
@@ -10,8 +12,18 @@ namespace Demo.Host
     {
         static void Main()
         {
+            // Create and build your container
+            var builder = new ContainerBuilder();
+
+            var container = builder.Build();
+            
+            
             //Create actor system
             var system = ActorSystem.Create("user-example");
+            system.AddAggregateStorageFactory()
+                .RegisterDefaultStorage(new InMemoryAggregateStorage());
+
+            system.UseAutofac(container);
 
             //Create supervising aggregate manager for UserAccount aggregate root actors
             var aggregateManager = system.ActorOf(Props.Create(() => new UserAggregateManager()));

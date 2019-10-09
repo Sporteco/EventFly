@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using Akka.Actor;
 using Akka.Event;
+using Akkatecture.AggregateStorages;
 using Akkatecture.Commands;
 using Akkatecture.Core;
 using Akkatecture.Events;
@@ -17,6 +18,7 @@ namespace Akkatecture.Aggregates
         where TAggregateState : class, IAggregateState<TIdentity>, new ()
         where TIdentity : IIdentity
     {
+
         private readonly IEventDefinitionService _eventDefinitionService;
 
         private static readonly IAggregateName AggregateName = typeof(TAggregate).GetAggregateName();
@@ -69,9 +71,22 @@ namespace Akkatecture.Aggregates
             State = LoadState();
         }
 
-        protected abstract TAggregateState LoadState();
+        protected virtual TAggregateState LoadState()
+        {
+            var storage = GetStorage()  ?? throw new InvalidOperationException($"Aggregate [{typeof(TAggregate).PrettyPrint()}] storage not found.");
+            return storage.LoadState<TAggregateState, TIdentity>(Id) ?? new TAggregateState{ Id = Id };
+        }
 
-        protected abstract void SaveState();
+        private IAggregateStorage GetStorage()
+        {
+            return Context.GetAggregateStorage<TAggregate>();
+        }
+
+        protected virtual void SaveState()
+        {
+            var storage = GetStorage() ?? throw new InvalidOperationException($"Aggregate [{typeof(TAggregate).PrettyPrint()}] storage not found.");
+            storage.SaveState<TAggregateState, TIdentity>(State);
+        }
 
         public void InitReceives()
         {
@@ -137,10 +152,13 @@ namespace Akkatecture.Aggregates
         public virtual void Emit<TAggregateEvent>(TAggregateEvent aggregateEvent, IMetadata metadata = null)
             where TAggregateEvent : class, IAggregateEvent<TIdentity>
         {
+
             var committedEvent = From(aggregateEvent, Version, metadata);
+
             SaveState();
             ApplyCommittedEvent(committedEvent);
         }
+
 
         public virtual CommittedEvent<TAggregate, TIdentity, TAggregateEvent> From<TAggregateEvent>(TAggregateEvent aggregateEvent,
             long version, IMetadata metadata = null)
