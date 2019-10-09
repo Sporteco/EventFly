@@ -25,7 +25,7 @@ using Akkatecture.Aggregates;
 
 namespace Akkatecture.TestHelpers.Aggregates.Sagas.Test.Events
 {
-    public class TestSagaCompletedEvent : AggregateEvent<TestSaga, TestSagaId>
+    public class TestSagaCompletedEvent : AggregateEvent<TestSagaId>
     {
         public TestSagaState State { get; }
 

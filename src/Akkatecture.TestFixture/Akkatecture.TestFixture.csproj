@@ -10,7 +10,7 @@
     <TargetFramework>$(NetStandardVersion)</TargetFramework>
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
     <GenerateAssemblyInfo>True</GenerateAssemblyInfo>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <Title>Akkatecture.TestFixture</Title>
   </PropertyGroup>
@@ -25,6 +25,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Akkatecture.Abstractions\Akkatecture.Abstractions.csproj" />
     <ProjectReference Include="..\Akkatecture\Akkatecture.csproj" />
   </ItemGroup>
 

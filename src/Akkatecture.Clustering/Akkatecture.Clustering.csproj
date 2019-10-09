@@ -9,7 +9,7 @@
     <TargetFramework>$(NetStandardVersion)</TargetFramework>
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
     <GenerateAssemblyInfo>True</GenerateAssemblyInfo>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <Title>Akkatecture.Clustering</Title>
   </PropertyGroup>
@@ -36,6 +36,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Akkatecture.Abstractions\Akkatecture.Abstractions.csproj" />
     <ProjectReference Include="..\Akkatecture\Akkatecture.csproj" />
     <EmbeddedResource Include="Configuration\default.conf" />
   </ItemGroup>

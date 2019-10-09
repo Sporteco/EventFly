@@ -18,6 +18,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\src\Akkatecture.Abstractions\Akkatecture.Abstractions.csproj" />
     <ProjectReference Include="..\..\..\src\Akkatecture\Akkatecture.csproj" />
   </ItemGroup>
 

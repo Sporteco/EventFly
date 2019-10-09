@@ -34,7 +34,7 @@ namespace Akkatecture.Aggregates
     public class CommittedEvent<TAggregate, TIdentity, TAggregateEvent> : ICommittedEvent<TAggregate, TIdentity, TAggregateEvent>
         where TAggregate : IAggregateRoot<TIdentity>
         where TIdentity : IIdentity
-        where TAggregateEvent : class, IAggregateEvent<TAggregate, TIdentity>
+        where TAggregateEvent : class, IAggregateEvent<TIdentity>
     {
         public TIdentity AggregateIdentity { get; }
         public TAggregateEvent AggregateEvent { get; }

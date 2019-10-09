@@ -26,7 +26,7 @@ using Akkatecture.Commands;
 
 namespace Akkatecture.Examples.Domain.Model.UserAccount
 {
-    public class UserAccountAggregateManager : AggregateManager<UserAccountAggregate,UserAccountId, Command<UserAccountAggregate, UserAccountId>>
+    public class UserAccountAggregateManager : AggregateManager<UserAccountAggregate,UserAccountId, Command<UserAccountId>>
     {
         
     }

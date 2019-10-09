@@ -2,7 +2,7 @@ using Akkatecture.Commands;
 
 namespace Akkatecture.TestHelpers.Aggregates.Commands
 {
-    public class TestSuccessExecutionResultCommand : Command<TestAggregate, TestAggregateId>
+    public class TestSuccessExecutionResultCommand : Command<TestAggregateId>
     {
         public TestSuccessExecutionResultCommand(
             TestAggregateId aggregateId,

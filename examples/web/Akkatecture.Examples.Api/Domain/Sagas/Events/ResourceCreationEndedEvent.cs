@@ -27,7 +27,7 @@ using Akkatecture.Examples.Api.Domain.Aggregates.Resource;
 
 namespace Akkatecture.Examples.Api.Domain.Sagas.Events
 {
-    public class ResourceCreationEndedEvent : AggregateEvent<ResourceCreationSaga, ResourceCreationSagaId>
+    public class ResourceCreationEndedEvent : AggregateEvent<ResourceCreationSagaId>
     {
         public ResourceId ResourceId { get; }
         public int Progress { get; }

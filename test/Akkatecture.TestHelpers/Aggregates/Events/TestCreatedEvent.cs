@@ -27,7 +27,7 @@ using Akkatecture.Events;
 namespace Akkatecture.TestHelpers.Aggregates.Events
 {
     [EventVersion("TestCreated", 1)]
-    public class TestCreatedEvent : AggregateEvent<TestAggregate, TestAggregateId>
+    public class TestCreatedEvent : AggregateEvent<TestAggregateId>
     {
         public TestAggregateId TestAggregateId { get; }
 
@@ -38,7 +38,7 @@ namespace Akkatecture.TestHelpers.Aggregates.Events
     }
 
     [EventVersion("TestCreated", 2)]
-    public class TestCreatedEventV2 : AggregateEvent<TestAggregate, TestAggregateId>
+    public class TestCreatedEventV2 : AggregateEvent<TestAggregateId>
     {
         public TestAggregateId TestAggregateId { get; }
         public string Name { get; }

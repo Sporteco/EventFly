@@ -25,7 +25,7 @@ using Akkatecture.Aggregates;
 
 namespace Akkatecture.TestHelpers.Aggregates.Sagas.TestAsync.Events
 {
-    public class TestAsyncSagaStartedEvent : AggregateEvent<TestAsyncSaga,TestAsyncSagaId>
+    public class TestAsyncSagaStartedEvent : AggregateEvent<TestAsyncSagaId>
     {
         private readonly Entities.Test _sentTest;
         public TestAggregateId Sender { get; }

@@ -7,11 +7,11 @@
     </PropertyGroup>
 
   <PropertyGroup>
-    <TargetFramework>$(NetStandardVersion)</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <Title>Akkatecture</Title>
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
     <GenerateAssemblyInfo>True</GenerateAssemblyInfo>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
   </PropertyGroup>
 
@@ -41,6 +41,10 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Configuration\defaults.conf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Akkatecture.Abstractions\Akkatecture.Abstractions.csproj" />
   </ItemGroup>
 
 </Project>

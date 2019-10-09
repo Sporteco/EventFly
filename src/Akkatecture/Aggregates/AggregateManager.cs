@@ -34,7 +34,7 @@ namespace Akkatecture.Aggregates
     public abstract class AggregateManager<TAggregate, TIdentity, TCommand> : ReceiveActor, IAggregateManager<TAggregate, TIdentity>
         where TAggregate : ReceivePersistentActor, IAggregateRoot<TIdentity>
         where TIdentity : IIdentity
-        where TCommand : ICommand<TAggregate, TIdentity>
+        where TCommand : ICommand<TIdentity>
     {
         protected ILoggingAdapter Logger { get; set; }
         protected Func<DeadLetter, bool> DeadLetterHandler => Handle;

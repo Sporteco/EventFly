@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28621.142
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Akkatecture", "src\Akkatecture\Akkatecture.csproj", "{3D397B96-ED4E-4CBA-87FF-E045E650DADA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Akkatecture", "src\Akkatecture\Akkatecture.csproj", "{294B5F75-4BF1-4CD1-AA98-1369A4E4ACDE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{C7A99371-DCC0-4726-A971-E35C8CDF4768}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{86C56730-ABA0-411C-898C-5966EC483594}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Akkatecture.Tests", "test\Akkatecture.Tests\Akkatecture.Tests.csproj", "{90CF254E-E922-4935-8381-00644FD668AC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Akkatecture.Tests", "test\Akkatecture.Tests\Akkatecture.Tests.csproj", "{FE32A6E6-7356-43DE-996B-122878AD4FD9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "examples", "examples", "{7522402D-176E-4305-A68B-F3FFBFD38158}"
 EndProject
@@ -18,31 +18,31 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "simple", "simple", "{090ECC
 		examples\simple\README.md = examples\simple\README.md
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Akkatecture.TestHelpers", "test\Akkatecture.TestHelpers\Akkatecture.TestHelpers.csproj", "{6543746C-F5D4-4F64-9C51-4470C4623428}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Akkatecture.TestHelpers", "test\Akkatecture.TestHelpers\Akkatecture.TestHelpers.csproj", "{D9461EE2-175F-4F2B-AD75-FB93C09ABCDE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Akkatecture.Clustering", "src\Akkatecture.Clustering\Akkatecture.Clustering.csproj", "{8281381F-C7AD-41C0-8566-D3C2873B6FD6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Akkatecture.Clustering", "src\Akkatecture.Clustering\Akkatecture.Clustering.csproj", "{2F38E561-BAA0-4A5A-AE2D-7F0C6C823000}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "cluster", "cluster", "{F39AA664-CAE8-4592-9173-8D03CABA1C07}"
 	ProjectSection(SolutionItems) = preProject
 		examples\cluster\README.md = examples\cluster\README.md
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Akkatecture.Examples.Seed", "examples\cluster\Akkatecture.Examples.Seed\Akkatecture.Examples.Seed.csproj", "{BEAC89B6-9B71-4BF6-9B3A-4193DE028F7A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Akkatecture.Examples.Seed", "examples\cluster\Akkatecture.Examples.Seed\Akkatecture.Examples.Seed.csproj", "{0E3DB1CF-7A20-43A3-8ACA-9A9410087A9E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Akkatecture.Examples.Worker", "examples\cluster\Akkatecture.Examples.Worker\Akkatecture.Examples.Worker.csproj", "{DD833121-B2AD-4F2E-A12E-B1B28714817A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Akkatecture.Examples.Worker", "examples\cluster\Akkatecture.Examples.Worker\Akkatecture.Examples.Worker.csproj", "{1341869F-AC9D-412E-889B-EE725E4A2CDC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Akkatecture.Examples.ClusterClient", "examples\cluster\Akkatecture.Examples.ClusterClient\Akkatecture.Examples.ClusterClient.csproj", "{5513AA4C-5E65-41CC-84AF-6C6003B54F60}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Akkatecture.Examples.ClusterClient", "examples\cluster\Akkatecture.Examples.ClusterClient\Akkatecture.Examples.ClusterClient.csproj", "{EB7AAC0F-4961-4C91-96F2-88D4C790E02F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Akkatecture.Examples.Application", "examples\simple\Akkatecture.Examples.Application\Akkatecture.Examples.Application.csproj", "{F4512D84-8576-44DB-9F15-E299F62EB9D3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Akkatecture.Examples.Application", "examples\simple\Akkatecture.Examples.Application\Akkatecture.Examples.Application.csproj", "{2CD72C5D-ED7B-4669-ABE4-EEB3F039225C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Akkatecture.Examples.Domain", "examples\simple\Akkatecture.Examples.Domain\Akkatecture.Examples.Domain.csproj", "{C104C065-D0CE-42C0-9C43-D8F17ECEA0A0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Akkatecture.Examples.Domain", "examples\simple\Akkatecture.Examples.Domain\Akkatecture.Examples.Domain.csproj", "{F716A019-4FF5-4604-93A7-D4C9A994A290}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "web", "web", "{2B7C892D-01E8-4FE5-A8BB-BBF130A42904}"
 	ProjectSection(SolutionItems) = preProject
 		examples\web\README.md = examples\web\README.md
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Akkatecture.Examples.Api", "examples\web\Akkatecture.Examples.Api\Akkatecture.Examples.Api.csproj", "{6A69FDC5-7A8D-4FB8-874A-484F68FBEA7A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Akkatecture.Examples.Api", "examples\web\Akkatecture.Examples.Api\Akkatecture.Examples.Api.csproj", "{F70444F1-9EBE-4101-9152-BF9A98A97D4E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "postman", "postman", "{8811113F-775E-4371-8E71-942BD50844A6}"
 	ProjectSection(SolutionItems) = preProject
@@ -56,33 +56,43 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{F1C674D3
 		build\azure-pipelines-master-ci-cd.yaml = build\azure-pipelines-master-ci-cd.yaml
 		build\azure-pipelines-release-ci-cd.yaml = build\azure-pipelines-release-ci-cd.yaml
 		build\azure-pipelines-static-ci.yaml = build\azure-pipelines-static-ci.yaml
-		build\README.md = build\README.md
 		build\paket.dependencies = build\paket.dependencies
+		build\README.md = build\README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Akkatecture.TestFixture", "src\Akkatecture.TestFixture\Akkatecture.TestFixture.csproj", "{BED56747-BBF3-45F5-9EB6-C24808AA09EC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Akkatecture.TestFixture", "src\Akkatecture.TestFixture\Akkatecture.TestFixture.csproj", "{0CB7A8CC-E3CD-481C-81C9-BA830DC32361}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Akkatecture.MultiNodeTestRunner", "test\Akkatecture.MultiNodeTestRunner\Akkatecture.MultiNodeTestRunner.csproj", "{081C0036-15A6-48FE-A70E-CCC1CCA3E495}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Akkatecture.MultiNodeTestRunner", "test\Akkatecture.MultiNodeTestRunner\Akkatecture.MultiNodeTestRunner.csproj", "{081C0036-15A6-48FE-A70E-CCC1CCA3E495}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{6F5F4612-D2DD-47E9-ADA9-18450D44E903}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Akkatecture.NodeTestRunner", "test\Akkatecture.NodeTestRunner\Akkatecture.NodeTestRunner.csproj", "{216BF8B4-3A50-4EF3-BCA5-4BDA738B0B72}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Akkatecture.NodeTestRunner", "test\Akkatecture.NodeTestRunner\Akkatecture.NodeTestRunner.csproj", "{216BF8B4-3A50-4EF3-BCA5-4BDA738B0B72}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Akkatecture.Tests.MultiNode", "test\Akkatecture.Tests.MultiNode\Akkatecture.Tests.MultiNode.csproj", "{C7E74510-5D43-4D63-B3B1-13333DC1700E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Akkatecture.Tests.MultiNode", "test\Akkatecture.Tests.MultiNode\Akkatecture.Tests.MultiNode.csproj", "{C7E74510-5D43-4D63-B3B1-13333DC1700E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "templates", "templates", "{19634F28-9CC5-4B76-83B6-5AA41B3CA78E}"
-ProjectSection(SolutionItems) = preProject
-	build\templates\fake-template.yaml = build\templates\fake-template.yaml
-EndProjectSection
+	ProjectSection(SolutionItems) = preProject
+		build\templates\fake-template.yaml = build\templates\fake-template.yaml
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "jobs", "jobs", "{94E321E7-073B-4B06-874B-A411D6971A7F}"
-ProjectSection(SolutionItems) = preProject
-	examples\jobs\README.md = examples\jobs\README.md
-EndProjectSection
+	ProjectSection(SolutionItems) = preProject
+		examples\jobs\README.md = examples\jobs\README.md
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Akkatecture.Examples.Jobs", "examples\jobs\Akkatecture.Examples.Jobs\Akkatecture.Examples.Jobs.csproj", "{D1FC3A57-86CD-4A83-8604-7811BF707022}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Akkatecture.Examples.Jobs", "examples\jobs\Akkatecture.Examples.Jobs\Akkatecture.Examples.Jobs.csproj", "{D1FC3A57-86CD-4A83-8604-7811BF707022}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Akkatecture.Examples.JobApplication", "examples\jobs\Akkatecture.Examples.JobApplication\Akkatecture.Examples.JobApplication.csproj", "{EDC2FA9D-B9DF-452C-8A7F-89237D891486}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Akkatecture.Examples.JobApplication", "examples\jobs\Akkatecture.Examples.JobApplication\Akkatecture.Examples.JobApplication.csproj", "{EDC2FA9D-B9DF-452C-8A7F-89237D891486}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Akkatecture.Abstractions", "src\Akkatecture.Abstractions\Akkatecture.Abstractions.csproj", "{9769D18E-F55C-4A27-AD8A-9C253130F82F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "demo", "demo", "{F3CA8C69-92CA-4897-9CB2-4D40811BAAEE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo.Abstractions", "examples\demo\Demo.Abstractions\Demo.Abstractions.csproj", "{9BDF36BD-633D-4D70-937B-EB29C755D947}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo.Domain", "examples\demo\Demo.Domain\Demo.Domain.csproj", "{D4D68713-CEAB-4975-AB4E-FC9540B85403}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo.Host", "examples\demo\Demo.Host\Demo.Host.csproj", "{A2D750B4-0C1C-4405-9CA7-2565BBBFE18A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -90,50 +100,50 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{3D397B96-ED4E-4CBA-87FF-E045E650DADA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3D397B96-ED4E-4CBA-87FF-E045E650DADA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3D397B96-ED4E-4CBA-87FF-E045E650DADA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3D397B96-ED4E-4CBA-87FF-E045E650DADA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{90CF254E-E922-4935-8381-00644FD668AC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{90CF254E-E922-4935-8381-00644FD668AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{90CF254E-E922-4935-8381-00644FD668AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{90CF254E-E922-4935-8381-00644FD668AC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6543746C-F5D4-4F64-9C51-4470C4623428}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6543746C-F5D4-4F64-9C51-4470C4623428}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6543746C-F5D4-4F64-9C51-4470C4623428}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6543746C-F5D4-4F64-9C51-4470C4623428}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8281381F-C7AD-41C0-8566-D3C2873B6FD6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8281381F-C7AD-41C0-8566-D3C2873B6FD6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8281381F-C7AD-41C0-8566-D3C2873B6FD6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8281381F-C7AD-41C0-8566-D3C2873B6FD6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BEAC89B6-9B71-4BF6-9B3A-4193DE028F7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BEAC89B6-9B71-4BF6-9B3A-4193DE028F7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BEAC89B6-9B71-4BF6-9B3A-4193DE028F7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BEAC89B6-9B71-4BF6-9B3A-4193DE028F7A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DD833121-B2AD-4F2E-A12E-B1B28714817A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DD833121-B2AD-4F2E-A12E-B1B28714817A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DD833121-B2AD-4F2E-A12E-B1B28714817A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DD833121-B2AD-4F2E-A12E-B1B28714817A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5513AA4C-5E65-41CC-84AF-6C6003B54F60}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5513AA4C-5E65-41CC-84AF-6C6003B54F60}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5513AA4C-5E65-41CC-84AF-6C6003B54F60}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5513AA4C-5E65-41CC-84AF-6C6003B54F60}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F4512D84-8576-44DB-9F15-E299F62EB9D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F4512D84-8576-44DB-9F15-E299F62EB9D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F4512D84-8576-44DB-9F15-E299F62EB9D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F4512D84-8576-44DB-9F15-E299F62EB9D3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C104C065-D0CE-42C0-9C43-D8F17ECEA0A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C104C065-D0CE-42C0-9C43-D8F17ECEA0A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C104C065-D0CE-42C0-9C43-D8F17ECEA0A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C104C065-D0CE-42C0-9C43-D8F17ECEA0A0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6A69FDC5-7A8D-4FB8-874A-484F68FBEA7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6A69FDC5-7A8D-4FB8-874A-484F68FBEA7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6A69FDC5-7A8D-4FB8-874A-484F68FBEA7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6A69FDC5-7A8D-4FB8-874A-484F68FBEA7A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BED56747-BBF3-45F5-9EB6-C24808AA09EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BED56747-BBF3-45F5-9EB6-C24808AA09EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BED56747-BBF3-45F5-9EB6-C24808AA09EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BED56747-BBF3-45F5-9EB6-C24808AA09EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{294B5F75-4BF1-4CD1-AA98-1369A4E4ACDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{294B5F75-4BF1-4CD1-AA98-1369A4E4ACDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{294B5F75-4BF1-4CD1-AA98-1369A4E4ACDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{294B5F75-4BF1-4CD1-AA98-1369A4E4ACDE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE32A6E6-7356-43DE-996B-122878AD4FD9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE32A6E6-7356-43DE-996B-122878AD4FD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE32A6E6-7356-43DE-996B-122878AD4FD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE32A6E6-7356-43DE-996B-122878AD4FD9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D9461EE2-175F-4F2B-AD75-FB93C09ABCDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D9461EE2-175F-4F2B-AD75-FB93C09ABCDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D9461EE2-175F-4F2B-AD75-FB93C09ABCDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D9461EE2-175F-4F2B-AD75-FB93C09ABCDE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F38E561-BAA0-4A5A-AE2D-7F0C6C823000}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F38E561-BAA0-4A5A-AE2D-7F0C6C823000}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F38E561-BAA0-4A5A-AE2D-7F0C6C823000}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F38E561-BAA0-4A5A-AE2D-7F0C6C823000}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E3DB1CF-7A20-43A3-8ACA-9A9410087A9E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E3DB1CF-7A20-43A3-8ACA-9A9410087A9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E3DB1CF-7A20-43A3-8ACA-9A9410087A9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E3DB1CF-7A20-43A3-8ACA-9A9410087A9E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1341869F-AC9D-412E-889B-EE725E4A2CDC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1341869F-AC9D-412E-889B-EE725E4A2CDC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1341869F-AC9D-412E-889B-EE725E4A2CDC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1341869F-AC9D-412E-889B-EE725E4A2CDC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB7AAC0F-4961-4C91-96F2-88D4C790E02F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB7AAC0F-4961-4C91-96F2-88D4C790E02F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB7AAC0F-4961-4C91-96F2-88D4C790E02F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB7AAC0F-4961-4C91-96F2-88D4C790E02F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2CD72C5D-ED7B-4669-ABE4-EEB3F039225C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2CD72C5D-ED7B-4669-ABE4-EEB3F039225C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2CD72C5D-ED7B-4669-ABE4-EEB3F039225C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2CD72C5D-ED7B-4669-ABE4-EEB3F039225C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F716A019-4FF5-4604-93A7-D4C9A994A290}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F716A019-4FF5-4604-93A7-D4C9A994A290}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F716A019-4FF5-4604-93A7-D4C9A994A290}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F716A019-4FF5-4604-93A7-D4C9A994A290}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F70444F1-9EBE-4101-9152-BF9A98A97D4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F70444F1-9EBE-4101-9152-BF9A98A97D4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F70444F1-9EBE-4101-9152-BF9A98A97D4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F70444F1-9EBE-4101-9152-BF9A98A97D4E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0CB7A8CC-E3CD-481C-81C9-BA830DC32361}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0CB7A8CC-E3CD-481C-81C9-BA830DC32361}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0CB7A8CC-E3CD-481C-81C9-BA830DC32361}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0CB7A8CC-E3CD-481C-81C9-BA830DC32361}.Release|Any CPU.Build.0 = Release|Any CPU
 		{081C0036-15A6-48FE-A70E-CCC1CCA3E495}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{081C0036-15A6-48FE-A70E-CCC1CCA3E495}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{081C0036-15A6-48FE-A70E-CCC1CCA3E495}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -154,34 +164,55 @@ Global
 		{EDC2FA9D-B9DF-452C-8A7F-89237D891486}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EDC2FA9D-B9DF-452C-8A7F-89237D891486}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EDC2FA9D-B9DF-452C-8A7F-89237D891486}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9769D18E-F55C-4A27-AD8A-9C253130F82F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9769D18E-F55C-4A27-AD8A-9C253130F82F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9769D18E-F55C-4A27-AD8A-9C253130F82F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9769D18E-F55C-4A27-AD8A-9C253130F82F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9BDF36BD-633D-4D70-937B-EB29C755D947}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9BDF36BD-633D-4D70-937B-EB29C755D947}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9BDF36BD-633D-4D70-937B-EB29C755D947}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9BDF36BD-633D-4D70-937B-EB29C755D947}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D4D68713-CEAB-4975-AB4E-FC9540B85403}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D4D68713-CEAB-4975-AB4E-FC9540B85403}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D4D68713-CEAB-4975-AB4E-FC9540B85403}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D4D68713-CEAB-4975-AB4E-FC9540B85403}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A2D750B4-0C1C-4405-9CA7-2565BBBFE18A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2D750B4-0C1C-4405-9CA7-2565BBBFE18A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2D750B4-0C1C-4405-9CA7-2565BBBFE18A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2D750B4-0C1C-4405-9CA7-2565BBBFE18A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{3D397B96-ED4E-4CBA-87FF-E045E650DADA} = {C7A99371-DCC0-4726-A971-E35C8CDF4768}
-		{90CF254E-E922-4935-8381-00644FD668AC} = {86C56730-ABA0-411C-898C-5966EC483594}
+		{294B5F75-4BF1-4CD1-AA98-1369A4E4ACDE} = {C7A99371-DCC0-4726-A971-E35C8CDF4768}
+		{FE32A6E6-7356-43DE-996B-122878AD4FD9} = {86C56730-ABA0-411C-898C-5966EC483594}
 		{090ECC2F-5647-4B15-ABDF-2E1B44439626} = {7522402D-176E-4305-A68B-F3FFBFD38158}
-		{6543746C-F5D4-4F64-9C51-4470C4623428} = {86C56730-ABA0-411C-898C-5966EC483594}
-		{8281381F-C7AD-41C0-8566-D3C2873B6FD6} = {C7A99371-DCC0-4726-A971-E35C8CDF4768}
+		{D9461EE2-175F-4F2B-AD75-FB93C09ABCDE} = {86C56730-ABA0-411C-898C-5966EC483594}
+		{2F38E561-BAA0-4A5A-AE2D-7F0C6C823000} = {C7A99371-DCC0-4726-A971-E35C8CDF4768}
 		{F39AA664-CAE8-4592-9173-8D03CABA1C07} = {7522402D-176E-4305-A68B-F3FFBFD38158}
-		{BEAC89B6-9B71-4BF6-9B3A-4193DE028F7A} = {F39AA664-CAE8-4592-9173-8D03CABA1C07}
-		{DD833121-B2AD-4F2E-A12E-B1B28714817A} = {F39AA664-CAE8-4592-9173-8D03CABA1C07}
-		{5513AA4C-5E65-41CC-84AF-6C6003B54F60} = {F39AA664-CAE8-4592-9173-8D03CABA1C07}
-		{F4512D84-8576-44DB-9F15-E299F62EB9D3} = {090ECC2F-5647-4B15-ABDF-2E1B44439626}
-		{C104C065-D0CE-42C0-9C43-D8F17ECEA0A0} = {090ECC2F-5647-4B15-ABDF-2E1B44439626}
+		{0E3DB1CF-7A20-43A3-8ACA-9A9410087A9E} = {F39AA664-CAE8-4592-9173-8D03CABA1C07}
+		{1341869F-AC9D-412E-889B-EE725E4A2CDC} = {F39AA664-CAE8-4592-9173-8D03CABA1C07}
+		{EB7AAC0F-4961-4C91-96F2-88D4C790E02F} = {F39AA664-CAE8-4592-9173-8D03CABA1C07}
+		{2CD72C5D-ED7B-4669-ABE4-EEB3F039225C} = {090ECC2F-5647-4B15-ABDF-2E1B44439626}
+		{F716A019-4FF5-4604-93A7-D4C9A994A290} = {090ECC2F-5647-4B15-ABDF-2E1B44439626}
 		{2B7C892D-01E8-4FE5-A8BB-BBF130A42904} = {7522402D-176E-4305-A68B-F3FFBFD38158}
-		{6A69FDC5-7A8D-4FB8-874A-484F68FBEA7A} = {2B7C892D-01E8-4FE5-A8BB-BBF130A42904}
+		{F70444F1-9EBE-4101-9152-BF9A98A97D4E} = {2B7C892D-01E8-4FE5-A8BB-BBF130A42904}
 		{8811113F-775E-4371-8E71-942BD50844A6} = {2B7C892D-01E8-4FE5-A8BB-BBF130A42904}
-		{BED56747-BBF3-45F5-9EB6-C24808AA09EC} = {C7A99371-DCC0-4726-A971-E35C8CDF4768}
-		{6F5F4612-D2DD-47E9-ADA9-18450D44E903} = {86C56730-ABA0-411C-898C-5966EC483594}
+		{0CB7A8CC-E3CD-481C-81C9-BA830DC32361} = {C7A99371-DCC0-4726-A971-E35C8CDF4768}
 		{081C0036-15A6-48FE-A70E-CCC1CCA3E495} = {6F5F4612-D2DD-47E9-ADA9-18450D44E903}
+		{6F5F4612-D2DD-47E9-ADA9-18450D44E903} = {86C56730-ABA0-411C-898C-5966EC483594}
 		{216BF8B4-3A50-4EF3-BCA5-4BDA738B0B72} = {6F5F4612-D2DD-47E9-ADA9-18450D44E903}
 		{C7E74510-5D43-4D63-B3B1-13333DC1700E} = {86C56730-ABA0-411C-898C-5966EC483594}
 		{19634F28-9CC5-4B76-83B6-5AA41B3CA78E} = {F1C674D3-CC23-4708-9903-7B3CD3565899}
 		{94E321E7-073B-4B06-874B-A411D6971A7F} = {7522402D-176E-4305-A68B-F3FFBFD38158}
 		{D1FC3A57-86CD-4A83-8604-7811BF707022} = {94E321E7-073B-4B06-874B-A411D6971A7F}
 		{EDC2FA9D-B9DF-452C-8A7F-89237D891486} = {94E321E7-073B-4B06-874B-A411D6971A7F}
+		{9769D18E-F55C-4A27-AD8A-9C253130F82F} = {C7A99371-DCC0-4726-A971-E35C8CDF4768}
+		{F3CA8C69-92CA-4897-9CB2-4D40811BAAEE} = {7522402D-176E-4305-A68B-F3FFBFD38158}
+		{9BDF36BD-633D-4D70-937B-EB29C755D947} = {F3CA8C69-92CA-4897-9CB2-4D40811BAAEE}
+		{D4D68713-CEAB-4975-AB4E-FC9540B85403} = {F3CA8C69-92CA-4897-9CB2-4D40811BAAEE}
+		{A2D750B4-0C1C-4405-9CA7-2565BBBFE18A} = {F3CA8C69-92CA-4897-9CB2-4D40811BAAEE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F5A40806-ED71-4286-A37C-BE0364FA29A6}

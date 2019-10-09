@@ -42,44 +42,6 @@ namespace Akkatecture.Extensions
 {
     public static class TypeExtensions
     {
-        private static readonly ConcurrentDictionary<Type, string> PrettyPrintCache = new ConcurrentDictionary<Type, string>();
-
-        public static string PrettyPrint(this Type type)
-        {
-            return PrettyPrintCache.GetOrAdd(
-                type,
-                t =>
-                {
-                    try
-                    {
-                        return PrettyPrintRecursive(t, 0);
-                    }
-                    catch (Exception)
-                    {
-                        return t.Name;
-                    }
-                });
-        }
-
-        private static string PrettyPrintRecursive(Type type, int depth)
-        {
-            if (depth > 3)
-            {
-                return type.Name;
-            }
-
-            var nameParts = type.Name.Split('`');
-            if (nameParts.Length == 1)
-            {
-                return nameParts[0];
-            }
-
-            var genericArguments = type.GetTypeInfo().GetGenericArguments();
-            return !type.IsConstructedGenericType
-                ? $"{nameParts[0]}<{new string(',', genericArguments.Length - 1)}>"
-                : $"{nameParts[0]}<{string.Join(",", genericArguments.Select(t => PrettyPrintRecursive(t, depth + 1)))}>";
-        }
-
         private static readonly ConcurrentDictionary<Type, AggregateName> AggregateNames = new ConcurrentDictionary<Type, AggregateName>();
 
         public static AggregateName GetAggregateName(
@@ -145,7 +107,7 @@ namespace Akkatecture.Extensions
             where TAggregate : IAggregateRoot<TIdentity>
             where TIdentity : IIdentity
         {
-            var aggregateEventType = typeof(IAggregateEvent<TAggregate, TIdentity>);
+            var aggregateEventType = typeof(IAggregateEvent<TIdentity>);
 
             return type
                 .GetTypeInfo()
@@ -190,7 +152,7 @@ namespace Akkatecture.Extensions
             where TIdentity : IIdentity
             where TAggregateState : IEventApplier<TAggregate, TIdentity>
         {
-            var aggregateEventType = typeof(IAggregateEvent<TAggregate, TIdentity>);
+            var aggregateEventType = typeof(IAggregateEvent<TIdentity>);
 
             return type
                 .GetTypeInfo()
@@ -376,7 +338,7 @@ namespace Akkatecture.Extensions
             where TAggregate : IAggregateRoot<TIdentity>
             where TIdentity : IIdentity
         {
-            var aggregateEventType = typeof(IAggregateEvent<TAggregate, TIdentity>);
+            var aggregateEventType = typeof(IAggregateEvent<TIdentity>);
             
             return type
                 .GetTypeInfo()

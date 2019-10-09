@@ -51,7 +51,7 @@ namespace Akkatecture.Aggregates
         private static readonly IReadOnlyDictionary<Type, Action<TAggregateState, IAggregateSnapshot>> HydrateMethodsFromState =  typeof(TAggregateState).GetAggregateSnapshotHydrateMethods<TAggregate, TIdentity, TAggregateState>();
         private static readonly IAggregateName AggregateName = typeof(TAggregate).GetAggregateName();
         private CircularBuffer<ISourceId> _previousSourceIds = new CircularBuffer<ISourceId>(100);
-        private ICommand<TAggregate, TIdentity> PinnedCommand { get; set; }
+        private ICommand<TIdentity> PinnedCommand { get; set; }
         private object PinnedReply { get; set; }
         private readonly IEventDefinitionService _eventDefinitionService;
         private readonly ISnapshotDefinitionService _snapshotDefinitionService;
@@ -109,7 +109,7 @@ namespace Akkatecture.Aggregates
 
             if (Settings.UseDefaultEventRecover)
             {
-                Recover<ICommittedEvent<TAggregate, TIdentity, IAggregateEvent<TAggregate, TIdentity>>>(Recover);
+                Recover<ICommittedEvent<TAggregate, TIdentity, IAggregateEvent<TIdentity>>>(Recover);
                 Recover<RecoveryCompleted>(Recover);
             }
             
@@ -136,7 +136,7 @@ namespace Akkatecture.Aggregates
         }
 
         public virtual void Emit<TAggregateEvent>(TAggregateEvent aggregateEvent, IMetadata metadata = null)
-            where TAggregateEvent : class, IAggregateEvent<TAggregate, TIdentity>
+            where TAggregateEvent : class, IAggregateEvent<TIdentity>
         {
             var committedEvent = From(aggregateEvent, Version, metadata);
             Persist(committedEvent, ApplyCommittedEvent);
@@ -144,7 +144,7 @@ namespace Akkatecture.Aggregates
 
         
         
-        public virtual void EmitAll(params IAggregateEvent<TAggregate, TIdentity>[] aggregateEvents)
+        public virtual void EmitAll(params IAggregateEvent<TIdentity>[] aggregateEvents)
         {
             var version = Version;
             
@@ -208,7 +208,7 @@ namespace Akkatecture.Aggregates
         
         public virtual CommittedEvent<TAggregate, TIdentity, TAggregateEvent> From<TAggregateEvent>(TAggregateEvent aggregateEvent,
             long version, IMetadata metadata = null)
-            where TAggregateEvent : class, IAggregateEvent<TAggregate, TIdentity>
+            where TAggregateEvent : class, IAggregateEvent<TIdentity>
         {
             if (aggregateEvent == null)
             {
@@ -248,7 +248,7 @@ namespace Akkatecture.Aggregates
         }
 
         protected void  ApplyCommittedEvent<TAggregateEvent>(ICommittedEvent<TAggregate, TIdentity, TAggregateEvent> committedEvent)
-            where TAggregateEvent : class, IAggregateEvent<TAggregate, TIdentity>
+            where TAggregateEvent : class, IAggregateEvent<TIdentity>
         {
             var applyMethods = GetEventApplyMethods(committedEvent.AggregateEvent);
             applyMethods(committedEvent.AggregateEvent);
@@ -317,7 +317,7 @@ namespace Akkatecture.Aggregates
 
         protected override bool AroundReceive(Receive receive, object message)
         {
-            if (message is Command<TAggregate, TIdentity> command)
+            if (message is Command<TIdentity> command)
             {
                 if(IsNew || Id.Equals(command.AggregateId))
                     PinnedCommand = command;
@@ -357,13 +357,13 @@ namespace Akkatecture.Aggregates
             base.Unhandled(message);
         }
 
-        protected IEnumerable<IAggregateEvent<TAggregate, TIdentity>> Events(params IAggregateEvent<TAggregate, TIdentity>[] events)
+        protected IEnumerable<IAggregateEvent<TIdentity>> Events(params IAggregateEvent<TIdentity>[] events)
         {
             return events.ToList();
         }
 
         protected Action<IAggregateEvent> GetEventApplyMethods<TAggregateEvent>(TAggregateEvent aggregateEvent)
-            where TAggregateEvent : class, IAggregateEvent<TAggregate, TIdentity>
+            where TAggregateEvent : class, IAggregateEvent<TIdentity>
         {
             var eventType = aggregateEvent.GetType();
 
@@ -392,7 +392,7 @@ namespace Akkatecture.Aggregates
             return snapshotHydrateMethod;
         }
 
-        protected virtual void ApplyEvent(IAggregateEvent<TAggregate, TIdentity> aggregateEvent)
+        protected virtual void ApplyEvent(IAggregateEvent<TIdentity> aggregateEvent)
         {
             var eventApplier = GetEventApplyMethods(aggregateEvent);
 
@@ -410,7 +410,7 @@ namespace Akkatecture.Aggregates
             Version = version;
         }
 
-        protected virtual bool Recover(ICommittedEvent<TAggregate, TIdentity, IAggregateEvent<TAggregate, TIdentity>> committedEvent)
+        protected virtual bool Recover(ICommittedEvent<TAggregate, TIdentity, IAggregateEvent<TIdentity>> committedEvent)
         {
             try
             {
@@ -491,7 +491,7 @@ namespace Akkatecture.Aggregates
         
 
         protected void Command<TCommand, TCommandHandler>(Predicate<TCommand> shouldHandle = null)
-            where TCommand : ICommand<TAggregate, TIdentity>
+            where TCommand : ICommand<TIdentity>
             where TCommandHandler : CommandHandler<TAggregate, TIdentity, TCommand>
         {
             try

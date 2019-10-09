@@ -105,7 +105,7 @@ namespace Akkatecture.Sagas.AggregateSaga
 
             if (Settings.UseDefaultEventRecover)
             {
-                Recover<ICommittedEvent<TAggregateSaga, TIdentity, IAggregateEvent<TAggregateSaga, TIdentity>>>(Recover);
+                Recover<ICommittedEvent<TAggregateSaga, TIdentity, IAggregateEvent<TIdentity>>>(Recover);
                 Recover<RecoveryCompleted>(Recover);
             }
 
@@ -222,14 +222,14 @@ namespace Akkatecture.Sagas.AggregateSaga
 
 
         protected virtual void Emit<TAggregateEvent>(TAggregateEvent aggregateEvent, IMetadata metadata = null)
-            where TAggregateEvent : class, IAggregateEvent<TAggregateSaga, TIdentity>
+            where TAggregateEvent : class, IAggregateEvent<TIdentity>
         {
             var committedEvent = From(aggregateEvent, Version, metadata);
             Persist(committedEvent, ApplyCommittedEvent);
 
         }
 
-        public virtual void EmitAll(params IAggregateEvent<TAggregateSaga, TIdentity>[] aggregateEvents)
+        public virtual void EmitAll(params IAggregateEvent<TIdentity>[] aggregateEvents)
         {
             var version = Version;
             
@@ -310,7 +310,7 @@ namespace Akkatecture.Sagas.AggregateSaga
 
         public virtual CommittedEvent<TAggregateSaga, TIdentity, TAggregateEvent> From<TAggregateEvent>(TAggregateEvent aggregateEvent,
             long version, IMetadata metadata = null)
-            where TAggregateEvent : class, IAggregateEvent<TAggregateSaga, TIdentity>
+            where TAggregateEvent : class, IAggregateEvent<TIdentity>
         {
             if (aggregateEvent == null)
             {
@@ -350,7 +350,7 @@ namespace Akkatecture.Sagas.AggregateSaga
         }
 
         protected void ApplyCommittedEvent<TAggregateEvent>(ICommittedEvent<TAggregateSaga, TIdentity, TAggregateEvent> committedEvent)
-            where TAggregateEvent : class, IAggregateEvent<TAggregateSaga, TIdentity>
+            where TAggregateEvent : class, IAggregateEvent<TIdentity>
         {
             var applyMethods = GetEventApplyMethods(committedEvent.AggregateEvent);
             applyMethods(committedEvent.AggregateEvent);
@@ -400,7 +400,7 @@ namespace Akkatecture.Sagas.AggregateSaga
         }
 
         protected Action<IAggregateEvent> GetEventApplyMethods<TAggregateEvent>(TAggregateEvent aggregateEvent)
-            where TAggregateEvent : IAggregateEvent<TAggregateSaga, TIdentity>
+            where TAggregateEvent : IAggregateEvent<TIdentity>
         {
             var eventType = aggregateEvent.GetType();
 
@@ -413,7 +413,7 @@ namespace Akkatecture.Sagas.AggregateSaga
             return aggregateApplyMethod;
         }
 
-        protected virtual void ApplyEvent(IAggregateEvent<TAggregateSaga, TIdentity> aggregateEvent)
+        protected virtual void ApplyEvent(IAggregateEvent<TIdentity> aggregateEvent)
         {
             var eventApplier = GetEventApplyMethods(aggregateEvent);
 
@@ -422,7 +422,7 @@ namespace Akkatecture.Sagas.AggregateSaga
             Version++;
         }
 
-        protected virtual bool Recover(ICommittedEvent<TAggregateSaga, TIdentity, IAggregateEvent<TAggregateSaga, TIdentity>> committedEvent)
+        protected virtual bool Recover(ICommittedEvent<TAggregateSaga, TIdentity, IAggregateEvent<TIdentity>> committedEvent)
         {
             try
             {

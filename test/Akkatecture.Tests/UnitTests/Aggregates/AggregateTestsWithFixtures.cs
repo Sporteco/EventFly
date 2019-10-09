@@ -128,8 +128,8 @@ namespace Akkatecture.Tests.UnitTests.Aggregates
         public void NullInInitialCommands_AfterAggregateCreation_ExceptionThrown()
         {
             var aggregateId = TestAggregateId.New;
-            var nullCommand = (ICommand<TestAggregate, TestAggregateId>)null;
-            var commands = new List<ICommand<TestAggregate, TestAggregateId>> {nullCommand};
+            var nullCommand = (ICommand<TestAggregateId>)null;
+            var commands = new List<ICommand<TestAggregateId>> {nullCommand};
 
             this.Invoking(test =>
                     this.FixtureFor<TestAggregate, TestAggregateId>(aggregateId)
@@ -248,7 +248,7 @@ namespace Akkatecture.Tests.UnitTests.Aggregates
         public void TestEventSourcing_AfterManyTests_TestStateSignalled()
         {
             var aggregateId = TestAggregateId.New;
-            var commands = new List<ICommand<TestAggregate, TestAggregateId>>();
+            var commands = new List<ICommand<TestAggregateId>>();
             commands.AddRange(Enumerable.Range(0, 5).Select(x => new AddTestCommand(aggregateId, CommandId.New, new Test(TestId.New))));
             
             this.FixtureFor<TestAggregateManager,TestAggregate, TestAggregateId>(() => new TestAggregateManager(), aggregateId)
@@ -301,7 +301,7 @@ namespace Akkatecture.Tests.UnitTests.Aggregates
         public void TestSnapShotting_AfterManyTests_TestStateSignalled()
         {
             var aggregateId = TestAggregateId.New;
-            var commands = new List<ICommand<TestAggregate, TestAggregateId>>();
+            var commands = new List<ICommand<TestAggregateId>>();
             commands.AddRange(Enumerable.Range(0, 10).Select(x => new AddTestCommand(aggregateId, CommandId.New, new Test(TestId.New))));
             
             this.FixtureFor<TestAggregateManager,TestAggregate, TestAggregateId>(() => new TestAggregateManager(), aggregateId)

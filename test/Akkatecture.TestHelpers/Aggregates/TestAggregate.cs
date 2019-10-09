@@ -241,7 +241,7 @@ namespace Akkatecture.TestHelpers.Aggregates
         }
 
         private void Signal<TAggregateEvent>(TAggregateEvent aggregateEvent, IMetadata metadata = null)
-            where TAggregateEvent : class, IAggregateEvent<TestAggregate, TestAggregateId>
+            where TAggregateEvent : class, IAggregateEvent<TestAggregateId>
         {
             if (aggregateEvent == null)
             {
@@ -274,7 +274,7 @@ namespace Akkatecture.TestHelpers.Aggregates
         }
 
         private void Throw<TAggregateEvent>(TAggregateEvent aggregateEvent, IMetadata metadata = null)
-            where TAggregateEvent : class, IAggregateEvent<TestAggregate, TestAggregateId>
+            where TAggregateEvent : class, IAggregateEvent<TestAggregateId>
         {
             Signal(aggregateEvent, metadata);
         }

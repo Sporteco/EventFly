@@ -3,7 +3,7 @@ using Akkatecture.TestHelpers.Aggregates.Entities;
 
 namespace Akkatecture.TestHelpers.Aggregates.Commands
 {
-    public class CreateAndAddTwoTestsCommand: Command<TestAggregate, TestAggregateId>
+    public class CreateAndAddTwoTestsCommand: Command<TestAggregateId>
     {
         public Test FirstTest { get; }
         public Test SecondTest { get; }

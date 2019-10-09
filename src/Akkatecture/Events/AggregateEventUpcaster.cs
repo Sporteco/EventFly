@@ -109,8 +109,8 @@ namespace Akkatecture.Events
         
         
         
-        public IAggregateEvent<TAggregate, TIdentity> Upcast(
-            IAggregateEvent<TAggregate, TIdentity> aggregateEvent)
+        public IAggregateEvent<TIdentity> Upcast(
+            IAggregateEvent<TIdentity> aggregateEvent)
         {
             var aggregateEventType = aggregateEvent.GetType();
             Func<TEventUpcaster,IAggregateEvent, IAggregateEvent> upcaster;
@@ -120,7 +120,7 @@ namespace Akkatecture.Events
                 throw new ArgumentException(nameof(aggregateEventType));
             }
 
-            var evt = upcaster((TEventUpcaster)(object)this, aggregateEvent) as IAggregateEvent<TAggregate, TIdentity>;
+            var evt = upcaster((TEventUpcaster)(object)this, aggregateEvent) as IAggregateEvent<TIdentity>;
 
             return evt;
         }

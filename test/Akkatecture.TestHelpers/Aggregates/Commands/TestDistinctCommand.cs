@@ -6,7 +6,7 @@ using Akkatecture.Extensions;
 
 namespace Akkatecture.TestHelpers.Aggregates.Commands
 {
-    public class TestDistinctCommand : DistinctCommand<TestAggregate, TestAggregateId>
+    public class TestDistinctCommand : DistinctCommand<TestAggregateId>
     {
         public int MagicNumber { get; }
 

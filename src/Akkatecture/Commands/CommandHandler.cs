@@ -38,7 +38,7 @@ namespace Akkatecture.Commands
         ICommandHandler<TAggregate, TIdentity,TResult, TCommand>
         where TAggregate : ReceivePersistentActor, IAggregateRoot<TIdentity>
         where TIdentity : IIdentity
-        where TCommand : ICommand<TAggregate, TIdentity>
+        where TCommand : ICommand<TIdentity>
     {
         public abstract TResult HandleCommand(
             TAggregate aggregate,
@@ -50,7 +50,7 @@ namespace Akkatecture.Commands
         CommandHandler<TAggregate, TIdentity,bool,TCommand>
         where TAggregate : ReceivePersistentActor, IAggregateRoot<TIdentity>
         where TIdentity : IIdentity
-        where TCommand : ICommand<TAggregate, TIdentity>
+        where TCommand : ICommand<TIdentity>
     {
         public override bool HandleCommand(
             TAggregate aggregate,

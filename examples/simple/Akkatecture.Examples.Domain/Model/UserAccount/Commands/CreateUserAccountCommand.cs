@@ -25,7 +25,7 @@ using Akkatecture.Commands;
 
 namespace Akkatecture.Examples.Domain.Model.UserAccount.Commands
 {
-    public class CreateUserAccountCommand : Command<UserAccountAggregate, UserAccountId>
+    public class CreateUserAccountCommand : Command<UserAccountId>
     {
         public string Name { get; }
         public CreateUserAccountCommand(

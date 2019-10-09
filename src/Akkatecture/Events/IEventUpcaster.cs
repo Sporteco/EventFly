@@ -30,6 +30,6 @@ namespace Akkatecture.Events
         where TAggregate : IAggregateRoot<TIdentity>
         where TIdentity : IIdentity
     {
-        IAggregateEvent<TAggregate,TIdentity> Upcast(IAggregateEvent<TAggregate, TIdentity> aggregateEvent);
+        IAggregateEvent<TIdentity> Upcast(IAggregateEvent<TIdentity> aggregateEvent);
     }
 }

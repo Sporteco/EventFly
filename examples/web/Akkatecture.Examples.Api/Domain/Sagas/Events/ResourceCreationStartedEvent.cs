@@ -27,7 +27,7 @@ using Akkatecture.Examples.Api.Domain.Aggregates.Resource;
 
 namespace Akkatecture.Examples.Api.Domain.Sagas.Events
 {
-    public class ResourceCreationStartedEvent : AggregateEvent<ResourceCreationSaga, ResourceCreationSagaId>
+    public class ResourceCreationStartedEvent : AggregateEvent<ResourceCreationSagaId>
     {
         public ResourceId ResourceId { get; }
         public DateTime StartedAt { get; }

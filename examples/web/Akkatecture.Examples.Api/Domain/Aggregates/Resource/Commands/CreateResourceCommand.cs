@@ -29,7 +29,7 @@ using Akkatecture.Examples.Api.Domain.Aggregates.Resource.Events;
 
 namespace Akkatecture.Examples.Api.Domain.Aggregates.Resource.Commands
 {
-    public class CreateResourceCommand : Command<Resource, ResourceId>
+    public class CreateResourceCommand : Command<ResourceId>
     {
         public CreateResourceCommand(ResourceId aggregateId)
             : base(aggregateId)

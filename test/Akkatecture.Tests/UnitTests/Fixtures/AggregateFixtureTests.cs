@@ -66,7 +66,7 @@ namespace Akkatecture.Tests.UnitTests.Fixtures
             {
                 var fixture = new AggregateFixture<TestAggregate, TestAggregateId>(testKit);
                 var aggregateIdentity = TestAggregateId.New;
-                var events = new List<IAggregateEvent<TestAggregate, TestAggregateId>>();
+                var events = new List<IAggregateEvent<TestAggregateId>>();
                 events.Add(new TestCreatedEvent(aggregateIdentity));
                 events.AddRange(Enumerable.Range(0, 10).Select(x => new TestAddedEvent(new Test(TestId.New))));
                 var journal = Persistence.Instance.Apply(testKit.Sys).JournalFor(null);
@@ -85,7 +85,7 @@ namespace Akkatecture.Tests.UnitTests.Fixtures
                     var index = from;
                     receiverProbe.ExpectMsg<ReplayedMessage>(x =>
                         x.Persistent.SequenceNr == index &&
-                        x.Persistent.Payload is ICommittedEvent<TestAggregate, TestAggregateId, IAggregateEvent<TestAggregate,TestAggregateId>>);
+                        x.Persistent.Payload is ICommittedEvent<TestAggregate, TestAggregateId, IAggregateEvent<TestAggregateId>>);
                     
                     from++;
                 }

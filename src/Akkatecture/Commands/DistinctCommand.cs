@@ -34,8 +34,7 @@ using Akkatecture.Core;
 
 namespace Akkatecture.Commands
 {
-    public abstract class DistinctCommand<TAggregate, TIdentity> : ICommand<TAggregate, TIdentity>
-        where TAggregate : IAggregateRoot<TIdentity>
+    public abstract class DistinctCommand<TIdentity> : ICommand<TIdentity>
         where TIdentity : IIdentity
     {
         private readonly Lazy<ISourceId> _lazySourceId;

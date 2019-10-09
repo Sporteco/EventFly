@@ -35,7 +35,7 @@ namespace Akkatecture.Subscribers
     public interface ISubscribeToAsync<TAggregate, in TIdentity, in TAggregateEvent>
         where TAggregate : IAggregateRoot<TIdentity>
         where TIdentity : IIdentity
-        where TAggregateEvent : class, IAggregateEvent<TAggregate, TIdentity>
+        where TAggregateEvent : class, IAggregateEvent<TIdentity>
     {
         Task HandleAsync(IDomainEvent<TAggregate, TIdentity, TAggregateEvent> domainEvent);
     }
@@ -43,7 +43,7 @@ namespace Akkatecture.Subscribers
     public interface ISubscribeTo<TAggregate, in TIdentity, in TAggregateEvent>
         where TAggregate : IAggregateRoot<TIdentity>
         where TIdentity : IIdentity
-        where TAggregateEvent : class, IAggregateEvent<TAggregate, TIdentity>
+        where TAggregateEvent : class, IAggregateEvent<TIdentity>
     {
         bool Handle(IDomainEvent<TAggregate, TIdentity, TAggregateEvent> domainEvent);
     }

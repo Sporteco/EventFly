@@ -27,7 +27,7 @@ using Akkatecture.Events;
 namespace Akkatecture.Examples.Domain.Model.UserAccount.Events
 {
     [EventVersion("UserAccountNameChanged", 1)]
-    public class UserAccountNameChangedEvent : AggregateEvent<UserAccountAggregate, UserAccountId>
+    public class UserAccountNameChangedEvent : AggregateEvent<UserAccountId>
     {
         public string Name { get; }
         public UserAccountNameChangedEvent(string name)

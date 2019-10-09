@@ -25,7 +25,7 @@ using Akkatecture.Aggregates;
 
 namespace Akkatecture.TestHelpers.Aggregates.Sagas.TestAsync.Events
 {
-    public class TestAsyncSagaTransactionCompletedEvent : AggregateEvent<TestAsyncSaga, TestAsyncSagaId>
+    public class TestAsyncSagaTransactionCompletedEvent : AggregateEvent<TestAsyncSagaId>
     {
         
     }

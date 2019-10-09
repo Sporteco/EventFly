@@ -25,7 +25,7 @@ using Akkatecture.Commands;
 
 namespace Akkatecture.Examples.Domain.Model.UserAccount.Commands
 {
-    public class UserAccountChangeNameCommand : Command<UserAccountAggregate, UserAccountId>
+    public class UserAccountChangeNameCommand : Command<UserAccountId>
     {
         public string Name { get; }
         public UserAccountChangeNameCommand(

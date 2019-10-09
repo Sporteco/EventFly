@@ -26,7 +26,7 @@ using Akkatecture.TestHelpers.Aggregates.Entities;
 
 namespace Akkatecture.TestHelpers.Aggregates.Commands
 {
-    public class GiveTestCommand : Command<TestAggregate, TestAggregateId>
+    public class GiveTestCommand : Command<TestAggregateId>
     {
         public TestAggregateId ReceiverAggregateId { get; } 
         public Test TestToGive { get; }

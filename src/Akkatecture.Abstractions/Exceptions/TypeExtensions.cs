@@ -26,56 +26,54 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
-using Akkatecture.Aggregates;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+
 using Akkatecture.Core;
-using Akkatecture.ValueObjects;
 
-namespace Akkatecture.Commands
+
+namespace Akkatecture.Extensions
 {
-    public abstract class Command<TAggregate, TIdentity, TSourceIdentity> :
-        ValueObject,
-        ICommand<TAggregate, TIdentity, TSourceIdentity>
-        where TAggregate : IAggregateRoot<TIdentity>
-        where TIdentity : IIdentity
-        where TSourceIdentity : ISourceId
+    public static class TypeExtensions
     {
-        public TSourceIdentity SourceId { get; }
-        public TIdentity AggregateId { get; }
+        private static readonly ConcurrentDictionary<Type, string> PrettyPrintCache = new ConcurrentDictionary<Type, string>();
 
-        protected Command(
-            TIdentity aggregateId,
-            TSourceIdentity sourceId)
+        public static string PrettyPrint(this Type type)
         {
-            if (aggregateId == null) throw new ArgumentNullException(nameof(aggregateId));
-            if (sourceId == null) throw new ArgumentNullException(nameof(sourceId));
-
-            AggregateId = aggregateId;
-            SourceId = sourceId;
+            return PrettyPrintCache.GetOrAdd(
+                type,
+                t =>
+                {
+                    try
+                    {
+                        return PrettyPrintRecursive(t, 0);
+                    }
+                    catch (Exception)
+                    {
+                        return t.Name;
+                    }
+                });
         }
 
-        public ISourceId GetSourceId()
+        private static string PrettyPrintRecursive(Type type, int depth)
         {
-            return SourceId;
-        }
-    }
+            if (depth > 3)
+            {
+                return type.Name;
+            }
 
-    public abstract class Command<TAggregate, TIdentity> :
-        Command<TAggregate, TIdentity, ISourceId>,
-        ICommand<TAggregate, TIdentity>
-        where TAggregate : IAggregateRoot<TIdentity>
-        where TIdentity : IIdentity
-    {
-        protected Command(
-            TIdentity aggregateId)
-            : this(aggregateId, CommandId.New)
-        {
-        }
+            var nameParts = type.Name.Split('`');
+            if (nameParts.Length == 1)
+            {
+                return nameParts[0];
+            }
 
-        protected Command(
-            TIdentity aggregateId, 
-            CommandId sourceId)
-            : base(aggregateId, sourceId)
-        {
+            var genericArguments = type.GetTypeInfo().GetGenericArguments();
+            return !type.IsConstructedGenericType
+                ? $"{nameParts[0]}<{new string(',', genericArguments.Length - 1)}>"
+                : $"{nameParts[0]}<{string.Join(",", genericArguments.Select(t => PrettyPrintRecursive(t, depth + 1)))}>";
         }
     }
 }

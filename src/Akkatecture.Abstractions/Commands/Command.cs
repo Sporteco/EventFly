@@ -25,18 +25,55 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using System;
+using Akkatecture.Aggregates;
 using Akkatecture.Core;
-using Akkatecture.Extensions;
+using Akkatecture.ValueObjects;
 
-namespace Akkatecture.Aggregates
+namespace Akkatecture.Commands
 {
-    public abstract class AggregateEvent<TAggregate, TIdentity> : IAggregateEvent<TAggregate, TIdentity>
-        where TAggregate : IAggregateRoot<TIdentity>
+    public abstract class Command<TIdentity, TSourceIdentity> :
+        ValueObject,
+        ICommand<TIdentity, TSourceIdentity>
+        where TIdentity : IIdentity
+        where TSourceIdentity : ISourceId
+    {
+        public TSourceIdentity SourceId { get; }
+        public TIdentity AggregateId { get; }
+
+        protected Command(
+            TIdentity aggregateId,
+            TSourceIdentity sourceId)
+        {
+            if (aggregateId == null) throw new ArgumentNullException(nameof(aggregateId));
+            if (sourceId == null) throw new ArgumentNullException(nameof(sourceId));
+
+            AggregateId = aggregateId;
+            SourceId = sourceId;
+        }
+
+        public ISourceId GetSourceId()
+        {
+            return SourceId;
+        }
+    }
+
+    public abstract class Command<TIdentity> :
+        Command<TIdentity, ISourceId>,
+        ICommand<TIdentity>
         where TIdentity : IIdentity
     {
-        public override string ToString()
+        protected Command(
+            TIdentity aggregateId)
+            : this(aggregateId, CommandId.New)
         {
-            return $"{typeof(TAggregate).PrettyPrint()}/{GetType().PrettyPrint()}";
+        }
+
+        protected Command(
+            TIdentity aggregateId, 
+            CommandId sourceId)
+            : base(aggregateId, sourceId)
+        {
         }
     }
 }

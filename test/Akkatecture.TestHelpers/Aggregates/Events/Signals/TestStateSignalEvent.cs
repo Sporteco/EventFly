@@ -25,7 +25,7 @@ using Akkatecture.Aggregates;
 
 namespace Akkatecture.TestHelpers.Aggregates.Events.Signals
 {
-    public class TestStateSignalEvent : AggregateEvent<TestAggregate, TestAggregateId>
+    public class TestStateSignalEvent : AggregateEvent<TestAggregateId>
     {
         public TestAggregateState AggregateState { get; }
         public long LastSequenceNr { get; }

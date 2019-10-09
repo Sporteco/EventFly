@@ -101,7 +101,7 @@ namespace Akkatecture.TestFixture.Aggregates
             return this;
         }
 
-        public IFixtureExecutor<TAggregate, TIdentity> Given(params IAggregateEvent<TAggregate,TIdentity>[] aggregateEvents)
+        public IFixtureExecutor<TAggregate, TIdentity> Given(params IAggregateEvent<TIdentity>[] aggregateEvents)
         {
             InitializeEventJournal(AggregateId, aggregateEvents);
             
@@ -115,7 +115,7 @@ namespace Akkatecture.TestFixture.Aggregates
             return this;
         }
 
-        public IFixtureExecutor<TAggregate, TIdentity> Given(params ICommand<TAggregate, TIdentity>[] commands)
+        public IFixtureExecutor<TAggregate, TIdentity> Given(params ICommand<TIdentity>[] commands)
         {
             if(commands == null)
                 throw new ArgumentNullException(nameof(commands));
@@ -134,7 +134,7 @@ namespace Akkatecture.TestFixture.Aggregates
             return this;
         }
 
-        public IFixtureAsserter<TAggregate, TIdentity> When(params ICommand<TAggregate, TIdentity>[] commands)
+        public IFixtureAsserter<TAggregate, TIdentity> When(params ICommand<TIdentity>[] commands)
         {
 
             if(commands == null)
@@ -154,13 +154,13 @@ namespace Akkatecture.TestFixture.Aggregates
             return this;
         }
 
-        public IFixtureAsserter<TAggregate, TIdentity> AndWhen(params ICommand<TAggregate, TIdentity>[] commands)
+        public IFixtureAsserter<TAggregate, TIdentity> AndWhen(params ICommand<TIdentity>[] commands)
         {
             return When(commands);
         }
         
         public IFixtureAsserter<TAggregate, TIdentity> ThenExpect<TAggregateEvent>(Predicate<TAggregateEvent> aggregateEventPredicate = null)
-            where TAggregateEvent : class, IAggregateEvent<TAggregate, TIdentity>
+            where TAggregateEvent : class, IAggregateEvent<TIdentity>
         {
             _testKit.Sys.EventStream.Subscribe(AggregateEventTestProbe, typeof(IDomainEvent<TAggregate, TIdentity, TAggregateEvent>));
             
@@ -179,7 +179,7 @@ namespace Akkatecture.TestFixture.Aggregates
         }
         
         public IFixtureAsserter<TAggregate, TIdentity> ThenExpectDomainEvent<TAggregateEvent>(Predicate<IDomainEvent<TAggregate, TIdentity, TAggregateEvent>> domainEventPredicate = null)
-            where TAggregateEvent : class, IAggregateEvent<TAggregate,TIdentity>
+            where TAggregateEvent : class, IAggregateEvent<TIdentity>
         {
             _testKit.Sys.EventStream.Subscribe(AggregateEventTestProbe, typeof(IDomainEvent<TAggregate, TIdentity, TAggregateEvent>));
             
@@ -191,13 +191,13 @@ namespace Akkatecture.TestFixture.Aggregates
             return this;
         }
         
-        private void InitializeEventJournal(TIdentity aggregateId, params IAggregateEvent<TAggregate, TIdentity>[] events)
+        private void InitializeEventJournal(TIdentity aggregateId, params IAggregateEvent<TIdentity>[] events)
         {
             var writerGuid = Guid.NewGuid().ToString();
             var writes = new AtomicWrite[events.Length];
             for (var i = 0; i < events.Length; i++)
             {
-                var committedEvent = new CommittedEvent<TAggregate, TIdentity, IAggregateEvent<TAggregate, TIdentity>>(aggregateId, events[i], new Metadata(), DateTimeOffset.UtcNow, i+1);
+                var committedEvent = new CommittedEvent<TAggregate, TIdentity, IAggregateEvent<TIdentity>>(aggregateId, events[i], new Metadata(), DateTimeOffset.UtcNow, i+1);
                 writes[i] = new AtomicWrite(new Persistent(committedEvent, i+1, aggregateId.Value, string.Empty, false, ActorRefs.NoSender, writerGuid));
             }
             var journal = Persistence.Instance.Apply(_testKit.Sys).JournalFor(null);
@@ -210,7 +210,7 @@ namespace Akkatecture.TestFixture.Aggregates
                 var seq = i;
                 AggregateEventTestProbe.ExpectMsg<WriteMessageSuccess>(x =>
                     x.Persistent.PersistenceId == aggregateId.ToString() &&
-                    x.Persistent.Payload is CommittedEvent<TAggregate, TIdentity, IAggregateEvent<TAggregate, TIdentity>> &&
+                    x.Persistent.Payload is CommittedEvent<TAggregate, TIdentity, IAggregateEvent<TIdentity>> &&
                     x.Persistent.SequenceNr == (long) seq+1);
             }
         }

@@ -27,7 +27,7 @@ using Akkatecture.Events;
 namespace Akkatecture.Examples.Api.Domain.Aggregates.Resource.Events
 {
     [EventVersion("ResourceCreated", 1)]
-    public class ResourceCreatedEvent : AggregateEvent<Resource, ResourceId>
+    public class ResourceCreatedEvent : AggregateEvent<ResourceId>
     {
     }
 }
