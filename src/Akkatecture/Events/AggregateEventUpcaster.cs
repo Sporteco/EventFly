@@ -28,6 +28,7 @@ using System.Linq;
 using Akka.Persistence.Journal;
 using Akkatecture.Aggregates;
 using Akkatecture.Core;
+using Akkatecture.Exceptions;
 using Akkatecture.Extensions;
 
 namespace Akkatecture.Events
@@ -44,6 +45,7 @@ namespace Akkatecture.Events
         where TAggregate : IAggregateRoot<TIdentity>
         where TIdentity : IIdentity
     {
+        // ReSharper disable once StaticMemberInGenericType
         private static ConcurrentDictionary<Type, bool> _decisionCache = new ConcurrentDictionary<Type, bool>();
         private readonly IReadOnlyDictionary<Type, Func<TEventUpcaster, IAggregateEvent, IAggregateEvent>> _upcastFunctions;
 

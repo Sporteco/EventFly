@@ -26,8 +26,8 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using Akka.Actor;
 using Akka.Event;
-using Akka.Persistence;
 using Akkatecture.Aggregates;
+using Akkatecture.Exceptions;
 using Akkatecture.Extensions;
 using Akkatecture.Messages;
 

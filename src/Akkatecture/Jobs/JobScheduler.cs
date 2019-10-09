@@ -29,6 +29,7 @@ using System.Linq;
 using Akka.Actor;
 using Akka.Event;
 using Akka.Persistence;
+using Akkatecture.Exceptions;
 using Akkatecture.Extensions;
 using Akkatecture.Jobs.Commands;
 using Akkatecture.Jobs.Events;

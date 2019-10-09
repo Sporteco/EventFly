@@ -7,6 +7,7 @@ using Akka.Event;
 using Akkatecture.Commands;
 using Akkatecture.Core;
 using Akkatecture.Events;
+using Akkatecture.Exceptions;
 using Akkatecture.Extensions;
 
 namespace Akkatecture.Aggregates

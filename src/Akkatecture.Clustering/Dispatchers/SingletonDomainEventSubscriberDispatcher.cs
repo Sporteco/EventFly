@@ -25,7 +25,7 @@ using Akka.Actor;
 using Akka.Event;
 using Akkatecture.Aggregates;
 using Akkatecture.Clustering.Extentions;
-using Akkatecture.Extensions;
+using Akkatecture.Exceptions;
 using Akkatecture.Subscribers;
 
 namespace Akkatecture.Clustering.Dispatchers

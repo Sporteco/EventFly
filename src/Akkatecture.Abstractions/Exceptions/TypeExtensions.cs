@@ -27,14 +27,10 @@
 
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-using Akkatecture.Core;
-
-
-namespace Akkatecture.Extensions
+namespace Akkatecture.Exceptions
 {
     public static class TypeExtensions
     {

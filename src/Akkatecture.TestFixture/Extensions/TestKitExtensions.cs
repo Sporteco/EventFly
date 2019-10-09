@@ -24,7 +24,6 @@
 using System;
 using System.Linq.Expressions;
 using Akka.Actor;
-using Akka.Persistence;
 using Akka.TestKit;
 using Akkatecture.Aggregates;
 using Akkatecture.Core;

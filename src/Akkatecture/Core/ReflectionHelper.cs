@@ -30,7 +30,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using Akkatecture.Extensions;
+using Akkatecture.Exceptions;
 
 namespace Akkatecture.Core
 {
@@ -83,7 +83,7 @@ namespace Akkatecture.Core
                 };
 
             var type = methodInfo.DeclaringType;
-            var instanceVariable = Expression.Variable(type);
+            var instanceVariable = Expression.Variable(type ?? throw new InvalidOperationException());
             var blockVariables = new List<ParameterExpression>
                 {
                         instanceVariable,

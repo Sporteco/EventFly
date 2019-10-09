@@ -81,7 +81,7 @@ namespace Akkatecture.Jobs
                 var subscriptionFunction = Delegate.CreateDelegate(funcType, this, methods[subscriptionType]);
                 var actorReceiveMethod = method.MakeGenericMethod(subscriptionType);
 
-                actorReceiveMethod.Invoke(this, new[] { subscriptionFunction });
+                actorReceiveMethod.Invoke(this, new object[] { subscriptionFunction });
             }
         }
     }

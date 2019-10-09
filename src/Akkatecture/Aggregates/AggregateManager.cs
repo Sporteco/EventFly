@@ -26,6 +26,7 @@ using Akka.Actor;
 using Akka.Event;
 using Akkatecture.Commands;
 using Akkatecture.Core;
+using Akkatecture.Exceptions;
 using Akkatecture.Extensions;
 
 namespace Akkatecture.Aggregates
@@ -53,7 +54,7 @@ namespace Akkatecture.Aggregates
             if(Settings.HandleDeadLetters)
             {
                 Context.System.EventStream.Subscribe(Self, typeof(DeadLetter));
-                Receive<DeadLetter>(DeadLetterHandler);
+                Receive(DeadLetterHandler);
             }
              
         }

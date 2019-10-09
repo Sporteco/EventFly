@@ -26,7 +26,7 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using Akkatecture.Core;
-using Akkatecture.Extensions;
+using Akkatecture.Exceptions;
 
 namespace Akkatecture.Aggregates
 {

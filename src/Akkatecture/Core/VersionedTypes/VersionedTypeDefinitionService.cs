@@ -33,7 +33,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using Akka.Event;
-using Akkatecture.Extensions;
+using Akkatecture.Exceptions;
 
 namespace Akkatecture.Core.VersionedTypes
 {

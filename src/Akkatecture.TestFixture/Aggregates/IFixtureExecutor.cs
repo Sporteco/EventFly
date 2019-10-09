@@ -22,7 +22,6 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using Akka.Actor;
-using Akka.Persistence;
 using Akkatecture.Aggregates;
 using Akkatecture.Commands;
 using Akkatecture.Core;

@@ -174,7 +174,7 @@ namespace Akkatecture.TestFixture.Aggregates
 
         public IFixtureAsserter<TAggregate, TIdentity> ThenExpectReply<TReply>(Predicate<TReply> aggregateReplyPredicate = null)
         {
-            AggregateReplyTestProbe.ExpectMsg<TReply>(aggregateReplyPredicate);
+            AggregateReplyTestProbe.ExpectMsg(aggregateReplyPredicate);
             return this;
         }
         

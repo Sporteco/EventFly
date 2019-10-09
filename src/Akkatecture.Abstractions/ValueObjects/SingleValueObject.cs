@@ -28,7 +28,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Akkatecture.Extensions;
+using Akkatecture.Exceptions;
 
 namespace Akkatecture.ValueObjects
 {

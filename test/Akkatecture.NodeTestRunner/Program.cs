@@ -71,6 +71,7 @@ namespace Akkatecture.NodeTestRunner
                 .CompileLibraries
                 .Where(dep => dep.Name.ToLower()
                     .Contains(assembly.FullName.Split(new[] { ',' })[0].ToLower()))
+                // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
                 .Select(dependency => AssemblyLoadContext.Default.LoadFromAssemblyName(new AssemblyName(dependency.Name)));
 
             Thread.Sleep(TimeSpan.FromSeconds(10));

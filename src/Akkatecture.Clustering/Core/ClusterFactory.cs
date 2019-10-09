@@ -25,7 +25,6 @@ using System;
 using System.Linq.Expressions;
 using Akka.Actor;
 using Akka.Cluster.Sharding;
-using Akka.Persistence;
 using Akkatecture.Aggregates;
 using Akkatecture.Clustering.Dispatchers;
 using Akkatecture.Core;

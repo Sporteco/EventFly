@@ -125,7 +125,7 @@ namespace Akkatecture.Subscribers
                 var subscriptionFunction = Delegate.CreateDelegate(funcType, this, methods[subscriptionType]);
                 var actorReceiveMethod = method.MakeGenericMethod(subscriptionType);
 
-                actorReceiveMethod.Invoke(this, new []{subscriptionFunction});
+                actorReceiveMethod.Invoke(this, new object[]{subscriptionFunction});
             }
         }
 
@@ -171,7 +171,7 @@ namespace Akkatecture.Subscribers
                 var subscriptionFunction = Delegate.CreateDelegate(funcType, this, methods[subscriptionType]);
                 var actorReceiveMethod = method.MakeGenericMethod(subscriptionType);
 
-                actorReceiveMethod.Invoke(this, new []{subscriptionFunction,null});
+                actorReceiveMethod.Invoke(this, new []{subscriptionFunction,(object) null});
             }
         }
         

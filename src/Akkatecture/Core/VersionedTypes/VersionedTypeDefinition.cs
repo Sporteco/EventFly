@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Akkatecture.Extensions;
+using Akkatecture.Exceptions;
 using Akkatecture.ValueObjects;
 
 namespace Akkatecture.Core.VersionedTypes

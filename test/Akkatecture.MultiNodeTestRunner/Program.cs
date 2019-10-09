@@ -342,6 +342,7 @@ namespace Akkatecture.MultiNodeTestRunner
 
     internal class TcpLoggingServer : ReceiveActor
     {
+        // ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
         private readonly ILoggingAdapter _log;
 
         public TcpLoggingServer(IActorRef sinkCoordinator)

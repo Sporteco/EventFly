@@ -23,11 +23,10 @@
 
 using Akka.Actor;
 using Akka.Event;
-using Akka.Persistence;
 using Akkatecture.Aggregates;
 using Akkatecture.Clustering.Core;
 using Akkatecture.Clustering.Extentions;
-using Akkatecture.Extensions;
+using Akkatecture.Exceptions;
 using Akkatecture.Sagas;
 using Akkatecture.Sagas.AggregateSaga;
 

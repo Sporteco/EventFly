@@ -30,6 +30,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using Akkatecture.Aggregates;
 using Akkatecture.Core;
+using Akkatecture.Exceptions;
 using Akkatecture.Extensions;
 using Akkatecture.TestHelpers;
 using FluentAssertions;

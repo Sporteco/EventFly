@@ -27,7 +27,7 @@
 
 using System;
 using System.Collections.Generic;
-using Akkatecture.Extensions;
+using Akkatecture.Exceptions;
 
 namespace Akkatecture.Specifications.Provided
 {

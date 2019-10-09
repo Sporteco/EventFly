@@ -34,6 +34,7 @@ using Akkatecture.Aggregates;
 using Akkatecture.Aggregates.Snapshot;
 using Akkatecture.Core;
 using Akkatecture.Events;
+using Akkatecture.Exceptions;
 using Akkatecture.Jobs;
 using Akkatecture.Sagas;
 using Akkatecture.Subscribers;

@@ -24,6 +24,7 @@ namespace Akkatecture.TestHelpers.Aggregates.Sagas.TestAsync
             TestAggregateManager = testAggregateManager;
             
             Command<EmitTestSagaState>(Handle);
+            // ReSharper disable once VirtualMemberCallInConstructor
             SetSnapshotStrategy(SnapshotAlwaysStrategy.Instance);
         }
 

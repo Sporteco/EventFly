@@ -23,7 +23,6 @@
 
 using System;
 using Akka.Actor;
-using Akka.Persistence;
 using Akkatecture.Aggregates;
 using Akkatecture.Commands;
 using Akkatecture.Core;

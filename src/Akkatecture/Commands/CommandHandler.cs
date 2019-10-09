@@ -27,10 +27,9 @@
 
 using Akka.Actor;
 using Akka.Event;
-using Akka.Persistence;
 using Akkatecture.Aggregates;
 using Akkatecture.Core;
-using Akkatecture.Extensions;
+using Akkatecture.Exceptions;
 
 namespace Akkatecture.Commands
 {

@@ -25,6 +25,7 @@ using Akka.Actor;
 using Akkatecture.Akka;
 using Akkatecture.Configuration.DependancyInjection;
 
+// ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection
 {
     public static class AkkatectureServiceCollectionExtensions
@@ -34,7 +35,7 @@ namespace Microsoft.Extensions.DependencyInjection
             this IServiceCollection services,
             ActorSystem actorSystem)
         {
-            services.AddSingleton<ActorSystem>(actorSystem);
+            services.AddSingleton(actorSystem);
             return new AkkatectureBuilder(services,actorSystem);
         }
         
@@ -45,7 +46,7 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             var actorRef = new ActorRefProvider<TActor>(actorReference);
 
-            builder.Services.AddSingleton<ActorRefProvider<TActor>>(actorRef);
+            builder.Services.AddSingleton(actorRef);
             return builder;
         }
         

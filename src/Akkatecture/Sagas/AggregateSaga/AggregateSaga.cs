@@ -37,6 +37,7 @@ using Akkatecture.Aggregates.Snapshot;
 using Akkatecture.Aggregates.Snapshot.Strategies;
 using Akkatecture.Core;
 using Akkatecture.Events;
+using Akkatecture.Exceptions;
 using Akkatecture.Extensions;
 using SnapshotMetadata = Akkatecture.Aggregates.Snapshot.SnapshotMetadata;
 
@@ -167,7 +168,7 @@ namespace Akkatecture.Sagas.AggregateSaga
                 var subscriptionFunction = Delegate.CreateDelegate(funcType, this, methods[subscriptionType]);
                 var actorReceiveMethod = method.MakeGenericMethod(subscriptionType);
 
-                actorReceiveMethod.Invoke(this, new[] { subscriptionFunction });
+                actorReceiveMethod.Invoke(this, new object[] { subscriptionFunction });
             }
         }
 
@@ -216,7 +217,7 @@ namespace Akkatecture.Sagas.AggregateSaga
                 var subscriptionFunction = Delegate.CreateDelegate(funcType, this, methods[subscriptionType]);
                 var actorReceiveMethod = method.MakeGenericMethod(subscriptionType);
 
-                actorReceiveMethod.Invoke(this, new[] { subscriptionFunction, null });
+                actorReceiveMethod.Invoke(this, new[] { subscriptionFunction, (object) null });
             }
         }
 
@@ -444,7 +445,7 @@ namespace Akkatecture.Sagas.AggregateSaga
             {
                 Log.Debug("AggregateSaga of Name={0}, and Id={1}; has received a SnapshotOffer of Type={2}.", Name, Id, aggregateSnapshotOffer.Snapshot.GetType().PrettyPrint());
                 var comittedSnapshot = aggregateSnapshotOffer.Snapshot as CommittedSnapshot<TAggregateSaga, TIdentity, IAggregateSnapshot<TAggregateSaga, TIdentity>>;
-                HydrateSnapshot(comittedSnapshot.AggregateSnapshot, aggregateSnapshotOffer.Metadata.SequenceNr);
+                if (comittedSnapshot != null) HydrateSnapshot(comittedSnapshot.AggregateSnapshot, aggregateSnapshotOffer.Metadata.SequenceNr);
             }
             catch (Exception exception)
             {

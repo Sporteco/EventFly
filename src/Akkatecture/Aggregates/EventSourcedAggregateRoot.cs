@@ -37,6 +37,7 @@ using Akkatecture.Aggregates.Snapshot.Strategies;
 using Akkatecture.Commands;
 using Akkatecture.Core;
 using Akkatecture.Events;
+using Akkatecture.Exceptions;
 using Akkatecture.Extensions;
 using SnapshotMetadata = Akkatecture.Aggregates.Snapshot.SnapshotMetadata;
 
@@ -432,7 +433,7 @@ namespace Akkatecture.Aggregates
             {
                 Log.Debug("Aggregate of Name={0}, and Id={1}; has received a SnapshotOffer of Type={2}.", Name, Id, aggregateSnapshotOffer.Snapshot.GetType().PrettyPrint());
                 var comittedSnapshot = aggregateSnapshotOffer.Snapshot as CommittedSnapshot<TAggregate,TIdentity, IAggregateSnapshot<TAggregate, TIdentity>>;
-                HydrateSnapshot(comittedSnapshot.AggregateSnapshot, aggregateSnapshotOffer.Metadata.SequenceNr);
+                if (comittedSnapshot != null) HydrateSnapshot(comittedSnapshot.AggregateSnapshot, aggregateSnapshotOffer.Metadata.SequenceNr);
             }
             catch (Exception exception)
             {
@@ -497,7 +498,7 @@ namespace Akkatecture.Aggregates
             try
             {
                 var handler = (TCommandHandler) Activator.CreateInstance(typeof(TCommandHandler));
-                Command<TCommand>(x => handler.HandleCommand(this as TAggregate, Context, x),shouldHandle);
+                Command(x => handler.HandleCommand(this as TAggregate, Context, x),shouldHandle);
             }
             catch (Exception exception)
             {
@@ -547,7 +548,7 @@ namespace Akkatecture.Aggregates
                 var subscriptionFunction = Delegate.CreateDelegate(funcType, this, methods[subscriptionType]);
                 var actorReceiveMethod = method.MakeGenericMethod(subscriptionType);
 
-                actorReceiveMethod.Invoke(this, new[] { subscriptionFunction });
+                actorReceiveMethod.Invoke(this, new object[] { subscriptionFunction });
             }
         }
         

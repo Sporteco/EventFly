@@ -26,6 +26,7 @@ using System.Linq.Expressions;
 using Akka.Actor;
 using Akka.Event;
 using Akka.Pattern;
+using Akkatecture.Exceptions;
 using Akkatecture.Extensions;
 
 namespace Akkatecture.Jobs

@@ -30,7 +30,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using Akkatecture.Extensions;
+using Akkatecture.Exceptions;
 using Akkatecture.ValueObjects;
 
 namespace Akkatecture.Core

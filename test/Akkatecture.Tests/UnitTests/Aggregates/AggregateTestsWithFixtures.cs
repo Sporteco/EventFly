@@ -128,8 +128,7 @@ namespace Akkatecture.Tests.UnitTests.Aggregates
         public void NullInInitialCommands_AfterAggregateCreation_ExceptionThrown()
         {
             var aggregateId = TestAggregateId.New;
-            var nullCommand = (ICommand<TestAggregateId>)null;
-            var commands = new List<ICommand<TestAggregateId>> {nullCommand};
+            var commands = new List<ICommand<TestAggregateId>> {null};
 
             this.Invoking(test =>
                     this.FixtureFor<TestAggregate, TestAggregateId>(aggregateId)
