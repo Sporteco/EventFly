@@ -8,7 +8,7 @@ using Akkatecture.Aggregates;
 using Akkatecture.Events;
 using Akkatecture.Extensions;
 
-namespace Akkatecture.Query
+namespace Akkatecture.Queries
 {
     
     

@@ -5,7 +5,9 @@ using Akkatecture.Storages.EntityFramework;
 using Autofac;
 using Demo.Commands;
 using Demo.Db;
+using Demo.Db.QueryHandlers;
 using Demo.Domain;
+using Demo.Queries;
 using Demo.ValueObjects;
 
 namespace Demo.Host
@@ -39,6 +41,11 @@ namespace Demo.Host
             aggregateManager.Tell(createUserAccountCommand);
             var result = aggregateManager.Ask(new RenameUserCommand(aggregateId, new UserName("TEST"))).GetAwaiter().GetResult();
             Console.WriteLine(result);
+
+            //Create supervising aggregate manager for UserAccount aggregate root actors
+            var usersQueryManager = system.ActorOf(Props.Create(() => new UsersQueryManager()));
+            var res = usersQueryManager.Ask(new UsersQuery("test")).GetAwaiter().GetResult();
+            res = usersQueryManager.Ask(new UsersQuery("test")).GetAwaiter().GetResult();
                         
             //block end of program
             Console.ReadLine();
