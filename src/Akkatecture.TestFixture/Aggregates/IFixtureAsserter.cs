@@ -33,7 +33,7 @@ namespace Akkatecture.TestFixture.Aggregates
         where TAggregate : ActorBase, IAggregateRoot<TIdentity>
         where TIdentity : IIdentity
     {
-        IFixtureAsserter<TAggregate, TIdentity> AndWhen(params ICommand<TIdentity>[] commands);
+        IFixtureAsserter<TAggregate, TIdentity> AndWhen(params ICommand[] commands);
         IFixtureAsserter<TAggregate, TIdentity> ThenExpect<TAggregateEvent>(Predicate<TAggregateEvent> aggregateEventPredicate = null)
             where TAggregateEvent : class, IAggregateEvent<TIdentity>;
 

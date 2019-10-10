@@ -37,6 +37,6 @@ namespace Akkatecture.TestFixture.Aggregates
         IFixtureExecutor<TAggregate, TIdentity> GivenNothing();
         IFixtureExecutor<TAggregate, TIdentity> Given(params IAggregateEvent<TIdentity>[] aggregateEvents);
         IFixtureExecutor<TAggregate, TIdentity> Given(IAggregateSnapshot<TAggregate, TIdentity> aggregateSnapshot, long snapshotSequenceNumber);
-        IFixtureExecutor<TAggregate, TIdentity> Given(params ICommand<TIdentity>[] commands);
+        IFixtureExecutor<TAggregate, TIdentity> Given(params ICommand[] commands);
     }
 }

@@ -195,24 +195,24 @@ namespace Akkatecture.Tests.MultiNode
                 var commandId = CommandId.New;
                 _aggregateProxy.Value.Tell(new CreateTestCommand(sender, commandId), senderProbe);
 
-                senderProbe.ExpectMsg<TestExecutionResult>(
-                    x => x.Result.IsSuccess 
+                senderProbe.ExpectMsg<ITestExecutionResult>(
+                    x => x.IsSuccess 
                          && x.SourceId.Value == commandId.Value ,TimeSpan.FromSeconds(10));
                 
                 
                 var nextAggregateCommand = new AddTestCommand(sender, CommandId.New, senderTest);
                 _aggregateProxy.Value.Tell(nextAggregateCommand, senderProbe);
 
-                senderProbe.ExpectMsg<TestExecutionResult>(
-                    x => x.Result.IsSuccess, TimeSpan.FromSeconds(10));
+                senderProbe.ExpectMsg<ITestExecutionResult>(
+                    x => x.IsSuccess, TimeSpan.FromSeconds(10));
                 
                 // set up receiver
                 var receiverProbe = CreateTestProbe("receiver-probe");
                 var commandId2 = CommandId.New;
                 _aggregateProxy.Value.Tell(new CreateTestCommand(receiver, commandId2), receiverProbe);
 
-                receiverProbe.ExpectMsg<TestExecutionResult>(
-                    x => x.Result.IsSuccess 
+                receiverProbe.ExpectMsg<ITestExecutionResult>(
+                    x => x.IsSuccess 
                          && x.SourceId.Value == commandId2.Value ,TimeSpan.FromSeconds(10));
 
             }, _config.Client);
@@ -236,8 +236,8 @@ namespace Akkatecture.Tests.MultiNode
                 var nextAggregateCommand = new GiveTestCommand(sender, CommandId.New, receiver, senderTest);
                 _aggregateProxy.Value.Tell(nextAggregateCommand,senderProbe);
                     
-                senderProbe.ExpectMsg<TestExecutionResult>(
-                    x => x.Result.IsSuccess, TimeSpan.FromSeconds(10));
+                senderProbe.ExpectMsg<ITestExecutionResult>(
+                    x => x.IsSuccess, TimeSpan.FromSeconds(10));
                     
             }, _config.Client);
             

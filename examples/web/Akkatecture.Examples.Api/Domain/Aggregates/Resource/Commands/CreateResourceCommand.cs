@@ -23,8 +23,8 @@
 
 using System.Collections.Generic;
 using Akka.Actor;
-using Akkatecture.Aggregates.ExecutionResults;
 using Akkatecture.Commands;
+using Akkatecture.Commands.ExecutionResults;
 using Akkatecture.Examples.Api.Domain.Aggregates.Resource.Events;
 
 namespace Akkatecture.Examples.Api.Domain.Aggregates.Resource.Commands
@@ -40,10 +40,7 @@ namespace Akkatecture.Examples.Api.Domain.Aggregates.Resource.Commands
 
     public class CreateResourceCommandHandler : CommandHandler<Resource, ResourceId, CreateResourceCommand>
     {
-        public override void Handle(
-            Resource aggregate,
-            IActorContext context,
-            CreateResourceCommand command)
+        public override IExecutionResult HandleCommand(Resource aggregate, IActorContext context, CreateResourceCommand command)
         {
             if (aggregate.IsNew)
             {
@@ -51,12 +48,12 @@ namespace Akkatecture.Examples.Api.Domain.Aggregates.Resource.Commands
                 aggregate.Emit(aggregateEvent);
 
                 var executionResult = new SuccessExecutionResult();
-                context.Sender.Tell(executionResult);
+                return executionResult;
             }
             else
             {
                 var executionResult = new FailedExecutionResult(new List<string>{"aggregate is already created"});
-                context.Sender.Tell(executionResult);
+                return executionResult;
             }
         }
     }

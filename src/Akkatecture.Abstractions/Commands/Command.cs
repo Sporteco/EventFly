@@ -26,23 +26,19 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
+using Akkatecture.Commands.ExecutionResults;
 using Akkatecture.Core;
 using Akkatecture.ValueObjects;
 
 namespace Akkatecture.Commands
 {
-    public abstract class Command<TIdentity, TSourceIdentity> :
-        ValueObject,
-        ICommand<TIdentity, TSourceIdentity>
+    public abstract class Command<TIdentity, TExecutionResult> : ValueObject, ICommand<TIdentity, TExecutionResult>
         where TIdentity : IIdentity
-        where TSourceIdentity : ISourceId
+        where TExecutionResult : IExecutionResult
     {
-        public TSourceIdentity SourceId { get; }
-        public TIdentity AggregateId { get; }
+        protected Command(TIdentity aggregateId) : this(aggregateId, CommandId.New) {}
 
-        protected Command(
-            TIdentity aggregateId,
-            TSourceIdentity sourceId)
+        protected Command(TIdentity aggregateId, ISourceId sourceId)
         {
             if (aggregateId == null) throw new ArgumentNullException(nameof(aggregateId));
             if (sourceId == null) throw new ArgumentNullException(nameof(sourceId));
@@ -51,28 +47,19 @@ namespace Akkatecture.Commands
             SourceId = sourceId;
         }
 
-        public ISourceId GetSourceId()
-        {
-            return SourceId;
-        }
+        public ISourceId SourceId { get; }
+        public TIdentity AggregateId { get; }
+
+        public ISourceId GetSourceId() => SourceId;
+
+        public IIdentity GetAggregateId() => AggregateId;
     }
 
-    public abstract class Command<TIdentity> :
-        Command<TIdentity, ISourceId>,
-        ICommand<TIdentity>
+    public abstract class Command<TIdentity> : Command<TIdentity, IExecutionResult> 
         where TIdentity : IIdentity
     {
-        protected Command(
-            TIdentity aggregateId)
-            : this(aggregateId, CommandId.New)
-        {
-        }
+        protected Command(TIdentity aggregateId) : this(aggregateId, CommandId.New) {}
 
-        protected Command(
-            TIdentity aggregateId, 
-            CommandId sourceId)
-            : base(aggregateId, sourceId)
-        {
-        }
+        protected Command(TIdentity aggregateId, ISourceId sourceId) : base(aggregateId, sourceId) {}
     }
 }

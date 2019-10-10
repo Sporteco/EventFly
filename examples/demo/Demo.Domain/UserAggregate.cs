@@ -1,17 +1,28 @@
 ﻿using Akkatecture.Aggregates;
+using Akkatecture.Commands.ExecutionResults;
 using Demo.Commands;
+using Demo.Domain.CommandHandlers;
 using Demo.Events;
+using Demo.ValueObjects;
 
 namespace Demo.Domain
 {
     public class UserAggregate : EventDrivenAggregateRoot<UserAggregate, UserId, UserState>,
-    IExecute<CreateUserCommand>
+    IExecute<CreateUserCommand,UserId>
     {
-        public UserAggregate(UserId id) : base(id){}
-        public bool Execute(CreateUserCommand cmd)
+        public UserAggregate(UserId id) : base(id)
+        {
+            Command<RenameUserCommand,RenameUserCommandHandler>();
+        }
+        public IExecutionResult Execute(CreateUserCommand cmd)
         {
             Emit(new UserCreatedEvent(cmd.UserName, cmd.Birth));
-            return true;
+            return ExecutionResult.Success();
+        }
+
+        public void Rename(UserName newName)
+        {
+            Emit(new UserRenamedEvent(newName));
         }
     }
 }

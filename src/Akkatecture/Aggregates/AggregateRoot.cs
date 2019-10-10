@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using Akka.Actor;
 using Akka.Event;
 using Akkatecture.AggregateStorages;
 using Akkatecture.Commands;
+using Akkatecture.Commands.ExecutionResults;
 using Akkatecture.Core;
 using Akkatecture.Events;
 using Akkatecture.Exceptions;
@@ -23,7 +23,7 @@ namespace Akkatecture.Aggregates
 
         private static readonly IAggregateName AggregateName = typeof(TAggregate).GetAggregateName();
         private CircularBuffer<ISourceId> _previousSourceIds = new CircularBuffer<ISourceId>(100);
-        private ICommand<TIdentity> PinnedCommand { get; set; }
+        private ICommand PinnedCommand { get; set; }
         private object PinnedReply { get; set; }
         public TAggregateState State { get; private set; }
         public IAggregateName Name => AggregateName;
@@ -63,7 +63,7 @@ namespace Akkatecture.Aggregates
             Id = id;
             SetSourceIdHistory(100);
 
-            InitReceives();
+            this.InitReceives();
         }
 
         protected override void PreStart()
@@ -92,52 +92,38 @@ namespace Akkatecture.Aggregates
             _aggregateStorage.SaveState<TAggregateState, TIdentity>(State);
         }
 
-        public void InitReceives()
+        
+
+        protected void Command<TCommand, TCommandHandler>(Predicate<TCommand> shouldHandle = null)
+            where TCommand : ICommand<TIdentity, IExecutionResult>
+            where TCommandHandler : CommandHandler<TAggregate, TIdentity, IExecutionResult, TCommand>
         {
-            var type = GetType();
-            
-            var subscriptionTypes =
-                type.GetAggregateExecuteTypes();
+            Command<TCommand, IExecutionResult, TCommandHandler>(shouldHandle);
+        }
 
-            var methods = type
-                .GetTypeInfo()
-                .GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
-                .Where(mi =>
-                {
-                    if (mi.Name != "Execute") return false;
-                    var parameters = mi.GetParameters();
-                    return
-                        parameters.Length == 1;
-                })
-                .ToDictionary(
-                    mi => mi.GetParameters()[0].ParameterType,
-                    mi => mi);
-            
-            var method = type
-                .GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
-                .Where(mi =>
-                {
-                    if (mi.Name != "Command") return false;
-                    var parameters = mi.GetParameters();
-                    return
-                        parameters.Length == 1
-                        && parameters[0].ParameterType.Name.Contains("Func");
-                })
-                .First();
-
-            foreach (var subscriptionType in subscriptionTypes)
+        protected void Command<TCommand, TResult, TCommandHandler>(Predicate<TCommand> shouldHandle = null)
+            where TCommand : ICommand<TIdentity, TResult>
+            where TCommandHandler : CommandHandler<TAggregate, TIdentity, TResult, TCommand>
+            where TResult : IExecutionResult
+        {
+            try
             {
-                var funcType = typeof(Func<,>).MakeGenericType(subscriptionType, typeof(bool));
-                var subscriptionFunction = Delegate.CreateDelegate(funcType, this, methods[subscriptionType]);
-                var actorReceiveMethod = method.MakeGenericMethod(subscriptionType);
+                var handler = (TCommandHandler) Activator.CreateInstance(typeof(TCommandHandler));
+                Receive(x =>
+                {
+                    var result = handler.HandleCommand(this as TAggregate, Context, x);
+                    Context.Sender.Tell(result);
 
-                actorReceiveMethod.Invoke(this, new object[] { subscriptionFunction });
+                },shouldHandle);
             }
+            catch (Exception exception)
+            {
+                Log.Error(exception,"Unable to activate CommandHandler of Type={0} for Aggregate of Type={1}.",typeof(TCommandHandler).PrettyPrint(), typeof(TAggregate).PrettyPrint());
+            }
+
         }
-        protected void Command<T>(Func<T,bool> handler)
-        {
-            Receive(handler);
-        }
+
+
         protected void SetSourceIdHistory(int count)
         {
             _previousSourceIds = new CircularBuffer<ISourceId>(count);
@@ -285,6 +271,19 @@ namespace Akkatecture.Aggregates
         {
             Log.Error(cause, "Aggregate of Name={0}, and Id={1}; has experienced an error and will now restart", Name, Id);
             base.AroundPreRestart(cause, message);
+        }
+
+
+        protected void Command<TCommand, TResult>(Func<TCommand,TResult> handler)
+            where TCommand : ICommand<TIdentity, TResult>
+            where TResult : IExecutionResult
+        {
+            Receive(x =>
+            {
+                var result = handler(x);
+                Context.Sender.Tell(result);
+
+            }, (Predicate<TCommand>)null);
         }
     }
 }

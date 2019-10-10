@@ -31,10 +31,9 @@ using Akkatecture.Extensions;
 
 namespace Akkatecture.Aggregates
 {
-    public abstract class AggregateManager<TAggregate, TIdentity, TCommand> : ReceiveActor, IAggregateManager<TAggregate, TIdentity>
+    public abstract class AggregateManager<TAggregate, TIdentity> : ReceiveActor, IAggregateManager<TAggregate, TIdentity>
         where TAggregate : ActorBase, IAggregateRoot<TIdentity>
         where TIdentity : IIdentity
-        where TCommand : ICommand<TIdentity>
     {
         protected ILoggingAdapter Logger { get; set; }
         protected Func<DeadLetter, bool> DeadLetterHandler => Handle;
@@ -49,7 +48,7 @@ namespace Akkatecture.Aggregates
             Receive<Terminated>(Terminate);
 
             if(Settings.AutoDispatchOnReceive)
-                Receive<TCommand>(Dispatch);
+                Receive<ICommand>(Dispatch);
 
             if(Settings.HandleDeadLetters)
             {
@@ -59,11 +58,11 @@ namespace Akkatecture.Aggregates
              
         }
 
-        protected virtual bool Dispatch(TCommand command)
+        protected virtual bool Dispatch(ICommand command)
         {
             Logger.Info("AggregateManager of Type={0}; has received a command of Type={1}", Name, command.GetType().PrettyPrint());
 
-            var aggregateRef = FindOrCreate(command.AggregateId);
+            var aggregateRef = FindOrCreate((TIdentity)command.GetAggregateId());
 
             aggregateRef.Forward(command);
 
@@ -71,11 +70,11 @@ namespace Akkatecture.Aggregates
         }
 
 
-        protected virtual bool ReDispatch(TCommand command)
+        protected virtual bool ReDispatch(ICommand command)
         {
             Logger.Info("AggregateManager of Type={0}; is ReDispatching deadletter of Type={1}", Name, command.GetType().PrettyPrint());
 
-            var aggregateRef = FindOrCreate(command.AggregateId);
+            var aggregateRef = FindOrCreate((TIdentity)command.GetAggregateId());
 
             aggregateRef.Forward(command);
 
@@ -84,7 +83,7 @@ namespace Akkatecture.Aggregates
 
         protected bool Handle(DeadLetter deadLetter)
         {
-            if(deadLetter.Message is TCommand &&
+            if(deadLetter.Message is ICommand &&
                 (deadLetter.Message as dynamic).AggregateId.GetType() == typeof(TIdentity))
             {
                 var command = deadLetter.Message as dynamic;

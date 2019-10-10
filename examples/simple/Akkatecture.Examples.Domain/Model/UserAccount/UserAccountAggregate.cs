@@ -22,30 +22,31 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using Akkatecture.Aggregates;
+using Akkatecture.Commands.ExecutionResults;
 using Akkatecture.Examples.Domain.Model.UserAccount.Commands;
 using Akkatecture.Examples.Domain.Model.UserAccount.Events;
 
 namespace Akkatecture.Examples.Domain.Model.UserAccount
 {
     public class UserAccountAggregate : EventSourcedAggregateRoot<UserAccountAggregate,UserAccountId,UserAccountState>,
-        IExecute<CreateUserAccountCommand>,
-        IExecute<UserAccountChangeNameCommand>
+        IExecute<CreateUserAccountCommand,UserAccountId>,
+        IExecute<UserAccountChangeNameCommand,UserAccountId>
     {
         public UserAccountAggregate(UserAccountId id)
             : base(id)
         {
         }
         
-        public bool Execute(CreateUserAccountCommand command)
+        public IExecutionResult Execute(CreateUserAccountCommand command)
         {
             Create(command.Name);
-            return true;
+            return ExecutionResult.Success();
         }
 
-        public bool Execute(UserAccountChangeNameCommand command)
+        public IExecutionResult Execute(UserAccountChangeNameCommand command)
         {
             ChangeName(command.Name);
-            return true;
+            return ExecutionResult.Success();
         }
         
         private void Create(string name)

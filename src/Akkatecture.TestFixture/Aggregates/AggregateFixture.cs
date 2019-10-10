@@ -115,7 +115,7 @@ namespace Akkatecture.TestFixture.Aggregates
             return this;
         }
 
-        public IFixtureExecutor<TAggregate, TIdentity> Given(params ICommand<TIdentity>[] commands)
+        public IFixtureExecutor<TAggregate, TIdentity> Given(params ICommand[] commands)
         {
             if(commands == null)
                 throw new ArgumentNullException(nameof(commands));
@@ -134,7 +134,7 @@ namespace Akkatecture.TestFixture.Aggregates
             return this;
         }
 
-        public IFixtureAsserter<TAggregate, TIdentity> When(params ICommand<TIdentity>[] commands)
+        public IFixtureAsserter<TAggregate, TIdentity> When(params ICommand[] commands)
         {
 
             if(commands == null)
@@ -154,7 +154,7 @@ namespace Akkatecture.TestFixture.Aggregates
             return this;
         }
 
-        public IFixtureAsserter<TAggregate, TIdentity> AndWhen(params ICommand<TIdentity>[] commands)
+        public IFixtureAsserter<TAggregate, TIdentity> AndWhen(params ICommand[] commands)
         {
             return When(commands);
         }

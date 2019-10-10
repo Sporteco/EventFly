@@ -27,6 +27,7 @@
 
 using Akka.Actor;
 using Akkatecture.Aggregates;
+using Akkatecture.Commands.ExecutionResults;
 using Akkatecture.Core;
 
 namespace Akkatecture.Commands
@@ -38,7 +39,8 @@ namespace Akkatecture.Commands
     public interface ICommandHandler<in TAggregate, TIdentity, out TResult, in TCommand> : ICommandHandler
         where TAggregate : IAggregateRoot<TIdentity>
         where TIdentity : IIdentity
-        where TCommand : ICommand<TIdentity>
+        where TCommand : ICommand<TIdentity,TResult>
+        where TResult : IExecutionResult
     {
         TResult HandleCommand(TAggregate aggregate, IActorContext context, TCommand command);
     }

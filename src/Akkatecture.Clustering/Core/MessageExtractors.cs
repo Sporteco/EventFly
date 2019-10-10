@@ -70,8 +70,8 @@ namespace Akkatecture.Clustering.Core
             if (message is null)
                 throw new ArgumentNullException(nameof(message));
 
-            if (message is ICommand<TIdentity> command)
-                return command.AggregateId.Value;
+            if (message is ICommand command)
+                return command.GetAggregateId().Value;
 
             throw new ArgumentException(nameof(message));
         }

@@ -1,28 +1,39 @@
-using Akkatecture.Aggregates.ExecutionResults;
+using System.Collections.Generic;
+using Akkatecture.Commands.ExecutionResults;
 using Akkatecture.Core;
 
 namespace Akkatecture.TestHelpers.Aggregates
 {
-    public class TestExecutionResult
+    public interface ITestExecutionResult : IExecutionResult
     {
-        public IExecutionResult Result { get; set; }
+        ISourceId SourceId { get; set; }
+    }
+
+    public static class TestExecutionResult
+    {
+        public static ITestExecutionResult SucceededWith(ISourceId sourceId) => 
+            new SuccessTestExecutionResult(sourceId);
+        public static ITestExecutionResult FailedWith(ISourceId sourceId) 
+            => new FailedTestExecutionResult(sourceId, new[]{"Ошибка!!!"});
+    }
+
+    public class SuccessTestExecutionResult : SuccessExecutionResult, ITestExecutionResult
+    {
         public ISourceId SourceId { get; set; }
 
-        public static TestExecutionResult FailedWith(ISourceId sourceId)
+        public SuccessTestExecutionResult(ISourceId sourceId)
         {
-            return new TestExecutionResult
-            {
-                Result = ExecutionResult.Failed(),
-                SourceId = sourceId
-            };
+            SourceId = sourceId;
         }
-        public static TestExecutionResult SucceededWith(ISourceId sourceId)
+    }
+
+    public class FailedTestExecutionResult : FailedExecutionResult, ITestExecutionResult
+    {
+        public ISourceId SourceId { get; set; }
+
+        public FailedTestExecutionResult(ISourceId sourceId, IEnumerable<string> errors) : base(errors)
         {
-            return new TestExecutionResult
-            {
-                Result = ExecutionResult.Success(),
-                SourceId = sourceId
-            };
+            SourceId = sourceId;
         }
     }
 }

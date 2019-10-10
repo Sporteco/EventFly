@@ -187,7 +187,7 @@ namespace Akkatecture.Extensions
             return domainEventTypes;
         }
         
-        internal static IReadOnlyList<Type> GetAggregateExecuteTypes(this Type type)
+        internal static IReadOnlyList<Tuple<Type,Type>> GetAggregateExecuteTypes(this Type type)
         {
             var interfaces = type
                 .GetTypeInfo()
@@ -195,8 +195,8 @@ namespace Akkatecture.Extensions
                 .Select(i => i.GetTypeInfo())
                 .ToList();
             var domainEventTypes = interfaces
-                .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IExecute<>))
-                .Select(i =>   i.GetGenericArguments()[0])
+                .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IExecute<,,>))
+                .Select(i => new Tuple<Type,Type>(i.GetGenericArguments()[0],i.GetGenericArguments()[1]))
                 .ToList();
             
 

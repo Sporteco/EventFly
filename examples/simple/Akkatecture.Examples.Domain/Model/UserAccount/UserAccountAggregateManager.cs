@@ -22,11 +22,10 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using Akkatecture.Aggregates;
-using Akkatecture.Commands;
 
 namespace Akkatecture.Examples.Domain.Model.UserAccount
 {
-    public class UserAccountAggregateManager : AggregateManager<UserAccountAggregate,UserAccountId, Command<UserAccountId>>
+    public class UserAccountAggregateManager : AggregateManager<UserAccountAggregate,UserAccountId>
     {
         
     }

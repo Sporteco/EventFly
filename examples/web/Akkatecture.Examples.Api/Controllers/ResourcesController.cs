@@ -23,8 +23,8 @@
 
 using System;
 using System.Threading.Tasks;
-using Akkatecture.Aggregates.ExecutionResults;
 using Akkatecture.Akka;
+using Akkatecture.Commands.ExecutionResults;
 using Akkatecture.Examples.Api.Controllers.Models;
 using Akkatecture.Examples.Api.Domain.Aggregates.Resource;
 using Akkatecture.Examples.Api.Domain.Aggregates.Resource.Commands;

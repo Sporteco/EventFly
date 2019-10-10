@@ -64,7 +64,7 @@ namespace Akkatecture.Tests.UnitTests.Aggregates
                 .Given(new TestCreatedEvent(aggregateId), new TestAddedEvent(new Test(TestId.New)))
                 .When(new AddTestCommand(aggregateId, commandId, new Test(testId)))
                 .ThenExpect<TestAddedEvent>(x => x.Test.Id == testId)
-                .ThenExpectReply<TestExecutionResult>(x => x.SourceId.Value == commandId.Value && x.Result.IsSuccess);
+                .ThenExpectReply<ITestExecutionResult>(x => x.SourceId.Value == commandId.Value && x.IsSuccess);
 
 
         }
@@ -128,7 +128,7 @@ namespace Akkatecture.Tests.UnitTests.Aggregates
         public void NullInInitialCommands_AfterAggregateCreation_ExceptionThrown()
         {
             var aggregateId = TestAggregateId.New;
-            var commands = new List<ICommand<TestAggregateId>> {null};
+            var commands = new List<ICommand> {null};
 
             this.Invoking(test =>
                     this.FixtureFor<TestAggregate, TestAggregateId>(aggregateId)
@@ -247,7 +247,7 @@ namespace Akkatecture.Tests.UnitTests.Aggregates
         public void TestEventSourcing_AfterManyTests_TestStateSignalled()
         {
             var aggregateId = TestAggregateId.New;
-            var commands = new List<ICommand<TestAggregateId>>();
+            var commands = new List<ICommand>();
             commands.AddRange(Enumerable.Range(0, 5).Select(x => new AddTestCommand(aggregateId, CommandId.New, new Test(TestId.New))));
             
             this.FixtureFor<TestAggregateManager,TestAggregate, TestAggregateId>(() => new TestAggregateManager(), aggregateId)
@@ -300,7 +300,7 @@ namespace Akkatecture.Tests.UnitTests.Aggregates
         public void TestSnapShotting_AfterManyTests_TestStateSignalled()
         {
             var aggregateId = TestAggregateId.New;
-            var commands = new List<ICommand<TestAggregateId>>();
+            var commands = new List<ICommand>();
             commands.AddRange(Enumerable.Range(0, 10).Select(x => new AddTestCommand(aggregateId, CommandId.New, new Test(TestId.New))));
             
             this.FixtureFor<TestAggregateManager,TestAggregate, TestAggregateId>(() => new TestAggregateManager(), aggregateId)

@@ -26,8 +26,8 @@ using System.Threading.Tasks;
 using Akka.Actor;
 using Akka.TestKit.Xunit2;
 using Akkatecture.Aggregates;
-using Akkatecture.Aggregates.ExecutionResults;
 using Akkatecture.Commands;
+using Akkatecture.Commands.ExecutionResults;
 using Akkatecture.TestHelpers.Aggregates;
 using Akkatecture.TestHelpers.Aggregates.Commands;
 using Akkatecture.TestHelpers.Aggregates.Entities;
@@ -81,9 +81,9 @@ namespace Akkatecture.Tests.UnitTests.Aggregates
             var aggregateId = TestAggregateId.New;
             var commandId = CommandId.New;
             var command = new CreateTestCommand(aggregateId, commandId);
-            var result = await aggregateManager.Ask<TestExecutionResult>(command);
+            var result = await aggregateManager.Ask<ITestExecutionResult>(command);
 
-            result.Result.IsSuccess.Should().BeTrue();
+            result.IsSuccess.Should().BeTrue();
             result.SourceId.Should().Be(command.SourceId);
         }
 

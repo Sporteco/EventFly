@@ -158,8 +158,8 @@ namespace Akkatecture.Tests.MultiNode
                     var aggregateId = TestAggregateId.New;
                     _aggregateManagerProxy.Value.Tell(new CreateTestCommand(aggregateId, commandId), probe);
 
-                    probe.ExpectMsg<TestExecutionResult>(
-                        x => x.Result.IsSuccess
+                    probe.ExpectMsg<ITestExecutionResult>(
+                        x => x.IsSuccess
                                && x.SourceId.Value == commandId.Value ,TimeSpan.FromSeconds(10));
                     
                 }, _config.Client);

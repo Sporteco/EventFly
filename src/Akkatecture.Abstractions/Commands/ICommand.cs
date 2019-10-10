@@ -25,6 +25,7 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using Akkatecture.Commands.ExecutionResults;
 using Akkatecture.Core;
 using Akkatecture.Core.VersionedTypes;
 
@@ -32,19 +33,14 @@ namespace Akkatecture.Commands
 {
     public interface ICommand : IVersionedType
     {
-        ISourceId GetSourceId();
+        ISourceId SourceId { get; }
+        IIdentity GetAggregateId();
     }
 
-    public interface ICommand<out TIdentity, out TSourceIdentity> : ICommand
+    public interface ICommand<out TIdentity, TResult> : ICommand
         where TIdentity : IIdentity
-        where TSourceIdentity : ISourceId
+        where TResult : IExecutionResult
     {
         TIdentity AggregateId { get; }
-        TSourceIdentity SourceId { get; }
-    }
-
-    public interface ICommand<out TIdentity> : ICommand<TIdentity, ISourceId>
-      where TIdentity : IIdentity
-    {
     }
 }

@@ -25,7 +25,7 @@ using Akkatecture.Commands;
 
 namespace Akkatecture.TestHelpers.Aggregates.Commands
 {
-    public class CreateTestCommand : Command<TestAggregateId>
+    public class CreateTestCommand : Command<TestAggregateId,ITestExecutionResult>
     {
         public CreateTestCommand(
             TestAggregateId aggregateId,

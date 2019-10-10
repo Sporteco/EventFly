@@ -26,10 +26,9 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using Akka.Actor;
-using Akka.Event;
 using Akkatecture.Aggregates;
+using Akkatecture.Commands.ExecutionResults;
 using Akkatecture.Core;
-using Akkatecture.Exceptions;
 
 namespace Akkatecture.Commands
 {
@@ -37,34 +36,16 @@ namespace Akkatecture.Commands
         ICommandHandler<TAggregate, TIdentity,TResult, TCommand>
         where TAggregate : ActorBase, IAggregateRoot<TIdentity>
         where TIdentity : IIdentity
-        where TCommand : ICommand<TIdentity>
+        where TCommand : ICommand<TIdentity,TResult>
+        where TResult : IExecutionResult
     {
-        public abstract TResult HandleCommand(
-            TAggregate aggregate,
-            IActorContext context,
-            TCommand command);
+        public abstract TResult HandleCommand(TAggregate aggregate,IActorContext context,TCommand command);
     }
 
-    public abstract class CommandHandler<TAggregate, TIdentity, TCommand> :
-        CommandHandler<TAggregate, TIdentity,bool,TCommand>
+    public abstract class CommandHandler<TAggregate, TIdentity,TCommand> : CommandHandler<TAggregate, TIdentity,IExecutionResult,TCommand>
         where TAggregate : ActorBase, IAggregateRoot<TIdentity>
         where TIdentity : IIdentity
-        where TCommand : ICommand<TIdentity>
-    {
-        public override bool HandleCommand(
-            TAggregate aggregate,
-            IActorContext context,
-            TCommand command)
-        {
-            var logger = context.GetLogger();
-            Handle(aggregate, context, command);
-            logger.Debug("Command of Type={0} handled in CommandHandler of Type={1}",command.GetType().PrettyPrint(), GetType().PrettyPrint());
-            return true;
-        }
+        where TCommand : ICommand<TIdentity,IExecutionResult>
+    {}
 
-        public abstract void Handle(
-            TAggregate aggregate,
-            IActorContext context,
-            TCommand command);
-    }
 }

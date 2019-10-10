@@ -22,11 +22,10 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using Akkatecture.Aggregates;
-using Akkatecture.Commands;
 
 namespace Akkatecture.Examples.Api.Domain.Aggregates.Resource
 {
-    public class ResourceManager : AggregateManager<Resource,ResourceId,Command<ResourceId>>
+    public class ResourceManager : AggregateManager<Resource,ResourceId>
     {
         
     }

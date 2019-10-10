@@ -22,6 +22,8 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using Akkatecture.Commands;
+using Akkatecture.Commands.ExecutionResults;
+using Akkatecture.Core;
 
 namespace Akkatecture.Aggregates
 {
@@ -30,9 +32,15 @@ namespace Akkatecture.Aggregates
         
     }
     
-    public interface IExecute<in TCommand> : IExecute
-        where TCommand : ICommand
+    public interface IExecute<in TCommand, out TResult,TIdentity> : IExecute
+        where TCommand : ICommand<TIdentity, TResult>
+        where TIdentity : IIdentity
+        where TResult : IExecutionResult
     {
-        bool Execute(TCommand command);
+        TResult Execute(TCommand command);
     }
+    public interface IExecute<in TCommand,TIdentity> : IExecute<TCommand,IExecutionResult,TIdentity>
+        where TCommand : ICommand<TIdentity, IExecutionResult>
+        where TIdentity : IIdentity
+    {}
 }

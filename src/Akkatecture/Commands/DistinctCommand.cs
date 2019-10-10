@@ -29,11 +29,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using Akkatecture.Commands.ExecutionResults;
 using Akkatecture.Core;
 
 namespace Akkatecture.Commands
 {
-    public abstract class DistinctCommand<TIdentity> : ICommand<TIdentity>
+    public abstract class DistinctCommand<TIdentity> : ICommand<TIdentity, IExecutionResult>
         where TIdentity : IIdentity
     {
         private readonly Lazy<ISourceId> _lazySourceId;
@@ -67,5 +68,7 @@ namespace Akkatecture.Commands
         {
             return SourceId;
         }
+
+        public IIdentity GetAggregateId() => AggregateId;
     }
 }

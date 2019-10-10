@@ -25,9 +25,9 @@ using System;
 using System.Linq;
 using Akka.Persistence;
 using Akkatecture.Aggregates;
-using Akkatecture.Aggregates.ExecutionResults;
 using Akkatecture.Aggregates.Snapshot;
 using Akkatecture.Aggregates.Snapshot.Strategies;
+using Akkatecture.Commands.ExecutionResults;
 using Akkatecture.Core;
 using Akkatecture.Extensions;
 using Akkatecture.TestHelpers.Aggregates.Commands;
@@ -40,18 +40,18 @@ namespace Akkatecture.TestHelpers.Aggregates
 {
     [AggregateName("Test")]
     public sealed class TestAggregate : EventSourcedAggregateRoot<TestAggregate, TestAggregateId, TestAggregateState>, 
-        IExecute<CreateTestCommand>,
-        IExecute<CreateAndAddTwoTestsCommand>,
-        IExecute<AddTestCommand>,
-        IExecute<AddFourTestsCommand>,
-        IExecute<GiveTestCommand>,
-        IExecute<ReceiveTestCommand>,
-        IExecute<TestDistinctCommand>,
-        IExecute<PoisonTestAggregateCommand>,
-        IExecute<PublishTestStateCommand>,
-        IExecute<TestDomainErrorCommand>,
-        IExecute<TestFailedExecutionResultCommand>,
-        IExecute<TestSuccessExecutionResultCommand>
+        IExecute<CreateTestCommand,ITestExecutionResult,TestAggregateId>,
+        IExecute<CreateAndAddTwoTestsCommand,TestAggregateId>,
+        IExecute<AddTestCommand,ITestExecutionResult,TestAggregateId>,
+        IExecute<AddFourTestsCommand,TestAggregateId>,
+        IExecute<GiveTestCommand,TestAggregateId>,
+        IExecute<ReceiveTestCommand,TestAggregateId>,
+        IExecute<TestDistinctCommand,TestAggregateId>,
+        IExecute<PoisonTestAggregateCommand,TestAggregateId>,
+        IExecute<PublishTestStateCommand,TestAggregateId>,
+        IExecute<TestDomainErrorCommand,TestAggregateId>,
+        IExecute<TestFailedExecutionResultCommand,TestAggregateId>,
+        IExecute<TestSuccessExecutionResultCommand,TestAggregateId>
     {
         public int TestErrors { get; private set; }
         public TestAggregate(TestAggregateId aggregateId)
@@ -64,7 +64,7 @@ namespace Akkatecture.TestHelpers.Aggregates
             SetSnapshotStrategy(new SnapshotEveryFewVersionsStrategy(10));
         }
 
-        public bool Execute(CreateTestCommand command)
+        public ITestExecutionResult Execute(CreateTestCommand command)
         {
             if (IsNew)
             {
@@ -78,11 +78,11 @@ namespace Akkatecture.TestHelpers.Aggregates
                 ReplyFailure(TestExecutionResult.FailedWith(command.SourceId));
             }
 
-            return true;
+            return new SuccessTestExecutionResult(command.SourceId);
         }
         
 
-        public bool Execute(CreateAndAddTwoTestsCommand command)
+        public IExecutionResult Execute(CreateAndAddTwoTestsCommand command)
         {
             if (IsNew)
             {
@@ -99,10 +99,10 @@ namespace Akkatecture.TestHelpers.Aggregates
                 ReplyFailure(TestExecutionResult.FailedWith(command.SourceId));
             }
 
-            return true;
+            return ExecutionResult.Success();
         }
 
-        public bool Execute(AddTestCommand command)
+        public ITestExecutionResult Execute(AddTestCommand command)
         {
             if (!IsNew)
             {
@@ -117,10 +117,10 @@ namespace Akkatecture.TestHelpers.Aggregates
                 Throw(new TestedErrorEvent(TestErrors));
                 ReplyFailure(TestExecutionResult.FailedWith(command.SourceId));
             }
-            return true;
+            return new SuccessTestExecutionResult(command.SourceId);
         }
 
-        public bool Execute(AddFourTestsCommand command)
+        public IExecutionResult Execute(AddFourTestsCommand command)
         {
             if (!IsNew)
             {
@@ -139,10 +139,10 @@ namespace Akkatecture.TestHelpers.Aggregates
                 Throw(new TestedErrorEvent(TestErrors));
                 ReplyFailure(TestExecutionResult.FailedWith(command.SourceId));
             }
-            return true;
+            return ExecutionResult.Success();
         }
 
-        public bool Execute(GiveTestCommand command)
+        public IExecutionResult Execute(GiveTestCommand command)
         {
             if (!IsNew)
             {
@@ -160,10 +160,10 @@ namespace Akkatecture.TestHelpers.Aggregates
                 ReplyFailure(TestExecutionResult.FailedWith(command.SourceId));
             }
 
-            return true;
+            return ExecutionResult.Success();
         }
 
-        public bool Execute(ReceiveTestCommand command)
+        public IExecutionResult Execute(ReceiveTestCommand command)
         {
             if (!IsNew)
             {
@@ -177,25 +177,25 @@ namespace Akkatecture.TestHelpers.Aggregates
                 ReplyFailure(TestExecutionResult.FailedWith(command.SourceId));
             }
 
-            return true;
+            return ExecutionResult.Success();
         }
-        public bool Execute(TestFailedExecutionResultCommand command)
+        public IExecutionResult Execute(TestFailedExecutionResultCommand command)
         {
             Sender.Tell(ExecutionResult.Failed(), Self);
-            return true;
+            return ExecutionResult.Success();
         }
         
-        public bool Execute(TestSuccessExecutionResultCommand command)
+        public IExecutionResult Execute(TestSuccessExecutionResultCommand command)
         {
             Sender.Tell(ExecutionResult.Success(), Self);
-            return true;
+            return ExecutionResult.Success();
         }
-        public bool Execute(TestDistinctCommand command)
+        public IExecutionResult Execute(TestDistinctCommand command)
         {
-            return true;
+            return ExecutionResult.Success();
         }
 
-        public bool Execute(PoisonTestAggregateCommand command)
+        public IExecutionResult Execute(PoisonTestAggregateCommand command)
         {
             if (!IsNew)
             {
@@ -208,23 +208,23 @@ namespace Akkatecture.TestHelpers.Aggregates
                 ReplyFailure(TestExecutionResult.FailedWith(command.SourceId));
             }
 
-            return true;
+            return ExecutionResult.Success();
         }
 
-        public bool Execute(PublishTestStateCommand command)
+        public IExecutionResult Execute(PublishTestStateCommand command)
         {
             Signal(new TestStateSignalEvent(State,LastSequenceNr,Version));
 
-            return true;
+            return ExecutionResult.Success();
         }
 
 
-        public bool Execute(TestDomainErrorCommand command)
+        public IExecutionResult Execute(TestDomainErrorCommand command)
         {
             TestErrors++;
             Throw(new TestedErrorEvent(TestErrors));
 
-            return true;
+            return ExecutionResult.Success();
         }
 
         protected override bool SnapshotStatus(SaveSnapshotSuccess snapshotSuccess)

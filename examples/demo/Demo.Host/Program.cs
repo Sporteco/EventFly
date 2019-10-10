@@ -37,6 +37,8 @@ namespace Demo.Host
             
             //Send command, this is equivalent to command.publish() in other cqrs frameworks
             aggregateManager.Tell(createUserAccountCommand);
+            var result = aggregateManager.Ask(new RenameUserCommand(aggregateId, new UserName("TEST"))).GetAwaiter().GetResult();
+            Console.WriteLine(result);
                         
             //block end of program
             Console.ReadLine();

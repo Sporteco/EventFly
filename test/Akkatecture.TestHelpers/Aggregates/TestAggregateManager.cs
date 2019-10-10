@@ -22,11 +22,10 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using Akkatecture.Aggregates;
-using Akkatecture.Commands;
 
 namespace Akkatecture.TestHelpers.Aggregates
 {
-    public class  TestAggregateManager : AggregateManager<TestAggregate, TestAggregateId, Command<TestAggregateId>>
+    public class  TestAggregateManager : AggregateManager<TestAggregate, TestAggregateId>
     {
         
     }
