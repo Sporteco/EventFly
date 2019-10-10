@@ -22,7 +22,6 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
-using System.Linq.Expressions;
 using Akka.Actor;
 using Akka.Persistence;
 using Akka.TestKit;
@@ -72,9 +71,7 @@ namespace Akkatecture.TestFixture.Aggregates
             return this;
         }
 
-        public IFixtureArranger<TAggregate, TIdentity> Using<TAggregateManager>(
-            Expression<Func<TAggregateManager>> aggregateManagerFactory, TIdentity aggregateId)
-            where TAggregateManager : ReceiveActor, IAggregateManager<TAggregate, TIdentity>
+        public IFixtureArranger<TAggregate, TIdentity> Using(TIdentity aggregateId)
         {
             if(aggregateId == null)
                 throw new ArgumentNullException(nameof(aggregateId));
@@ -86,7 +83,7 @@ namespace Akkatecture.TestFixture.Aggregates
             AggregateId = aggregateId;
             AggregateEventTestProbe = _testKit.CreateTestProbe("aggregate-event-test-probe");
             AggregateReplyTestProbe = _testKit.CreateTestProbe("aggregate-reply-test-probe");
-            AggregateRef = _testKit.Sys.ActorOf(Props.Create(aggregateManagerFactory), "aggregate-manager");
+            AggregateRef = _testKit.Sys.GetAggregateManager<TIdentity>();
             UsesAggregateManager = false;
             AggregateProps = Props.Empty;
             

@@ -21,8 +21,6 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System;
-using System.Linq.Expressions;
 using Akka.Actor;
 using Akka.TestKit;
 using Akkatecture.Aggregates;
@@ -39,15 +37,6 @@ namespace Akkatecture.TestFixture.Extensions
             where TIdentity : IIdentity
         {
             return new AggregateFixture<TAggregate, TIdentity>(testKit).For(aggregateId);
-        }
-        
-        public static IFixtureArranger<TAggregate, TIdentity> FixtureFor<TAggregateManager, TAggregate, TIdentity>(
-            this TestKitBase testKit, Expression<Func<TAggregateManager>> aggregateManagerFactory, TIdentity aggregateId)
-            where TAggregateManager : ReceiveActor, IAggregateManager<TAggregate, TIdentity>
-            where TAggregate : ActorBase, IAggregateRoot<TIdentity>
-            where TIdentity : IIdentity
-        {
-            return new AggregateFixture<TAggregate, TIdentity>(testKit).Using(aggregateManagerFactory,aggregateId);
         }
     }
 }

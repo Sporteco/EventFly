@@ -22,6 +22,7 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
+using Akka.Actor;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -29,6 +30,12 @@ namespace Akkatecture.Examples.Api.Controllers
 {
     public class BaseController : Controller
     {
+        protected readonly ActorSystem System;
+
+        public BaseController(ActorSystem system)
+        {
+            System = system;
+        }
         public static string GetAbsoluteUri(HttpContext context)
         {
             var request = context.Request;

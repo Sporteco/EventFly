@@ -7,14 +7,14 @@ using Newtonsoft.Json;
 
 namespace Akkatecture.Queries
 {
-    public abstract class QueryManager<TQueryHandler, TQuery, TResult> : ReceiveActor
+    public class QueryManager<TQueryHandler, TQuery, TResult> : ReceiveActor
         where TQueryHandler : ActorBase, IQueryHandler<TQuery, TResult> where TQuery : IQuery<TResult>
     {
         protected ILoggingAdapter Logger { get; set; }
 
         public string Name { get; }
 
-        protected QueryManager()
+        public QueryManager()
         {
             Logger = Context.GetLogger();
             Name = GetType().PrettyPrint();

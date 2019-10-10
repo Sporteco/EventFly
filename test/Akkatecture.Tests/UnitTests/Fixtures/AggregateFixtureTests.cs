@@ -23,6 +23,7 @@ namespace Akkatecture.Tests.UnitTests.Fixtures
         private const string Category = "AggregateFixture";
         private readonly string _config = TestHelpers.Akka.Configuration.Config;
 
+        
         [Fact]
         [Category(Category)]
         public void FixtureArrangerWithIdentity_CreatesAggregateRef()
@@ -48,12 +49,13 @@ namespace Akkatecture.Tests.UnitTests.Fixtures
         {
             using (var testKit = new TestKit(_config,"fixture-tests-2"))
             {
+                testKit.Sys.RegisterAggregate<TestAggregate, TestAggregateId>();
                 var fixture = new AggregateFixture<TestAggregate, TestAggregateId>(testKit);
                 var aggregateIdentity = TestAggregateId.New;
 
-                fixture.Using(() => new TestAggregateManager(), aggregateIdentity);
+                fixture.Using(aggregateIdentity);
 
-                fixture.AggregateRef.Path.Name.Should().Be("aggregate-manager");
+                fixture.AggregateRef.Path.Name.Should().Be("aggregate-TestAggregate-manager");
                 fixture.AggregateId.Should().Be(aggregateIdentity);
             }
         }

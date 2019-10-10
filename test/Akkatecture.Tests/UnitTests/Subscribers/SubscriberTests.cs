@@ -42,7 +42,7 @@ namespace Akkatecture.Tests.UnitTests.Subscribers
         public SubscriberTests(ITestOutputHelper testOutputHelper)
             :base(TestHelpers.Akka.Configuration.Config, "subscriber-tests", testOutputHelper)
         {
-            
+            Sys.RegisterAggregate<TestAggregate, TestAggregateId>();
         }
 
         [Fact]
@@ -52,12 +52,11 @@ namespace Akkatecture.Tests.UnitTests.Subscribers
             var eventProbe = CreateTestProbe("event-probe");
             Sys.EventStream.Subscribe(eventProbe, typeof(TestSubscribedEventHandled<TestCreatedEvent>));
             Sys.ActorOf(Props.Create(() => new TestAggregateSubscriber()), "test-subscriber");        
-            var aggregateManager = Sys.ActorOf(Props.Create(() => new TestAggregateManager()), "test-aggregatemanager");
             
             var aggregateId = TestAggregateId.New;
             var commandId = CommandId.New;
             var command = new CreateTestCommand(aggregateId, commandId);
-            aggregateManager.Tell(command);
+            Sys.PublishCommandAsync(command).GetAwaiter().GetResult();
 
             eventProbe.
                 ExpectMsg<TestSubscribedEventHandled<TestCreatedEvent>>(x =>
@@ -72,12 +71,11 @@ namespace Akkatecture.Tests.UnitTests.Subscribers
             var eventProbe = CreateTestProbe("event-probe");
             Sys.EventStream.Subscribe(eventProbe, typeof(TestAsyncSubscribedEventHandled<TestCreatedEvent>));
             Sys.ActorOf(Props.Create(() => new TestAsyncAggregateSubscriber()), "test-subscriber");        
-            var aggregateManager = Sys.ActorOf(Props.Create(() => new TestAggregateManager()), "test-aggregatemanager");
             
             var aggregateId = TestAggregateId.New;
             var commandId = CommandId.New;
             var command = new CreateTestCommand(aggregateId, commandId);
-            aggregateManager.Tell(command);
+            Sys.PublishCommandAsync(command).GetAwaiter().GetResult();
 
             eventProbe
                 .ExpectMsg<TestAsyncSubscribedEventHandled<TestCreatedEvent>>(x =>

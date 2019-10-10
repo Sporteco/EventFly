@@ -49,7 +49,7 @@ namespace Akkatecture.Tests.UnitTests.Aggregates
         public AggregateTestsWithFixtures(ITestOutputHelper testOutputHelper)
             : base(TestHelpers.Akka.Configuration.Config, "aggregate-fixture-tests", testOutputHelper)
         {
-            
+            Sys.RegisterAggregate<TestAggregate, TestAggregateId>();
         }
         
         [Fact]
@@ -250,7 +250,7 @@ namespace Akkatecture.Tests.UnitTests.Aggregates
             var commands = new List<ICommand>();
             commands.AddRange(Enumerable.Range(0, 5).Select(x => new AddTestCommand(aggregateId, CommandId.New, new Test(TestId.New))));
             
-            this.FixtureFor<TestAggregateManager,TestAggregate, TestAggregateId>(() => new TestAggregateManager(), aggregateId)
+            this.FixtureFor<TestAggregate, TestAggregateId>(aggregateId)
                 .Given(new TestCreatedEvent(aggregateId))
                 .When(commands.ToArray())
                 .AndWhen(new PoisonTestAggregateCommand(aggregateId))
@@ -284,7 +284,7 @@ namespace Akkatecture.Tests.UnitTests.Aggregates
         {
             var aggregateId = TestAggregateId.New;
             
-            this.FixtureFor<TestAggregateManager,TestAggregate, TestAggregateId>(() => new TestAggregateManager(), aggregateId)
+            this.FixtureFor<TestAggregate, TestAggregateId>(aggregateId)
                 .Given(new TestCreatedEvent(aggregateId))
                 .When(new AddFourTestsCommand(aggregateId, CommandId.New, new Test(TestId.New)))
                 .AndWhen(new PoisonTestAggregateCommand(aggregateId))
@@ -303,7 +303,7 @@ namespace Akkatecture.Tests.UnitTests.Aggregates
             var commands = new List<ICommand>();
             commands.AddRange(Enumerable.Range(0, 10).Select(x => new AddTestCommand(aggregateId, CommandId.New, new Test(TestId.New))));
             
-            this.FixtureFor<TestAggregateManager,TestAggregate, TestAggregateId>(() => new TestAggregateManager(), aggregateId)
+            this.FixtureFor<TestAggregate, TestAggregateId>(aggregateId)
                 .Given(new TestCreatedEvent(aggregateId))
                 .When(commands.ToArray())
                 .AndWhen(new PoisonTestAggregateCommand(aggregateId))

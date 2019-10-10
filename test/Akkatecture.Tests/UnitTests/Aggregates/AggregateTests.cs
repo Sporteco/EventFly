@@ -23,11 +23,9 @@
 
 using System.ComponentModel;
 using System.Threading.Tasks;
-using Akka.Actor;
 using Akka.TestKit.Xunit2;
 using Akkatecture.Aggregates;
 using Akkatecture.Commands;
-using Akkatecture.Commands.ExecutionResults;
 using Akkatecture.TestHelpers.Aggregates;
 using Akkatecture.TestHelpers.Aggregates.Commands;
 using Akkatecture.TestHelpers.Aggregates.Entities;
@@ -47,7 +45,7 @@ namespace Akkatecture.Tests.UnitTests.Aggregates
         public AggregateTests(ITestOutputHelper testOutputHelper)
             : base(TestHelpers.Akka.Configuration.Config, "aggregate-tests", testOutputHelper)
         {
-            
+            Sys.RegisterAggregate<TestAggregate, TestAggregateId>();
         }
         
         [Fact]
@@ -56,12 +54,11 @@ namespace Akkatecture.Tests.UnitTests.Aggregates
         {
             var eventProbe = CreateTestProbe("event-probe");
             Sys.EventStream.Subscribe(eventProbe, typeof(IDomainEvent<TestAggregate, TestAggregateId, TestCreatedEvent>));
-            var aggregateManager = Sys.ActorOf(Props.Create(() => new TestAggregateManager()), "test-aggregatemanager");
             
             var aggregateId = TestAggregateId.New;
             var commandId = CommandId.New;
             var command = new CreateTestCommand(aggregateId, commandId);
-            aggregateManager.Tell(command);
+            Sys.PublishCommandAsync(command).GetAwaiter().GetResult();
             
             eventProbe
                 .ExpectMsg<IDomainEvent<TestAggregate, TestAggregateId, TestCreatedEvent>>(
@@ -76,12 +73,11 @@ namespace Akkatecture.Tests.UnitTests.Aggregates
         {
             var eventProbe = CreateTestProbe("event-probe");
             Sys.EventStream.Subscribe(eventProbe, typeof(IDomainEvent<TestAggregate, TestAggregateId, TestCreatedEvent>));
-            var aggregateManager = Sys.ActorOf(Props.Create(() => new TestAggregateManager()), "test-aggregatemanager");
             
             var aggregateId = TestAggregateId.New;
             var commandId = CommandId.New;
             var command = new CreateTestCommand(aggregateId, commandId);
-            var result = await aggregateManager.Ask<ITestExecutionResult>(command);
+            var result = await Sys.PublishCommandAsync(command);
 
             result.IsSuccess.Should().BeTrue();
             result.SourceId.Should().Be(command.SourceId);
@@ -93,12 +89,11 @@ namespace Akkatecture.Tests.UnitTests.Aggregates
         {
             var eventProbe = CreateTestProbe("event-probe");
             Sys.EventStream.Subscribe(eventProbe, typeof(IDomainEvent<TestAggregate, TestAggregateId, TestCreatedEvent>));
-            var aggregateManager = Sys.ActorOf(Props.Create(() => new TestAggregateManager()), "test-aggregatemanager");
 
             var aggregateId = TestAggregateId.New;
             var commandId = CommandId.New;
             var command = new CreateTestCommand(aggregateId, commandId);
-            aggregateManager.Tell(command);
+            Sys.PublishCommandAsync(command).GetAwaiter().GetResult();
 
             eventProbe
                 .ExpectMsg<IDomainEvent<TestAggregate, TestAggregateId, TestCreatedEvent>>(
@@ -119,14 +114,13 @@ namespace Akkatecture.Tests.UnitTests.Aggregates
         {
             var eventProbe = CreateTestProbe("event-probe");
             Sys.EventStream.Subscribe(eventProbe, typeof(IDomainEvent<TestAggregate, TestAggregateId, TestStateSignalEvent>));
-            var aggregateManager = Sys.ActorOf(Props.Create(() => new TestAggregateManager()), "test-aggregatemanager");
 
             var aggregateId = TestAggregateId.New;
             var commandId = CommandId.New;
             var command = new CreateTestCommand(aggregateId, commandId);
             var nextCommand = new PublishTestStateCommand(aggregateId);
-            aggregateManager.Tell(command);
-            aggregateManager.Tell(nextCommand);
+            Sys.PublishCommandAsync(command).GetAwaiter().GetResult();
+            Sys.PublishCommandAsync(nextCommand).GetAwaiter().GetResult();
 
             eventProbe
                 .ExpectMsg<IDomainEvent<TestAggregate, TestAggregateId, TestStateSignalEvent>>(
@@ -141,7 +135,6 @@ namespace Akkatecture.Tests.UnitTests.Aggregates
         {
             var eventProbe = CreateTestProbe("event-probe");
             Sys.EventStream.Subscribe(eventProbe, typeof(IDomainEvent<TestAggregate, TestAggregateId, TestAddedEvent>));
-            var aggregateManager = Sys.ActorOf(Props.Create(() => new TestAggregateManager()), "test-aggregatemanager");
 
             var aggregateId = TestAggregateId.New;
             var commandId = CommandId.New;
@@ -150,8 +143,8 @@ namespace Akkatecture.Tests.UnitTests.Aggregates
             var test = new Test(testId);
             var nextCommandId = CommandId.New;
             var nextCommand = new AddTestCommand(aggregateId, nextCommandId, test);
-            aggregateManager.Tell(command);
-            aggregateManager.Tell(nextCommand);
+            Sys.PublishCommandAsync(command).GetAwaiter().GetResult();
+            Sys.PublishCommandAsync(nextCommand).GetAwaiter().GetResult();
 
             eventProbe
                 .ExpectMsg<IDomainEvent<TestAggregate, TestAggregateId, TestAddedEvent>>(
@@ -164,7 +157,6 @@ namespace Akkatecture.Tests.UnitTests.Aggregates
         {
             var eventProbe = CreateTestProbe("event-probe");
             Sys.EventStream.Subscribe(eventProbe, typeof(IDomainEvent<TestAggregate, TestAggregateId, TestAddedEvent>));
-            var aggregateManager = Sys.ActorOf(Props.Create(() => new TestAggregateManager()), "test-aggregatemanager");
 
 
             var aggregateId = TestAggregateId.New;
@@ -178,9 +170,9 @@ namespace Akkatecture.Tests.UnitTests.Aggregates
             var test2 = new Test(test2Id);
             var nextCommandId2 = CommandId.New;
             var nextCommand2 = new AddTestCommand(aggregateId, nextCommandId2, test2);
-            aggregateManager.Tell(command);
-            aggregateManager.Tell(nextCommand);
-            aggregateManager.Tell(nextCommand2);
+            Sys.PublishCommandAsync(command).GetAwaiter().GetResult();
+            Sys.PublishCommandAsync(nextCommand).GetAwaiter().GetResult();
+            Sys.PublishCommandAsync(nextCommand2).GetAwaiter().GetResult();
 
 
             eventProbe
@@ -201,26 +193,25 @@ namespace Akkatecture.Tests.UnitTests.Aggregates
             
             var eventProbe = CreateTestProbe("event-probe");
             Sys.EventStream.Subscribe(eventProbe, typeof(IDomainEvent<TestAggregate, TestAggregateId, TestStateSignalEvent>));
-            var aggregateManager = Sys.ActorOf(Props.Create(() => new TestAggregateManager()), "test-aggregatemanager");
             var aggregateId = TestAggregateId.New;
             var commandId = CommandId.New;
             
             var command = new CreateTestCommand(aggregateId, commandId);
-            aggregateManager.Tell(command);
+            Sys.PublishCommandAsync(command).GetAwaiter().GetResult();
 
             for (var i = 0; i < 5; i++)
             {
                 var test = new Test(TestId.New);
                 var testCommandId = CommandId.New;
                 var testCommand = new AddTestCommand(aggregateId, testCommandId, test);
-                aggregateManager.Tell(testCommand);
+                Sys.PublishCommandAsync(testCommand).GetAwaiter().GetResult();
             }
             
             var poisonCommand = new PoisonTestAggregateCommand(aggregateId);
-            aggregateManager.Tell(poisonCommand);
+            Sys.PublishCommandAsync(poisonCommand).GetAwaiter().GetResult();
 
             var reviveCommand = new PublishTestStateCommand(aggregateId);
-            aggregateManager.Tell(reviveCommand);
+            Sys.PublishCommandAsync(reviveCommand).GetAwaiter().GetResult();
 
 
             eventProbe
@@ -237,7 +228,6 @@ namespace Akkatecture.Tests.UnitTests.Aggregates
             var eventProbe = CreateTestProbe("event-probe");
             Sys.EventStream.Subscribe(eventProbe, typeof(IDomainEvent<TestAggregate, TestAggregateId, TestCreatedEvent>));
             Sys.EventStream.Subscribe(eventProbe, typeof(IDomainEvent<TestAggregate, TestAggregateId, TestAddedEvent>));
-            var aggregateManager = Sys.ActorOf(Props.Create(() => new TestAggregateManager()), "test-aggregatemanager");
 
             var aggregateId = TestAggregateId.New;
             var commandId = CommandId.New;
@@ -245,7 +235,7 @@ namespace Akkatecture.Tests.UnitTests.Aggregates
             var secondTest = new Test(TestId.New);
             var command = new CreateAndAddTwoTestsCommand(aggregateId, commandId, firstTest, secondTest);
             
-            aggregateManager.Tell(command);
+            Sys.PublishCommandAsync(command).GetAwaiter().GetResult();
 
             eventProbe.ExpectMsg<IDomainEvent<TestAggregate, TestAggregateId, TestCreatedEvent>>();
             eventProbe.ExpectMsg<IDomainEvent<TestAggregate, TestAggregateId, TestAddedEvent>>();
@@ -261,24 +251,23 @@ namespace Akkatecture.Tests.UnitTests.Aggregates
             var eventProbe = CreateTestProbe("event-probe");
             Sys.EventStream.Subscribe(eventProbe, typeof(IDomainEvent<TestAggregate, TestAggregateId, TestAddedEvent>));
             Sys.EventStream.Subscribe(eventProbe, typeof(IDomainEvent<TestAggregate, TestAggregateId, TestStateSignalEvent>));
-            var aggregateManager = Sys.ActorOf(Props.Create(() => new TestAggregateManager()), "test-aggregatemanager");
             var aggregateId = TestAggregateId.New;
             var commandId = CommandId.New;
 
             
             var command = new CreateTestCommand(aggregateId, commandId);
-            aggregateManager.Tell(command);
+            Sys.PublishCommandAsync(command).GetAwaiter().GetResult();
 
             var test = new Test(TestId.New);
             var testSourceId = CommandId.New;
             var testCommand = new AddFourTestsCommand(aggregateId, testSourceId, test);
-            aggregateManager.Tell(testCommand);
+            Sys.PublishCommandAsync(testCommand).GetAwaiter().GetResult();
             
             var poisonCommand = new PoisonTestAggregateCommand(aggregateId);
-            aggregateManager.Tell(poisonCommand);
+            Sys.PublishCommandAsync(poisonCommand).GetAwaiter().GetResult();
 
             var reviveCommand = new PublishTestStateCommand(aggregateId);
-            aggregateManager.Tell(reviveCommand);
+            Sys.PublishCommandAsync(reviveCommand).GetAwaiter().GetResult();
 
             eventProbe
                 .ExpectMsg<IDomainEvent<TestAggregate, TestAggregateId, TestAddedEvent>>();
@@ -303,20 +292,19 @@ namespace Akkatecture.Tests.UnitTests.Aggregates
         {
             var eventProbe = CreateTestProbe("event-probe");
             Sys.EventStream.Subscribe(eventProbe, typeof(IDomainEvent<TestAggregate, TestAggregateId, TestStateSignalEvent>));
-            var aggregateManager = Sys.ActorOf(Props.Create(() => new TestAggregateManager()), "test-aggregatemanager");
             var aggregateId = TestAggregateId.New;
             var commandId = CommandId.New;
 
             
             var command = new CreateTestCommand(aggregateId, commandId);
-            aggregateManager.Tell(command);
+            Sys.PublishCommandAsync(command).GetAwaiter().GetResult();
 
             for (var i = 0; i < 10; i++)
             {
                 var test = new Test(TestId.New);
                 var testCommandId = CommandId.New;
                 var testCommand = new AddTestCommand(aggregateId, testCommandId, test);
-                aggregateManager.Tell(testCommand);
+                Sys.PublishCommandAsync(testCommand).GetAwaiter().GetResult();
             }
             
             eventProbe
@@ -332,24 +320,22 @@ namespace Akkatecture.Tests.UnitTests.Aggregates
         [Category(Category)]
         public async Task InitialState_TestingSuccessCommand_SuccessResultReplied()
         {
-            var aggregateManager = Sys.ActorOf(Props.Create(() => new TestAggregateManager()), "test-aggregatemanager");
             var aggregateId = TestAggregateId.New;
             var commandId = CommandId.New;
             var command = new TestSuccessExecutionResultCommand(aggregateId, commandId);
             
-            await aggregateManager.Ask<SuccessExecutionResult>(command);
+            await Sys.PublishCommandAsync(command);
         }
         
         [Fact]
         [Category(Category)]
         public async Task InitialState_TestingFailedCommand_SuccessResultReplied()
         {
-            var aggregateManager = Sys.ActorOf(Props.Create(() => new TestAggregateManager()), "test-aggregatemanager");
             var aggregateId = TestAggregateId.New;
             var commandId = CommandId.New;
             var command = new TestFailedExecutionResultCommand(aggregateId, commandId);
 
-            await aggregateManager.Ask<FailedExecutionResult>(command);
+            await Sys.PublishCommandAsync(command);
         }
         [Fact]
         [Category(Category)]

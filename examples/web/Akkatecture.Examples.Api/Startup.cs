@@ -22,10 +22,8 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using Akka.Actor;
-using Akkatecture.Examples.Api.Domain.Aggregates.Resource;
 using Akkatecture.Examples.Api.Domain.Repositories.Operations;
 using Akkatecture.Examples.Api.Domain.Repositories.Resources;
-using Akkatecture.Examples.Api.Domain.Sagas;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
@@ -44,18 +42,10 @@ namespace Akkatecture.Examples.Api
         public void ConfigureServices(IServiceCollection services)
         {
             var actorSystem = ActorSystem.Create("api-system");
-            var aggregateManager = actorSystem.ActorOf(Props.Create(() => new ResourceManager()),"resource-manager");
-            var sagaManager = actorSystem.ActorOf(Props.Create(() => new ResourceCreationSagaManager(() => new ResourceCreationSaga())),"resourcecreation-sagamanager");
-            var resourceStorage = actorSystem.ActorOf(Props.Create(() => new ResourcesStorageHandler()), "resource-storagehandler");
-            var operationStorage = actorSystem.ActorOf(Props.Create(() => new OperationsStorageHandler()), "operation-storagehandler");
 
             // Add Actors to DI as ActorRefProvider<T>
             services
-                .AddAkkatecture(actorSystem)
-                .AddActorReference<ResourceManager>(aggregateManager)
-                .AddActorReference<ResourceCreationSagaManager>(sagaManager)
-                .AddActorReference<ResourcesStorageHandler>(resourceStorage)
-                .AddActorReference<OperationsStorageHandler>(operationStorage);
+                .AddAkkatecture(actorSystem);
             
             services
                 .AddMvc()

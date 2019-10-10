@@ -23,6 +23,7 @@
 
 using System;
 using System.Threading.Tasks;
+using Akka.Actor;
 using Akkatecture.Examples.Api.Domain.Repositories.Operations;
 using Microsoft.AspNetCore.Mvc;
 
@@ -32,8 +33,7 @@ namespace Akkatecture.Examples.Api.Controllers
     {
         private readonly IQueryOperations _operationQuery;
         
-        public OperationsController(
-            IQueryOperations operationQuery)
+        public OperationsController(ActorSystem system, IQueryOperations operationQuery) : base(system)
         {
             _operationQuery = operationQuery; 
         }

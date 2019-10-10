@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Akka.Actor;
+using Akkatecture;
 using Akkatecture.AggregateStorages;
 using Akkatecture.Storages.EntityFramework;
 using Autofac;
@@ -16,36 +19,37 @@ namespace Demo.Host
     {
         static void Main()
         {
-            // Create and build your container
+            MainAsync().GetAwaiter().GetResult();
+        }
+        static async Task MainAsync()
+        {
+        // Create and build your container
             var builder = new ContainerBuilder();
 
             var container = builder.Build();
+
+            var aggregateId = UserId.New;
+            var createUserAccountCommand = new CreateUserCommand(aggregateId, new UserName("userName"),new Birth(DateTime.Now));
             
             
             //Create actor system
             var system = ActorSystem.Create("user-example");
-            system.AddAggregateStorageFactory()
+            system.UseAutofac(container);
+
+            system
+                .AddAggregateStorageFactory()
                 .RegisterDefaultStorage<InMemoryAggregateStorage>()
                 .RegisterStorage<UserAggregate,EntityFrameworkStorage<TestDbContext>>();
 
-            system.UseAutofac(container);
+            system
+                .RegisterAggregate<UserAggregate, UserId>()
+                .RegisterQuery<UsersQueryHandler, UsersQuery, ICollection<UserInfo>>();
 
-            //Create supervising aggregate manager for UserAccount aggregate root actors
-            var aggregateManager = system.ActorOf(Props.Create(() => new UserAggregateManager()));
-
-            //Build create user account aggregate command
-            var aggregateId = UserId.New;
-            var createUserAccountCommand = new CreateUserCommand(aggregateId, new UserName("userName"),new Birth(DateTime.Now));
+            var result = await system.PublishCommandAsync(createUserAccountCommand);
             
-            //Send command, this is equivalent to command.publish() in other cqrs frameworks
-            aggregateManager.Tell(createUserAccountCommand);
-            var result = aggregateManager.Ask(new RenameUserCommand(aggregateId, new UserName("TEST"))).GetAwaiter().GetResult();
-            Console.WriteLine(result);
+            result = await system.PublishCommandAsync(new RenameUserCommand(aggregateId, new UserName("TEST")));
 
-            //Create supervising aggregate manager for UserAccount aggregate root actors
-            var usersQueryManager = system.ActorOf(Props.Create(() => new UsersQueryManager()));
-            var res = usersQueryManager.Ask(new UsersQuery("test")).GetAwaiter().GetResult();
-            res = usersQueryManager.Ask(new UsersQuery("test")).GetAwaiter().GetResult();
+            var res = await system.QueryAsync(new UsersQuery("test"));
                         
             //block end of program
             Console.ReadLine();

@@ -56,7 +56,7 @@ namespace Akkatecture.Tests.IntegrationTests.Aggregates.Sagas
             Sys.EventStream.Subscribe(eventProbe, typeof(DomainEvent<TestSaga, TestSagaId, TestSagaStartedEvent>));
             Sys.EventStream.Subscribe(eventProbe, typeof(DomainEvent<TestSaga, TestSagaId, TestSagaCompletedEvent>));
             Sys.EventStream.Subscribe(eventProbe, typeof(DomainEvent<TestSaga, TestSagaId, TestSagaTransactionCompletedEvent>));
-            var aggregateManager = Sys.ActorOf(Props.Create(() => new TestAggregateManager()), "test-aggregatemanager");
+            var aggregateManager = Sys.ActorOf(Props.Create(() => new AggregateManager<TestAggregate,TestAggregateId>()), "test-aggregatemanager");
             Sys.ActorOf(Props.Create(() => new TestSagaManager(() => new TestSaga(aggregateManager))), "test-sagaaggregatemanager");
             
             var senderAggregateId = TestAggregateId.New;
@@ -98,7 +98,7 @@ namespace Akkatecture.Tests.IntegrationTests.Aggregates.Sagas
             Sys.EventStream.Subscribe(eventProbe, typeof(DomainEvent<TestAsyncSaga, TestAsyncSagaId, TestAsyncSagaStartedEvent>));
             Sys.EventStream.Subscribe(eventProbe, typeof(DomainEvent<TestAsyncSaga, TestAsyncSagaId, TestAsyncSagaCompletedEvent>));
             Sys.EventStream.Subscribe(eventProbe, typeof(DomainEvent<TestAsyncSaga, TestAsyncSagaId, TestAsyncSagaTransactionCompletedEvent>));
-            var aggregateManager = Sys.ActorOf(Props.Create(() => new TestAggregateManager()), "test-aggregatemanager");
+            var aggregateManager = Sys.ActorOf(Props.Create(() => new AggregateManager<TestAggregate,TestAggregateId>()), "test-aggregatemanager");
             Sys.ActorOf(Props.Create(() => new TestAsyncSagaManager(() => new TestAsyncSaga(aggregateManager))), "test-sagaaggregatemanager");
             
             var senderAggregateId = TestAggregateId.New;

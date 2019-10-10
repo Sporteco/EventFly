@@ -20,10 +20,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\src\Akkatecture.Clustering\Akkatecture.Clustering.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Update="seed.conf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

@@ -23,8 +23,7 @@
 
 using System;
 using System.Threading.Tasks;
-using Akkatecture.Akka;
-using Akkatecture.Commands.ExecutionResults;
+using Akka.Actor;
 using Akkatecture.Examples.Api.Controllers.Models;
 using Akkatecture.Examples.Api.Domain.Aggregates.Resource;
 using Akkatecture.Examples.Api.Domain.Aggregates.Resource.Commands;
@@ -35,14 +34,11 @@ namespace Akkatecture.Examples.Api.Controllers
 {
     public class ResourceController : BaseController
     {
-        private readonly ActorRefProvider<ResourceManager> _resourceManager;
+
 
         private readonly IQueryResources _resourceQuery;
-        public ResourceController(
-            ActorRefProvider<ResourceManager> resourceManager,
-            IQueryResources resourceQuery)
+        public ResourceController(ActorSystem system, IQueryResources resourceQuery) : base(system)
         {
-            _resourceManager = resourceManager;
             _resourceQuery = resourceQuery;
         }
 
@@ -53,7 +49,7 @@ namespace Akkatecture.Examples.Api.Controllers
             var id = resourceId.GetGuid();
             var command = new CreateResourceCommand(resourceId);
 
-            var result = await _resourceManager.Ask<IExecutionResult>(command);
+            var result = await System.PublishCommandAsync(command);
 
             if (result.IsSuccess)
             {

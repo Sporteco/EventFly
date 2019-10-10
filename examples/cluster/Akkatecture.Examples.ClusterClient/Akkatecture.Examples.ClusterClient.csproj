@@ -19,7 +19,6 @@
     </Description>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\src\Akkatecture.Clustering\Akkatecture.Clustering.csproj" />
     <ProjectReference Include="..\..\simple\Akkatecture.Examples.Domain\Akkatecture.Examples.Domain.csproj" />
   </ItemGroup>
   

@@ -32,7 +32,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Akkatecture.Abstractions\Akkatecture.Abstractions.csproj" />
-    <ProjectReference Include="..\..\src\Akkatecture.Clustering\Akkatecture.Clustering.csproj" />
     <ProjectReference Include="..\..\src\Akkatecture\Akkatecture.csproj" />
     <ProjectReference Include="..\Akkatecture.TestHelpers\Akkatecture.TestHelpers.csproj" />
   </ItemGroup>

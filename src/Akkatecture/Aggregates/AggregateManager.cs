@@ -31,7 +31,7 @@ using Akkatecture.Extensions;
 
 namespace Akkatecture.Aggregates
 {
-    public abstract class AggregateManager<TAggregate, TIdentity> : ReceiveActor, IAggregateManager<TAggregate, TIdentity>
+    public class AggregateManager<TAggregate, TIdentity> : ReceiveActor, IAggregateManager<TAggregate, TIdentity>
         where TAggregate : ActorBase, IAggregateRoot<TIdentity>
         where TIdentity : IIdentity
     {
@@ -40,7 +40,7 @@ namespace Akkatecture.Aggregates
         public AggregateManagerSettings Settings { get; }
         public string Name { get; }
 
-        protected AggregateManager()
+        public AggregateManager()
         {
             Logger = Context.GetLogger();
             Settings = new AggregateManagerSettings(Context.System.Settings.Config);

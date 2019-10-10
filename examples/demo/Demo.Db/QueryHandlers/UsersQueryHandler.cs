@@ -23,5 +23,4 @@ namespace Demo.Db.QueryHandlers
         }
 
     }
-    public class UsersQueryManager : QueryManager<UsersQueryHandler, UsersQuery,  ICollection<UserInfo>>{}
 }
