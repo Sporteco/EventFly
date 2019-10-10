@@ -72,7 +72,7 @@ namespace Akkatecture.Tests.UnitTests.Mapping
             var eventSequence = domainEventReadAdapter.FromJournal(committedEvent, string.Empty);
             var upcastedEvent = eventSequence.Events.Single();
 
-            if (upcastedEvent is IDomainEvent<TestAggregate, TestAggregateId, TestCreatedEvent> e)
+            if (upcastedEvent is IDomainEvent<TestAggregateId, TestCreatedEvent> e)
             {
                 e.AggregateEvent.GetType().Should().Be<TestCreatedEvent>();
             }

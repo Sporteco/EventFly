@@ -33,18 +33,16 @@ using Akkatecture.Core;
 
 namespace Akkatecture.Sagas
 {
-    public interface ISagaHandles<TAggregate, in TIdentity, in TAggregateEvent> : ISaga
+    public interface ISagaHandles<in TIdentity, in TAggregateEvent> : ISaga
         where TAggregateEvent : class, IAggregateEvent<TIdentity>
-        where TAggregate : IAggregateRoot<TIdentity>
         where TIdentity : IIdentity
     {
-        bool Handle(IDomainEvent<TAggregate, TIdentity, TAggregateEvent> domainEvent);
+        bool Handle(IDomainEvent<TIdentity, TAggregateEvent> domainEvent);
     }
-    public interface ISagaHandlesAsync<TAggregate, in TIdentity, in TAggregateEvent> : ISaga
+    public interface ISagaHandlesAsync<in TIdentity, in TAggregateEvent> : ISaga
         where TAggregateEvent : class, IAggregateEvent<TIdentity>
-        where TAggregate : IAggregateRoot<TIdentity>
         where TIdentity : IIdentity
     {
-        Task HandleAsync(IDomainEvent<TAggregate, TIdentity, TAggregateEvent> domainEvent);
+        Task HandleAsync(IDomainEvent<TIdentity, TAggregateEvent> domainEvent);
     }
 }

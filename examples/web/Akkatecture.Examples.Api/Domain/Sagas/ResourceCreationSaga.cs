@@ -33,9 +33,9 @@ using Akkatecture.Sagas.AggregateSaga;
 namespace Akkatecture.Examples.Api.Domain.Sagas
 {
     public class ResourceCreationSaga : AggregateSaga<ResourceCreationSaga, ResourceCreationSagaId, ResourceCreationSagaState>,
-        ISagaIsStartedByAsync<Resource, ResourceId, ResourceCreatedEvent>
+        ISagaIsStartedByAsync<ResourceId, ResourceCreatedEvent>
     {
-        public async Task HandleAsync(IDomainEvent<Resource, ResourceId, ResourceCreatedEvent> domainEvent)
+        public async Task HandleAsync(IDomainEvent<ResourceId, ResourceCreatedEvent> domainEvent)
         {
             //simulates a long running process
             var resourceId = domainEvent.AggregateIdentity;

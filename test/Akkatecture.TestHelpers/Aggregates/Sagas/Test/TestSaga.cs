@@ -33,8 +33,8 @@ using Akkatecture.TestHelpers.Aggregates.Sagas.Test.Events;
 namespace Akkatecture.TestHelpers.Aggregates.Sagas.Test
 {
     public class TestSaga : AggregateSaga<TestSaga,TestSagaId,TestSagaState>,
-        ISagaIsStartedBy<TestAggregate, TestAggregateId, TestSentEvent>,
-        ISagaHandles<TestAggregate, TestAggregateId, TestReceivedEvent>
+        ISagaIsStartedBy<TestAggregateId, TestSentEvent>,
+        ISagaHandles<TestAggregateId, TestReceivedEvent>
     {
         private IActorRef TestAggregateManager { get; }
         public TestSaga(IActorRef testAggregateManager)
@@ -44,7 +44,7 @@ namespace Akkatecture.TestHelpers.Aggregates.Sagas.Test
             Command<EmitTestSagaState>(Handle);
         }
 
-        public bool Handle(IDomainEvent<TestAggregate, TestAggregateId, TestSentEvent> domainEvent)
+        public bool Handle(IDomainEvent<TestAggregateId, TestSentEvent> domainEvent)
         {
             if (IsNew)
             {
@@ -63,7 +63,7 @@ namespace Akkatecture.TestHelpers.Aggregates.Sagas.Test
             return true;
         }
 
-        public bool Handle(IDomainEvent<TestAggregate, TestAggregateId, TestReceivedEvent> domainEvent)
+        public bool Handle(IDomainEvent<TestAggregateId, TestReceivedEvent> domainEvent)
         {
             if (!IsNew)
             {

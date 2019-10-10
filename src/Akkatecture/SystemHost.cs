@@ -32,7 +32,7 @@ namespace Akkatecture
             where TIdentity : IIdentity where TExecutionResult : IExecutionResult
             => GetInstance(system).PublishAsync(command);
 
-        public static Task<TResult> QueryAsync<TResult>(this ActorSystem system, IQuery<TResult> query)
+        public static Task<TResult> ExecuteQueryAsync<TResult>(this ActorSystem system, IQuery<TResult> query)
             => GetInstance(system).QueryAsync(query);
 
         public static IActorRef GetAggregateManager<TIdentity>(this ActorSystem system) 

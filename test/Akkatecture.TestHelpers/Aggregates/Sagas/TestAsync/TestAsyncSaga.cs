@@ -15,8 +15,8 @@ namespace Akkatecture.TestHelpers.Aggregates.Sagas.TestAsync
 {
     [SagaName("TestAsyncSaga")]
     public class TestAsyncSaga: AggregateSaga<TestAsyncSaga,TestAsyncSagaId,TestAsyncSagaState>,
-        ISagaIsStartedByAsync<TestAggregate, TestAggregateId, TestSentEvent>,
-        ISagaHandlesAsync<TestAggregate, TestAggregateId, TestReceivedEvent>
+        ISagaIsStartedByAsync<TestAggregateId, TestSentEvent>,
+        ISagaHandlesAsync<TestAggregateId, TestReceivedEvent>
     {
         private IActorRef TestAggregateManager { get; }
         public TestAsyncSaga(IActorRef testAggregateManager)
@@ -28,7 +28,7 @@ namespace Akkatecture.TestHelpers.Aggregates.Sagas.TestAsync
             SetSnapshotStrategy(SnapshotAlwaysStrategy.Instance);
         }
 
-        public Task HandleAsync(IDomainEvent<TestAggregate, TestAggregateId, TestSentEvent> domainEvent)
+        public Task HandleAsync(IDomainEvent<TestAggregateId, TestSentEvent> domainEvent)
         {
             if (IsNew)
             {
@@ -47,7 +47,7 @@ namespace Akkatecture.TestHelpers.Aggregates.Sagas.TestAsync
             return Task.CompletedTask;
         }
 
-        public Task HandleAsync(IDomainEvent<TestAggregate, TestAggregateId, TestReceivedEvent> domainEvent)
+        public Task HandleAsync(IDomainEvent<TestAggregateId, TestReceivedEvent> domainEvent)
         {
             if (!IsNew)
             {

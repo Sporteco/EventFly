@@ -29,17 +29,17 @@ using Akkatecture.TestHelpers.Aggregates.Events;
 namespace Akkatecture.TestHelpers.Subscribers
 {
     public class TestAggregateSubscriber : DomainEventSubscriber,
-        ISubscribeTo<TestAggregate,TestAggregateId,TestCreatedEvent>,
-        ISubscribeTo<TestAggregate, TestAggregateId, TestAddedEvent>
+        ISubscribeTo<TestAggregateId, TestCreatedEvent>,
+        ISubscribeTo<TestAggregateId, TestAddedEvent>
     {
-        public bool Handle(IDomainEvent<TestAggregate, TestAggregateId, TestCreatedEvent> domainEvent)
+        public bool Handle(IDomainEvent<TestAggregateId, TestCreatedEvent> domainEvent)
         {
             var handled = new TestSubscribedEventHandled<TestCreatedEvent>(domainEvent.AggregateEvent);
             Context.System.EventStream.Publish(handled);
             return true;
         }
         
-        public bool Handle(IDomainEvent<TestAggregate, TestAggregateId, TestAddedEvent> domainEvent)
+        public bool Handle(IDomainEvent<TestAggregateId, TestAddedEvent> domainEvent)
         {
             var handled = new TestSubscribedEventHandled<TestAddedEvent>(domainEvent.AggregateEvent);
             Context.System.EventStream.Publish(handled);

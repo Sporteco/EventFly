@@ -45,11 +45,12 @@ namespace Demo.Host
                 .RegisterAggregate<UserAggregate, UserId>()
                 .RegisterQuery<UsersQueryHandler, UsersQuery, ICollection<UserInfo>>();
 
-            var result = await system.PublishCommandAsync(createUserAccountCommand);
+            await system.PublishCommandAsync(createUserAccountCommand);
             
-            result = await system.PublishCommandAsync(new RenameUserCommand(aggregateId, new UserName("TEST")));
+            await system.PublishCommandAsync(new RenameUserCommand(aggregateId, new UserName("TEST")));
 
-            var res = await system.QueryAsync(new UsersQuery("test"));
+            var res = await system.ExecuteQueryAsync(new UsersQuery("test"));
+            Console.WriteLine(res?.Count);
                         
             //block end of program
             Console.ReadLine();

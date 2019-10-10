@@ -159,7 +159,7 @@ namespace Akkatecture.TestFixture.Aggregates
         public IFixtureAsserter<TAggregate, TIdentity> ThenExpect<TAggregateEvent>(Predicate<TAggregateEvent> aggregateEventPredicate = null)
             where TAggregateEvent : class, IAggregateEvent<TIdentity>
         {
-            _testKit.Sys.EventStream.Subscribe(AggregateEventTestProbe, typeof(IDomainEvent<TAggregate, TIdentity, TAggregateEvent>));
+            _testKit.Sys.EventStream.Subscribe(AggregateEventTestProbe, typeof(IDomainEvent<TIdentity, TAggregateEvent>));
             
             if(aggregateEventPredicate == null)
                 AggregateEventTestProbe.ExpectMsg<DomainEvent<TAggregate, TIdentity, TAggregateEvent>>();
@@ -175,10 +175,10 @@ namespace Akkatecture.TestFixture.Aggregates
             return this;
         }
         
-        public IFixtureAsserter<TAggregate, TIdentity> ThenExpectDomainEvent<TAggregateEvent>(Predicate<IDomainEvent<TAggregate, TIdentity, TAggregateEvent>> domainEventPredicate = null)
+        public IFixtureAsserter<TAggregate, TIdentity> ThenExpectDomainEvent<TAggregateEvent>(Predicate<IDomainEvent<TIdentity, TAggregateEvent>> domainEventPredicate = null)
             where TAggregateEvent : class, IAggregateEvent<TIdentity>
         {
-            _testKit.Sys.EventStream.Subscribe(AggregateEventTestProbe, typeof(IDomainEvent<TAggregate, TIdentity, TAggregateEvent>));
+            _testKit.Sys.EventStream.Subscribe(AggregateEventTestProbe, typeof(IDomainEvent<TIdentity, TAggregateEvent>));
             
             if(domainEventPredicate == null)
                 AggregateEventTestProbe.ExpectMsg<DomainEvent<TAggregate, TIdentity, TAggregateEvent>>();

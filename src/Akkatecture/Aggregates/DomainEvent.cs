@@ -31,7 +31,7 @@ using Akkatecture.Exceptions;
 
 namespace Akkatecture.Aggregates
 {
-    public class DomainEvent<TAggregate, TIdentity, TAggregateEvent> : IDomainEvent<TAggregate, TIdentity, TAggregateEvent>
+    public class DomainEvent<TAggregate, TIdentity, TAggregateEvent> : IDomainEvent<TIdentity, TAggregateEvent>
         where TAggregate : IAggregateRoot<TIdentity>
         where TIdentity : IIdentity
         where TAggregateEvent : class, IAggregateEvent<TIdentity>

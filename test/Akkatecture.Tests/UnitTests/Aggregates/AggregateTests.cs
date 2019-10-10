@@ -53,7 +53,7 @@ namespace Akkatecture.Tests.UnitTests.Aggregates
         public void InitialState_AfterAggregateCreation_TestCreatedEventEmitted()
         {
             var eventProbe = CreateTestProbe("event-probe");
-            Sys.EventStream.Subscribe(eventProbe, typeof(IDomainEvent<TestAggregate, TestAggregateId, TestCreatedEvent>));
+            Sys.EventStream.Subscribe(eventProbe, typeof(IDomainEvent<TestAggregateId, TestCreatedEvent>));
             
             var aggregateId = TestAggregateId.New;
             var commandId = CommandId.New;
@@ -61,7 +61,7 @@ namespace Akkatecture.Tests.UnitTests.Aggregates
             Sys.PublishCommandAsync(command).GetAwaiter().GetResult();
             
             eventProbe
-                .ExpectMsg<IDomainEvent<TestAggregate, TestAggregateId, TestCreatedEvent>>(
+                .ExpectMsg<IDomainEvent<TestAggregateId, TestCreatedEvent>>(
                 x => x.AggregateEvent.TestAggregateId.Equals(aggregateId) &&
                      x.Metadata.ContainsKey("some-key"));
         }
@@ -72,7 +72,7 @@ namespace Akkatecture.Tests.UnitTests.Aggregates
         public async Task SendingCommand_ToAggregateRoot_ShouldReplyWithProperMessage()
         {
             var eventProbe = CreateTestProbe("event-probe");
-            Sys.EventStream.Subscribe(eventProbe, typeof(IDomainEvent<TestAggregate, TestAggregateId, TestCreatedEvent>));
+            Sys.EventStream.Subscribe(eventProbe, typeof(IDomainEvent<TestAggregateId, TestCreatedEvent>));
             
             var aggregateId = TestAggregateId.New;
             var commandId = CommandId.New;
@@ -88,7 +88,7 @@ namespace Akkatecture.Tests.UnitTests.Aggregates
         public void EventContainerMetadata_AfterAggregateCreation_TestCreatedEventEmitted()
         {
             var eventProbe = CreateTestProbe("event-probe");
-            Sys.EventStream.Subscribe(eventProbe, typeof(IDomainEvent<TestAggregate, TestAggregateId, TestCreatedEvent>));
+            Sys.EventStream.Subscribe(eventProbe, typeof(IDomainEvent<TestAggregateId, TestCreatedEvent>));
 
             var aggregateId = TestAggregateId.New;
             var commandId = CommandId.New;
@@ -96,7 +96,7 @@ namespace Akkatecture.Tests.UnitTests.Aggregates
             Sys.PublishCommandAsync(command).GetAwaiter().GetResult();
 
             eventProbe
-                .ExpectMsg<IDomainEvent<TestAggregate, TestAggregateId, TestCreatedEvent>>(
+                .ExpectMsg<IDomainEvent<TestAggregateId, TestCreatedEvent>>(
                 x => x.AggregateIdentity.Equals(aggregateId)
                     && x.IdentityType == typeof(TestAggregateId)
                     && x.AggregateType == typeof(TestAggregate)
@@ -113,7 +113,7 @@ namespace Akkatecture.Tests.UnitTests.Aggregates
         public void InitialState_AfterAggregateCreation_TestStateSignalled()
         {
             var eventProbe = CreateTestProbe("event-probe");
-            Sys.EventStream.Subscribe(eventProbe, typeof(IDomainEvent<TestAggregate, TestAggregateId, TestStateSignalEvent>));
+            Sys.EventStream.Subscribe(eventProbe, typeof(IDomainEvent<TestAggregateId, TestStateSignalEvent>));
 
             var aggregateId = TestAggregateId.New;
             var commandId = CommandId.New;
@@ -123,7 +123,7 @@ namespace Akkatecture.Tests.UnitTests.Aggregates
             Sys.PublishCommandAsync(nextCommand).GetAwaiter().GetResult();
 
             eventProbe
-                .ExpectMsg<IDomainEvent<TestAggregate, TestAggregateId, TestStateSignalEvent>>(
+                .ExpectMsg<IDomainEvent<TestAggregateId, TestStateSignalEvent>>(
                 x => x.AggregateEvent.LastSequenceNr == 1
                      && x.AggregateEvent.Version == 1
                      && x.AggregateEvent.AggregateState.TestCollection.Count == 0);
@@ -134,7 +134,7 @@ namespace Akkatecture.Tests.UnitTests.Aggregates
         public void TestCommand_AfterAggregateCreation_TestEventEmitted()
         {
             var eventProbe = CreateTestProbe("event-probe");
-            Sys.EventStream.Subscribe(eventProbe, typeof(IDomainEvent<TestAggregate, TestAggregateId, TestAddedEvent>));
+            Sys.EventStream.Subscribe(eventProbe, typeof(IDomainEvent<TestAggregateId, TestAddedEvent>));
 
             var aggregateId = TestAggregateId.New;
             var commandId = CommandId.New;
@@ -147,7 +147,7 @@ namespace Akkatecture.Tests.UnitTests.Aggregates
             Sys.PublishCommandAsync(nextCommand).GetAwaiter().GetResult();
 
             eventProbe
-                .ExpectMsg<IDomainEvent<TestAggregate, TestAggregateId, TestAddedEvent>>(
+                .ExpectMsg<IDomainEvent<TestAggregateId, TestAddedEvent>>(
                 x => x.AggregateEvent.Test.Equals(test));
         }
 
@@ -156,7 +156,7 @@ namespace Akkatecture.Tests.UnitTests.Aggregates
         public void TestCommandTwice_AfterAggregateCreation_TestEventEmitted()
         {
             var eventProbe = CreateTestProbe("event-probe");
-            Sys.EventStream.Subscribe(eventProbe, typeof(IDomainEvent<TestAggregate, TestAggregateId, TestAddedEvent>));
+            Sys.EventStream.Subscribe(eventProbe, typeof(IDomainEvent<TestAggregateId, TestAddedEvent>));
 
 
             var aggregateId = TestAggregateId.New;
@@ -176,12 +176,12 @@ namespace Akkatecture.Tests.UnitTests.Aggregates
 
 
             eventProbe
-                .ExpectMsg<IDomainEvent<TestAggregate, TestAggregateId, TestAddedEvent>>(
+                .ExpectMsg<IDomainEvent<TestAggregateId, TestAddedEvent>>(
                 x => x.AggregateEvent.Test.Equals(test)
                      && x.AggregateSequenceNumber == 2);
 
             eventProbe
-                .ExpectMsg<IDomainEvent<TestAggregate, TestAggregateId, TestAddedEvent>>(
+                .ExpectMsg<IDomainEvent<TestAggregateId, TestAddedEvent>>(
                 x => x.AggregateEvent.Test.Equals(test2)
                      && x.AggregateSequenceNumber == 3);
         }
@@ -192,7 +192,7 @@ namespace Akkatecture.Tests.UnitTests.Aggregates
         {
             
             var eventProbe = CreateTestProbe("event-probe");
-            Sys.EventStream.Subscribe(eventProbe, typeof(IDomainEvent<TestAggregate, TestAggregateId, TestStateSignalEvent>));
+            Sys.EventStream.Subscribe(eventProbe, typeof(IDomainEvent<TestAggregateId, TestStateSignalEvent>));
             var aggregateId = TestAggregateId.New;
             var commandId = CommandId.New;
             
@@ -215,7 +215,7 @@ namespace Akkatecture.Tests.UnitTests.Aggregates
 
 
             eventProbe
-                .ExpectMsg<IDomainEvent<TestAggregate, TestAggregateId, TestStateSignalEvent>>(
+                .ExpectMsg<IDomainEvent<TestAggregateId, TestStateSignalEvent>>(
                 x => x.AggregateEvent.LastSequenceNr == 6
                      && x.AggregateEvent.Version == 6
                      && x.AggregateEvent.AggregateState.TestCollection.Count == 5);
@@ -226,8 +226,8 @@ namespace Akkatecture.Tests.UnitTests.Aggregates
         public void TestEventMultipleEmitSourcing_AfterManyMultiCreateCommand_EventsEmitted()
         {
             var eventProbe = CreateTestProbe("event-probe");
-            Sys.EventStream.Subscribe(eventProbe, typeof(IDomainEvent<TestAggregate, TestAggregateId, TestCreatedEvent>));
-            Sys.EventStream.Subscribe(eventProbe, typeof(IDomainEvent<TestAggregate, TestAggregateId, TestAddedEvent>));
+            Sys.EventStream.Subscribe(eventProbe, typeof(IDomainEvent<TestAggregateId, TestCreatedEvent>));
+            Sys.EventStream.Subscribe(eventProbe, typeof(IDomainEvent<TestAggregateId, TestAddedEvent>));
 
             var aggregateId = TestAggregateId.New;
             var commandId = CommandId.New;
@@ -237,9 +237,9 @@ namespace Akkatecture.Tests.UnitTests.Aggregates
             
             Sys.PublishCommandAsync(command).GetAwaiter().GetResult();
 
-            eventProbe.ExpectMsg<IDomainEvent<TestAggregate, TestAggregateId, TestCreatedEvent>>();
-            eventProbe.ExpectMsg<IDomainEvent<TestAggregate, TestAggregateId, TestAddedEvent>>();
-            eventProbe.ExpectMsg<IDomainEvent<TestAggregate, TestAggregateId, TestAddedEvent>>();
+            eventProbe.ExpectMsg<IDomainEvent<TestAggregateId, TestCreatedEvent>>();
+            eventProbe.ExpectMsg<IDomainEvent<TestAggregateId, TestAddedEvent>>();
+            eventProbe.ExpectMsg<IDomainEvent<TestAggregateId, TestAddedEvent>>();
 
         }
         
@@ -249,8 +249,8 @@ namespace Akkatecture.Tests.UnitTests.Aggregates
         {
             
             var eventProbe = CreateTestProbe("event-probe");
-            Sys.EventStream.Subscribe(eventProbe, typeof(IDomainEvent<TestAggregate, TestAggregateId, TestAddedEvent>));
-            Sys.EventStream.Subscribe(eventProbe, typeof(IDomainEvent<TestAggregate, TestAggregateId, TestStateSignalEvent>));
+            Sys.EventStream.Subscribe(eventProbe, typeof(IDomainEvent<TestAggregateId, TestAddedEvent>));
+            Sys.EventStream.Subscribe(eventProbe, typeof(IDomainEvent<TestAggregateId, TestStateSignalEvent>));
             var aggregateId = TestAggregateId.New;
             var commandId = CommandId.New;
 
@@ -270,16 +270,16 @@ namespace Akkatecture.Tests.UnitTests.Aggregates
             Sys.PublishCommandAsync(reviveCommand).GetAwaiter().GetResult();
 
             eventProbe
-                .ExpectMsg<IDomainEvent<TestAggregate, TestAggregateId, TestAddedEvent>>();
+                .ExpectMsg<IDomainEvent<TestAggregateId, TestAddedEvent>>();
             eventProbe
-                .ExpectMsg<IDomainEvent<TestAggregate, TestAggregateId, TestAddedEvent>>();
+                .ExpectMsg<IDomainEvent<TestAggregateId, TestAddedEvent>>();
             eventProbe
-                .ExpectMsg<IDomainEvent<TestAggregate, TestAggregateId, TestAddedEvent>>();
+                .ExpectMsg<IDomainEvent<TestAggregateId, TestAddedEvent>>();
             eventProbe
-                .ExpectMsg<IDomainEvent<TestAggregate, TestAggregateId, TestAddedEvent>>();
+                .ExpectMsg<IDomainEvent<TestAggregateId, TestAddedEvent>>();
 
             eventProbe
-                .ExpectMsg<IDomainEvent<TestAggregate, TestAggregateId, TestStateSignalEvent>>(
+                .ExpectMsg<IDomainEvent<TestAggregateId, TestStateSignalEvent>>(
                 x => x.AggregateEvent.LastSequenceNr == 5
                      && x.AggregateEvent.Version == 5
                      && x.AggregateEvent.AggregateState.TestCollection.Count == 4);
@@ -291,7 +291,7 @@ namespace Akkatecture.Tests.UnitTests.Aggregates
         public void TestSnapShotting_AfterManyTests_TestStateSignalled()
         {
             var eventProbe = CreateTestProbe("event-probe");
-            Sys.EventStream.Subscribe(eventProbe, typeof(IDomainEvent<TestAggregate, TestAggregateId, TestStateSignalEvent>));
+            Sys.EventStream.Subscribe(eventProbe, typeof(IDomainEvent<TestAggregateId, TestStateSignalEvent>));
             var aggregateId = TestAggregateId.New;
             var commandId = CommandId.New;
 
@@ -308,7 +308,7 @@ namespace Akkatecture.Tests.UnitTests.Aggregates
             }
             
             eventProbe
-                .ExpectMsg<IDomainEvent<TestAggregate, TestAggregateId, TestStateSignalEvent>>(
+                .ExpectMsg<IDomainEvent<TestAggregateId, TestStateSignalEvent>>(
                 x => x.AggregateEvent.LastSequenceNr == 11
                      && x.AggregateEvent.Version == 11
                      && x.AggregateEvent.AggregateState.TestCollection.Count == 10
