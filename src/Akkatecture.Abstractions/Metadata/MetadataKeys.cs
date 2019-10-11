@@ -40,6 +40,7 @@ namespace Akkatecture.Metadata
         public const string AggregateId = "aggregate_id";
         public const string SourceId = "source_id";
         public const string CorrelationId = "correlation_id";
+        public const string SagaIds = "saga_ids";
         public const string CausationId = "causation_id";
     }
 }

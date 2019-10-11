@@ -65,6 +65,10 @@ namespace Akkatecture.Sagas.AggregateSaga
             if (PinnedEvent != null)
             {
                 command.Metadata.Merge(PinnedEvent.Metadata);
+                if (!command.Metadata.SagaIds.Contains(Id.Value))
+                {
+                    command.Metadata.SagaIds = new List<string>(command.Metadata.SagaIds) {Id.Value};
+                }
             }
 
             return await Context.System.PublishCommandAsync(command);

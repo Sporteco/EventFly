@@ -43,5 +43,14 @@ namespace Akkatecture.Commands
             get { return GetMetadataValue(MetadataKeys.CorrelationId); }
             set => AddValue(MetadataKeys.CorrelationId, value);
         }
+
+        [JsonIgnore]
+        public IReadOnlyCollection<string> SagaIds
+        {
+            get => ContainsKey(MetadataKeys.SagaIds) ? 
+                (IReadOnlyCollection<string>) GetMetadataValue(MetadataKeys.SagaIds)?.Split(',') : 
+                new List<string>().AsReadOnly();
+            set => AddValue(MetadataKeys.SagaIds, value == null ? "" : string.Join(",",value));
+        }
     }
 }

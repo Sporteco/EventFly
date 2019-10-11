@@ -1,4 +1,5 @@
-﻿using Akkatecture.Core;
+﻿using System.Collections.Generic;
+using Akkatecture.Core;
 
 namespace Akkatecture.Metadata
 {
@@ -6,5 +7,6 @@ namespace Akkatecture.Metadata
     {
         ISourceId SourceId { get; }
         string CorrelationId { get; }
+        IReadOnlyCollection<string> SagaIds { get; }
     }
 }
