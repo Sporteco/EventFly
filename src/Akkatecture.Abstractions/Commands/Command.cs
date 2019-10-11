@@ -36,30 +36,25 @@ namespace Akkatecture.Commands
         where TIdentity : IIdentity
         where TExecutionResult : IExecutionResult
     {
-        protected Command(TIdentity aggregateId) : this(aggregateId, CommandId.New) {}
-
-        protected Command(TIdentity aggregateId, ISourceId sourceId)
+        protected Command(TIdentity aggregateId, CommandMetadata metadata = null)
         {
             if (aggregateId == null) throw new ArgumentNullException(nameof(aggregateId));
-            if (sourceId == null) throw new ArgumentNullException(nameof(sourceId));
+            if (metadata == null) metadata = new CommandMetadata(SourceId.New);
+
+            Metadata = metadata;
 
             AggregateId = aggregateId;
-            SourceId = sourceId;
         }
 
-        public ISourceId SourceId { get; }
         public TIdentity AggregateId { get; }
 
-        public ISourceId GetSourceId() => SourceId;
-
         public IIdentity GetAggregateId() => AggregateId;
+        public CommandMetadata Metadata { get; }
     }
 
     public abstract class Command<TIdentity> : Command<TIdentity, IExecutionResult> 
         where TIdentity : IIdentity
     {
-        protected Command(TIdentity aggregateId) : this(aggregateId, CommandId.New) {}
-
-        protected Command(TIdentity aggregateId, ISourceId sourceId) : base(aggregateId, sourceId) {}
+        protected Command(TIdentity aggregateId, CommandMetadata metadata = null) : base(aggregateId, metadata) {}
     }
 }

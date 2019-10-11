@@ -99,7 +99,7 @@ namespace Akkatecture.Events
                     genericType,
                     committedEvent.AggregateIdentity,
                     upcastedEvent,
-                    committedEvent.Metadata,
+                    committedEvent.EventMetadata,
                     committedEvent.Timestamp,
                     committedEvent.AggregateSequenceNumber);
                 

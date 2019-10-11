@@ -25,36 +25,21 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System;
-using Akkatecture.TestHelpers.Aggregates;
-using Akkatecture.TestHelpers.Aggregates.Commands;
-using FluentAssertions;
-using Xunit;
-
-namespace Akkatecture.Tests.UnitTests.Commands
+namespace Akkatecture.Metadata
 {
-    public class DistinctCommandTests
+    public static class MetadataKeys
     {
-        [Theory]
-        [InlineData("testaggregate-4b1e7b48-18f1-4215-91d9-903cffdab3d8", 1, "command-c3918596-b704-5e6a-9bfc-9876b359f0f0")]
-        [InlineData("testaggregate-4b1e7b48-18f1-4215-91d9-903cffdab3d8", 2, "command-2fc95416-f301-581d-8173-6624677ac172")]
-        [InlineData("testaggregate-6a2a04bd-bbc8-44ac-80ac-b0ca56897bc0", 2, "command-a123dc1f-781b-558c-8740-4fb4d2f3b018")]
-        public void Arguments(string aggregateId, int magicNumber, string expectedSouceId)
-        {
-            var testId = TestAggregateId.With(aggregateId);
-            var command = new TestDistinctCommand(testId, magicNumber);
-
-            var sourceId = command.SourceId;
-            
-            sourceId.Value.Should().Be(expectedSouceId);
-            command.GetSourceId().Value.Should().Be(expectedSouceId);
-        }
-
-        [Fact]
-        public void InstantiatingDistinctCommand_WithNullId_ThrowsException()
-        {
-            this.Invoking(test => new TestDistinctCommand(null, 99))
-                .Should().Throw<ArgumentNullException>();
-        }
+        public const string EventId = "event_id";
+        public const string BatchId = "batch_id";
+        public const string EventName = "event_name";
+        public const string EventVersion = "event_version";
+        public const string Timestamp = "timestamp";
+        public const string TimestampEpoch = "timestamp_epoch";
+        public const string AggregateSequenceNumber = "aggregate_sequence_number";
+        public const string AggregateName = "aggregate_name";
+        public const string AggregateId = "aggregate_id";
+        public const string SourceId = "source_id";
+        public const string CorrelationId = "correlation_id";
+        public const string CausationId = "causation_id";
     }
 }

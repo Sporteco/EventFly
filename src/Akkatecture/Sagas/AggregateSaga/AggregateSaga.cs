@@ -35,10 +35,13 @@ using Akka.Persistence;
 using Akkatecture.Aggregates;
 using Akkatecture.Aggregates.Snapshot;
 using Akkatecture.Aggregates.Snapshot.Strategies;
+using Akkatecture.Commands;
+using Akkatecture.Commands.ExecutionResults;
 using Akkatecture.Core;
 using Akkatecture.Events;
 using Akkatecture.Exceptions;
 using Akkatecture.Extensions;
+using Akkatecture.Metadata;
 using SnapshotMetadata = Akkatecture.Aggregates.Snapshot.SnapshotMetadata;
 
 namespace Akkatecture.Sagas.AggregateSaga
@@ -57,6 +60,16 @@ namespace Akkatecture.Sagas.AggregateSaga
         protected ISnapshotDefinitionService _snapshotDefinitionService;
         protected ISnapshotStrategy SnapshotStrategy { get; set; } = SnapshotNeverStrategy.Instance;
         public TSagaState State { get; }
+        public async Task<TExecutionResult> PublishCommandAsync<TCommandIdentity, TExecutionResult>(ICommand<TCommandIdentity, TExecutionResult> command) where TCommandIdentity : IIdentity where TExecutionResult : IExecutionResult
+        {
+            if (PinnedEvent != null)
+            {
+                command.Metadata.Merge(PinnedEvent.Metadata);
+            }
+
+            return await Context.System.PublishCommandAsync(command);
+        }
+
         public IAggregateName Name => SagaName;
         public override string PersistenceId { get; }
         public TIdentity Id { get; }
@@ -64,6 +77,8 @@ namespace Akkatecture.Sagas.AggregateSaga
         public bool IsNew => Version <= 0;
         public override Recovery Recovery => new Recovery(SnapshotSelectionCriteria.Latest);
         public AggregateSagaSettings Settings { get; }
+
+        protected IDomainEvent PinnedEvent;
 
         protected AggregateSaga()
         {
@@ -199,11 +214,10 @@ namespace Akkatecture.Sagas.AggregateSaga
 
 
             var method = type
-                .GetBaseType("ReceivePersistentActor")
                 .GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
                 .Where(mi =>
                 {
-                    if (mi.Name != "CommandAsync") return false;
+                    if (mi.Name != "CommandInternal") return false;
                     var parameters = mi.GetParameters();
                     return
                         parameters.Length == 2
@@ -221,8 +235,30 @@ namespace Akkatecture.Sagas.AggregateSaga
             }
         }
 
+        protected void CommandInternal<T>(Func<T, bool> handler)
+        {
+            Command<T>(e =>
+            {
+                if (e is IDomainEvent @event)
+                {
+                    PinnedEvent = @event;
+                }
+                handler(e);
+            });
+        }
+        protected void CommandInternal<T>(Func<T, Task> handler, object item)
+        {
+            CommandAsync<T>(e =>
+            {
+                if (e is IDomainEvent @event)
+                {
+                    PinnedEvent = @event;
+                }
+                return handler(e);
+            });
+        }
 
-        protected virtual void Emit<TAggregateEvent>(TAggregateEvent aggregateEvent, IMetadata metadata = null)
+        protected virtual void Emit<TAggregateEvent>(TAggregateEvent aggregateEvent, IEventMetadata metadata = null)
             where TAggregateEvent : class, IAggregateEvent<TIdentity>
         {
             var committedEvent = From(aggregateEvent, Version, metadata);
@@ -245,7 +281,7 @@ namespace Akkatecture.Sagas.AggregateSaga
             PersistAll(committedEvents, ApplyObjectCommittedEvent);
         }
         
-        protected virtual object FromObject(object aggregateEvent, long version, IMetadata metadata = null)
+        protected virtual object FromObject(object aggregateEvent, long version, IEventMetadata metadata = null)
         {
             if (aggregateEvent is IAggregateEvent)
             {
@@ -256,7 +292,7 @@ namespace Akkatecture.Sagas.AggregateSaga
                     GuidFactories.Deterministic.Namespaces.Events,
                     $"{Id.Value}-v{aggregateSequenceNumber}");
                 var now = DateTimeOffset.UtcNow;
-                var eventMetadata = new Metadata
+                var eventMetadata = new EventMetadata(PinnedEvent.Metadata)
                 {
                     Timestamp = now,
                     AggregateSequenceNumber = aggregateSequenceNumber,
@@ -266,7 +302,8 @@ namespace Akkatecture.Sagas.AggregateSaga
                     EventName = eventDefinition.Name,
                     EventVersion = eventDefinition.Version
                 };
-                eventMetadata.Add(MetadataKeys.TimestampEpoch, now.ToUnixTime().ToString());
+
+                eventMetadata.AddValue(MetadataKeys.TimestampEpoch, now.ToUnixTime().ToString());
                 if (metadata != null)
                 {
                     eventMetadata.AddRange(metadata);
@@ -310,7 +347,7 @@ namespace Akkatecture.Sagas.AggregateSaga
         }
 
         public virtual CommittedEvent<TAggregateSaga, TIdentity, TAggregateEvent> From<TAggregateEvent>(TAggregateEvent aggregateEvent,
-            long version, IMetadata metadata = null)
+            long version, IEventMetadata metadata = null)
             where TAggregateEvent : class, IAggregateEvent<TIdentity>
         {
             if (aggregateEvent == null)
@@ -324,7 +361,7 @@ namespace Akkatecture.Sagas.AggregateSaga
                 GuidFactories.Deterministic.Namespaces.Events,
                 $"{Id.Value}-v{aggregateSequenceNumber}");
             var now = DateTimeOffset.UtcNow;
-            var eventMetadata = new Metadata
+            var eventMetadata = new EventMetadata
             {
                 Timestamp = now,
                 AggregateSequenceNumber = aggregateSequenceNumber,
@@ -334,7 +371,7 @@ namespace Akkatecture.Sagas.AggregateSaga
                 EventName = eventDefinition.Name,
                 EventVersion = eventDefinition.Version
             };
-            eventMetadata.Add(MetadataKeys.TimestampEpoch, now.ToUnixTime().ToString());
+            eventMetadata.AddValue(MetadataKeys.TimestampEpoch, now.ToUnixTime().ToString());
             if (metadata != null)
             {
                 eventMetadata.AddRange(metadata);
@@ -343,6 +380,7 @@ namespace Akkatecture.Sagas.AggregateSaga
             var committedEvent = new CommittedEvent<TAggregateSaga, TIdentity, TAggregateEvent>(Id, aggregateEvent, eventMetadata, now, aggregateSequenceNumber);
             return committedEvent;
         }
+
 
         protected virtual IAggregateSnapshot<TAggregateSaga, TIdentity> CreateSnapshot()
         {
@@ -360,7 +398,7 @@ namespace Akkatecture.Sagas.AggregateSaga
 
             Version++;
 
-            var domainEvent = new DomainEvent<TAggregateSaga, TIdentity, TAggregateEvent>(Id, committedEvent.AggregateEvent, committedEvent.Metadata, committedEvent.Timestamp, Version);
+            var domainEvent = new DomainEvent<TAggregateSaga, TIdentity, TAggregateEvent>(Id, committedEvent.AggregateEvent, committedEvent.EventMetadata, committedEvent.Timestamp, Version);
 
             Publish(domainEvent);
 

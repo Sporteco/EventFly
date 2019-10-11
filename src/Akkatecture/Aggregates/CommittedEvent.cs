@@ -38,19 +38,19 @@ namespace Akkatecture.Aggregates
     {
         public TIdentity AggregateIdentity { get; }
         public TAggregateEvent AggregateEvent { get; }
-	    public Metadata Metadata { get; }
+	    public EventMetadata EventMetadata { get; }
         public long AggregateSequenceNumber { get; }
         public DateTimeOffset Timestamp { get; }
 
         public CommittedEvent(
             TIdentity aggregateIdentity,
             TAggregateEvent aggregateEvent,
-            Metadata metadata,
+            EventMetadata metadata,
             DateTimeOffset timestamp,
             long aggregateSequenceNumber)
         {
             if (aggregateEvent == null) throw new ArgumentNullException(nameof(aggregateEvent));
-            if (metadata == null) throw new ArgumentNullException(nameof(metadata));
+            if (metadata == null) metadata = new EventMetadata();
             if (timestamp == default(DateTimeOffset)) throw new ArgumentNullException(nameof(timestamp));
             if (aggregateIdentity == null || string.IsNullOrEmpty(aggregateIdentity.Value)) throw new ArgumentNullException(nameof(aggregateIdentity));
             if (aggregateSequenceNumber <= 0) throw new ArgumentOutOfRangeException(nameof(aggregateSequenceNumber));
@@ -58,7 +58,7 @@ namespace Akkatecture.Aggregates
             AggregateIdentity = aggregateIdentity;
             AggregateSequenceNumber = aggregateSequenceNumber;
             AggregateEvent = aggregateEvent;
-            Metadata = metadata;
+            EventMetadata = metadata;
             Timestamp = timestamp;
         }
 

@@ -80,7 +80,7 @@ namespace Akkatecture.Tests.UnitTests.Aggregates
             var result = await Sys.PublishCommandAsync(command);
 
             result.IsSuccess.Should().BeTrue();
-            result.SourceId.Should().Be(command.SourceId);
+            result.SourceId.Should().Be(command.Metadata.SourceId);
         }
 
         [Fact]

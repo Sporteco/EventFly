@@ -43,13 +43,13 @@ namespace Akkatecture.Aggregates
         public TIdentity AggregateIdentity { get; }
         public TAggregateEvent AggregateEvent { get; }
         public long AggregateSequenceNumber { get; }
-        public Metadata Metadata { get; }
+        public EventMetadata Metadata { get; }
         public DateTimeOffset Timestamp { get; }
 
         public DomainEvent(
             TIdentity aggregateIdentity,
             TAggregateEvent aggregateEvent,
-            Metadata metadata,
+            EventMetadata metadata,
             DateTimeOffset timestamp,
             long aggregateSequenceNumber)
         {

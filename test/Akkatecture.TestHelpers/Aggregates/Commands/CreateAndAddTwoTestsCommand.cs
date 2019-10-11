@@ -13,7 +13,7 @@ namespace Akkatecture.TestHelpers.Aggregates.Commands
             CommandId sourceId,
             Test firstTest,
             Test secondTest)
-            : base(aggregateId, sourceId)
+            : base(aggregateId, new CommandMetadata(sourceId))
         {
             FirstTest = firstTest;
             SecondTest = secondTest;

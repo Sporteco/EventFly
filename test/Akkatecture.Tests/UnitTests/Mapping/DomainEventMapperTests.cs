@@ -53,7 +53,7 @@ namespace Akkatecture.Tests.UnitTests.Mapping
             var eventId = EventId.NewDeterministic(
                 GuidFactories.Deterministic.Namespaces.Events,
                 $"{aggregateId.Value}-v{3}");
-            var eventMetadata = new Metadata
+            var eventMetadata = new EventMetadata
             {
                 Timestamp = now,
                 AggregateSequenceNumber = aggregateSequenceNumber,
@@ -92,7 +92,7 @@ namespace Akkatecture.Tests.UnitTests.Mapping
 
             var unchanged = domainEventReadAdapter.FromJournal(message, string.Empty);
 
-            unchanged.Events.Single().As<CreateTestCommand>().GetSourceId().Should().Be(message.GetSourceId());
+            unchanged.Events.Single().As<CreateTestCommand>().Metadata.SourceId.Should().Be(message.Metadata.SourceId);
             unchanged.Events.Single().As<CreateTestCommand>().AggregateId.Should().Be(message.AggregateId);
         }
     }

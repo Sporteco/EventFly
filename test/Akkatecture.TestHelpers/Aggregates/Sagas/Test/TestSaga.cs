@@ -54,7 +54,7 @@ namespace Akkatecture.TestHelpers.Aggregates.Sagas.Test
 
                 Emit(new TestSagaStartedEvent(domainEvent.AggregateIdentity, domainEvent.AggregateEvent.RecipientAggregateId, domainEvent.AggregateEvent.Test));
 
-                Context.System.PublishCommandAsync(command).GetAwaiter().GetResult();
+                PublishCommandAsync(command).GetAwaiter().GetResult();
             }
 
             return true;

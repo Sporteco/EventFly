@@ -10,6 +10,7 @@ using Akkatecture.Core;
 using Akkatecture.Events;
 using Akkatecture.Exceptions;
 using Akkatecture.Extensions;
+using Akkatecture.Metadata;
 
 namespace Akkatecture.Aggregates
 {
@@ -139,7 +140,7 @@ namespace Akkatecture.Aggregates
             return Id;
         }
 
-        public virtual void Emit<TAggregateEvent>(TAggregateEvent aggregateEvent, IMetadata metadata = null)
+        public virtual void Emit<TAggregateEvent>(TAggregateEvent aggregateEvent, IEventMetadata metadata = null)
             where TAggregateEvent : class, IAggregateEvent<TIdentity>
         {
 
@@ -151,7 +152,7 @@ namespace Akkatecture.Aggregates
 
 
         public virtual CommittedEvent<TAggregate, TIdentity, TAggregateEvent> From<TAggregateEvent>(TAggregateEvent aggregateEvent,
-            long version, IMetadata metadata = null)
+            long version, IEventMetadata metadata = null)
             where TAggregateEvent : class, IAggregateEvent<TIdentity>
         {
             if (aggregateEvent == null)
@@ -165,18 +166,18 @@ namespace Akkatecture.Aggregates
                 GuidFactories.Deterministic.Namespaces.Events,
                 $"{Id.Value}-v{aggregateSequenceNumber}");
             var now = DateTimeOffset.UtcNow;
-            var eventMetadata = new Metadata
+            var eventMetadata = new EventMetadata(PinnedCommand.Metadata)
             {
                 Timestamp = now,
                 AggregateSequenceNumber = aggregateSequenceNumber,
                 AggregateName = Name.Value,
                 AggregateId = Id.Value,
-                SourceId = PinnedCommand.SourceId,
                 EventId = eventId,
                 EventName = eventDefinition.Name,
                 EventVersion = eventDefinition.Version
             };
-            eventMetadata.Add(MetadataKeys.TimestampEpoch, now.ToUnixTime().ToString());
+            
+            eventMetadata.AddValue(MetadataKeys.TimestampEpoch, now.ToUnixTime().ToString());
             if (metadata != null)
             {
                 eventMetadata.AddRange(metadata);
@@ -191,7 +192,7 @@ namespace Akkatecture.Aggregates
         {
             Log.Info("Aggregate of Name={0}, and Id={1}; committed and applied an AggregateEvent of Type={2}.", Name, Id, typeof(TAggregateEvent).PrettyPrint());
 
-            var domainEvent = new DomainEvent<TAggregate,TIdentity,TAggregateEvent>(Id, committedEvent.AggregateEvent,committedEvent.Metadata,committedEvent.Timestamp,Version);
+            var domainEvent = new DomainEvent<TAggregate,TIdentity,TAggregateEvent>(Id, committedEvent.AggregateEvent,committedEvent.EventMetadata,committedEvent.Timestamp,Version);
 
             Publish(domainEvent);
             ReplyIfAvailable();

@@ -25,21 +25,14 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-namespace Akkatecture.Aggregates
+using System;
+using System.Collections.Generic;
+
+namespace Akkatecture.Metadata
 {
-    public static class MetadataKeys
+    public interface IMetadataContainer : IReadOnlyDictionary<string, string>
     {
-        public const string EventId = "event_id";
-        public const string BatchId = "batch_id";
-        public const string EventName = "event_name";
-        public const string EventVersion = "event_version";
-        public const string Timestamp = "timestamp";
-        public const string TimestampEpoch = "timestamp_epoch";
-        public const string AggregateSequenceNumber = "aggregate_sequence_number";
-        public const string AggregateName = "aggregate_name";
-        public const string AggregateId = "aggregate_id";
-        public const string SourceId = "source_id";
-        public const string CorrelationId = "correlation_id";
-        public const string CausationId = "causation_id";
+        string GetMetadataValue(string key);
+        T GetMetadataValue<T>(string key, Func<string, T> converter);
     }
 }

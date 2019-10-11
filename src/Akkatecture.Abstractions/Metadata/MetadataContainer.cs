@@ -30,7 +30,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Akkatecture.Exceptions;
 
-namespace Akkatecture.Core
+namespace Akkatecture.Metadata
 {
     public class MetadataContainer : Dictionary<string, string>
     {
@@ -76,6 +76,12 @@ namespace Akkatecture.Core
             return GetMetadataValue(key, s => s);
         }
 
+        public void AddValue(string key, string value)
+        {
+            if (ContainsKey(key)) this[key] = value;
+            else Add(key,value);
+        }
+
         public T GetMetadataValue<T>(string key, Func<string, T> converter)
         {
             string value;
@@ -93,6 +99,33 @@ namespace Akkatecture.Core
             {
                 throw new MetadataParseException(key, value, e);
             }
+        }
+        public void Merge(IMetadataContainer metadata)
+        {
+            foreach (var kv in metadata)
+            {
+                if (!ContainsKey(kv.Key))
+                    Add(kv.Key,kv.Value);
+            }
+        }
+
+#pragma warning disable 659
+        public override bool Equals(object obj)
+#pragma warning restore 659
+        {
+            if (obj is MetadataContainer c)
+            {
+                if (c.Count != Count) return false;
+                foreach (var pair in c)
+                {
+                    if (!ContainsKey(pair.Key)) return false;
+                    if (this[pair.Key] != pair.Value) return false;
+                }
+
+                return true;
+            }
+
+            return false;
         }
     }
 }

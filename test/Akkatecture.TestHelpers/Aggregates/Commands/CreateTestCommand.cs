@@ -30,7 +30,7 @@ namespace Akkatecture.TestHelpers.Aggregates.Commands
         public CreateTestCommand(
             TestAggregateId aggregateId,
             CommandId sourceId)
-            : base(aggregateId, sourceId)
+            : base(aggregateId,  new CommandMetadata(sourceId))
         {
         }
     }

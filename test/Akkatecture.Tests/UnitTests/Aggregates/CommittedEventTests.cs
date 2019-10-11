@@ -47,7 +47,7 @@ namespace Akkatecture.Tests.UnitTests.Aggregates
             var eventId = EventId.NewDeterministic(
                 GuidFactories.Deterministic.Namespaces.Events,
                 $"{aggregateId.Value}-v{aggregateSequenceNumber}");
-            var eventMetadata = new Metadata
+            var eventMetadata = new EventMetadata
             {
                 Timestamp = now,
                 AggregateSequenceNumber = aggregateSequenceNumber,
@@ -76,7 +76,7 @@ namespace Akkatecture.Tests.UnitTests.Aggregates
             var eventId = EventId.NewDeterministic(
                 GuidFactories.Deterministic.Namespaces.Events,
                 $"{aggregateId.Value}-v{aggregateSequenceNumber}");
-            var eventMetadata = new Metadata
+            var eventMetadata = new EventMetadata
             {
                 Timestamp = now,
                 AggregateSequenceNumber = aggregateSequenceNumber,
@@ -95,25 +95,6 @@ namespace Akkatecture.Tests.UnitTests.Aggregates
                 .Should().Throw<ArgumentNullException>().And.Message.Contains("aggregateEvent").Should().BeTrue();
         }
         
-        [Fact]
-        public void InstantiatingCommittedEvent_WithNullMetadata_ThrowsException()
-        {
-            var aggregateSequenceNumber = 3;
-            var aggregateId = TestAggregateId.New;
-            var entityId = TestId.New;
-            var entity = new Test(entityId);
-            var aggregateEvent = new TestAddedEvent(entity);
-            var now = DateTimeOffset.UtcNow;
-
-            this.Invoking(test =>
-                    new CommittedEvent<TestAggregate, TestAggregateId, TestAddedEvent>(
-                        aggregateId,
-                        aggregateEvent,
-                        null,
-                        now,
-                        aggregateSequenceNumber))
-                .Should().Throw<ArgumentNullException>().And.Message.Contains("metadata").Should().BeTrue();
-        }
         
         [Fact]
         public void InstantiatingCommittedEvent_WithDefaultTimeOffset_ThrowsException()
@@ -128,7 +109,7 @@ namespace Akkatecture.Tests.UnitTests.Aggregates
                 GuidFactories.Deterministic.Namespaces.Events,
                 $"{aggregateId.Value}-v{aggregateSequenceNumber}");
             
-            var eventMetadata = new Metadata
+            var eventMetadata = new EventMetadata
             {
                 Timestamp = now,
                 AggregateSequenceNumber = aggregateSequenceNumber,
@@ -160,7 +141,7 @@ namespace Akkatecture.Tests.UnitTests.Aggregates
                 GuidFactories.Deterministic.Namespaces.Events,
                 $"{aggregateId.Value}-v{aggregateSequenceNumber}");
             
-            var eventMetadata = new Metadata
+            var eventMetadata = new EventMetadata
             {
                 Timestamp = now,
                 AggregateSequenceNumber = aggregateSequenceNumber,
@@ -192,7 +173,7 @@ namespace Akkatecture.Tests.UnitTests.Aggregates
                 GuidFactories.Deterministic.Namespaces.Events,
                 $"{aggregateId.Value}-v{aggregateSequenceNumber}");
             
-            var eventMetadata = new Metadata
+            var eventMetadata = new EventMetadata
             {
                 Timestamp = now,
                 AggregateSequenceNumber = aggregateSequenceNumber,

@@ -36,9 +36,9 @@ namespace Akkatecture.TestHelpers.Aggregates.Sagas.TestAsync
                     domainEvent.AggregateIdentity,
                     domainEvent.AggregateEvent.Test);
 
-                Emit(new TestAsyncSagaStartedEvent(domainEvent.AggregateIdentity, domainEvent.AggregateEvent.RecipientAggregateId, domainEvent.AggregateEvent.Test), new Metadata{{"some-key","some-value"}});
+                Emit(new TestAsyncSagaStartedEvent(domainEvent.AggregateIdentity, domainEvent.AggregateEvent.RecipientAggregateId, domainEvent.AggregateEvent.Test), new EventMetadata{{"some-key","some-value"}});
 
-                await Context.System.PublishCommandAsync(command);
+                await PublishCommandAsync(command);
 
             }
         }

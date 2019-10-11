@@ -16,7 +16,7 @@ namespace Akkatecture.Aggregates
         protected EventDrivenAggregateRoot(TIdentity id) : base(id)
         {
         }
-        public override void Emit<TAggregateEvent>(TAggregateEvent aggregateEvent, IMetadata metadata = null)
+        public override void Emit<TAggregateEvent>(TAggregateEvent aggregateEvent, IEventMetadata metadata = null)
         {
             var committedEvent = From(aggregateEvent, Version, metadata);
 

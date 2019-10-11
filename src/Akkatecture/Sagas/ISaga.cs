@@ -26,12 +26,11 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-
 namespace Akkatecture.Sagas
 {
     public interface ISaga
     {
-        
+
     }
 
     public interface ISaga<TSagaId> : ISaga

@@ -30,6 +30,7 @@ using Akkatecture.Aggregates.Snapshot.Strategies;
 using Akkatecture.Commands.ExecutionResults;
 using Akkatecture.Core;
 using Akkatecture.Extensions;
+using Akkatecture.Metadata;
 using Akkatecture.TestHelpers.Aggregates.Commands;
 using Akkatecture.TestHelpers.Aggregates.Events;
 using Akkatecture.TestHelpers.Aggregates.Events.Errors;
@@ -46,7 +47,6 @@ namespace Akkatecture.TestHelpers.Aggregates
         IExecute<AddFourTestsCommand,TestAggregateId>,
         IExecute<GiveTestCommand,TestAggregateId>,
         IExecute<ReceiveTestCommand,TestAggregateId>,
-        IExecute<TestDistinctCommand,TestAggregateId>,
         IExecute<PoisonTestAggregateCommand,TestAggregateId>,
         IExecute<PublishTestStateCommand,TestAggregateId>,
         IExecute<TestDomainErrorCommand,TestAggregateId>,
@@ -68,17 +68,17 @@ namespace Akkatecture.TestHelpers.Aggregates
         {
             if (IsNew)
             {
-                Emit(new TestCreatedEvent(command.AggregateId), new Metadata {{"some-key","some-value"}});
-                Reply(TestExecutionResult.SucceededWith(command.SourceId));
+                Emit(new TestCreatedEvent(command.AggregateId), new EventMetadata {{"some-key","some-value"}});
+                Reply(TestExecutionResult.SucceededWith(command.Metadata.SourceId));
             }
             else
             {
                 TestErrors++;
                 Throw(new TestedErrorEvent(TestErrors));
-                ReplyFailure(TestExecutionResult.FailedWith(command.SourceId));
+                ReplyFailure(TestExecutionResult.FailedWith(command.Metadata.SourceId));
             }
 
-            return new SuccessTestExecutionResult(command.SourceId);
+            return new SuccessTestExecutionResult(command.Metadata.SourceId);
         }
         
 
@@ -90,13 +90,13 @@ namespace Akkatecture.TestHelpers.Aggregates
                 var firstTestAddedEvent = new TestAddedEvent(command.FirstTest);
                 var secondTestAddedEvent = new TestAddedEvent(command.SecondTest);
                 EmitAll(createdEvent, firstTestAddedEvent, secondTestAddedEvent);
-                Reply(TestExecutionResult.SucceededWith(command.SourceId));
+                Reply(TestExecutionResult.SucceededWith(command.Metadata.SourceId));
             }
             else
             {
                 TestErrors++;
                 Throw(new TestedErrorEvent(TestErrors));
-                ReplyFailure(TestExecutionResult.FailedWith(command.SourceId));
+                ReplyFailure(TestExecutionResult.FailedWith(command.Metadata.SourceId));
             }
 
             return ExecutionResult.Success();
@@ -108,16 +108,16 @@ namespace Akkatecture.TestHelpers.Aggregates
             {
 
                 Emit(new TestAddedEvent(command.Test));
-                Reply(TestExecutionResult.SucceededWith(command.SourceId));
+                Reply(TestExecutionResult.SucceededWith(command.Metadata.SourceId));
 
             }
             else
             {
                 TestErrors++;
                 Throw(new TestedErrorEvent(TestErrors));
-                ReplyFailure(TestExecutionResult.FailedWith(command.SourceId));
+                ReplyFailure(TestExecutionResult.FailedWith(command.Metadata.SourceId));
             }
-            return new SuccessTestExecutionResult(command.SourceId);
+            return new SuccessTestExecutionResult(command.Metadata.SourceId);
         }
 
         public IExecutionResult Execute(AddFourTestsCommand command)
@@ -130,14 +130,14 @@ namespace Akkatecture.TestHelpers.Aggregates
 
                 // ReSharper disable once CoVariantArrayConversion
                 EmitAll(events.ToArray());
-                Reply(TestExecutionResult.SucceededWith(command.SourceId));
+                Reply(TestExecutionResult.SucceededWith(command.Metadata.SourceId));
 
             }
             else
             {
                 TestErrors++;
                 Throw(new TestedErrorEvent(TestErrors));
-                ReplyFailure(TestExecutionResult.FailedWith(command.SourceId));
+                ReplyFailure(TestExecutionResult.FailedWith(command.Metadata.SourceId));
             }
             return ExecutionResult.Success();
         }
@@ -149,7 +149,7 @@ namespace Akkatecture.TestHelpers.Aggregates
                 if (State.TestCollection.Any(x => x.Id == command.TestToGive.Id))
                 {
                     Emit(new TestSentEvent(command.TestToGive,command.ReceiverAggregateId));
-                    Reply(TestExecutionResult.SucceededWith(command.SourceId));
+                    Reply(TestExecutionResult.SucceededWith(command.Metadata.SourceId));
                 }
 
             }
@@ -157,7 +157,7 @@ namespace Akkatecture.TestHelpers.Aggregates
             {
                 TestErrors++;
                 Throw(new TestedErrorEvent(TestErrors));
-                ReplyFailure(TestExecutionResult.FailedWith(command.SourceId));
+                ReplyFailure(TestExecutionResult.FailedWith(command.Metadata.SourceId));
             }
 
             return ExecutionResult.Success();
@@ -168,13 +168,13 @@ namespace Akkatecture.TestHelpers.Aggregates
             if (!IsNew)
             {
                 Emit(new TestReceivedEvent(command.SenderAggregateId, command.TestToReceive));
-                Reply(TestExecutionResult.SucceededWith(command.SourceId));
+                Reply(TestExecutionResult.SucceededWith(command.Metadata.SourceId));
             }
             else
             {
                 TestErrors++;
                 Throw(new TestedErrorEvent(TestErrors));
-                ReplyFailure(TestExecutionResult.FailedWith(command.SourceId));
+                ReplyFailure(TestExecutionResult.FailedWith(command.Metadata.SourceId));
             }
 
             return ExecutionResult.Success();
@@ -190,10 +190,6 @@ namespace Akkatecture.TestHelpers.Aggregates
             Sender.Tell(ExecutionResult.Success(), Self);
             return ExecutionResult.Success();
         }
-        public IExecutionResult Execute(TestDistinctCommand command)
-        {
-            return ExecutionResult.Success();
-        }
 
         public IExecutionResult Execute(PoisonTestAggregateCommand command)
         {
@@ -205,7 +201,7 @@ namespace Akkatecture.TestHelpers.Aggregates
             {
                 TestErrors++;
                 Throw(new TestedErrorEvent(TestErrors));
-                ReplyFailure(TestExecutionResult.FailedWith(command.SourceId));
+                ReplyFailure(TestExecutionResult.FailedWith(command.Metadata.SourceId));
             }
 
             return ExecutionResult.Success();
@@ -240,7 +236,7 @@ namespace Akkatecture.TestHelpers.Aggregates
                 .Select(x => new TestAggregateSnapshot.TestModel(x.Id.GetGuid())).ToList());
         }
 
-        private void Signal<TAggregateEvent>(TAggregateEvent aggregateEvent, IMetadata metadata = null)
+        private void Signal<TAggregateEvent>(TAggregateEvent aggregateEvent, IEventMetadata metadata = null)
             where TAggregateEvent : class, IAggregateEvent<TestAggregateId>
         {
             if (aggregateEvent == null)
@@ -253,7 +249,7 @@ namespace Akkatecture.TestHelpers.Aggregates
                 GuidFactories.Deterministic.Namespaces.Events,
                 $"{Id.Value}-v{aggregateSequenceNumber}");
             var now = DateTimeOffset.UtcNow;
-            var eventMetadata = new Metadata
+            var eventMetadata = new EventMetadata
             {
                 Timestamp = now,
                 AggregateSequenceNumber = aggregateSequenceNumber,
@@ -273,7 +269,7 @@ namespace Akkatecture.TestHelpers.Aggregates
             Publish(domainEvent);
         }
 
-        private void Throw<TAggregateEvent>(TAggregateEvent aggregateEvent, IMetadata metadata = null)
+        private void Throw<TAggregateEvent>(TAggregateEvent aggregateEvent, IEventMetadata metadata = null)
             where TAggregateEvent : class, IAggregateEvent<TestAggregateId>
         {
             Signal(aggregateEvent, metadata);

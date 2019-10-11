@@ -60,7 +60,7 @@ namespace Akkatecture.Tests.UnitTests.Serialization
             var eventId = EventId.NewDeterministic(
                 GuidFactories.Deterministic.Namespaces.Events,
                 $"{aggregateId.Value}-v{aggregateSequenceNumber}");
-            var eventMetadata = new Metadata
+            var eventMetadata = new EventMetadata
             {
                 Timestamp = now,
                 AggregateSequenceNumber = aggregateSequenceNumber,
@@ -92,7 +92,7 @@ namespace Akkatecture.Tests.UnitTests.Serialization
             var eventId = EventId.NewDeterministic(
                 GuidFactories.Deterministic.Namespaces.Events,
                 $"{aggregateId.Value}-v{aggregateSequenceNumber}");
-            var eventMetadata = new Metadata
+            var eventMetadata = new EventMetadata
             {
                 Timestamp = now,
                 AggregateSequenceNumber = aggregateSequenceNumber,

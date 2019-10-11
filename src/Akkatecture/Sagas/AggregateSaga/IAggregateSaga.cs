@@ -26,12 +26,19 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
+using System.Threading.Tasks;
 using Akkatecture.Aggregates;
+using Akkatecture.Commands;
+using Akkatecture.Commands.ExecutionResults;
+using Akkatecture.Core;
 
 namespace Akkatecture.Sagas.AggregateSaga
 {
     public interface IAggregateSaga<out TIdentity> : IAggregateRoot<TIdentity>
         where TIdentity : ISagaId
     {
+        Task<TExecutionResult> PublishCommandAsync<TCommandIdentity, TExecutionResult>(ICommand<TCommandIdentity, TExecutionResult> command)
+            where TCommandIdentity : IIdentity where TExecutionResult : IExecutionResult;
+
     }
 }

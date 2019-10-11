@@ -30,54 +30,55 @@ using System.Collections.Generic;
 using System.Linq;
 using Akkatecture.Core;
 using Akkatecture.Extensions;
+using Akkatecture.Metadata;
 using Newtonsoft.Json;
 
 namespace Akkatecture.Aggregates
 {
-    public class Metadata : MetadataContainer, IMetadata
+    public class EventMetadata : MetadataContainer, IEventMetadata
     {
-        public static IMetadata Empty { get; } = new Metadata();
+        public static IEventMetadata Empty { get; } = new EventMetadata();
 
-        public static IMetadata With(IEnumerable<KeyValuePair<string, string>> keyValuePairs)
+        public static IEventMetadata With(IEnumerable<KeyValuePair<string, string>> keyValuePairs)
         {
-            return new Metadata(keyValuePairs);
+            return new EventMetadata(keyValuePairs);
         }
 
-        public static IMetadata With(params KeyValuePair<string, string>[] keyValuePairs)
+        public static IEventMetadata With(params KeyValuePair<string, string>[] keyValuePairs)
         {
-            return new Metadata(keyValuePairs);
+            return new EventMetadata(keyValuePairs);
         }
 
-        public static IMetadata With(IDictionary<string, string> keyValuePairs)
+        public static IEventMetadata With(IDictionary<string, string> keyValuePairs)
         {
-            return new Metadata(keyValuePairs);
+            return new EventMetadata(keyValuePairs);
         }
 
         public ISourceId SourceId
         {
             get { return GetMetadataValue(MetadataKeys.SourceId, v => new SourceId(v)); }
-            set { Add(MetadataKeys.SourceId, value.Value); }
+            set { AddValue(MetadataKeys.SourceId, value.Value); }
         }
 
         [JsonIgnore]
         public string EventName
         {
             get { return GetMetadataValue(MetadataKeys.EventName); }
-            set { Add(MetadataKeys.EventName, value); }
+            set { AddValue(MetadataKeys.EventName, value); }
         }
 
         [JsonIgnore]
         public int EventVersion
         {
             get { return GetMetadataValue(MetadataKeys.EventVersion, int.Parse); }
-            set { Add(MetadataKeys.EventVersion, value.ToString()); }
+            set { AddValue(MetadataKeys.EventVersion, value.ToString()); }
         }
 
         [JsonIgnore]
         public DateTimeOffset Timestamp
         {
             get { return GetMetadataValue(MetadataKeys.Timestamp, DateTimeOffset.Parse); }
-            set { Add(MetadataKeys.Timestamp, value.ToString("O")); }
+            set { AddValue(MetadataKeys.Timestamp, value.ToString("O")); }
         }
 
         [JsonIgnore]
@@ -98,72 +99,72 @@ namespace Akkatecture.Aggregates
         public long AggregateSequenceNumber
         {
             get { return GetMetadataValue(MetadataKeys.AggregateSequenceNumber, int.Parse); }
-            set { Add(MetadataKeys.AggregateSequenceNumber, value.ToString()); }
+            set { AddValue(MetadataKeys.AggregateSequenceNumber, value.ToString()); }
         }
 
         [JsonIgnore]
         public string AggregateId
         {
             get { return GetMetadataValue(MetadataKeys.AggregateId); }
-            set { Add(MetadataKeys.AggregateId, value); }
+            set { AddValue(MetadataKeys.AggregateId, value); }
         }
         
         [JsonIgnore]
         public string CorrelationId
         {
             get { return GetMetadataValue(MetadataKeys.CorrelationId); }
-            set { Add(MetadataKeys.CorrelationId, value); }
+            set { AddValue(MetadataKeys.CorrelationId, value); }
         }
         
         [JsonIgnore]
         public string CausationId
         {
             get { return GetMetadataValue(MetadataKeys.CausationId); }
-            set { Add(MetadataKeys.CausationId, value); }
+            set { AddValue(MetadataKeys.CausationId, value); }
         }
 
         [JsonIgnore]
         public IEventId EventId
         {
             get { return GetMetadataValue(MetadataKeys.EventId, Aggregates.EventId.With); }
-            set { Add(MetadataKeys.EventId, value.Value); }
+            set { AddValue(MetadataKeys.EventId, value.Value); }
         }
 
         [JsonIgnore]
         public string AggregateName
         {
             get { return GetMetadataValue(MetadataKeys.AggregateName); }
-            set { Add(MetadataKeys.AggregateName, value); }
+            set { AddValue(MetadataKeys.AggregateName, value); }
         }
 
-        public Metadata()
+        public EventMetadata()
         {
             // Empty
         }
 
-        public Metadata(IDictionary<string, string> keyValuePairs)
+        public EventMetadata(IDictionary<string, string> keyValuePairs)
             : base(keyValuePairs)
         {
         }
 
-        public Metadata(IEnumerable<KeyValuePair<string, string>> keyValuePairs)
+        public EventMetadata(IEnumerable<KeyValuePair<string, string>> keyValuePairs)
             : base(keyValuePairs.ToDictionary(kv => kv.Key, kv => kv.Value))
         {
         }
 
-        public Metadata(params KeyValuePair<string, string>[] keyValuePairs)
+        public EventMetadata(params KeyValuePair<string, string>[] keyValuePairs)
             : this((IEnumerable<KeyValuePair<string, string>>)keyValuePairs)
         {
         }
 
-        public IMetadata CloneWith(params KeyValuePair<string, string>[] keyValuePairs)
+        public IEventMetadata CloneWith(params KeyValuePair<string, string>[] keyValuePairs)
         {
             return CloneWith((IEnumerable<KeyValuePair<string, string>>)keyValuePairs);
         }
 
-        public IMetadata CloneWith(IEnumerable<KeyValuePair<string, string>> keyValuePairs)
+        public IEventMetadata CloneWith(IEnumerable<KeyValuePair<string, string>> keyValuePairs)
         {
-            var metadata = new Metadata(this);
+            var metadata = new EventMetadata(this);
             foreach (var kv in keyValuePairs)
             {
                 if (metadata.ContainsKey(kv.Key))
@@ -174,5 +175,7 @@ namespace Akkatecture.Aggregates
             }
             return metadata;
         }
+
+
     }
 }

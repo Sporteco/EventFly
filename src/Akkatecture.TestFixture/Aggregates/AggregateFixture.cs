@@ -194,7 +194,7 @@ namespace Akkatecture.TestFixture.Aggregates
             var writes = new AtomicWrite[events.Length];
             for (var i = 0; i < events.Length; i++)
             {
-                var committedEvent = new CommittedEvent<TAggregate, TIdentity, IAggregateEvent<TIdentity>>(aggregateId, events[i], new Metadata(), DateTimeOffset.UtcNow, i+1);
+                var committedEvent = new CommittedEvent<TAggregate, TIdentity, IAggregateEvent<TIdentity>>(aggregateId, events[i], new EventMetadata(), DateTimeOffset.UtcNow, i+1);
                 writes[i] = new AtomicWrite(new Persistent(committedEvent, i+1, aggregateId.Value, string.Empty, false, ActorRefs.NoSender, writerGuid));
             }
             var journal = Persistence.Instance.Apply(_testKit.Sys).JournalFor(null);

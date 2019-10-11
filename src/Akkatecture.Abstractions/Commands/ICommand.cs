@@ -33,8 +33,8 @@ namespace Akkatecture.Commands
 {
     public interface ICommand : IVersionedType
     {
-        ISourceId SourceId { get; }
         IIdentity GetAggregateId();
+        CommandMetadata Metadata { get; }
     }
 
     public interface ICommand<out TIdentity, TResult> : ICommand

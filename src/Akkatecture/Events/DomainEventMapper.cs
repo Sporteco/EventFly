@@ -46,7 +46,7 @@ namespace Akkatecture.Events
                     genericType,
                     committedEvent.AggregateIdentity,
                     committedEvent.AggregateEvent,
-                    committedEvent.Metadata,
+                    committedEvent.EventMetadata,
                     committedEvent.Timestamp,
                     committedEvent.AggregateSequenceNumber);
 

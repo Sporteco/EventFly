@@ -17,7 +17,7 @@ namespace Akkatecture.Tests.UnitTests.Commands
             
             var command = new CreateTestCommand(aggregateId, sourceId);
 
-            command.GetSourceId().Should().Be(sourceId);
+            command.Metadata.SourceId.Value.Should().Be(sourceId.Value);
         }
         
         [Fact]
@@ -26,12 +26,6 @@ namespace Akkatecture.Tests.UnitTests.Commands
             this.Invoking(test => new CreateTestCommand(null, CommandId.New))
                 .Should().Throw<ArgumentNullException>().And.Message.Contains("aggregateId").Should().BeTrue();
         }
-        
-        [Fact]
-        public void InstantiatingCommand_WithNullSourceId_ThrowsException()
-        {
-            this.Invoking(test => new CreateTestCommand(TestAggregateId.New, null))
-                .Should().Throw<ArgumentNullException>().And.Message.Contains("sourceId").Should().BeTrue();
-        }
+       
     }
 }

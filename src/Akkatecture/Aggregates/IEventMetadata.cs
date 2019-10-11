@@ -27,12 +27,23 @@
 
 using System;
 using System.Collections.Generic;
+using Akkatecture.Metadata;
 
-namespace Akkatecture.Core
+namespace Akkatecture.Aggregates
 {
-    public interface IMetadataContainer : IReadOnlyDictionary<string, string>
+    public interface IEventMetadata : ICommonMetadata
     {
-        string GetMetadataValue(string key);
-        T GetMetadataValue<T>(string key, Func<string, T> converter);
+        IEventId EventId { get; }
+        string EventName { get; }
+        int EventVersion { get; }
+        DateTimeOffset Timestamp { get; }
+        long TimestampEpoch { get; }
+        long AggregateSequenceNumber { get; }
+        string AggregateId { get; }
+        string CausationId { get; }
+
+        IEventMetadata CloneWith(params KeyValuePair<string, string>[] keyValuePairs);
+        IEventMetadata CloneWith(IEnumerable<KeyValuePair<string, string>> keyValuePairs);
     }
+    
 }

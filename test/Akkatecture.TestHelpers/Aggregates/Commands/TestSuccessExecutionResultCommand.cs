@@ -7,7 +7,7 @@ namespace Akkatecture.TestHelpers.Aggregates.Commands
         public TestSuccessExecutionResultCommand(
             TestAggregateId aggregateId,
             CommandId sourceId)
-            : base(aggregateId, sourceId)
+            : base(aggregateId,  new CommandMetadata(sourceId))
         {
         }
     }
