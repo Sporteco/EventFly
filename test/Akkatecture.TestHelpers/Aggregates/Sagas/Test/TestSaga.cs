@@ -36,10 +36,8 @@ namespace Akkatecture.TestHelpers.Aggregates.Sagas.Test
         ISagaIsStartedBy<TestAggregateId, TestSentEvent>,
         ISagaHandles<TestAggregateId, TestReceivedEvent>
     {
-        private IActorRef TestAggregateManager { get; }
-        public TestSaga(IActorRef testAggregateManager)
+        public TestSaga()
         {
-            TestAggregateManager = testAggregateManager;
             
             Command<EmitTestSagaState>(Handle);
         }
@@ -56,8 +54,7 @@ namespace Akkatecture.TestHelpers.Aggregates.Sagas.Test
 
                 Emit(new TestSagaStartedEvent(domainEvent.AggregateIdentity, domainEvent.AggregateEvent.RecipientAggregateId, domainEvent.AggregateEvent.Test));
 
-                TestAggregateManager.Tell(command);
-
+                Context.System.PublishCommandAsync(command).GetAwaiter().GetResult();
             }
 
             return true;
@@ -74,7 +71,7 @@ namespace Akkatecture.TestHelpers.Aggregates.Sagas.Test
             return true;
         }
 
-        private bool Handle(EmitTestSagaState testCommmand)
+        private bool Handle(EmitTestSagaState testCommand)
         {
             Emit(new TestSagaCompletedEvent(State));
             return true;

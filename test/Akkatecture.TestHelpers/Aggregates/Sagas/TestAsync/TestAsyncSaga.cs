@@ -18,17 +18,15 @@ namespace Akkatecture.TestHelpers.Aggregates.Sagas.TestAsync
         ISagaIsStartedByAsync<TestAggregateId, TestSentEvent>,
         ISagaHandlesAsync<TestAggregateId, TestReceivedEvent>
     {
-        private IActorRef TestAggregateManager { get; }
-        public TestAsyncSaga(IActorRef testAggregateManager)
+        public TestAsyncSaga()
         {
-            TestAggregateManager = testAggregateManager;
             
             Command<EmitTestSagaState>(Handle);
             // ReSharper disable once VirtualMemberCallInConstructor
             SetSnapshotStrategy(SnapshotAlwaysStrategy.Instance);
         }
 
-        public Task HandleAsync(IDomainEvent<TestAggregateId, TestSentEvent> domainEvent)
+        public async Task HandleAsync(IDomainEvent<TestAggregateId, TestSentEvent> domainEvent)
         {
             if (IsNew)
             {
@@ -40,11 +38,9 @@ namespace Akkatecture.TestHelpers.Aggregates.Sagas.TestAsync
 
                 Emit(new TestAsyncSagaStartedEvent(domainEvent.AggregateIdentity, domainEvent.AggregateEvent.RecipientAggregateId, domainEvent.AggregateEvent.Test), new Metadata{{"some-key","some-value"}});
 
-                TestAggregateManager.Tell(command);
+                await Context.System.PublishCommandAsync(command);
 
             }
-
-            return Task.CompletedTask;
         }
 
         public Task HandleAsync(IDomainEvent<TestAggregateId, TestReceivedEvent> domainEvent)

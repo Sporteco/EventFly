@@ -9,6 +9,8 @@ using Akkatecture.Core;
 using Akkatecture.Exceptions;
 using Akkatecture.Queries;
 using Akkatecture.ReadModels;
+using Akkatecture.Sagas;
+using Akkatecture.Sagas.AggregateSaga;
 
 namespace Akkatecture
 {
@@ -35,6 +37,12 @@ namespace Akkatecture
             where TIdentity : IIdentity
             => GetInstance(system).RegisterAggregate<TAggregate, TIdentity>();
 
+        public static SystemHost RegisterSaga<TSaga, TSagaId, TSagaLocator>(this ActorSystem system)
+            where TSaga : ActorBase, IAggregateSaga<TSagaId>
+            where TSagaId : SagaId<TSagaId>
+            where TSagaLocator : class, ISagaLocator<TSagaId>, new()
+            => GetInstance(system).RegisterSaga<TSaga, TSagaId, TSagaLocator>();
+
         public static SystemHost RegisterQuery<TQueryHandler, TQuery, TResult>(this ActorSystem system)
             where TQueryHandler : ActorBase, IQueryHandler<TQuery, TResult> where TQuery : IQuery<TResult>
             => GetInstance(system).RegisterQuery<TQueryHandler, TQuery, TResult>();
@@ -50,6 +58,10 @@ namespace Akkatecture
             where TIdentity : IIdentity
             => GetInstance(system).GetAggregateManager<TIdentity>();
 
+        public static IActorRef GetSagaManager<TSagaId>(this ActorSystem system) 
+            where TSagaId : SagaId<TSagaId>
+            => GetInstance(system).GetSagaManager<TSagaId>();
+
         
     }
 
@@ -57,11 +69,19 @@ namespace Akkatecture
     {
         private readonly ActorSystem _system;
         private readonly ConcurrentDictionary<Type,IActorRef> _dicIdentity2AggregateStorage = new ConcurrentDictionary<Type, IActorRef>();
+        private readonly ConcurrentDictionary<Type,IActorRef> _dicIdentity2SagaStorage = new ConcurrentDictionary<Type, IActorRef>();
         private readonly ConcurrentDictionary<Type,IActorRef> _dicIdentity2QueryStorage = new ConcurrentDictionary<Type, IActorRef>();
 
         internal SystemHost(ActorSystem system)
         {
             _system = system;
+        }
+
+        public IActorRef GetSagaManager<TSagaId>() where TSagaId : SagaId<TSagaId>
+        {
+            if (!_dicIdentity2SagaStorage.TryGetValue(typeof(TSagaId), out var manager))
+                throw new InvalidOperationException($"Saga [{typeof(TSagaId).PrettyPrint()}] not registered.");
+            return manager;
         }
 
         public SystemHost RegisterReadModel<TReadModel,TReadModelManager>()
@@ -83,6 +103,17 @@ namespace Akkatecture
             var manager = _system.ActorOf(Props.Create(() =>
                 new AggregateManager<TAggregate, TIdentity>()), $"aggregate-{typeof(TAggregate).Name}-manager");
             _dicIdentity2AggregateStorage[typeof(TIdentity)] = manager;
+            return this;
+        }
+
+        public SystemHost RegisterSaga<TSaga,TSagaId,TSagaLocator>()
+            where TSaga : ActorBase, IAggregateSaga<TSagaId>
+            where TSagaId : SagaId<TSagaId>
+            where TSagaLocator : class, ISagaLocator<TSagaId>, new()
+        {
+            var manager = _system.ActorOf(Props.Create(() =>
+                new AggregateSagaManager<TSaga, TSagaId,TSagaLocator>()), $"saga-{typeof(TSagaId).Name}-manager");
+            _dicIdentity2SagaStorage[typeof(TSagaId)] = manager;
             return this;
         }
 

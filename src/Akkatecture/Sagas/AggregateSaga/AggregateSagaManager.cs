@@ -23,7 +23,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
 using Akka.Actor;
 using Akka.Event;
 using Akkatecture.Aggregates;
@@ -33,25 +32,23 @@ using Akkatecture.Messages;
 
 namespace Akkatecture.Sagas.AggregateSaga
 {
-    public abstract class AggregateSagaManager<TAggregateSaga, TIdentity, TSagaLocator> : ReceiveActor, IAggregateSagaManager<TAggregateSaga, TIdentity, TSagaLocator>
+    public class AggregateSagaManager<TAggregateSaga, TIdentity, TSagaLocator> : ReceiveActor, IAggregateSagaManager<TAggregateSaga, TIdentity, TSagaLocator>
         where TAggregateSaga : ActorBase, IAggregateSaga<TIdentity>
         where TIdentity : SagaId<TIdentity>
         where TSagaLocator : class, ISagaLocator<TIdentity>, new()
     {
         private IReadOnlyList<Type> _subscriptionTypes { get; }
         protected ILoggingAdapter Logger { get; }
-        public Expression<Func<TAggregateSaga>> SagaFactory { get; }
         protected TSagaLocator SagaLocator { get; }
         public AggregateSagaManagerSettings Settings { get; }
 
-        protected AggregateSagaManager(Expression<Func<TAggregateSaga>> sagaFactory)
+        public AggregateSagaManager()
         {
             Logger = Context.GetLogger();
 
             _subscriptionTypes = new List<Type>();
 
             SagaLocator = new TSagaLocator();
-            SagaFactory = sagaFactory;
             Settings = new AggregateSagaManagerSettings(Context.System.Settings.Config);
 
             var sagaType = typeof(TAggregateSaga);
@@ -142,7 +139,7 @@ namespace Akkatecture.Sagas.AggregateSaga
 
         private IActorRef Spawn(TIdentity sagaId)
         {
-            var saga = Context.ActorOf(Props.Create(SagaFactory), sagaId.Value);
+            var saga = Context.ActorOf(Props.Create<TAggregateSaga>(), sagaId.Value);
             Context.Watch(saga);
             return saga;
         }
