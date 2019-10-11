@@ -9,6 +9,7 @@ using Autofac;
 using Demo.Commands;
 using Demo.Db;
 using Demo.Db.QueryHandlers;
+using Demo.Db.ReadModels;
 using Demo.Domain;
 using Demo.Queries;
 using Demo.ValueObjects;
@@ -43,11 +44,15 @@ namespace Demo.Host
 
             system
                 .RegisterAggregate<UserAggregate, UserId>()
-                .RegisterQuery<UsersQueryHandler, UsersQuery, ICollection<UserInfo>>();
+                .RegisterQuery<UsersQueryHandler, UsersQuery, ICollection<UserInfo>>()
+                .RegisterReadModel<TotalUsersReadModel,TotalUsersReadModelManager>()
+                .RegisterAggregateReadModel<UsersInfoReadModel,UserId>();
 
             await system.PublishCommandAsync(createUserAccountCommand);
             
             await system.PublishCommandAsync(new RenameUserCommand(aggregateId, new UserName("TEST")));
+
+            await system.PublishCommandAsync(new CreateUserCommand(UserId.New, new UserName("userName2"),new Birth(DateTime.Today)));
 
             var res = await system.ExecuteQueryAsync(new UsersQuery("test"));
             Console.WriteLine(res?.Count);

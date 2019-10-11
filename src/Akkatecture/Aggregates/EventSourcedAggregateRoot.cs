@@ -115,7 +115,7 @@ namespace Akkatecture.Aggregates
                 Recover<RecoveryCompleted>(Recover);
             }
             
-            this.InitReceives();
+            this.InitAggregateReceivers();
 
             SetReceiveTimeout(Settings.SetReceiveTimeout);
             Command<ReceiveTimeout>(Timeout);

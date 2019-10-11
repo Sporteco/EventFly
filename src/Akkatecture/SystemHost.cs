@@ -8,6 +8,7 @@ using Akkatecture.Commands.ExecutionResults;
 using Akkatecture.Core;
 using Akkatecture.Exceptions;
 using Akkatecture.Queries;
+using Akkatecture.ReadModels;
 
 namespace Akkatecture
 {
@@ -18,6 +19,16 @@ namespace Akkatecture
         {
             return _hostmap.GetOrAdd(system.GetHashCode(), new SystemHost(system));
         }
+
+        public static SystemHost RegisterReadModel<TReadModel, TReadModelManager>(this ActorSystem system)
+            where TReadModelManager : ActorBase, IReadModelManager, new() where TReadModel : IReadModel
+            => GetInstance(system).RegisterReadModel<TReadModel, TReadModelManager>();
+
+        public static SystemHost RegisterAggregateReadModel<TReadModel, TIdentity>(ActorSystem system)
+            where TReadModel : ActorBase, IReadModel<TIdentity>
+            where TIdentity : IIdentity
+            => system.RegisterReadModel<TReadModel, AggregateReadModelManager<TReadModel, TIdentity>>();
+
 
         public static SystemHost RegisterAggregate<TAggregate, TIdentity>(this ActorSystem system) 
             where TAggregate : ActorBase, IAggregateRoot<TIdentity>
@@ -52,6 +63,19 @@ namespace Akkatecture
         {
             _system = system;
         }
+
+        public SystemHost RegisterReadModel<TReadModel,TReadModelManager>()
+            where TReadModelManager : ActorBase, IReadModelManager, new() where TReadModel : IReadModel
+        {
+            _system.ActorOf(Props.Create(() =>
+                new TReadModelManager()), $"read-model-{typeof(TReadModel).Name}-manager");
+            return this;
+        }
+        public SystemHost RegisterAggregateReadModel<TReadModel, TIdentity>()
+            where TReadModel : ActorBase, IReadModel<TIdentity>
+            where TIdentity : IIdentity
+            => RegisterReadModel<TReadModel, AggregateReadModelManager<TReadModel, TIdentity>>();
+
         public SystemHost RegisterAggregate<TAggregate,TIdentity>()
             where TAggregate : ActorBase, IAggregateRoot<TIdentity>
             where TIdentity : IIdentity

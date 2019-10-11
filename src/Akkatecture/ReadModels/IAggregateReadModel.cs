@@ -1,8 +1,10 @@
-﻿namespace Akkatecture.ReadModels
+﻿using Akkatecture.Core;
+
+namespace Akkatecture.ReadModels
 {
-    public interface IAggregateReadModel : IReadModel
+    public interface IAggregateReadModel<out TIdentity> : IReadModel<TIdentity>
+    where TIdentity : IIdentity
     {
-        string Id { get; }
         long Version { get; }
     }
 }

@@ -36,6 +36,7 @@ using Akkatecture.Core;
 using Akkatecture.Events;
 using Akkatecture.Exceptions;
 using Akkatecture.Jobs;
+using Akkatecture.ReadModels;
 using Akkatecture.Sagas;
 using Akkatecture.Subscribers;
 
@@ -202,6 +203,20 @@ namespace Akkatecture.Extensions
 
             return domainEventTypes;
         }
+        internal static IReadOnlyList<Tuple<Type,Type>> GetReadModelSubscribersTypes(this Type type)
+        {
+            var interfaces = type
+                .GetTypeInfo()
+                .GetInterfaces()
+                .Select(i => i.GetTypeInfo())
+                .ToList();
+            var types = interfaces
+                .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IAmReadModelFor<,>))
+                .Select(i => new Tuple<Type,Type>(i.GetGenericArguments()[0],i.GetGenericArguments()[1]))
+                .ToList();
+
+            return types;
+        }
 
         internal static IReadOnlyList<Type> GetDomainEventSubscriberSubscriptionTypes(this Type type)
         {
@@ -212,7 +227,7 @@ namespace Akkatecture.Extensions
                 .ToList();
             var domainEventTypes = interfaces
                 .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ISubscribeTo<,>))
-                .Select(i =>   typeof(IDomainEvent<,>).MakeGenericType(i.GetGenericArguments()[0],i.GetGenericArguments()[1]))
+                .Select(i => typeof(IDomainEvent<,>).MakeGenericType(i.GetGenericArguments()[0],i.GetGenericArguments()[1]))
                 .ToList();
             
 

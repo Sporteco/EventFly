@@ -63,7 +63,7 @@ namespace Akkatecture.Aggregates
             Id = id;
             SetSourceIdHistory(100);
 
-            this.InitReceives();
+            this.InitAggregateReceivers();
         }
 
         protected override void PreStart()
