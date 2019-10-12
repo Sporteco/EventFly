@@ -27,14 +27,20 @@
 
 using System;
 using Akkatecture.Aggregates;
+using Akkatecture.Core;
 using Akkatecture.Exceptions;
 
 namespace Akkatecture.Sagas
 {   
-    public abstract class SagaState<TSaga, TIdentity, TMessageApplier> : IMessageApplier<TSaga, TIdentity>
+    public abstract class SagaState<TSaga, TIdentity> 
+        where TSaga : IAggregateRoot<TIdentity>
+        where TIdentity : IIdentity
+    {
+    }
+    public abstract class SagaState<TSaga, TIdentity, TMessageApplier> : SagaState<TSaga, TIdentity>, IMessageApplier<TSaga, TIdentity>
         where TMessageApplier : class, IMessageApplier<TSaga, TIdentity>
         where TSaga : IAggregateRoot<TIdentity>
-        where TIdentity : ISagaId
+        where TIdentity : IIdentity
     {
         protected SagaState()
         {

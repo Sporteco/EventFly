@@ -26,14 +26,14 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using Akkatecture.Aggregates;
+using Akkatecture.Core;
 
 namespace Akkatecture.Sagas
 {
 
     public interface ISagaLocator<out TIdentity>
-        where TIdentity : ISagaId
+        where TIdentity : IIdentity
     {
         TIdentity LocateSaga(IDomainEvent domainEvent);
     }
-
 }

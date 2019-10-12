@@ -48,8 +48,8 @@ namespace Akkatecture.Sagas.AggregateSaga
 {
     public abstract class AggregateSaga<TAggregateSaga, TIdentity, TSagaState> : ReceivePersistentActor, IAggregateSaga<TIdentity>
         where TAggregateSaga : AggregateSaga<TAggregateSaga, TIdentity, TSagaState>
-        where TIdentity : SagaId<TIdentity>
-        where TSagaState : SagaState<TAggregateSaga,TIdentity, IMessageApplier<TAggregateSaga, TIdentity>>
+        where TIdentity : IIdentity
+        where TSagaState : SagaState<TAggregateSaga,TIdentity>
     {
         private static readonly IReadOnlyDictionary<Type, Action<TSagaState, IAggregateEvent>> ApplyMethodsFromState = typeof(TSagaState).GetAggregateStateEventApplyMethods<TAggregateSaga, TIdentity, TSagaState>();
         private static readonly IReadOnlyDictionary<Type, Action<TSagaState, IAggregateSnapshot>> HydrateMethodsFromState = typeof(TSagaState).GetAggregateSnapshotHydrateMethods<TAggregateSaga, TIdentity, TSagaState>();
@@ -65,10 +65,11 @@ namespace Akkatecture.Sagas.AggregateSaga
             if (PinnedEvent != null)
             {
                 command.Metadata.Merge(PinnedEvent.Metadata);
-                if (!command.Metadata.SagaIds.Contains(Id.Value))
-                {
-                    command.Metadata.SagaIds = new List<string>(command.Metadata.SagaIds) {Id.Value};
-                }
+            }
+
+            if (!command.Metadata.SagaIds.Contains(Id.Value))
+            {
+                command.Metadata.SagaIds = new List<string>(command.Metadata.SagaIds) {Id.Value};
             }
 
             return await Context.System.PublishCommandAsync(command);
@@ -563,5 +564,19 @@ namespace Akkatecture.Sagas.AggregateSaga
             Log.Debug("Aggregate of Name={0}, and Id={1}; has completed recovering from it's event journal at Version={2}.", Name, Id, Version);
             return true;
         }
+    }
+
+
+    public class StatelessSaga<TAggregateSaga,TIdentity> : AggregateSaga<TAggregateSaga,TIdentity,EmptySagaState<TAggregateSaga, TIdentity>>
+        where TAggregateSaga : AggregateSaga<TAggregateSaga, TIdentity, EmptySagaState<TAggregateSaga, TIdentity>>
+        where TIdentity : IIdentity
+    {
+
+    }
+
+    public class EmptySagaState<TAggregateSaga, TIdentity> : SagaState<TAggregateSaga, TIdentity>
+        where TAggregateSaga : IAggregateRoot<TIdentity> 
+        where TIdentity : IIdentity
+    {
     }
 }

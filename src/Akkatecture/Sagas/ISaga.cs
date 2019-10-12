@@ -26,6 +26,8 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
+using Akkatecture.Core;
+
 namespace Akkatecture.Sagas
 {
     public interface ISaga
@@ -34,7 +36,7 @@ namespace Akkatecture.Sagas
     }
 
     public interface ISaga<TSagaId> : ISaga
-        where TSagaId : ISagaId
+        where TSagaId : IIdentity
     {
         
     }

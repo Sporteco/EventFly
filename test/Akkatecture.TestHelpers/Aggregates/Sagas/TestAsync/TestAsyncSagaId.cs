@@ -21,11 +21,11 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using Akkatecture.Sagas;
+using Akkatecture.Core;
 
 namespace Akkatecture.TestHelpers.Aggregates.Sagas.TestAsync
 {
-    public class TestAsyncSagaId : SagaId<TestAsyncSagaId>
+    public class TestAsyncSagaId : Identity<TestAsyncSagaId>
     {
         public TestAsyncSagaId(string value) 
             : base(value)

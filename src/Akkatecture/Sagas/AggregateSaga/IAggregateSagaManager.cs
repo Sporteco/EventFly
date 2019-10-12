@@ -21,6 +21,8 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using Akkatecture.Core;
+
 namespace Akkatecture.Sagas.AggregateSaga
 {
     public interface IAggregateSagaManager
@@ -30,7 +32,7 @@ namespace Akkatecture.Sagas.AggregateSaga
 
     public interface IAggregateSagaManager<TAggregateSaga, TIdentity, TSagaLocator> : IAggregateSagaManager
         where TAggregateSaga : IAggregateSaga<TIdentity>
-        where TIdentity : SagaId<TIdentity>
+        where TIdentity : IIdentity
         where TSagaLocator : class, ISagaLocator<TIdentity>, new()
     {
     }

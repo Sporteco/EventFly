@@ -40,7 +40,7 @@ namespace Akkatecture.Core
     {
         // ReSharper disable StaticMemberInGenericType
         private static readonly Regex NameReplace = new Regex("Id$");
-        private static readonly string Name = NameReplace.Replace(typeof(T).Name, string.Empty).ToLowerInvariant();
+        public static string IdentityPrefix => NameReplace.Replace(typeof(T).Name, string.Empty).ToLowerInvariant();
         private static readonly Regex ValueValidation= new Regex(
             @"^[a-z0-9]+\-(?<guid>[a-f0-9]{8}\-[a-f0-9]{4}\-[a-f0-9]{4}\-[a-f0-9]{4}\-[a-f0-9]{12})$",
             RegexOptions.Compiled);
@@ -84,7 +84,7 @@ namespace Akkatecture.Core
 
         public static T With(Guid guid)
         {
-            var value = $"{Name}-{guid:D}";
+            var value = $"{IdentityPrefix}-{guid:D}";
             return With(value);
         }
 
@@ -103,8 +103,8 @@ namespace Akkatecture.Core
 
             if (!string.Equals(value.Trim(), value, StringComparison.OrdinalIgnoreCase))
                 yield return $"Identity '{value}' of type '{typeof(T).PrettyPrint()}' contains leading and/or traling spaces";
-            if (!value.StartsWith(Name))
-                yield return $"Identity '{value}' of type '{typeof(T).PrettyPrint()}' does not start with '{Name}'";
+            if (!value.StartsWith(IdentityPrefix))
+                yield return $"Identity '{value}' of type '{typeof(T).PrettyPrint()}' does not start with '{IdentityPrefix}'";
             if (!ValueValidation.IsMatch(value))
                 yield return $"Identity '{value}' of type '{typeof(T).PrettyPrint()}' does not follow the syntax '[NAME]-[GUID]' in lower case";
         }

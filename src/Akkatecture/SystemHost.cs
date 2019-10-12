@@ -39,9 +39,14 @@ namespace Akkatecture
 
         public static SystemHost RegisterSaga<TSaga, TSagaId, TSagaLocator>(this ActorSystem system)
             where TSaga : ActorBase, IAggregateSaga<TSagaId>
-            where TSagaId : SagaId<TSagaId>
+            where TSagaId : IIdentity
             where TSagaLocator : class, ISagaLocator<TSagaId>, new()
             => GetInstance(system).RegisterSaga<TSaga, TSagaId, TSagaLocator>();
+
+        public static SystemHost RegisterSaga<TSaga, TSagaId>(this ActorSystem system)
+            where TSaga : ActorBase, IAggregateSaga<TSagaId>
+            where TSagaId : IIdentity
+            => GetInstance(system).RegisterSaga<TSaga, TSagaId, SagaLocatorByIdentity<TSagaId>>();
 
         public static SystemHost RegisterQuery<TQueryHandler, TQuery, TResult>(this ActorSystem system)
             where TQueryHandler : ActorBase, IQueryHandler<TQuery, TResult> where TQuery : IQuery<TResult>
@@ -59,7 +64,7 @@ namespace Akkatecture
             => GetInstance(system).GetAggregateManager<TIdentity>();
 
         public static IActorRef GetSagaManager<TSagaId>(this ActorSystem system) 
-            where TSagaId : SagaId<TSagaId>
+            where TSagaId : IIdentity
             => GetInstance(system).GetSagaManager<TSagaId>();
 
         
@@ -77,7 +82,7 @@ namespace Akkatecture
             _system = system;
         }
 
-        public IActorRef GetSagaManager<TSagaId>() where TSagaId : SagaId<TSagaId>
+        public IActorRef GetSagaManager<TSagaId>() where TSagaId : IIdentity
         {
             if (!_dicIdentity2SagaStorage.TryGetValue(typeof(TSagaId), out var manager))
                 throw new InvalidOperationException($"Saga [{typeof(TSagaId).PrettyPrint()}] not registered.");
@@ -108,11 +113,21 @@ namespace Akkatecture
 
         public SystemHost RegisterSaga<TSaga,TSagaId,TSagaLocator>()
             where TSaga : ActorBase, IAggregateSaga<TSagaId>
-            where TSagaId : SagaId<TSagaId>
+            where TSagaId : IIdentity
             where TSagaLocator : class, ISagaLocator<TSagaId>, new()
         {
             var manager = _system.ActorOf(Props.Create(() =>
                 new AggregateSagaManager<TSaga, TSagaId,TSagaLocator>()), $"saga-{typeof(TSagaId).Name}-manager");
+            _dicIdentity2SagaStorage[typeof(TSagaId)] = manager;
+            return this;
+        }
+
+        public SystemHost RegisterSaga<TSaga,TSagaId>()
+            where TSaga : ActorBase, IAggregateSaga<TSagaId>
+            where TSagaId : IIdentity
+        {
+            var manager = _system.ActorOf(Props.Create(() =>
+                new AggregateSagaManager<TSaga, TSagaId,SagaLocatorByIdentity<TSagaId>>()), $"saga-{typeof(TSagaId).Name}-manager");
             _dicIdentity2SagaStorage[typeof(TSagaId)] = manager;
             return this;
         }

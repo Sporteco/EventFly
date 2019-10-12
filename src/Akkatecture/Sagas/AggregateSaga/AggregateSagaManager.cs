@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using Akka.Actor;
 using Akka.Event;
 using Akkatecture.Aggregates;
+using Akkatecture.Core;
 using Akkatecture.Exceptions;
 using Akkatecture.Extensions;
 using Akkatecture.Messages;
@@ -34,7 +35,7 @@ namespace Akkatecture.Sagas.AggregateSaga
 {
     public class AggregateSagaManager<TAggregateSaga, TIdentity, TSagaLocator> : ReceiveActor, IAggregateSagaManager<TAggregateSaga, TIdentity, TSagaLocator>
         where TAggregateSaga : ActorBase, IAggregateSaga<TIdentity>
-        where TIdentity : SagaId<TIdentity>
+        where TIdentity : IIdentity
         where TSagaLocator : class, ISagaLocator<TIdentity>, new()
     {
         private IReadOnlyList<Type> _subscriptionTypes { get; }

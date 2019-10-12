@@ -34,8 +34,8 @@ using Akkatecture.Core;
 
 namespace Akkatecture.Sagas.AggregateSaga
 {
-    public interface IAggregateSaga<out TIdentity> : IAggregateRoot<TIdentity>
-        where TIdentity : ISagaId
+    public interface IAggregateSaga<out TIdentity> : IAggregateRoot<TIdentity>, ISaga
+        where TIdentity : IIdentity
     {
         Task<TExecutionResult> PublishCommandAsync<TCommandIdentity, TExecutionResult>(ICommand<TCommandIdentity, TExecutionResult> command)
             where TCommandIdentity : IIdentity where TExecutionResult : IExecutionResult;

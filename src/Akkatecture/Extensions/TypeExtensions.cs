@@ -152,9 +152,9 @@ namespace Akkatecture.Extensions
         internal static IReadOnlyDictionary<Type, Action<TAggregateState, IAggregateEvent>> GetAggregateStateEventApplyMethods<TAggregate, TIdentity, TAggregateState>(this Type type)
             where TAggregate : IAggregateRoot<TIdentity>
             where TIdentity : IIdentity
-            where TAggregateState : IEventApplier<TAggregate, TIdentity>
         {
             var aggregateEventType = typeof(IAggregateEvent<TIdentity>);
+
 
             return type
                 .GetTypeInfo()
