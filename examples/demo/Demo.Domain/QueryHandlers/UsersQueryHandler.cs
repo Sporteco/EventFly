@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using Akkatecture.Queries;
+using Dapper;
 using Demo.Queries;
 
-namespace Demo.Db.QueryHandlers
+namespace Demo.Domain.QueryHandlers
 {
     public class UsersQueryHandler : QueryHandler<UsersQuery, ICollection<UserInfo>>
     {
@@ -13,9 +15,9 @@ namespace Demo.Db.QueryHandlers
         {
             if (_cache == null)
             {
-                using (var db = new TestDbContext())
+                using (var db = new SqlConnection(DbHelper.ConnectionString))
                 {
-                    _cache = db.User.Select(i => new UserInfo(i.Id.Value, i.Name.Value)).ToList();
+                    _cache = db.Query<UserInfo>("SELECT Id, Name FROM [User]").ToList();
                 }
             }
 

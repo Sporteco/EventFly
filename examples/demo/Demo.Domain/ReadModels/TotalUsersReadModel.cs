@@ -2,7 +2,7 @@
 using Akkatecture.ReadModels;
 using Demo.Events;
 
-namespace Demo.Db.ReadModels
+namespace Demo.Domain.ReadModels
 {
     public class TotalUsersReadModel : ReadModel<string>,
     IAmReadModelFor<UserId, UserCreatedEvent>

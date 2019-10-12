@@ -3,7 +3,7 @@ using Akkatecture.Aggregates;
 using Akkatecture.ReadModels;
 using Demo.Events;
 
-namespace Demo.Db.ReadModels
+namespace Demo.Domain.ReadModels
 {
     public class UsersInfoReadModel : ReadModel<UserId>,
         IAmReadModelFor<UserId, UserCreatedEvent>,

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Akka.Actor;
 using Akkatecture.Aggregates;
@@ -16,39 +17,39 @@ namespace Akkatecture
 {
     public static class SystemHostExtensions
     {
-        private static readonly ConcurrentDictionary<int,SystemHost> _hostmap = new ConcurrentDictionary<int, SystemHost>();
-        private static SystemHost GetInstance(ActorSystem system)
+        private static readonly ConcurrentDictionary<int,SystemMetadata> _hostmap = new ConcurrentDictionary<int, SystemMetadata>();
+        private static SystemMetadata GetInstance(ActorSystem system)
         {
-            return _hostmap.GetOrAdd(system.GetHashCode(), new SystemHost(system));
+            return _hostmap.GetOrAdd(system.GetHashCode(), new SystemMetadata(system));
         }
 
-        public static SystemHost RegisterReadModel<TReadModel, TReadModelManager>(this ActorSystem system)
+        public static SystemMetadata RegisterReadModel<TReadModel, TReadModelManager>(this ActorSystem system)
             where TReadModelManager : ActorBase, IReadModelManager, new() where TReadModel : IReadModel
             => GetInstance(system).RegisterReadModel<TReadModel, TReadModelManager>();
 
-        public static SystemHost RegisterAggregateReadModel<TReadModel, TIdentity>(ActorSystem system)
+        public static SystemMetadata RegisterAggregateReadModel<TReadModel, TIdentity>(ActorSystem system)
             where TReadModel : ActorBase, IReadModel<TIdentity>
             where TIdentity : IIdentity
             => system.RegisterReadModel<TReadModel, AggregateReadModelManager<TReadModel, TIdentity>>();
 
 
-        public static SystemHost RegisterAggregate<TAggregate, TIdentity>(this ActorSystem system) 
+        public static SystemMetadata RegisterAggregate<TAggregate, TIdentity>(this ActorSystem system) 
             where TAggregate : ActorBase, IAggregateRoot<TIdentity>
             where TIdentity : IIdentity
             => GetInstance(system).RegisterAggregate<TAggregate, TIdentity>();
 
-        public static SystemHost RegisterSaga<TSaga, TSagaId, TSagaLocator>(this ActorSystem system)
+        public static SystemMetadata RegisterSaga<TSaga, TSagaId, TSagaLocator>(this ActorSystem system)
             where TSaga : ActorBase, IAggregateSaga<TSagaId>
             where TSagaId : IIdentity
             where TSagaLocator : class, ISagaLocator<TSagaId>, new()
             => GetInstance(system).RegisterSaga<TSaga, TSagaId, TSagaLocator>();
 
-        public static SystemHost RegisterSaga<TSaga, TSagaId>(this ActorSystem system)
+        public static SystemMetadata RegisterSaga<TSaga, TSagaId>(this ActorSystem system)
             where TSaga : ActorBase, IAggregateSaga<TSagaId>
             where TSagaId : IIdentity
             => GetInstance(system).RegisterSaga<TSaga, TSagaId, SagaLocatorByIdentity<TSagaId>>();
 
-        public static SystemHost RegisterQuery<TQueryHandler, TQuery, TResult>(this ActorSystem system)
+        public static SystemMetadata RegisterQuery<TQueryHandler, TQuery, TResult>(this ActorSystem system)
             where TQueryHandler : ActorBase, IQueryHandler<TQuery, TResult> where TQuery : IQuery<TResult>
             => GetInstance(system).RegisterQuery<TQueryHandler, TQuery, TResult>();
 
@@ -70,14 +71,16 @@ namespace Akkatecture
         
     }
 
-    public class SystemHost
+    public class SystemMetadata
     {
         private readonly ActorSystem _system;
+        private readonly List<Type> _queries = new List<Type>();
+        private readonly List<Type> _commands = new List<Type>();
         private readonly ConcurrentDictionary<Type,IActorRef> _dicIdentity2AggregateStorage = new ConcurrentDictionary<Type, IActorRef>();
         private readonly ConcurrentDictionary<Type,IActorRef> _dicIdentity2SagaStorage = new ConcurrentDictionary<Type, IActorRef>();
         private readonly ConcurrentDictionary<Type,IActorRef> _dicIdentity2QueryStorage = new ConcurrentDictionary<Type, IActorRef>();
 
-        internal SystemHost(ActorSystem system)
+        internal SystemMetadata(ActorSystem system)
         {
             _system = system;
         }
@@ -89,19 +92,19 @@ namespace Akkatecture
             return manager;
         }
 
-        public SystemHost RegisterReadModel<TReadModel,TReadModelManager>()
+        public SystemMetadata RegisterReadModel<TReadModel,TReadModelManager>()
             where TReadModelManager : ActorBase, IReadModelManager, new() where TReadModel : IReadModel
         {
             _system.ActorOf(Props.Create(() =>
                 new TReadModelManager()), $"read-model-{typeof(TReadModel).Name}-manager");
             return this;
         }
-        public SystemHost RegisterAggregateReadModel<TReadModel, TIdentity>()
+        public SystemMetadata RegisterAggregateReadModel<TReadModel, TIdentity>()
             where TReadModel : ActorBase, IReadModel<TIdentity>
             where TIdentity : IIdentity
             => RegisterReadModel<TReadModel, AggregateReadModelManager<TReadModel, TIdentity>>();
 
-        public SystemHost RegisterAggregate<TAggregate,TIdentity>()
+        public SystemMetadata RegisterAggregate<TAggregate,TIdentity>()
             where TAggregate : ActorBase, IAggregateRoot<TIdentity>
             where TIdentity : IIdentity
         {
@@ -111,7 +114,7 @@ namespace Akkatecture
             return this;
         }
 
-        public SystemHost RegisterSaga<TSaga,TSagaId,TSagaLocator>()
+        public SystemMetadata RegisterSaga<TSaga,TSagaId,TSagaLocator>()
             where TSaga : ActorBase, IAggregateSaga<TSagaId>
             where TSagaId : IIdentity
             where TSagaLocator : class, ISagaLocator<TSagaId>, new()
@@ -122,7 +125,7 @@ namespace Akkatecture
             return this;
         }
 
-        public SystemHost RegisterSaga<TSaga,TSagaId>()
+        public SystemMetadata RegisterSaga<TSaga,TSagaId>()
             where TSaga : ActorBase, IAggregateSaga<TSagaId>
             where TSagaId : IIdentity
         {
@@ -132,12 +135,20 @@ namespace Akkatecture
             return this;
         }
 
-        public SystemHost RegisterQuery<TQueryHandler, TQuery, TResult>() 
+        public SystemMetadata RegisterQuery<TQueryHandler, TQuery, TResult>() 
             where TQueryHandler : ActorBase, IQueryHandler<TQuery, TResult> where TQuery : IQuery<TResult>
         {
             var manager = _system.ActorOf(Props.Create(() =>
                 new QueryManager<TQueryHandler, TQuery, TResult>()), $"query-{typeof(TQuery).Name}-manager");
             _dicIdentity2QueryStorage[typeof(TQuery)] = manager;
+            _queries.Add(typeof(TQuery));
+            return this;
+        }
+
+        public SystemMetadata RegisterPublicCommand<TCommand>() 
+            where TCommand : ICommand
+        {
+            _commands.Add(typeof(TCommand));
             return this;
         }
         public Task<TExecutionResult> PublishAsync<TIdentity, TExecutionResult>(ICommand<TIdentity, TExecutionResult> command) 
@@ -158,5 +169,8 @@ namespace Akkatecture
                 throw new InvalidOperationException($"Aggregate [{typeof(TIdentity).PrettyPrint()}] not registered.");
             return manager;
         }
+
+        public IEnumerable<Type> RegisteredQueryTypes => _queries;
+        public IEnumerable<Type> RegisteredCommandTypes => _commands;
     }
 }

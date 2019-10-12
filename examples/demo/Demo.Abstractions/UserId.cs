@@ -6,4 +6,5 @@ namespace Demo
     {
         public UserId(string value) : base(value){}
     }
+
 }

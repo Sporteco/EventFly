@@ -10,8 +10,7 @@ namespace Demo.Db
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(
-                @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=akk-test;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
+            optionsBuilder.UseSqlServer(DbHelper.ConnectionString);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

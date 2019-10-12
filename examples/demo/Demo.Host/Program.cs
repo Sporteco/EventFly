@@ -8,9 +8,9 @@ using Akkatecture.Storages.EntityFramework;
 using Autofac;
 using Demo.Commands;
 using Demo.Db;
-using Demo.Db.QueryHandlers;
-using Demo.Db.ReadModels;
 using Demo.Domain;
+using Demo.Domain.QueryHandlers;
+using Demo.Domain.ReadModels;
 using Demo.Queries;
 using Demo.ValueObjects;
 
