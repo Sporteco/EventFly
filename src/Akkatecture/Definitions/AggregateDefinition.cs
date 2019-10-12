@@ -1,39 +1,37 @@
-using System;
+﻿// Decompiled with JetBrains decompiler
+// Type: Akkatecture.Definitions.AggregateDefinition
+// Assembly: Akkatecture, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+// MVID: 61DF059E-E5F5-4992-B320-644C3E4F5C82
+// Assembly location: C:\Users\naych\source\repos\!!!!!\netcoreapp2.2\Akkatecture.dll
+
 using Akka.Actor;
 using Akkatecture.Aggregates;
 using Akkatecture.Extensions;
+using System;
 
-namespace Akkatecture.Meta
+namespace Akkatecture.Definitions
 {
-    public interface IAggregateDefinition
+  public class AggregateDefinition : IAggregateDefinition
+  {
+    public AggregateName Name { get; }
+
+    public Type Type { get; }
+
+    public Type IdentityType { get; }
+
+    public IActorRef Manager { get; }
+
+    public AggregateDefinition(Type aggregateType, Type queryIdentity, IActorRef manager)
     {
-        AggregateName Name { get; }
-        Type Type { get; }
-        Type IdentityType { get; }
-        IDomainDefinition Domain { get; }
-        IActorRef Manager { get; }
-        
+      this.Type = aggregateType;
+      this.IdentityType = queryIdentity;
+      this.Name = this.Type.GetAggregateName();
+      this.Manager = manager;
     }
-    public class AggregateDefinition : IAggregateDefinition
+
+    public override string ToString()
     {
-        public AggregateName Name { get; }
-        public Type Type { get; }
-        public Type IdentityType { get; }
-
-        public IDomainDefinition Domain { get; private set; }
-        public IActorRef Manager { get; }
-
-        public AggregateDefinition(IDomainDefinition domain, Type aggregateType, Type identityType,
-            IActorRef manager)
-           
-        {
-            Type = aggregateType;
-            IdentityType = identityType;
-            Name = Type.GetAggregateName();
-            Domain = domain;
-            Manager = manager;
-        }
-
-        public override string ToString() => Name.Value;
+      return this.Name.Value;
     }
+  }
 }

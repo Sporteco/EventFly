@@ -7,6 +7,7 @@ using Akkatecture.AggregateStorages;
 using Akkatecture.Commands;
 using Akkatecture.Commands.ExecutionResults;
 using Akkatecture.Core;
+using Akkatecture.Definitions;
 using Akkatecture.Events;
 using Akkatecture.Exceptions;
 using Akkatecture.Extensions;
@@ -20,7 +21,7 @@ namespace Akkatecture.Aggregates
         where TIdentity : IIdentity
     {
 
-        private readonly IEventDefinitionService _eventDefinitionService;
+        private readonly IEventDefinitions _eventDefinitionService;
 
         private static readonly IAggregateName AggregateName = typeof(TAggregate).GetAggregateName();
         private CircularBuffer<ISourceId> _previousSourceIds = new CircularBuffer<ISourceId>(100);
@@ -60,7 +61,7 @@ namespace Akkatecture.Aggregates
             }
 
             PinnedCommand = null;
-            _eventDefinitionService = new EventDefinitionService(Context.GetLogger());
+            _eventDefinitionService = Context.System.GetEventDefinitions();
             Id = id;
             SetSourceIdHistory(100);
 
@@ -159,7 +160,6 @@ namespace Akkatecture.Aggregates
             {
                 throw new ArgumentNullException(nameof(aggregateEvent));
             }
-            _eventDefinitionService.Load(aggregateEvent.GetType());
             var eventDefinition = _eventDefinitionService.GetDefinition(aggregateEvent.GetType());
             var aggregateSequenceNumber = version + 1;
             var eventId = EventId.NewDeterministic(

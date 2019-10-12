@@ -13,6 +13,7 @@ using Akkatecture.Aggregates.Snapshot;
 using Akkatecture.TestHelpers.Aggregates.Entities;
 using Akkatecture.TestHelpers.Aggregates.Events;
 using Akkatecture.TestHelpers.Aggregates.Snapshots;
+using Akkatecture.Tests.UnitTests.Subscribers;
 using Xunit;
 
 namespace Akkatecture.Tests.UnitTests.Fixtures
@@ -49,13 +50,14 @@ namespace Akkatecture.Tests.UnitTests.Fixtures
         {
             using (var testKit = new TestKit(_config,"fixture-tests-2"))
             {
-                testKit.Sys.RegisterAggregate<TestAggregate, TestAggregateId>();
+                testKit.Sys.RegisterDomain<TestDomain>();
+
                 var fixture = new AggregateFixture<TestAggregate, TestAggregateId>(testKit);
                 var aggregateIdentity = TestAggregateId.New;
 
                 fixture.Using(aggregateIdentity);
 
-                fixture.AggregateRef.Path.Name.Should().Be("aggregate-TestAggregate-manager");
+                fixture.AggregateRef.Path.Name.Should().Be("aggregate-Test-manager");
                 fixture.AggregateId.Should().Be(aggregateIdentity);
             }
         }

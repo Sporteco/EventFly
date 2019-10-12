@@ -32,6 +32,7 @@ using Akkatecture.TestHelpers.Aggregates.Sagas.Test;
 using Akkatecture.TestHelpers.Aggregates.Sagas.Test.Events;
 using Akkatecture.TestHelpers.Aggregates.Sagas.TestAsync;
 using Akkatecture.TestHelpers.Aggregates.Sagas.TestAsync.Events;
+using Akkatecture.Tests.UnitTests.Subscribers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -44,14 +45,13 @@ namespace Akkatecture.Tests.IntegrationTests.Aggregates.Sagas
         public AggregateSagaTests(ITestOutputHelper testOutputHelper)
             : base(TestHelpers.Akka.Configuration.Config, "aggregate-saga-tests", testOutputHelper)
         {
-            Sys.RegisterAggregate<TestAggregate, TestAggregateId>();
+            Sys.RegisterDomain<TestDomain>();
         }
 
         [Fact]
         [Category(Category)]
         public void SendingTest_FromTestAggregate_CompletesSaga()
         {
-            Sys.RegisterSaga<TestSaga, TestSagaId>();
             var eventProbe = CreateTestProbe("event-probe");
             Sys.EventStream.Subscribe(eventProbe, typeof(DomainEvent<TestSaga, TestSagaId, TestSagaStartedEvent>));
             Sys.EventStream.Subscribe(eventProbe, typeof(DomainEvent<TestSaga, TestSagaId, TestSagaCompletedEvent>));
@@ -95,7 +95,6 @@ namespace Akkatecture.Tests.IntegrationTests.Aggregates.Sagas
         [Category(Category)]
         public void SendingTest_FromTestAggregate_CompletesSagaAsync()
         {
-            Sys.RegisterSaga<TestAsyncSaga, TestAsyncSagaId>();
             var eventProbe = CreateTestProbe("event-probe");
             Sys.EventStream.Subscribe(eventProbe, typeof(DomainEvent<TestAsyncSaga, TestAsyncSagaId, TestAsyncSagaStartedEvent>));
             Sys.EventStream.Subscribe(eventProbe, typeof(DomainEvent<TestAsyncSaga, TestAsyncSagaId, TestAsyncSagaCompletedEvent>));

@@ -27,6 +27,7 @@ using Akka.Persistence.Journal;
 using Akkatecture.Aggregates;
 using Akkatecture.Commands;
 using Akkatecture.Core;
+using Akkatecture.Definitions;
 using Akkatecture.Events;
 using Akkatecture.Extensions;
 using Akkatecture.TestHelpers.Aggregates;
@@ -46,7 +47,7 @@ namespace Akkatecture.Tests.UnitTests.Mapping
         [Category(Category)]
         public void CommittedEvent_WhenTagged_ContainsAggregateNameAsTaggedElement()
         {
-            var aggregateEventTagger = new AggregateEventTagger();
+            var aggregateEventTagger = new AggregateEventTagger(new EventDefinitions());
             var aggregateSequenceNumber = 3;
             var aggregateId = TestAggregateId.New;
             var entityId = TestId.New;
@@ -88,7 +89,7 @@ namespace Akkatecture.Tests.UnitTests.Mapping
         [Category(Category)]
         public void CommittedEvent_WhenTagged_ContainsAggregateEventAsTaggedElement()
         {
-            var aggregateEventTagger = new AggregateEventTagger();
+            var aggregateEventTagger = new AggregateEventTagger(new EventDefinitions());
             var aggregateSequenceNumber = 3;
             var aggregateId = TestAggregateId.New;
             var entityId = TestId.New;
@@ -130,7 +131,7 @@ namespace Akkatecture.Tests.UnitTests.Mapping
         [Category(Category)]
         public void AggregateEventTagger_Manifest_ShouldBeEmpty()
         {
-            var aggregateEventTagger = new AggregateEventTagger();
+            var aggregateEventTagger = new AggregateEventTagger(new EventDefinitions());
 
             aggregateEventTagger.Manifest(null).Should().Be(string.Empty);
         }
@@ -139,7 +140,7 @@ namespace Akkatecture.Tests.UnitTests.Mapping
         [Category(Category)]
         public void AggregateEventTagger_TaggingNonEvent_ShouldBeLeftAlone()
         {
-            var aggregateEventTagger = new AggregateEventTagger();
+            var aggregateEventTagger = new AggregateEventTagger(new EventDefinitions());
             var command = new CreateTestCommand(TestAggregateId.New, CommandId.New);
 
             var untagged = aggregateEventTagger.ToJournal(command);

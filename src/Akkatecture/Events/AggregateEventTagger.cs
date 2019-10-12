@@ -22,12 +22,19 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using Akka.Persistence.Journal;
+using Akkatecture.Definitions;
 using Akkatecture.Extensions;
 
 namespace Akkatecture.Events
 {
     public class AggregateEventTagger : IWriteEventAdapter
     {
+        private readonly IEventDefinitions _eventDefinitions;
+
+        public AggregateEventTagger(IEventDefinitions eventDefinitions)
+        {
+            _eventDefinitions = eventDefinitions;
+        }
         public string Manifest(object evt) => string.Empty;
         
         public object ToJournal(object evt)
@@ -38,7 +45,7 @@ namespace Akkatecture.Events
                     .GetType()
                     .GetCommittedEventAggregateRootName();
                 
-                var eventDefinitionService = new EventDefinitionService(null);
+                var eventDefinitionService = _eventDefinitions;
                 
                 var aggregateEventType = evt
                     .GetType()

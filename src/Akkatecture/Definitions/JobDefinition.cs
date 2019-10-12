@@ -1,39 +1,19 @@
-// The MIT License (MIT)
-//
-// Copyright (c) 2018 - 2019 Lutando Ngqakaza
-// https://github.com/Lutando/Akkatecture 
-// 
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy of
-// this software and associated documentation files (the "Software"), to deal in
-// the Software without restriction, including without limitation the rights to
-// use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-// the Software, and to permit persons to whom the Software is furnished to do so,
-// subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+﻿// Decompiled with JetBrains decompiler
+// Type: Akkatecture.Definitions.JobDefinition
+// Assembly: Akkatecture, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+// MVID: 61DF059E-E5F5-4992-B320-644C3E4F5C82
+// Assembly location: C:\Users\naych\source\repos\!!!!!\netcoreapp2.2\Akkatecture.dll
 
-using System;
 using Akkatecture.Core.VersionedTypes;
+using System;
 
-namespace Akkatecture.Jobs
+namespace Akkatecture.Definitions
 {
-    public class JobDefinition : VersionedTypeDefinition
+  public class JobDefinition : VersionedTypeDefinition
+  {
+    public JobDefinition(int version, Type type, string name)
+      : base(version, type, name)
     {
-        public JobDefinition(int version,Type type,string name) : base(version, type, name){}
     }
-    
-    public class JobDefinitions : VersionedTypeDefinitions<IJob, JobVersionAttribute, JobDefinition>, IJobDefinitions
-    {
-        protected override JobDefinition CreateDefinition(int version, Type type, string name) => new JobDefinition(version, type, name);
-    }
-
+  }
 }
