@@ -1,4 +1,5 @@
 ﻿using Demo.Domain;
+using Demo.Domain.Aggregates;
 using Demo.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 

@@ -10,7 +10,7 @@ using System;
 
 namespace Akkatecture.Definitions
 {
-  public class CommandDefinitions : VersionedTypeDefinitions<ICommand, CommandVersionAttribute, CommandDefinition>, ICommandDefinitions, IVersionedTypeDefinitions<CommandVersionAttribute, CommandDefinition>
+  public class CommandDefinitions : VersionedTypeDefinitions<ICommand, CommandVersionAttribute, CommandDefinition>, ICommandDefinitions
   {
     protected override CommandDefinition CreateDefinition(
       int version,

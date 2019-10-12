@@ -1,5 +1,5 @@
-﻿using Akkatecture.Core.VersionedTypes;
-using Akkatecture.Events;
+﻿using Akkatecture.Aggregates;
+using Akkatecture.Core.VersionedTypes;
 
 namespace Akkatecture.Definitions
 {

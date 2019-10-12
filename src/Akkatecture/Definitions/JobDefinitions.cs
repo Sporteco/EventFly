@@ -10,7 +10,7 @@ using System;
 
 namespace Akkatecture.Definitions
 {
-  public class JobDefinitions : VersionedTypeDefinitions<IJob, JobVersionAttribute, JobDefinition>, IJobDefinitions, IVersionedTypeDefinitions<JobVersionAttribute, JobDefinition>
+  public class JobDefinitions : VersionedTypeDefinitions<IJob, JobVersionAttribute, JobDefinition>, IJobDefinitions
   {
     protected override JobDefinition CreateDefinition(
       int version,

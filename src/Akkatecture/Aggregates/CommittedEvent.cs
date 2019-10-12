@@ -51,7 +51,7 @@ namespace Akkatecture.Aggregates
         {
             if (aggregateEvent == null) throw new ArgumentNullException(nameof(aggregateEvent));
             if (metadata == null) metadata = new EventMetadata();
-            if (timestamp == default(DateTimeOffset)) throw new ArgumentNullException(nameof(timestamp));
+            if (timestamp == default) throw new ArgumentNullException(nameof(timestamp));
             if (aggregateIdentity == null || string.IsNullOrEmpty(aggregateIdentity.Value)) throw new ArgumentNullException(nameof(aggregateIdentity));
             if (aggregateSequenceNumber <= 0) throw new ArgumentOutOfRangeException(nameof(aggregateSequenceNumber));
             

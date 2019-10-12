@@ -5,7 +5,6 @@ using Akkatecture.TestHelpers.Aggregates.Commands;
 using Akkatecture.TestHelpers.Aggregates.Events;
 using Akkatecture.TestHelpers.Aggregates.Events.Errors;
 using Akkatecture.TestHelpers.Aggregates.Events.Signals;
-using Akkatecture.TestHelpers.Aggregates.Events.Upcasters;
 using Akkatecture.TestHelpers.Aggregates.Sagas.Test;
 using Akkatecture.TestHelpers.Aggregates.Sagas.Test.Events;
 using Akkatecture.TestHelpers.Aggregates.Sagas.TestAsync;

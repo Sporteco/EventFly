@@ -110,7 +110,7 @@ namespace Akkatecture.Core
                 // Always use version 5 (version 3 is MD5, version 5 is SHA1)
                 const int version = 5;
 
-                if (namespaceId == default(Guid)) throw new ArgumentNullException(nameof(namespaceId));
+                if (namespaceId == default) throw new ArgumentNullException(nameof(namespaceId));
                 if (nameBytes.Length == 0) throw new ArgumentNullException(nameof(nameBytes));
 
                 // Convert the namespace UUID to network order (step 3)

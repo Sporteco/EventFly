@@ -22,21 +22,21 @@ namespace Akkatecture.Core.VersionedTypes
 
     protected VersionedTypeDefinition(int version, Type type, string name)
     {
-      this.Version = version;
-      this.Type = type;
-      this.Name = name;
+      Version = version;
+      Type = type;
+      Name = name;
     }
 
     public override string ToString()
     {
-      return string.Format("{0} v{1} ({2} - {3})", (object) this.Name, (object) this.Version, (object) this.Type.GetTypeInfo().Assembly.GetName().Name, (object) this.Type.PrettyPrint());
+      return $"{ Name} v{(object) Version} ({(object) Type.GetTypeInfo().Assembly.GetName().Name} - {(object) Type.PrettyPrint()})";
     }
 
     protected override IEnumerable<object> GetEqualityComponents()
     {
-      yield return (object) this.Version;
-      yield return (object) this.Type;
-      yield return (object) this.Name;
+      yield return Version;
+      yield return Type;
+      yield return Name;
     }
   }
 }

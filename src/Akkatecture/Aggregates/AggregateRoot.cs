@@ -8,7 +8,6 @@ using Akkatecture.Commands;
 using Akkatecture.Commands.ExecutionResults;
 using Akkatecture.Core;
 using Akkatecture.Definitions;
-using Akkatecture.Events;
 using Akkatecture.Exceptions;
 using Akkatecture.Extensions;
 using Akkatecture.Metadata;

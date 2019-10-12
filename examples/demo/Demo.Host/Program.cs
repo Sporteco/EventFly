@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Akka.Actor;
 using Akkatecture;
@@ -9,8 +8,7 @@ using Autofac;
 using Demo.Commands;
 using Demo.Db;
 using Demo.Domain;
-using Demo.Domain.QueryHandlers;
-using Demo.Domain.ReadModels;
+using Demo.Domain.Aggregates;
 using Demo.Queries;
 using Demo.ValueObjects;
 

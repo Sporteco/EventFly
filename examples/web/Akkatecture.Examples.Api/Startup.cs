@@ -22,6 +22,7 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using Akka.Actor;
+using Akkatecture.Configuration.DependancyInjection;
 using Akkatecture.Examples.Api.Domain.Repositories.Operations;
 using Akkatecture.Examples.Api.Domain.Repositories.Resources;
 using Microsoft.AspNetCore.Builder;

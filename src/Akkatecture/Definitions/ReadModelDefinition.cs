@@ -19,14 +19,14 @@ namespace Akkatecture.Definitions
 
     public ReadModelDefinition(Type readModelType, IActorRef manager)
     {
-      this.Type = readModelType;
-      this.Name = readModelType.Name;
-      this.Manager = manager;
+      Type = readModelType;
+      Name = readModelType.Name;
+      Manager = manager;
     }
 
     public override string ToString()
     {
-      return this.Name;
+      return Name;
     }
   }
 }

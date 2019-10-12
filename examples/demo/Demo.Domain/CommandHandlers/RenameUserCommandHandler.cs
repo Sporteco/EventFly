@@ -2,6 +2,7 @@
 using Akkatecture.Commands;
 using Akkatecture.Commands.ExecutionResults;
 using Demo.Commands;
+using Demo.Domain.Aggregates;
 
 namespace Demo.Domain.CommandHandlers
 {

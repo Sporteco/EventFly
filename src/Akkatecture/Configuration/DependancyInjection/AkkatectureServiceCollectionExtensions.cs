@@ -23,10 +23,10 @@
 
 using Akka.Actor;
 using Akkatecture.Akka;
-using Akkatecture.Configuration.DependancyInjection;
+using Microsoft.Extensions.DependencyInjection;
 
 // ReSharper disable once CheckNamespace
-namespace Microsoft.Extensions.DependencyInjection
+namespace Akkatecture.Configuration.DependancyInjection
 {
     public static class AkkatectureServiceCollectionExtensions
     {

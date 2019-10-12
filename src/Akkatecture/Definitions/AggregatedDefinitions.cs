@@ -20,7 +20,7 @@ namespace Akkatecture.Definitions
 
     public void AddDefinitions(TDefinitions def)
     {
-      this._definitions.Add(def);
+      _definitions.Add(def);
     }
 
     public void Load(IReadOnlyCollection<Type> types)
@@ -30,39 +30,39 @@ namespace Akkatecture.Definitions
 
     public IEnumerable<TDefinition> GetDefinitions(string name)
     {
-      return this._definitions.SelectMany<TDefinitions, TDefinition>((Func<TDefinitions, IEnumerable<TDefinition>>) (d => d.GetDefinitions(name)));
+      return _definitions.SelectMany(d => d.GetDefinitions(name));
     }
 
     public bool TryGetDefinition(string name, int version, out TDefinition definition)
     {
-      foreach (TDefinitions definition1 in this._definitions)
+      foreach (TDefinitions definition1 in _definitions)
       {
         if (definition1.TryGetDefinition(name, version, out definition))
           return true;
       }
-      definition = default (TDefinition);
+      definition = default;
       return false;
     }
 
     public IEnumerable<TDefinition> GetAllDefinitions()
     {
-      return this._definitions.SelectMany<TDefinitions, TDefinition>((Func<TDefinitions, IEnumerable<TDefinition>>) (d => d.GetAllDefinitions()));
+      return _definitions.SelectMany(d => d.GetAllDefinitions());
     }
 
     public TDefinition GetDefinition(string name, int version)
     {
-      foreach (TDefinitions definition1 in this._definitions)
+      foreach (TDefinitions definition1 in _definitions)
       {
         TDefinition definition2;
         if (definition1.TryGetDefinition(name, version, out definition2))
           return definition2;
       }
-      throw new InvalidOperationException(string.Format("{0} version {1} not registered.", (object) name, (object) version));
+      throw new InvalidOperationException($"{(object) name} version {(object) version} not registered.");
     }
 
     public TDefinition GetDefinition(Type type)
     {
-      foreach (TDefinitions definition1 in this._definitions)
+      foreach (TDefinitions definition1 in _definitions)
       {
         TDefinition definition2;
         if (definition1.TryGetDefinition(type, out definition2))
@@ -73,28 +73,28 @@ namespace Akkatecture.Definitions
 
     public IReadOnlyCollection<TDefinition> GetDefinitions(Type type)
     {
-      return (IReadOnlyCollection<TDefinition>) this._definitions.SelectMany<TDefinitions, TDefinition>((Func<TDefinitions, IEnumerable<TDefinition>>) (d => (IEnumerable<TDefinition>) d.GetDefinitions(type))).ToList<TDefinition>();
+      return _definitions.SelectMany(d => (IEnumerable<TDefinition>) d.GetDefinitions(type)).ToList();
     }
 
     public bool TryGetDefinition(Type type, out TDefinition definition)
     {
-      foreach (TDefinitions definition1 in this._definitions)
+      foreach (TDefinitions definition1 in _definitions)
       {
         if (definition1.TryGetDefinition(type, out definition))
           return true;
       }
-      definition = default (TDefinition);
+      definition = default;
       return false;
     }
 
     public bool TryGetDefinitions(Type type, out IReadOnlyCollection<TDefinition> definitions)
     {
-      foreach (TDefinitions definition in this._definitions)
+      foreach (TDefinitions definition in _definitions)
       {
         if (definition.TryGetDefinitions(type, out definitions))
           return true;
       }
-      definitions = (IReadOnlyCollection<TDefinition>) null;
+      definitions = null;
       return false;
     }
 

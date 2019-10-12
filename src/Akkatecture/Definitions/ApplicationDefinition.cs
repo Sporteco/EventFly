@@ -30,7 +30,7 @@ namespace Akkatecture.Definitions
     {
       get
       {
-        return (IReadOnlyCollection<IDomainDefinition>) this._domains;
+        return _domains;
       }
     }
 
@@ -38,7 +38,7 @@ namespace Akkatecture.Definitions
     {
       get
       {
-        return (IReadOnlyCollection<IQueryDefinition>) this._domains.SelectMany<IDomainDefinition, IQueryDefinition>((Func<IDomainDefinition, IEnumerable<IQueryDefinition>>) (i => i.Queries.Select<IQueryDefinition, IQueryDefinition>((Func<IQueryDefinition, IQueryDefinition>) (q => q)))).ToList<IQueryDefinition>();
+        return _domains.SelectMany(i => i.Queries.Select(q => q)).ToList();
       }
     }
 
@@ -46,7 +46,7 @@ namespace Akkatecture.Definitions
     {
       get
       {
-        return (IReadOnlyCollection<IAggregateDefinition>) this._domains.SelectMany<IDomainDefinition, IAggregateDefinition>((Func<IDomainDefinition, IEnumerable<IAggregateDefinition>>) (i => i.Aggregates.Select<IAggregateDefinition, IAggregateDefinition>((Func<IAggregateDefinition, IAggregateDefinition>) (q => q)))).ToList<IAggregateDefinition>();
+        return _domains.SelectMany(i => i.Aggregates.Select(q => q)).ToList();
       }
     }
 
@@ -54,7 +54,7 @@ namespace Akkatecture.Definitions
     {
       get
       {
-        return (IReadOnlyCollection<IReadModelDefinition>) this._domains.SelectMany<IDomainDefinition, IReadModelDefinition>((Func<IDomainDefinition, IEnumerable<IReadModelDefinition>>) (i => i.ReadModels.Select<IReadModelDefinition, IReadModelDefinition>((Func<IReadModelDefinition, IReadModelDefinition>) (q => q)))).ToList<IReadModelDefinition>();
+        return _domains.SelectMany(i => i.ReadModels.Select(q => q)).ToList();
       }
     }
 
@@ -62,7 +62,7 @@ namespace Akkatecture.Definitions
     {
       get
       {
-        return (IReadOnlyCollection<ISagaDefinition>) this._domains.SelectMany<IDomainDefinition, ISagaDefinition>((Func<IDomainDefinition, IEnumerable<ISagaDefinition>>) (i => i.Sagas.Select<ISagaDefinition, ISagaDefinition>((Func<ISagaDefinition, ISagaDefinition>) (q => q)))).ToList<ISagaDefinition>();
+        return _domains.SelectMany(i => i.Sagas.Select(q => q)).ToList();
       }
     }
 
@@ -70,7 +70,7 @@ namespace Akkatecture.Definitions
     {
       get
       {
-        return (IEventDefinitions) this._events;
+        return _events;
       }
     }
 
@@ -78,7 +78,7 @@ namespace Akkatecture.Definitions
     {
       get
       {
-        return (IJobDefinitions) this._jobs;
+        return _jobs;
       }
     }
 
@@ -86,7 +86,7 @@ namespace Akkatecture.Definitions
     {
       get
       {
-        return (ISnapshotDefinitions) this._snapshots;
+        return _snapshots;
       }
     }
 
@@ -94,19 +94,19 @@ namespace Akkatecture.Definitions
     {
       get
       {
-        return (ICommandDefinitions) this._commands;
+        return _commands;
       }
     }
 
     public IApplicationDefinition RegisterDomain<TDomainDefinition>() where TDomainDefinition : IDomainDefinition
     {
-      IDomainDefinition instance = (IDomainDefinition) Activator.CreateInstance(typeof (TDomainDefinition), (object) this._system);
-      this._domains.Add(instance);
-      this._events.AddDefinitions(instance.Events);
-      this._jobs.AddDefinitions(instance.Jobs);
-      this._snapshots.AddDefinitions(instance.Snapshots);
-      this._commands.AddDefinitions(instance.Commands);
-      return (IApplicationDefinition) this;
+      IDomainDefinition instance = (IDomainDefinition) Activator.CreateInstance(typeof (TDomainDefinition), (object) _system);
+      _domains.Add(instance);
+      _events.AddDefinitions(instance.Events);
+      _jobs.AddDefinitions(instance.Jobs);
+      _snapshots.AddDefinitions(instance.Snapshots);
+      _commands.AddDefinitions(instance.Commands);
+      return this;
     }
 
     public Task<TExecutionResult> PublishAsync<TExecutionResult, TIdentity>(
@@ -114,27 +114,27 @@ namespace Akkatecture.Definitions
       where TExecutionResult : IExecutionResult
       where TIdentity : IIdentity
     {
-      return Futures.Ask<TExecutionResult>((ICanTell) this.GetAggregateManager(typeof (TIdentity)), (object) command, new TimeSpan?());
+      return Futures.Ask<TExecutionResult>(GetAggregateManager(typeof (TIdentity)), command, new TimeSpan?());
     }
 
     public Task<IExecutionResult> PublishAsync(ICommand command)
     {
-      return (Task<IExecutionResult>) Futures.Ask<IExecutionResult>((ICanTell) this.GetAggregateManager(command.GetAggregateId().GetType()), (object) command, new TimeSpan?());
+      return Futures.Ask<IExecutionResult>(GetAggregateManager(command.GetAggregateId().GetType()), command, new TimeSpan?());
     }
 
-    public Task<TResult> QueryAsync<TResult>(Akkatecture.Queries.IQuery<TResult> query)
+    public Task<TResult> QueryAsync<TResult>(Queries.IQuery<TResult> query)
     {
-      return Futures.Ask<TResult>((ICanTell) this.GetQueryManager(query.GetType()), (object) query, new TimeSpan?());
+      return Futures.Ask<TResult>(GetQueryManager(query.GetType()), query, new TimeSpan?());
     }
 
     public IActorRef GetAggregateManager(Type type)
     {
-      IActorRef manager = this.Aggregates.FirstOrDefault<IAggregateDefinition>((Func<IAggregateDefinition, bool>) (i =>
+      IActorRef manager = Aggregates.FirstOrDefault(i =>
       {
-        if (!(i.Type == type))
-          return i.IdentityType == type;
-        return true;
-      }))?.Manager;
+          if (!(i.Type == type))
+              return i.IdentityType == type;
+          return true;
+      })?.Manager;
       if (manager == null)
         throw new InvalidOperationException("Aggregate " + type.PrettyPrint() + " not registered");
       return manager;
@@ -142,7 +142,7 @@ namespace Akkatecture.Definitions
 
     public IActorRef GetQueryManager(Type queryType)
     {
-      IActorRef manager = this.Queries.FirstOrDefault<IQueryDefinition>((Func<IQueryDefinition, bool>) (i => i.Type == queryType))?.Manager;
+      IActorRef manager = Queries.FirstOrDefault(i => i.Type == queryType)?.Manager;
       if (manager == null)
         throw new InvalidOperationException("Query " + queryType.PrettyPrint() + " not registered");
       return manager;
@@ -150,12 +150,12 @@ namespace Akkatecture.Definitions
 
     public IActorRef GetSagaManager(Type type)
     {
-      IActorRef manager = this.Sagas.FirstOrDefault<ISagaDefinition>((Func<ISagaDefinition, bool>) (i =>
+      IActorRef manager = Sagas.FirstOrDefault(i =>
       {
-        if (!(i.Type == type))
-          return i.IdentityType == type;
-        return true;
-      }))?.Manager;
+          if (!(i.Type == type))
+              return i.IdentityType == type;
+          return true;
+      })?.Manager;
       if (manager == null)
         throw new InvalidOperationException("Saga " + type.PrettyPrint() + " not registered");
       return manager;
@@ -163,7 +163,7 @@ namespace Akkatecture.Definitions
 
     public IActorRef GetReadModelManager(Type type)
     {
-      IActorRef manager = this.ReadModels.FirstOrDefault<IReadModelDefinition>((Func<IReadModelDefinition, bool>) (i => i.Type == type))?.Manager;
+      IActorRef manager = ReadModels.FirstOrDefault(i => i.Type == type)?.Manager;
       if (manager == null)
         throw new InvalidOperationException("Saga " + type.PrettyPrint() + " not registered");
       return manager;
@@ -171,7 +171,7 @@ namespace Akkatecture.Definitions
 
     public ApplicationDefinition(ActorSystem system)
     {
-      this._system = system;
+      _system = system;
     }
   }
 }

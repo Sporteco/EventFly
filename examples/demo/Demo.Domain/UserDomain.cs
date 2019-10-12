@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Akka.Actor;
 using Akkatecture.Definitions;
 using Demo.Commands;
+using Demo.Domain.Aggregates;
 using Demo.Domain.QueryHandlers;
 using Demo.Queries;
 

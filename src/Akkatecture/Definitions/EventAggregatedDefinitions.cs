@@ -5,12 +5,10 @@
 // Assembly location: C:\Users\naych\source\repos\!!!!!\netcoreapp2.2\Akkatecture.dll
 
 using Akkatecture.Aggregates;
-using Akkatecture.Core.VersionedTypes;
-using Akkatecture.Events;
 
 namespace Akkatecture.Definitions
 {
-  public class EventAggregatedDefinitions : AggregatedDefinitions<EventDefinitions, EventVersionAttribute, EventDefinition>, IEventDefinitions, IVersionedTypeDefinitions<EventVersionAttribute, EventDefinition>
+  public class EventAggregatedDefinitions : AggregatedDefinitions<EventDefinitions, EventVersionAttribute, EventDefinition>, IEventDefinitions
   {
   }
 }

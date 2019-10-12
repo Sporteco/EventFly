@@ -2,7 +2,7 @@
 using Demo.Events;
 using Demo.ValueObjects;
 
-namespace Demo.Domain
+namespace Demo.Domain.Aggregates
 {
     public class UserState : AggregateState<UserAggregate, UserId>,
         IApply<UserCreatedEvent>,

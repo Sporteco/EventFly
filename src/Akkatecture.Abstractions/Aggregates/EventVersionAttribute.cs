@@ -28,7 +28,7 @@
 using System;
 using Akkatecture.Core.VersionedTypes;
 
-namespace Akkatecture.Events
+namespace Akkatecture.Aggregates
 {
     [AttributeUsage(
         AttributeTargets.Class,

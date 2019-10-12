@@ -8,7 +8,7 @@ using Demo.Commands;
 using Demo.Events;
 using Demo.ValueObjects;
 
-namespace Demo.Domain
+namespace Demo.Domain.Aggregates
 {
     public class TestSagaId : Identity<TestSagaId>
     {

@@ -10,7 +10,7 @@ using System;
 
 namespace Akkatecture.Definitions
 {
-  public class SnapshotDefinitions : VersionedTypeDefinitions<IAggregateSnapshot, SnapshotVersionAttribute, SnapshotDefinition>, ISnapshotDefinitions, IVersionedTypeDefinitions<SnapshotVersionAttribute, SnapshotDefinition>
+  public class SnapshotDefinitions : VersionedTypeDefinitions<IAggregateSnapshot, SnapshotVersionAttribute, SnapshotDefinition>, ISnapshotDefinitions
   {
     protected override SnapshotDefinition CreateDefinition(
       int version,

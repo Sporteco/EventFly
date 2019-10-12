@@ -5,11 +5,10 @@
 // Assembly location: C:\Users\naych\source\repos\!!!!!\netcoreapp2.2\Akkatecture.dll
 
 using Akkatecture.Commands;
-using Akkatecture.Core.VersionedTypes;
 
 namespace Akkatecture.Definitions
 {
-  public class CommandAggregatedDefinitions : AggregatedDefinitions<CommandDefinitions, CommandVersionAttribute, CommandDefinition>, ICommandDefinitions, IVersionedTypeDefinitions<CommandVersionAttribute, CommandDefinition>
+  public class CommandAggregatedDefinitions : AggregatedDefinitions<CommandDefinitions, CommandVersionAttribute, CommandDefinition>, ICommandDefinitions
   {
   }
 }

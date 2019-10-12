@@ -23,15 +23,15 @@ namespace Akkatecture.Definitions
 
     public AggregateDefinition(Type aggregateType, Type queryIdentity, IActorRef manager)
     {
-      this.Type = aggregateType;
-      this.IdentityType = queryIdentity;
-      this.Name = this.Type.GetAggregateName();
-      this.Manager = manager;
+      Type = aggregateType;
+      IdentityType = queryIdentity;
+      Name = Type.GetAggregateName();
+      Manager = manager;
     }
 
     public override string ToString()
     {
-      return this.Name.Value;
+      return Name.Value;
     }
   }
 }

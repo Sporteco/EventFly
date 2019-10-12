@@ -19,14 +19,14 @@ namespace Akkatecture.Definitions
 
     public QueryDefinition(Type queryType, IActorRef manager)
     {
-      this.Type = queryType;
-      this.Name = queryType.Name;
-      this.Manager = manager;
+      Type = queryType;
+      Name = queryType.Name;
+      Manager = manager;
     }
 
     public override string ToString()
     {
-      return this.Name;
+      return Name;
     }
   }
 }

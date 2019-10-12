@@ -5,11 +5,10 @@
 // Assembly location: C:\Users\naych\source\repos\!!!!!\netcoreapp2.2\Akkatecture.dll
 
 using Akkatecture.Aggregates.Snapshot;
-using Akkatecture.Core.VersionedTypes;
 
 namespace Akkatecture.Definitions
 {
-  public class SnapshotAggregatedDefinitions : AggregatedDefinitions<SnapshotDefinitions, SnapshotVersionAttribute, SnapshotDefinition>, ISnapshotDefinitions, IVersionedTypeDefinitions<SnapshotVersionAttribute, SnapshotDefinition>
+  public class SnapshotAggregatedDefinitions : AggregatedDefinitions<SnapshotDefinitions, SnapshotVersionAttribute, SnapshotDefinition>, ISnapshotDefinitions
   {
   }
 }

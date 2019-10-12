@@ -123,7 +123,7 @@ namespace Akkatecture.Tests.UnitTests.Aggregates
                         aggregateId,
                         aggregateEvent,
                         eventMetadata,
-                        default(DateTimeOffset),
+                        default,
                         aggregateSequenceNumber))
                 .Should().Throw<ArgumentNullException>().And.Message.Contains("timestamp").Should().BeTrue();
         }

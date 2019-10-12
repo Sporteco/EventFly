@@ -5,7 +5,7 @@ using Demo.Domain.CommandHandlers;
 using Demo.Events;
 using Demo.ValueObjects;
 
-namespace Demo.Domain
+namespace Demo.Domain.Aggregates
 {
     public class UserAggregate : EventDrivenAggregateRoot<UserAggregate, UserId, UserState>,
     IExecute<CreateUserCommand,UserId>
