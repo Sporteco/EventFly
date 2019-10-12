@@ -55,10 +55,6 @@ namespace Akkatecture.Examples.Domain.Model.UserAccount
             {
                 Emit(new UserAccountCreatedEvent(name));
             }
-            else
-            {
-                //signal domain error, aggregate already exists.
-            }
         }
 
         private void ChangeName(string name)
@@ -66,10 +62,6 @@ namespace Akkatecture.Examples.Domain.Model.UserAccount
             if (!IsNew)
             {
                 Emit(new UserAccountNameChangedEvent(name));   
-            }
-            else
-            {
-                //signal domain error, aggregate doesnt exist.
             }
         }
         

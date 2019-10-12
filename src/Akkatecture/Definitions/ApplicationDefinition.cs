@@ -4,16 +4,17 @@
 // MVID: 61DF059E-E5F5-4992-B320-644C3E4F5C82
 // Assembly location: C:\Users\naych\source\repos\!!!!!\netcoreapp2.2\Akkatecture.dll
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Akka.Actor;
 using Akkatecture.Commands;
 using Akkatecture.Commands.ExecutionResults;
 using Akkatecture.Core;
 using Akkatecture.Exceptions;
 using Akkatecture.Jobs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Akkatecture.Queries;
 
 namespace Akkatecture.Definitions
 {
@@ -114,17 +115,17 @@ namespace Akkatecture.Definitions
       where TExecutionResult : IExecutionResult
       where TIdentity : IIdentity
     {
-      return Futures.Ask<TExecutionResult>(GetAggregateManager(typeof (TIdentity)), command, new TimeSpan?());
+      return GetAggregateManager(typeof (TIdentity)).Ask<TExecutionResult>(command, new TimeSpan?());
     }
 
     public Task<IExecutionResult> PublishAsync(ICommand command)
     {
-      return Futures.Ask<IExecutionResult>(GetAggregateManager(command.GetAggregateId().GetType()), command, new TimeSpan?());
+      return GetAggregateManager(command.GetAggregateId().GetType()).Ask<IExecutionResult>(command, new TimeSpan?());
     }
 
-    public Task<TResult> QueryAsync<TResult>(Queries.IQuery<TResult> query)
+    public Task<TResult> QueryAsync<TResult>(IQuery<TResult> query)
     {
-      return Futures.Ask<TResult>(GetQueryManager(query.GetType()), query, new TimeSpan?());
+      return GetQueryManager(query.GetType()).Ask<TResult>(query, new TimeSpan?());
     }
 
     public IActorRef GetAggregateManager(Type type)

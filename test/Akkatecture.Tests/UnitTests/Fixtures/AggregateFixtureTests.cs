@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using Akka.TestKit.Xunit2;
-using Akkatecture.TestFixture.Aggregates;
-using Akkatecture.TestHelpers.Aggregates;
-using FluentAssertions;
 using System.ComponentModel;
 using System.Linq;
 using Akka.Actor;
 using Akka.Persistence;
+using Akka.TestKit.Xunit2;
 using Akkatecture.Aggregates;
 using Akkatecture.Aggregates.Snapshot;
+using Akkatecture.TestFixture.Aggregates;
+using Akkatecture.TestHelpers.Aggregates;
 using Akkatecture.TestHelpers.Aggregates.Entities;
 using Akkatecture.TestHelpers.Aggregates.Events;
 using Akkatecture.TestHelpers.Aggregates.Snapshots;
 using Akkatecture.Tests.UnitTests.Subscribers;
+using FluentAssertions;
 using Xunit;
 
 namespace Akkatecture.Tests.UnitTests.Fixtures

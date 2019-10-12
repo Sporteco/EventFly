@@ -1,12 +1,13 @@
-﻿using Akka.Actor;
+﻿using System;
+using System.Collections.Concurrent;
+using System.Threading.Tasks;
+using Akka.Actor;
 using Akkatecture.Commands;
 using Akkatecture.Commands.ExecutionResults;
 using Akkatecture.Core;
 using Akkatecture.Definitions;
 using Akkatecture.Jobs;
-using System;
-using System.Collections.Concurrent;
-using System.Threading.Tasks;
+using Akkatecture.Queries;
 
 namespace Akkatecture
 {
@@ -43,7 +44,7 @@ namespace Akkatecture
 
     public static Task<TResult> ExecuteQueryAsync<TResult>(
       this ActorSystem system,
-      Queries.IQuery<TResult> query)
+      IQuery<TResult> query)
     {
       return GetInstance(system).QueryAsync(query);
     }

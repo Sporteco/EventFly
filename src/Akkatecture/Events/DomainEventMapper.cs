@@ -52,10 +52,8 @@ namespace Akkatecture.Events
 
                 return domainEvent;
             }
-            else
-            {
-                return evt;
-            }
+
+            return evt;
         }
 
         public static EventEnvelope FromEnvelope(EventEnvelope eventEnvelope)

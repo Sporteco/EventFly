@@ -108,7 +108,7 @@ namespace Akkatecture.Tests.UnitTests.ValueObjects
                     new MagicEnumSingleValue(MagicEnum.Zero), 
                     new MagicEnumSingleValue(MagicEnum.Three), 
                     new MagicEnumSingleValue(MagicEnum.One), 
-                    new MagicEnumSingleValue(MagicEnum.Two), 
+                    new MagicEnumSingleValue(MagicEnum.Two) 
                 };
             
             var orderedValues = values
@@ -122,7 +122,7 @@ namespace Akkatecture.Tests.UnitTests.ValueObjects
                     MagicEnum.Zero,
                     MagicEnum.One,
                     MagicEnum.Two,
-                    MagicEnum.Three,
+                    MagicEnum.Three
                 },
                 o => o.WithStrictOrdering());
         }

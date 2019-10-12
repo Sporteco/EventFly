@@ -26,7 +26,6 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-
 using System.Threading.Tasks;
 using Akkatecture.Aggregates;
 using Akkatecture.Core;

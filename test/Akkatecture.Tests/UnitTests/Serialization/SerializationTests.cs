@@ -39,7 +39,6 @@ using Akkatecture.TestHelpers.Aggregates.Events;
 using Akkatecture.TestHelpers.Aggregates.Snapshots;
 using FluentAssertions;
 using Xunit;
-using EventId = Akkatecture.Aggregates.EventId;
 
 namespace Akkatecture.Tests.UnitTests.Serialization
 {
@@ -127,7 +126,7 @@ namespace Akkatecture.Tests.UnitTests.Serialization
                 SnapshotId = snapshotId,
                 AggregateSequenceNumber = aggregateSequenceNumber,
                 AggregateName = typeof(TestAggregate).GetAggregateName().Value,
-                AggregateId = aggregateId.Value,
+                AggregateId = aggregateId.Value
             };
             var committedEvent =
                 new CommittedSnapshot<TestAggregate, TestAggregateId, TestAggregateSnapshot>(

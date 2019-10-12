@@ -4,10 +4,10 @@
 // MVID: 61DF059E-E5F5-4992-B320-644C3E4F5C82
 // Assembly location: C:\Users\naych\source\repos\!!!!!\netcoreapp2.2\Akkatecture.dll
 
+using System;
 using Akka.Actor;
 using Akkatecture.Aggregates;
 using Akkatecture.Extensions;
-using System;
 
 namespace Akkatecture.Definitions
 {

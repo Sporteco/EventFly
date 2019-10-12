@@ -1,4 +1,6 @@
-﻿using Akka.Actor;
+﻿using System;
+using System.Collections.Generic;
+using Akka.Actor;
 using Akkatecture.Aggregates;
 using Akkatecture.Aggregates.Snapshot;
 using Akkatecture.Commands;
@@ -9,8 +11,6 @@ using Akkatecture.Queries;
 using Akkatecture.ReadModels;
 using Akkatecture.Sagas;
 using Akkatecture.Sagas.AggregateSaga;
-using System;
-using System.Collections.Generic;
 
 namespace Akkatecture.Definitions
 {

@@ -60,10 +60,8 @@ namespace Akkatecture.Examples.Api.Controllers
                 
                 return Accepted(new ResourceResponseModel(id,id));
             }
-            else
-            {
-                return BadRequest();
-            }
+
+            return BadRequest();
         }
 
         [HttpGet("resources")]

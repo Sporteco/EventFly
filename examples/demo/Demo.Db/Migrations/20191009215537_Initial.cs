@@ -11,7 +11,7 @@ namespace Demo.Db.Migrations
                 name: "User",
                 columns: table => new
                 {
-                    Id = table.Column<string>(nullable: false),
+                    Id = table.Column<string>(),
                     Name = table.Column<string>(nullable: true),
                     Birth = table.Column<DateTime>(nullable: true)
                 },

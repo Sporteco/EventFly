@@ -79,14 +79,14 @@ namespace Akkatecture.Core
 
             var lambdaArgument = new List<ParameterExpression>
                 {
-                    instanceArgument,
+                    instanceArgument
                 };
 
             var type = methodInfo.DeclaringType;
             var instanceVariable = Expression.Variable(type ?? throw new InvalidOperationException());
             var blockVariables = new List<ParameterExpression>
                 {
-                        instanceVariable,
+                        instanceVariable
                 };
             var blockExpressions = new List<Expression>
                 {

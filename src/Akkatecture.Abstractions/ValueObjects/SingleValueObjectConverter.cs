@@ -59,7 +59,7 @@ namespace Akkatecture.ValueObjects
                 });
 
             var value = serializer.Deserialize(reader, parameterType);
-            return Activator.CreateInstance(objectType, new[] { value });
+            return Activator.CreateInstance(objectType, value);
         }
 
         public override bool CanConvert(Type objectType)

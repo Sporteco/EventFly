@@ -1,6 +1,6 @@
-﻿using Akkatecture.Aggregates;
+﻿using System;
+using Akkatecture.Aggregates;
 using Akkatecture.Core.VersionedTypes;
-using System;
 
 namespace Akkatecture.Definitions
 {

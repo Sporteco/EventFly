@@ -29,8 +29,8 @@ using Akkatecture.Aggregates;
 using Akkatecture.Aggregates.Snapshot;
 using Akkatecture.Commands;
 using Akkatecture.Core;
-using SnapshotMetadata = Akkatecture.Aggregates.Snapshot.SnapshotMetadata;
 using AkkaSnapshotMetadata = Akka.Persistence.SnapshotMetadata;
+using SnapshotMetadata = Akkatecture.Aggregates.Snapshot.SnapshotMetadata;
 
 namespace Akkatecture.TestFixture.Aggregates
 {

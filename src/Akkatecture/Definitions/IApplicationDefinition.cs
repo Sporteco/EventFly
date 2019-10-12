@@ -4,14 +4,15 @@
 // MVID: 61DF059E-E5F5-4992-B320-644C3E4F5C82
 // Assembly location: C:\Users\naych\source\repos\!!!!!\netcoreapp2.2\Akkatecture.dll
 
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Akka.Actor;
 using Akkatecture.Commands;
 using Akkatecture.Commands.ExecutionResults;
 using Akkatecture.Core;
 using Akkatecture.Jobs;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using Akkatecture.Queries;
 
 namespace Akkatecture.Definitions
 {
@@ -44,7 +45,7 @@ namespace Akkatecture.Definitions
 
     Task<IExecutionResult> PublishAsync(ICommand command);
 
-    Task<TResult> QueryAsync<TResult>(Queries.IQuery<TResult> query);
+    Task<TResult> QueryAsync<TResult>(IQuery<TResult> query);
 
     IActorRef GetAggregateManager(Type aggregateType);
 
