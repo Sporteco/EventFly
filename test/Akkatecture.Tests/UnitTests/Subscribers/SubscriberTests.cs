@@ -42,7 +42,8 @@ namespace Akkatecture.Tests.UnitTests.Subscribers
         public SubscriberTests(ITestOutputHelper testOutputHelper)
             :base(TestHelpers.Akka.Configuration.Config, "subscriber-tests", testOutputHelper)
         {
-            Sys.RegisterAggregate<TestAggregate, TestAggregateId>();
+            Sys.RegisterDomain<TestDomain>();
+
         }
 
         [Fact]

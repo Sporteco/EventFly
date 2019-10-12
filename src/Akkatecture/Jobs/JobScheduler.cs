@@ -29,6 +29,7 @@ using System.Linq;
 using Akka.Actor;
 using Akka.Event;
 using Akka.Persistence;
+using Akkatecture.Definitions;
 using Akkatecture.Exceptions;
 using Akkatecture.Extensions;
 using Akkatecture.Jobs.Commands;
@@ -43,7 +44,7 @@ namespace Akkatecture.Jobs
     {
         private static readonly IJobName JobName = typeof(TJob).GetJobName();
         private readonly ICancelable _tickerTask;
-        private readonly IJobDefinitionService _jobDefinitionService;
+        private readonly IJobDefinitions _jobDefinitionService;
         public IJobName Name => JobName;
         protected SchedulerState<TJob, TIdentity> State { get; private set; }
         protected JobSchedulerSettings Settings { get; }
@@ -71,7 +72,7 @@ namespace Akkatecture.Jobs
                     .Scheduler
                     .ScheduleTellRepeatedlyCancelable(Settings.TickInterval, Settings.TickInterval, Self, Tick<TJob,TIdentity>.Instance, ActorRefs.NoSender);
 
-            _jobDefinitionService = new JobDefinitionService(Context.GetLogger());
+            _jobDefinitionService = Context.System.GetJobDefinitions();
             
             Command<Tick<TJob,TIdentity>>(Execute);
             Command<Schedule<TJob, TIdentity>>(Execute);
@@ -95,7 +96,6 @@ namespace Akkatecture.Jobs
             
             foreach (var schedule in State.Entries.Values.Where(e => ShouldTriggerSchedule(e, now)))
             {
-                _jobDefinitionService.Load(schedule.Job.GetType());
                 var jobDefinition = _jobDefinitionService.GetDefinition(schedule.Job.GetType());
                 Log.Info("JobScheduler for Job of Name={0}; sending job of Definition={1} to JobRunner.", Name, jobDefinition);
 
@@ -117,7 +117,6 @@ namespace Akkatecture.Jobs
         protected bool Execute(Schedule<TJob, TIdentity> command)
         {
             var sender = Sender;
-            _jobDefinitionService.Load(command.Job.GetType());
             var jobDefinition = _jobDefinitionService.GetDefinition(command.Job.GetType());
             try
             {

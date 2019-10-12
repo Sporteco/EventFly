@@ -42,12 +42,7 @@ namespace Demo.Host
                 .RegisterDefaultStorage<InMemoryAggregateStorage>()
                 .RegisterStorage<UserAggregate,EntityFrameworkStorage<TestDbContext>>();
 
-            system
-                .RegisterAggregate<UserAggregate, UserId>()
-                .RegisterSaga<TestSaga,TestSagaId>()
-                .RegisterQuery<UsersQueryHandler, UsersQuery, ICollection<UserInfo>>()
-                .RegisterReadModel<TotalUsersReadModel,TotalUsersReadModelManager>()
-                .RegisterAggregateReadModel<UsersInfoReadModel,UserId>();
+            system.RegisterDomain<UserDomain>();
 
             await system.PublishCommandAsync(createUserAccountCommand);
             

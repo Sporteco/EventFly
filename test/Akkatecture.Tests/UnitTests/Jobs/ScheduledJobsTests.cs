@@ -30,6 +30,7 @@ using Akka.TestKit.Xunit2;
 using Akkatecture.Jobs;
 using Akkatecture.Jobs.Commands;
 using Akkatecture.TestHelpers.Jobs;
+using Akkatecture.Tests.UnitTests.Subscribers;
 using FluentAssertions;
 using Xunit;
 using Xunit.Abstractions;
@@ -44,7 +45,7 @@ namespace Akkatecture.Tests.UnitTests.Jobs
         public ScheduledJobsTests(ITestOutputHelper testOutputHelper)
             : base(TestHelpers.Akka.Configuration.ConfigWithTestScheduler, "jobs-tests", testOutputHelper)
         {
-            
+            Sys.RegisterDomain<TestDomain>();
         }
 
         [Fact]

@@ -38,6 +38,7 @@ using Akkatecture.Aggregates.Snapshot.Strategies;
 using Akkatecture.Commands;
 using Akkatecture.Commands.ExecutionResults;
 using Akkatecture.Core;
+using Akkatecture.Definitions;
 using Akkatecture.Events;
 using Akkatecture.Exceptions;
 using Akkatecture.Extensions;
@@ -56,8 +57,8 @@ namespace Akkatecture.Sagas.AggregateSaga
         private static readonly IAggregateName SagaName = typeof(TAggregateSaga).GetSagaName();
         private CircularBuffer<ISourceId> _previousSourceIds = new CircularBuffer<ISourceId>(100);
         
-        protected IEventDefinitionService _eventDefinitionService;
-        protected ISnapshotDefinitionService _snapshotDefinitionService;
+        protected IEventDefinitions _eventDefinitionService;
+        protected ISnapshotDefinitions _snapshotDefinitionService;
         protected ISnapshotStrategy SnapshotStrategy { get; set; } = SnapshotNeverStrategy.Instance;
         public TSagaState State { get; }
         public async Task<TExecutionResult> PublishCommandAsync<TCommandIdentity, TExecutionResult>(ICommand<TCommandIdentity, TExecutionResult> command) where TCommandIdentity : IIdentity where TExecutionResult : IExecutionResult
@@ -138,8 +139,8 @@ namespace Akkatecture.Sagas.AggregateSaga
             Command<SaveSnapshotSuccess>(SnapshotStatus);
             Command<SaveSnapshotFailure>(SnapshotStatus);
 
-            _eventDefinitionService = new EventDefinitionService(Context.GetLogger());
-            _snapshotDefinitionService = new SnapshotDefinitionService(Context.GetLogger());
+            _eventDefinitionService = Context.System.GetEventDefinitions();
+            _snapshotDefinitionService = Context.System.GetSnapshotDefinitions();
 
         }
 
@@ -290,7 +291,6 @@ namespace Akkatecture.Sagas.AggregateSaga
         {
             if (aggregateEvent is IAggregateEvent)
             {
-                _eventDefinitionService.Load(aggregateEvent.GetType());
                 var eventDefinition = _eventDefinitionService.GetDefinition(aggregateEvent.GetType());
                 var aggregateSequenceNumber = version + 1;
                 var eventId = EventId.NewDeterministic(
@@ -359,7 +359,6 @@ namespace Akkatecture.Sagas.AggregateSaga
             {
                 throw new ArgumentNullException(nameof(aggregateEvent));
             }
-            _eventDefinitionService.Load(aggregateEvent.GetType());
             var eventDefinition = _eventDefinitionService.GetDefinition(aggregateEvent.GetType());
             var aggregateSequenceNumber = version + 1;
             var eventId = EventId.NewDeterministic(
@@ -412,7 +411,6 @@ namespace Akkatecture.Sagas.AggregateSaga
                 var aggregateSnapshot = CreateSnapshot();
                 if (aggregateSnapshot != null)
                 {
-                    _snapshotDefinitionService.Load(aggregateSnapshot.GetType());
                     var snapshotDefinition = _snapshotDefinitionService.GetDefinition(aggregateSnapshot.GetType());
                     var snapshotMetadata = new SnapshotMetadata
                     {

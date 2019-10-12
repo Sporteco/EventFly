@@ -22,6 +22,7 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using Akkatecture.Core.VersionedTypes;
+using Akkatecture.Definitions;
 
 namespace Akkatecture.Jobs
 {

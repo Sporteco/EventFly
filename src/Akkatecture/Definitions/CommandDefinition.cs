@@ -1,21 +1,19 @@
-using System;
-using System.Reflection;
+﻿// Decompiled with JetBrains decompiler
+// Type: Akkatecture.Definitions.CommandDefinition
+// Assembly: Akkatecture, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+// MVID: 61DF059E-E5F5-4992-B320-644C3E4F5C82
+// Assembly location: C:\Users\naych\source\repos\!!!!!\netcoreapp2.2\Akkatecture.dll
+
 using Akkatecture.Core.VersionedTypes;
+using System;
 
-namespace Akkatecture.Meta
+namespace Akkatecture.Definitions
 {
-    public class CommandDefinition : VersionedTypeDefinition
+  public class CommandDefinition : VersionedTypeDefinition
+  {
+    public CommandDefinition(int version, Type commandType, string name)
+      : base(version, commandType, name)
     {
-        public bool IsInternal { get; }
-        public CommandDefinition(int version,Type commandType,string name) : base(version, commandType, name)
-        {
-            IsInternal = CheckIsInternal(commandType);
-        }
-
-        private static bool CheckIsInternal(Type commandType)
-        {
-            return commandType.GetTypeInfo().GetCustomAttribute<InternalCommandAttribute>() != null;
-        }
-
     }
+  }
 }
