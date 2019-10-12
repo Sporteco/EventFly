@@ -1,8 +1,4 @@
-﻿// The MIT License (MIT)
-//
-// Copyright (c) 2015-2019 Rasmus Mikkelsen
-// Copyright (c) 2015-2019 eBay Software Foundation
-// Modified from original source https://github.com/eventflow/EventFlow
+// The MIT License (MIT)
 //
 // Copyright (c) 2018 - 2019 Lutando Ngqakaza
 // https://github.com/Lutando/Akkatecture 
@@ -28,16 +24,16 @@
 using System;
 using Akkatecture.Core.VersionedTypes;
 
-namespace Akkatecture.Events
+namespace Akkatecture.Jobs
 {
-    public class EventDefinition : VersionedTypeDefinition
+    public class JobDefinition : VersionedTypeDefinition
     {
-        public EventDefinition(
-            int version,
-            Type type,
-            string name)
-            : base(version, type, name)
-        {
-        }
+        public JobDefinition(int version,Type type,string name) : base(version, type, name){}
     }
+    
+    public class JobDefinitions : VersionedTypeDefinitions<IJob, JobVersionAttribute, JobDefinition>, IJobDefinitions
+    {
+        protected override JobDefinition CreateDefinition(int version, Type type, string name) => new JobDefinition(version, type, name);
+    }
+
 }

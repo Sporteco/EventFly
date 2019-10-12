@@ -21,22 +21,11 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System;
-using Akka.Event;
 using Akkatecture.Core.VersionedTypes;
 
 namespace Akkatecture.Aggregates.Snapshot
 {
-    public class SnapshotDefinitionService : VersionedTypeDefinitionService<IAggregateSnapshot, SnapshotVersionAttribute, SnapshotDefinition>, ISnapshotDefinitionService
+    public interface ISnapshotDefinitions : IVersionedTypeDefinitions<SnapshotVersionAttribute, SnapshotDefinition>
     {
-        public SnapshotDefinitionService(ILoggingAdapter logger)
-            : base(logger)
-        {
-        }
-
-        protected override SnapshotDefinition CreateDefinition(int version, Type type, string name)
-        {
-            return new SnapshotDefinition(version, type, name);
-        }
     }
 }

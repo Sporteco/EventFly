@@ -1,8 +1,4 @@
-﻿// The MIT License (MIT)
-//
-// Copyright (c) 2015-2019 Rasmus Mikkelsen
-// Copyright (c) 2015-2019 eBay Software Foundation
-// Modified from original source https://github.com/eventflow/EventFlow
+// The MIT License (MIT)
 //
 // Copyright (c) 2018 - 2019 Lutando Ngqakaza
 // https://github.com/Lutando/Akkatecture 
@@ -27,9 +23,9 @@
 
 using Akkatecture.Core.VersionedTypes;
 
-namespace Akkatecture.Events
+namespace Akkatecture.Jobs
 {
-    public interface IEventDefinitionService : IVersionedTypeDefinitionService<EventVersionAttribute, EventDefinition>
+    public interface IJobDefinitions : IVersionedTypeDefinitions<JobVersionAttribute, JobDefinition>
     {
     }
 }

@@ -26,22 +26,14 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
-using Akka.Event;
-using Akkatecture.Aggregates;
 using Akkatecture.Core.VersionedTypes;
 
-namespace Akkatecture.Events
+namespace Akkatecture.Meta
 {
-    public class EventDefinitionService : VersionedTypeDefinitionService<IAggregateEvent, EventVersionAttribute, EventDefinition>, IEventDefinitionService
+    public class EventDefinition : VersionedTypeDefinition
     {
-        public EventDefinitionService(ILoggingAdapter logger)
-            : base(logger)
+        public EventDefinition(int version, Type type, string name) : base(version, type, name)
         {
-        }
-
-        protected override EventDefinition CreateDefinition(int version, Type type, string name)
-        {
-            return new EventDefinition(version, type, name);
         }
     }
 }
