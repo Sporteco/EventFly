@@ -4,6 +4,7 @@ using Akkatecture.Definitions;
 using Demo.Commands;
 using Demo.Domain.Aggregates;
 using Demo.Domain.QueryHandlers;
+using Demo.Events;
 using Demo.Queries;
 
 namespace Demo.Domain
@@ -17,7 +18,8 @@ namespace Demo.Domain
             RegisterCommand<CreateUserCommand>();
             RegisterCommand<RenameUserCommand>();
             RegisterQuery<UsersQueryHandler,UsersQuery,ICollection<UserInfo>>();
-            
+            RegisterEvents(typeof(UserCreatedEvent), typeof(UserRenamedEvent));
+
         }
     }
 }
