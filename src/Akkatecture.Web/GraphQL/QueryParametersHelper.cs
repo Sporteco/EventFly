@@ -12,7 +12,7 @@ namespace Akkatecture.Web.GraphQL
     {
         public static QueryArguments GetArguments(Type parametersType, IGraphQueryHandler graphQuery)
         {
-            var qas = new List<QueryArgument>();
+           var qas = new List<QueryArgument>();
             foreach (var prop in parametersType.GetProperties().Where(i=>i.CanWrite))
             {
                 var type = GetGraphType(prop.PropertyType);
@@ -20,9 +20,10 @@ namespace Akkatecture.Web.GraphQL
                 var description = prop.GetCustomAttribute<DescriptionAttribute>()?.Description;
                 qas.Add(type != null
                     ? new QueryArgument(type) {Name = prop.Name, Description = description}
-                    : new QueryArgument(GetGraphTypeEx(prop.PropertyType, graphQuery)) {Name = prop.Name, Description = description});
+                    : new QueryArgument(GetGraphTypeEx(prop.PropertyType, graphQuery, true)) {Name = prop.Name, Description = description});
             }
             return new QueryArguments(qas);
+
         }
 
         static readonly Dictionary<Type, Type> MapTypes = new Dictionary<Type, Type>
@@ -61,15 +62,27 @@ namespace Akkatecture.Web.GraphQL
                     return typeof(ListGraphType<>).MakeGenericType(innerType);
                 return null;
             }
+            if (propType.IsArray)
+            {
+                var innerType = GetGraphType(propType.GetElementType());
+                if (innerType != null)
+                    return typeof(ListGraphType<>).MakeGenericType(innerType);
+                return null;
+            }
             if (MapTypes.ContainsKey(propType))
                 return MapTypes[propType];
+
+            if (propType.IsEnum)
+            {
+                return typeof(EnumerationGraphType<>).MakeGenericType(propType);
+            }
 
             if (propType.IsPrimitive)
                 return typeof(StringGraphType);
             return null;
         }
 
-        public static IEnumerable<FieldType> GetFields(Type modelType, IGraphQueryHandler graphQuery)
+        public static IEnumerable<FieldType> GetFields(Type modelType, IGraphQueryHandler graphQuery, bool isInput)
         {
             var qas = new List<FieldType>();
             foreach (var prop in modelType.GetProperties())
@@ -80,7 +93,7 @@ namespace Akkatecture.Web.GraphQL
                     ? new FieldType {Type = type, Name = prop.Name, Description = description}
                     : new FieldType
                     {
-                        ResolvedType = GetGraphTypeEx(prop.PropertyType, graphQuery), Name = prop.Name,
+                        ResolvedType = GetGraphTypeEx(prop.PropertyType, graphQuery, isInput), Name = prop.Name,
                         Description = description,
                     });
             }
@@ -88,17 +101,17 @@ namespace Akkatecture.Web.GraphQL
         }
 
 
-        private static IGraphType GetGraphTypeEx(Type propType, IGraphQueryHandler graphQuery)
+        private static IGraphType GetGraphTypeEx(Type propType, IGraphQueryHandler graphQuery, bool isInput)
         {
             if (propType.IsGenericType && propType.GetGenericArguments().Length == 1 && typeof(IEnumerable).IsAssignableFrom(propType))
             {
                 var innerType = propType.GetGenericArguments().First();
                 if (innerType != null)
-                    return new ListGraphType(graphQuery.GetQueryItemType(innerType));
+                    return new ListGraphType(graphQuery.GetQueryItemType(innerType, isInput));
                 return null;
             }
 
-            return graphQuery.GetQueryItemType(propType);
+            return graphQuery.GetQueryItemType(propType, isInput);
         }
     }
 }

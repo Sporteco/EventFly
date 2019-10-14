@@ -43,6 +43,7 @@ namespace Demo.Host
 
             system.RegisterDomain<UserDomain>();
 
+
             await system.PublishCommandAsync(createUserAccountCommand);
             
             //await system.PublishCommandAsync(new RenameUserCommand(aggregateId, new UserName("TEST")));

@@ -17,8 +17,10 @@ namespace Demo.Domain
             RegisterCommand<CreateUserCommand>();
             RegisterCommand<RenameUserCommand>();
             RegisterQuery<UsersQueryHandler,UsersQuery,UsersResult>();
+            RegisterQuery<EventPostersQueryHandler,EventPostersQuery,EventPosters>();
             RegisterEvents(typeof(UserCreatedEvent), typeof(UserRenamedEvent));
 
         }
     }
+
 }

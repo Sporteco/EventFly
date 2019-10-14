@@ -1,4 +1,6 @@
-﻿using Akkatecture.Definitions;
+﻿using System;
+using System.Collections.Concurrent;
+using Akkatecture.Definitions;
 using GraphQL;
 using GraphQL.Http;
 using GraphQL.Server;
@@ -11,9 +13,19 @@ namespace Akkatecture.Web.GraphQL
 {
     public static class BuilderExtensions
     {
+        private static ConcurrentDictionary<Type,object> _enumCache = new ConcurrentDictionary<Type,object>(); 
+        private static object GetRequiredServiceEx(this IServiceProvider provider, Type serviceType)
+        {
+            if (serviceType.IsGenericType && serviceType.GetGenericTypeDefinition() == typeof(EnumerationGraphType<>))
+            {
+                return _enumCache.GetOrAdd(serviceType, (у) => Activator.CreateInstance(serviceType));
+            }
+            return provider.GetRequiredService(serviceType);
+        }
+
         public static IServiceCollection AddAkkatectureGraphQl(this IServiceCollection services, IApplicationDefinition app)
         {
-            services.AddScoped<IDependencyResolver>(s => new FuncDependencyResolver(s.GetRequiredService));
+            services.AddScoped<IDependencyResolver>(s => new FuncDependencyResolver(s.GetRequiredServiceEx));
             services.AddSingleton<IDocumentExecuter, DocumentExecuter>();
             services.AddSingleton<IDocumentWriter, DocumentWriter>();
 

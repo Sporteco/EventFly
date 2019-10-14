@@ -5,8 +5,10 @@ using Newtonsoft.Json;
 namespace Demo
 {
     [JsonConverter(typeof(SingleValueObjectConverter))]
-    public class UserId : Identity<UserId>
+    public class EventPosterId : Identity<EventPosterId>
     {
-        public UserId(string value) : base(value){}
+        public EventPosterId(string value) : base(value)
+        {
+        }
     }
 }

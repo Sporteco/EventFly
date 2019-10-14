@@ -9,6 +9,8 @@ using Akkatecture.Web.Swagger;
 using Demo.Db;
 using Demo.Domain;
 using Demo.Domain.Aggregates;
+using Demo.Predicates;
+using GraphQL.Types;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -45,6 +47,8 @@ namespace Demo.Web
 
             services.AddAkkatectureGraphQl(system.GetApplicationDefinition());
             services.AddAkkatectureSwagger();
+
+            services.AddTransient<EnumerationGraphType<StringOperator>>();
 
             services.Configure<CookiePolicyOptions>(options =>
             {

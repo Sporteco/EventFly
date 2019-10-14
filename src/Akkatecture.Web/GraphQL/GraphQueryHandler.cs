@@ -27,15 +27,15 @@ namespace Akkatecture.Web.GraphQL
             return await ReadAsync((TQuery)query);
         }
 
-        public FieldType GetFieldType()
+        public FieldType GetFieldType(bool isInput)
         {
             return  new FieldType
             {
-                ResolvedType = GetQueryItemType(typeof(TResult)),
+                ResolvedType = GetQueryItemType(typeof(TResult),isInput),
                 Name = typeof(TQuery).Name,
                 Description = typeof(TQuery).GetCustomAttribute<DescriptionAttribute>()?.Description,
                 Arguments = QueryParametersHelper.GetArguments(typeof(TQuery), this),
-                Resolver = new FuncFieldResolver<TResult>(context => ExecuteQuery(context).GetAwaiter().GetResult())
+                Resolver = new FuncFieldResolver<TResult>(context => ExecuteQuery(context).GetAwaiter().GetResult()),
             };
         }
 
@@ -50,12 +50,12 @@ namespace Akkatecture.Web.GraphQL
             => JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(arguments));
 
 
-        public IGraphType GetQueryItemType(Type modelType)
+        public IGraphType GetQueryItemType(Type modelType, bool isInput)
         {
             lock (_declaredTypes)
             {
                 if (_declaredTypes.ContainsKey(modelType)) return _declaredTypes[modelType];
-                var result = GetGraphTypeEx(modelType, this);
+                var result = GetGraphTypeEx(modelType, this,isInput);
                 _declaredTypes.Add(modelType, result);
                 return result;
             }
@@ -64,17 +64,18 @@ namespace Akkatecture.Web.GraphQL
 
         public static Func<object,object> ConvertFunc<TParent, TRes>(Func<TParent, TRes> func) => arg => func((TParent)arg);
 
-        private static IGraphType GetGraphTypeEx(Type propType, IGraphQueryHandler graphQuery)
+        private static IGraphType GetGraphTypeEx(Type propType, IGraphQueryHandler graphQuery, bool isInput)
         {
             if (propType.IsGenericType && propType.GetGenericArguments().Length == 1 && typeof(IEnumerable).IsAssignableFrom(propType))
             {
                 var innerType = propType.GetGenericArguments().First();
                 if (innerType != null)
-                    return new ListGraphType(graphQuery.GetQueryItemType(innerType));
+                    return new ListGraphType(graphQuery.GetQueryItemType(innerType,isInput));
                 return null;
             }
 
-            return new ObjectGraphTypeFromModel(propType, graphQuery);
+            return isInput ? (IGraphType) new InputObjectGraphTypeFromModel(propType, graphQuery) 
+                : new ObjectGraphTypeFromModel(propType, graphQuery);
         }
     }
 }

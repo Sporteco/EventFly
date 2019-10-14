@@ -9,7 +9,7 @@ namespace Akkatecture.Web.GraphQL
         {
             foreach (var query in queries)
             {
-                AddField(query.GetFieldType());
+                AddField(query.GetFieldType(false));
             }
         }
     }
