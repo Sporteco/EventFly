@@ -27,6 +27,7 @@ namespace Demo.Host
 
             var container = builder.Build();
 
+
             var aggregateId = UserId.New;
             var createUserAccountCommand = new CreateUserCommand(aggregateId, new UserName("userName"),new Birth(DateTime.Now));
             
@@ -48,8 +49,8 @@ namespace Demo.Host
 
             //await system.PublishCommandAsync(new CreateUserCommand(UserId.New, new UserName("userName2"),new Birth(DateTime.Today)));
 
-            var res = await system.ExecuteQueryAsync(new UsersQuery("test"));
-            Console.WriteLine(res?.Count);
+            var res = await system.ExecuteQueryAsync(new UsersQuery());
+            Console.WriteLine(res?.Items.Count);
                         
             //block end of program
             Console.ReadLine();

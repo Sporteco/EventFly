@@ -59,7 +59,7 @@ namespace Akkatecture.Definitions
         var manager = _system.ActorOf(Props.Create(() => new QueryManager<TQueryHandler,TQuery,TResult>()),
             $"query-{typeof(TQuery).Name}-manager");
 
-        _queries.Add(new QueryDefinition(typeof(TQuery), manager));
+        _queries.Add(new QueryDefinition(typeof(TQuery), typeof(TResult), manager));
         return this;
     }
 

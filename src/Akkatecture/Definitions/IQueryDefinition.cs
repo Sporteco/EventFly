@@ -15,6 +15,8 @@ namespace Akkatecture.Definitions
 
     Type Type { get; }
 
+    Type QueryResultType { get; }
+
     IActorRef Manager { get; }
   }
 }

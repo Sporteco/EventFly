@@ -14,12 +14,14 @@ namespace Akkatecture.Definitions
     public string Name { get; }
 
     public Type Type { get; }
+    public Type QueryResultType { get; }
 
     public IActorRef Manager { get; }
 
-    public QueryDefinition(Type queryType, IActorRef manager)
+    public QueryDefinition(Type queryType, Type modelType, IActorRef manager)
     {
       Type = queryType;
+      QueryResultType = modelType;
       Name = queryType.Name;
       Manager = manager;
     }

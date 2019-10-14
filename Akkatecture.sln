@@ -77,7 +77,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Akkatecture.Storages.Entity
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demo.Db", "examples\demo\Demo.Db\Demo.Db.csproj", "{050F4344-9C7A-4184-BBD9-1EE5348BC87F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Akkatecture.Web", "src\Akkatecture.Web\Akkatecture.Web.csproj", "{0B4FF7BD-CDD0-4DA4-9E9E-A56600ADEDBA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Akkatecture.Web", "src\Akkatecture.Web\Akkatecture.Web.csproj", "{0B4FF7BD-CDD0-4DA4-9E9E-A56600ADEDBA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo.Web", "examples\demo\Demo.Web\Demo.Web.csproj", "{9AF8A2F1-E35A-4426-B38E-67B96B1A05AE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -149,6 +151,10 @@ Global
 		{0B4FF7BD-CDD0-4DA4-9E9E-A56600ADEDBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0B4FF7BD-CDD0-4DA4-9E9E-A56600ADEDBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0B4FF7BD-CDD0-4DA4-9E9E-A56600ADEDBA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9AF8A2F1-E35A-4426-B38E-67B96B1A05AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9AF8A2F1-E35A-4426-B38E-67B96B1A05AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9AF8A2F1-E35A-4426-B38E-67B96B1A05AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9AF8A2F1-E35A-4426-B38E-67B96B1A05AE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -176,6 +182,7 @@ Global
 		{36C23311-942F-4822-A817-6DFBFA260C52} = {C7A99371-DCC0-4726-A971-E35C8CDF4768}
 		{050F4344-9C7A-4184-BBD9-1EE5348BC87F} = {F3CA8C69-92CA-4897-9CB2-4D40811BAAEE}
 		{0B4FF7BD-CDD0-4DA4-9E9E-A56600ADEDBA} = {C7A99371-DCC0-4726-A971-E35C8CDF4768}
+		{9AF8A2F1-E35A-4426-B38E-67B96B1A05AE} = {F3CA8C69-92CA-4897-9CB2-4D40811BAAEE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F5A40806-ED71-4286-A37C-BE0364FA29A6}

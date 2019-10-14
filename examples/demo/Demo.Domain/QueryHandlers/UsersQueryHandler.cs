@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Data.SqlClient;
+﻿using System.Data.SqlClient;
 using System.Linq;
 using Akkatecture.Queries;
 using Dapper;
@@ -7,22 +6,20 @@ using Demo.Queries;
 
 namespace Demo.Domain.QueryHandlers
 {
-    public class UsersQueryHandler : QueryHandler<UsersQuery, ICollection<UserInfo>>
+    public class UsersQueryHandler : QueryHandler<UsersQuery, UsersResult>
     {
-        private ICollection<UserInfo> _cache;
-
-        public override ICollection<UserInfo> ExecuteQuery(UsersQuery query)
+        public override UsersResult ExecuteQuery(UsersQuery query)
         {
-            if (_cache == null)
+            var filter = "";
+            if (!string.IsNullOrEmpty(query.NameFilter))
+                filter = $"WHERE Name LIKE '%{query.NameFilter}%'";
+
+            using (var db = new SqlConnection(DbHelper.ConnectionString))
             {
-                using (var db = new SqlConnection(DbHelper.ConnectionString))
-                {
-                    _cache = db.Query<UserInfo>("SELECT Id, Name FROM [User]").ToList();
-                }
+                return new UsersResult(
+                    db.Query<UserInfo>($"SELECT Id, Name FROM [User] {filter}").ToList(),
+                    100);
             }
-
-            return _cache;
         }
-
     }
 }

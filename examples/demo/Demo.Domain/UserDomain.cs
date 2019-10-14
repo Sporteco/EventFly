@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Akka.Actor;
 using Akkatecture.Definitions;
 using Demo.Commands;
@@ -17,7 +16,7 @@ namespace Demo.Domain
             RegisterSaga<TestSaga, TestSagaId>();
             RegisterCommand<CreateUserCommand>();
             RegisterCommand<RenameUserCommand>();
-            RegisterQuery<UsersQueryHandler,UsersQuery,ICollection<UserInfo>>();
+            RegisterQuery<UsersQueryHandler,UsersQuery,UsersResult>();
             RegisterEvents(typeof(UserCreatedEvent), typeof(UserRenamedEvent));
 
         }

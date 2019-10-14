@@ -29,6 +29,7 @@
     <PackageReference Include="Akka.Persistence" Version="$(AkkaPersistenceVersion)" />
     <PackageReference Include="Akka.Persistence.Query" Version="$(AkkaPersistenceQueryVersion)" />
     <PackageReference Include="Cronos" Version="0.7.0" />
+    <PackageReference Include="GraphQL" Version="2.4.0" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="$(SourceLinkGithubVersion)" PrivateAssets="All" />
     <PackageReference Include="Microsoft.CSharp" Version="4.5.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.2.0" />

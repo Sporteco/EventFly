@@ -10,11 +10,11 @@ using Demo.ValueObjects;
 
 namespace Demo.Domain.Aggregates
 {
-    public class TestSagaId : Identity<TestSagaId>
-    {
-        public TestSagaId(string value) : base(value){}
-    }
-
+    #region TestSagaId
+    public class TestSagaId : Identity<TestSagaId> { public TestSagaId(string value) : base(value){} }
+    
+    #endregion
+    
     public class TestSaga : StatelessSaga<TestSaga, TestSagaId>,
         ISagaIsStartedByAsync<UserId, UserCreatedEvent>,
         ISagaHandles<UserId,UserRenamedEvent>
