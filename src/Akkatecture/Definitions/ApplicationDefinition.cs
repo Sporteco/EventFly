@@ -128,6 +128,11 @@ namespace Akkatecture.Definitions
       return GetQueryManager(query.GetType()).Ask<TResult>(query, new TimeSpan?());
     }
 
+    public Task<object> QueryAsync(IQuery query)
+    {
+        return GetQueryManager(query.GetType()).Ask(query, new TimeSpan?());
+    }
+
     public IActorRef GetAggregateManager(Type type)
     {
       var manager = Aggregates.FirstOrDefault(i =>

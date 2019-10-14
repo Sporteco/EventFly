@@ -46,6 +46,7 @@ namespace Akkatecture.Definitions
     Task<IExecutionResult> PublishAsync(ICommand command);
 
     Task<TResult> QueryAsync<TResult>(IQuery<TResult> query);
+    Task<object> QueryAsync(IQuery query);
 
     IActorRef GetAggregateManager(Type aggregateType);
 
