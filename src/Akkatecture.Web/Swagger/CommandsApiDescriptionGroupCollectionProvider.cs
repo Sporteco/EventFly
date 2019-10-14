@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Akka.Actor;
 using Akkatecture.Commands;
 using Akkatecture.Definitions;
 using Akkatecture.Queries;
@@ -26,11 +27,11 @@ namespace Akkatecture.Web.Swagger
     private readonly ApiDescriptionGroupCollectionProvider _internal;
 
     public CommandsApiDescriptionGroupCollectionProvider(
-      IApplicationDefinition metadata,
+      ActorSystem system,
       IActionDescriptorCollectionProvider actionDescriptorCollectionProvider,
       IEnumerable<IApiDescriptionProvider> apiDescriptionProviders)
     {
-      _metadata = metadata;
+      _metadata = system.GetApplicationDefinition();
       _internal = new ApiDescriptionGroupCollectionProvider(actionDescriptorCollectionProvider, apiDescriptionProviders);
     }
 

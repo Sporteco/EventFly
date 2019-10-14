@@ -16,7 +16,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
-namespace Akkatecture.Web.Middlewares
+namespace Akkatecture.Web.Swagger
 {
   public class CommandPublishMiddleware
   {

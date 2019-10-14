@@ -4,6 +4,7 @@ using Akkatecture.AggregateStorages;
 using Akkatecture.Configuration.DependancyInjection;
 using Akkatecture.Storages.EntityFramework;
 using Akkatecture.Web.GraphQL;
+using Akkatecture.Web.Swagger;
 using Demo.Db;
 using Demo.Domain;
 using Demo.Domain.Aggregates;
@@ -42,6 +43,7 @@ namespace Demo.Web
             system.RegisterDomain<UserDomain>();
 
             services.AddAkkatectureGraphQl(system.GetApplicationDefinition());
+            services.AddAkkatectureSwagger();
 
             services.Configure<CookiePolicyOptions>(options =>
             {
@@ -73,6 +75,7 @@ namespace Demo.Web
             app.UseCookiePolicy();
 
             app.UseAkkatectureGraphQl();
+            app.UseAkkatectureSwagger();
 
             app.UseMvc(routes =>
             {
