@@ -2,6 +2,6 @@
 {
     public interface IAggregateState<TIdentity> 
     {
-        TIdentity Id { get; set; }
+        string Id { get; set; }
     }
 }

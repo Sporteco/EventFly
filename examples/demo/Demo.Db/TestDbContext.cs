@@ -20,9 +20,7 @@ namespace Demo.Db
             modelBuilder.Entity<UserState>().HasKey(e => e.Id);
 
             modelBuilder.Entity<UserState>()
-                .Property(e => e.Id).HasConversion(
-                    v => v.ToString(),
-                    v => UserId.With(v));
+                .Property(e => e.Id);
 
             modelBuilder.Entity<UserState>()
                 .Property(e => e.Name).HasConversion(

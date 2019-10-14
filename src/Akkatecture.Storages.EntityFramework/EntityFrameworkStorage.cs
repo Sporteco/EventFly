@@ -24,7 +24,7 @@ namespace Akkatecture.Storages.EntityFramework
             _dbContext.SaveChanges();
         }
 
-        public TAggregateState LoadState<TAggregateState, TIdentity>(TIdentity id) where TAggregateState : class, IAggregateState<TIdentity>, new() where TIdentity : IIdentity
+        public TAggregateState LoadState<TAggregateState, TIdentity>(string id) where TAggregateState : class, IAggregateState<TIdentity>, new() where TIdentity : IIdentity
         {
             var item = _dbContext.Find<TAggregateState>(id);
             if (item == null)

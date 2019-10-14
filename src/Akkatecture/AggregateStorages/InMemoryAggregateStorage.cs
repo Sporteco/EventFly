@@ -9,13 +9,13 @@ namespace Akkatecture.AggregateStorages
         private readonly ConcurrentDictionary<string, object> _stages = new ConcurrentDictionary<string, object>();
         public void SaveState<TAggregateState, TIdentity>(TAggregateState state) where TAggregateState : IAggregateState<TIdentity> where TIdentity : IIdentity
         {
-            _stages.AddOrUpdate(state.Id.Value, state, (s, o) => state);
+            _stages.AddOrUpdate(state.Id, state, (s, o) => state);
         }
 
-        public TAggregateState LoadState<TAggregateState, TIdentity>(TIdentity id) where TAggregateState : class, IAggregateState<TIdentity>, new() where TIdentity : IIdentity
+        public TAggregateState LoadState<TAggregateState, TIdentity>(string id) where TAggregateState : class, IAggregateState<TIdentity>, new() where TIdentity : IIdentity
         {
-            if (!_stages.ContainsKey(id.Value)) return null;
-            return (TAggregateState)_stages[id.Value];
+            if (!_stages.ContainsKey(id)) return null;
+            return (TAggregateState)_stages[id];
         }
 
         public void Dispose()

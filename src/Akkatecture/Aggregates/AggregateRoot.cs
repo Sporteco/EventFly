@@ -85,7 +85,7 @@ namespace Akkatecture.Aggregates
 
         protected virtual TAggregateState LoadState()
         {
-            return _aggregateStorage.LoadState<TAggregateState, TIdentity>(Id) ?? new TAggregateState{ Id = Id };
+            return _aggregateStorage.LoadState<TAggregateState, TIdentity>(Id.Value) ?? new TAggregateState{ Id = Id.Value };
         }
 
         protected virtual void SaveState()

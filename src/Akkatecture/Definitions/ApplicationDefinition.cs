@@ -101,7 +101,7 @@ namespace Akkatecture.Definitions
 
     public IApplicationDefinition RegisterDomain<TDomainDefinition>() where TDomainDefinition : IDomainDefinition
     {
-      IDomainDefinition instance = (IDomainDefinition) Activator.CreateInstance(typeof (TDomainDefinition), (object) _system);
+      var instance = (IDomainDefinition) Activator.CreateInstance(typeof (TDomainDefinition), (object) _system);
       _domains.Add(instance);
       _events.AddDefinitions(instance.Events);
       _jobs.AddDefinitions(instance.Jobs);
@@ -130,7 +130,7 @@ namespace Akkatecture.Definitions
 
     public IActorRef GetAggregateManager(Type type)
     {
-      IActorRef manager = Aggregates.FirstOrDefault(i =>
+      var manager = Aggregates.FirstOrDefault(i =>
       {
           if (!(i.Type == type))
               return i.IdentityType == type;
@@ -143,7 +143,7 @@ namespace Akkatecture.Definitions
 
     public IActorRef GetQueryManager(Type queryType)
     {
-      IActorRef manager = Queries.FirstOrDefault(i => i.Type == queryType)?.Manager;
+      var manager = Queries.FirstOrDefault(i => i.Type == queryType)?.Manager;
       if (manager == null)
         throw new InvalidOperationException("Query " + queryType.PrettyPrint() + " not registered");
       return manager;
@@ -151,7 +151,7 @@ namespace Akkatecture.Definitions
 
     public IActorRef GetSagaManager(Type type)
     {
-      IActorRef manager = Sagas.FirstOrDefault(i =>
+      var manager = Sagas.FirstOrDefault(i =>
       {
           if (!(i.Type == type))
               return i.IdentityType == type;
@@ -164,7 +164,7 @@ namespace Akkatecture.Definitions
 
     public IActorRef GetReadModelManager(Type type)
     {
-      IActorRef manager = ReadModels.FirstOrDefault(i => i.Type == type)?.Manager;
+      var manager = ReadModels.FirstOrDefault(i => i.Type == type)?.Manager;
       if (manager == null)
         throw new InvalidOperationException("Saga " + type.PrettyPrint() + " not registered");
       return manager;

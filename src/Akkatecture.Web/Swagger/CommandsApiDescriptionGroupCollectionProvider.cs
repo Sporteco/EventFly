@@ -4,7 +4,6 @@
 // MVID: 043A546D-C869-4CCE-8BB0-8D9655232ADF
 // Assembly location: C:\Users\naych\source\repos\!!!!!\netcoreapp2.2\Akkatecture.Web.dll
 
-using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Akka.Actor;
@@ -39,8 +38,8 @@ namespace Akkatecture.Web.Swagger
     {
       get
       {
-        ApiDescriptionGroupCollection descriptionGroups = _internal.ApiDescriptionGroups;
-        List<ApiDescription> apis = new List<ApiDescription>();
+        var descriptionGroups = _internal.ApiDescriptionGroups;
+        var apis = new List<ApiDescription>();
         PrepareCommands(apis);
         return new ApiDescriptionGroupCollection(PrepareQueries(apis, descriptionGroups), 1);
       }
@@ -50,20 +49,20 @@ namespace Akkatecture.Web.Swagger
       List<ApiDescription> apis,
       ApiDescriptionGroupCollection data)
     {
-      foreach (IDomainDefinition domain in _metadata.Domains)
+      foreach (var domain in _metadata.Domains)
       {
-        foreach (IQueryDefinition query in domain.Queries)
+        foreach (var query in domain.Queries)
         {
-          Type type = query.Type;
-          string name = type.Name.ToLowerInvariant().Replace("query", "");
-          string str = "api/" + query.Name;
-          Type genericInterface = ReflectionExtensions.GetSubclassOfRawGenericInterface(typeof (IQuery<>), type);
+          var type = query.Type;
+          var name = type.Name.ToLowerInvariant().Replace("query", "");
+          var str = "api/" + query.Name;
+          var genericInterface = ReflectionExtensions.GetSubclassOfRawGenericInterface(typeof (IQuery<>), type);
           if (!(genericInterface == null))
           {
-            Type genericArgument = genericInterface.GetGenericArguments()[0];
-            ApiDescription apiDescription1 = new ApiDescription();
-            ApiDescription apiDescription2 = apiDescription1;
-            ControllerActionDescriptor actionDescriptor1 = new ControllerActionDescriptor();
+            var genericArgument = genericInterface.GetGenericArguments()[0];
+            var apiDescription1 = new ApiDescription();
+            var apiDescription2 = apiDescription1;
+            var actionDescriptor1 = new ControllerActionDescriptor();
             actionDescriptor1.ActionConstraints = new List<IActionConstraintMetadata>
             {
                 new HttpMethodActionConstraint(new[]
@@ -91,7 +90,7 @@ namespace Akkatecture.Web.Swagger
                     domain.Name
                 }
             };
-            ControllerActionDescriptor actionDescriptor2 = actionDescriptor1;
+            var actionDescriptor2 = actionDescriptor1;
             apiDescription2.ActionDescriptor = actionDescriptor2;
             apiDescription1.HttpMethod = "POST";
             apiDescription1.RelativePath = str;
@@ -100,7 +99,7 @@ namespace Akkatecture.Web.Swagger
               StatusCode = 200,
               Type = genericArgument
             });
-            ApiDescription apiDescription3 = apiDescription1;
+            var apiDescription3 = apiDescription1;
             ((List<ApiParameterDescription>) apiDescription3.ParameterDescriptions).Add(new ApiParameterDescription
             {
               Name = "query",
@@ -111,27 +110,27 @@ namespace Akkatecture.Web.Swagger
           }
         }
       }
-      List<ApiDescriptionGroup> descriptionGroupList = new List<ApiDescriptionGroup> { new ApiDescriptionGroup("R3", apis) };
+      var descriptionGroupList = new List<ApiDescriptionGroup> { new ApiDescriptionGroup("R3", apis) };
       descriptionGroupList.AddRange(data.Items);
       return descriptionGroupList;
     }
 
     private void PrepareCommands(List<ApiDescription> apis)
     {
-      foreach (IDomainDefinition domain in _metadata.Domains)
+      foreach (var domain in _metadata.Domains)
       {
-        foreach (CommandDefinition allDefinition in domain.Commands.GetAllDefinitions())
+        foreach (var allDefinition in domain.Commands.GetAllDefinitions())
         {
-          Type type = allDefinition.Type;
-          string name = type.Name.ToLowerInvariant().Replace("command", "");
-          string str = "api/" + allDefinition.Name + "/" + allDefinition.Version;
-          Type subclassOfRawGeneric = ReflectionExtensions.GetSubclassOfRawGeneric(typeof (Command<,>), type);
+          var type = allDefinition.Type;
+          var name = type.Name.ToLowerInvariant().Replace("command", "");
+          var str = "api/" + allDefinition.Name + "/" + allDefinition.Version;
+          var subclassOfRawGeneric = ReflectionExtensions.GetSubclassOfRawGeneric(typeof (Command<,>), type);
           if (!(subclassOfRawGeneric == null))
           {
-            Type genericArgument = subclassOfRawGeneric.GetGenericArguments()[1];
-            ApiDescription apiDescription1 = new ApiDescription();
-            ApiDescription apiDescription2 = apiDescription1;
-            ControllerActionDescriptor actionDescriptor1 = new ControllerActionDescriptor();
+            var genericArgument = subclassOfRawGeneric.GetGenericArguments()[1];
+            var apiDescription1 = new ApiDescription();
+            var apiDescription2 = apiDescription1;
+            var actionDescriptor1 = new ControllerActionDescriptor();
             actionDescriptor1.ActionConstraints = new List<IActionConstraintMetadata>
             {
                 new HttpMethodActionConstraint(new[]
@@ -159,7 +158,7 @@ namespace Akkatecture.Web.Swagger
                     domain.Name
                 }
             };
-            ControllerActionDescriptor actionDescriptor2 = actionDescriptor1;
+            var actionDescriptor2 = actionDescriptor1;
             apiDescription2.ActionDescriptor = actionDescriptor2;
             apiDescription1.HttpMethod = "PUT";
             apiDescription1.RelativePath = str;
@@ -168,7 +167,7 @@ namespace Akkatecture.Web.Swagger
               StatusCode = 200,
               Type = genericArgument
             });
-            ApiDescription apiDescription3 = apiDescription1;
+            var apiDescription3 = apiDescription1;
             ((List<ApiParameterDescription>) apiDescription3.ParameterDescriptions).Add(new ApiParameterDescription
             {
               Name = "request",

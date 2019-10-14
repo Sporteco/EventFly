@@ -35,7 +35,7 @@ namespace Akkatecture.Definitions
 
     public bool TryGetDefinition(string name, int version, out TDefinition definition)
     {
-      foreach (TDefinitions definition1 in _definitions)
+      foreach (var definition1 in _definitions)
       {
         if (definition1.TryGetDefinition(name, version, out definition))
           return true;
@@ -51,7 +51,7 @@ namespace Akkatecture.Definitions
 
     public TDefinition GetDefinition(string name, int version)
     {
-      foreach (TDefinitions definition1 in _definitions)
+      foreach (var definition1 in _definitions)
       {
         TDefinition definition2;
         if (definition1.TryGetDefinition(name, version, out definition2))
@@ -62,7 +62,7 @@ namespace Akkatecture.Definitions
 
     public TDefinition GetDefinition(Type type)
     {
-      foreach (TDefinitions definition1 in _definitions)
+      foreach (var definition1 in _definitions)
       {
         TDefinition definition2;
         if (definition1.TryGetDefinition(type, out definition2))
@@ -78,7 +78,7 @@ namespace Akkatecture.Definitions
 
     public bool TryGetDefinition(Type type, out TDefinition definition)
     {
-      foreach (TDefinitions definition1 in _definitions)
+      foreach (var definition1 in _definitions)
       {
         if (definition1.TryGetDefinition(type, out definition))
           return true;
@@ -89,7 +89,7 @@ namespace Akkatecture.Definitions
 
     public bool TryGetDefinitions(Type type, out IReadOnlyCollection<TDefinition> definitions)
     {
-      foreach (TDefinitions definition in _definitions)
+      foreach (var definition in _definitions)
       {
         if (definition.TryGetDefinitions(type, out definitions))
           return true;

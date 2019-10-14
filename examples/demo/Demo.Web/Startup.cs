@@ -3,6 +3,7 @@ using Akkatecture;
 using Akkatecture.AggregateStorages;
 using Akkatecture.Configuration.DependancyInjection;
 using Akkatecture.Storages.EntityFramework;
+using Akkatecture.Web;
 using Akkatecture.Web.GraphQL;
 using Akkatecture.Web.Swagger;
 using Demo.Db;
@@ -73,6 +74,8 @@ namespace Demo.Web
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
+            
+            app.UseMiddleware<AkkatectureMiddleware>();
 
             app.UseAkkatectureGraphQl();
             app.UseAkkatectureSwagger();

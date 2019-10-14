@@ -10,7 +10,7 @@ namespace Demo.Commands
         public readonly UserName UserName;
         public readonly Birth Birth;
 
-        public CreateUserCommand(UserId userId, UserName userName, Birth birth) : base(userId)
+        public CreateUserCommand(UserId aggregateId, UserName userName, Birth birth) : base(aggregateId)
         {
             UserName = userName;
             Birth = birth;

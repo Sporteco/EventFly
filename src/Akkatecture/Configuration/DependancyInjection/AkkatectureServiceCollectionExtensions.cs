@@ -23,6 +23,7 @@
 
 using Akka.Actor;
 using Akkatecture.Akka;
+using Akkatecture.Commands;
 using Microsoft.Extensions.DependencyInjection;
 
 // ReSharper disable once CheckNamespace
@@ -36,6 +37,7 @@ namespace Akkatecture.Configuration.DependancyInjection
             ActorSystem actorSystem)
         {
             services.AddSingleton(actorSystem);
+            services.AddTransient<ISerializedCommandPublisher, SerializedCommandPublisher>();
             return new AkkatectureBuilder(services,actorSystem);
         }
         

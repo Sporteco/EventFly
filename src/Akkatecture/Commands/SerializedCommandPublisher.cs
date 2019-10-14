@@ -47,7 +47,7 @@ namespace Akkatecture.Commands
       {
         throw new ArgumentException($"Failed to deserialize command '{name}' v{version}: {ex.Message}", ex);
       }
-      IExecutionResult executionResult = await _applicationDefinition.PublishAsync(command);
+      var executionResult = await _applicationDefinition.PublishAsync(command);
       return executionResult;
     }
   }

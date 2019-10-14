@@ -15,7 +15,7 @@ namespace Akkatecture.Web.Swagger
     {
       for (; toCheck != (Type) null && toCheck != typeof (object); toCheck = toCheck.BaseType)
       {
-        Type type = toCheck.IsGenericType ? toCheck.GetGenericTypeDefinition() : toCheck;
+        var type = toCheck.IsGenericType ? toCheck.GetGenericTypeDefinition() : toCheck;
         if (generic == type)
           return toCheck;
       }

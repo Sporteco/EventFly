@@ -33,15 +33,15 @@ namespace Akkatecture.Core.VersionedTypes
     {
       if (types == null)
         return;
-      List<Type> list1 = types.Where(t => !typeof (TTypeCheck).GetTypeInfo().IsAssignableFrom((TypeInfo) t)).ToList();
+      var list1 = types.Where(t => !typeof (TTypeCheck).GetTypeInfo().IsAssignableFrom((TypeInfo) t)).ToList();
       if (list1.Any())
         throw new ArgumentException("The following types are not of type '" + typeof (TTypeCheck).PrettyPrint() + "': " + string.Join(", ", list1.Select(t => t.PrettyPrint())));
       lock (_syncRoot)
       {
-        List<TDefinition> list2 = types.Distinct().Where(t => !_definitionsByType.ContainsKey(t)).SelectMany(CreateDefinitions).ToList();
+        var list2 = types.Distinct().Where(t => !_definitionsByType.ContainsKey(t)).SelectMany(CreateDefinitions).ToList();
         if (!list2.Any())
           return;
-        foreach (TDefinition definition in list2)
+        foreach (var definition in list2)
         {
           _definitionsByType.GetOrAdd(definition.Type, _ => new List<TDefinition>()).Add(definition);
           Dictionary<int, TDefinition> dictionary;
@@ -133,10 +133,10 @@ namespace Akkatecture.Core.VersionedTypes
 
     private IEnumerable<TDefinition> CreateDefinitions(Type versionedType)
     {
-      bool hasAttributeDefinition = false;
-      foreach (TDefinition definition in CreateDefinitionFromAttribute(versionedType))
+      var hasAttributeDefinition = false;
+      foreach (var definition in CreateDefinitionFromAttribute(versionedType))
       {
-        TDefinition definitionFromAttribute = definition;
+        var definitionFromAttribute = definition;
         hasAttributeDefinition = true;
         yield return definitionFromAttribute;
       }
@@ -146,14 +146,14 @@ namespace Akkatecture.Core.VersionedTypes
 
     private TDefinition CreateDefinitionFromName(Type versionedType)
     {
-      Match match = NameRegex.Match(versionedType.Name);
+      var match = NameRegex.Match(versionedType.Name);
       if (!match.Success)
         throw new ArgumentException("Versioned type name '" + versionedType.Name + "' is not a valid name");
-      int version = 1;
-      Group group = match.Groups["version"];
+      var version = 1;
+      var group = match.Groups["version"];
       if (group.Success)
         version = int.Parse(group.Value);
-      string name = match.Groups["name"].Value;
+      var name = match.Groups["name"].Value;
       return CreateDefinition(version, versionedType, name);
     }
 
