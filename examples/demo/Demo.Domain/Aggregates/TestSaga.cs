@@ -19,6 +19,12 @@ namespace Demo.Domain.Aggregates
         ISagaIsStartedByAsync<UserId, UserCreatedEvent>,
         ISagaHandles<UserId,UserRenamedEvent>
     {
+        private readonly string _s;
+
+        public TestSaga(string s) : base()
+        {
+            _s = s;
+        }
 
         public async Task HandleAsync(IDomainEvent<UserId, UserCreatedEvent> domainEvent)
         {

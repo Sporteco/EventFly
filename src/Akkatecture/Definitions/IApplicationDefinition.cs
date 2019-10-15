@@ -16,44 +16,45 @@ using Akkatecture.Queries;
 
 namespace Akkatecture.Definitions
 {
-  public interface IApplicationDefinition
-  {
-    IReadOnlyCollection<IDomainDefinition> Domains { get; }
+    public interface IApplicationDefinition
+    {
+        IReadOnlyCollection<IDomainDefinition> Domains { get; }
 
-    IReadOnlyCollection<IQueryDefinition> Queries { get; }
+        IReadOnlyCollection<IQueryDefinition> Queries { get; }
 
-    IReadOnlyCollection<IAggregateDefinition> Aggregates { get; }
+        IReadOnlyCollection<IAggregateDefinition> Aggregates { get; }
 
-    IReadOnlyCollection<IReadModelDefinition> ReadModels { get; }
+        IReadOnlyCollection<IReadModelDefinition> ReadModels { get; }
 
-    IReadOnlyCollection<ISagaDefinition> Sagas { get; }
+        IReadOnlyCollection<ISagaDefinition> Sagas { get; }
 
-    ICommandDefinitions Commands { get; }
+        ICommandDefinitions Commands { get; }
 
-    IEventDefinitions Events { get; }
+        IEventDefinitions Events { get; }
 
-    IJobDefinitions Jobs { get; }
+        IJobDefinitions Jobs { get; }
 
-    ISnapshotDefinitions Snapshots { get; }
+        ISnapshotDefinitions Snapshots { get; }
 
-    IApplicationDefinition RegisterDomain<TDomainDefinition>() where TDomainDefinition : IDomainDefinition;
+        IApplicationDefinition RegisterDomain<TDomainDefinition>() where TDomainDefinition : IDomainDefinition;
+        IApplicationDefinition RegisterServiceProvider(IServiceProvider serviceProvider);
 
-    Task<TExecutionResult> PublishAsync<TExecutionResult, TIdentity>(
-      ICommand<TIdentity, TExecutionResult> command)
-      where TExecutionResult : IExecutionResult
-      where TIdentity : IIdentity;
+        Task<TExecutionResult> PublishAsync<TExecutionResult, TIdentity>(
+          ICommand<TIdentity, TExecutionResult> command)
+          where TExecutionResult : IExecutionResult
+          where TIdentity : IIdentity;
 
-    Task<IExecutionResult> PublishAsync(ICommand command);
+        Task<IExecutionResult> PublishAsync(ICommand command);
 
-    Task<TResult> QueryAsync<TResult>(IQuery<TResult> query);
-    Task<object> QueryAsync(IQuery query);
+        Task<TResult> QueryAsync<TResult>(IQuery<TResult> query);
+        Task<object> QueryAsync(IQuery query);
 
-    IActorRef GetAggregateManager(Type aggregateType);
+        IActorRef GetAggregateManager(Type aggregateType);
 
-    IActorRef GetQueryManager(Type queryType);
+        IActorRef GetQueryManager(Type queryType);
 
-    IActorRef GetSagaManager(Type sagaType);
+        IActorRef GetSagaManager(Type sagaType);
 
-    IActorRef GetReadModelManager(Type readModelType);
-  }
+        IActorRef GetReadModelManager(Type readModelType);
+    }
 }

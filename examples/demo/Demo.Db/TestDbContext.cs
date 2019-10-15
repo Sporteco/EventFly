@@ -11,8 +11,9 @@ namespace Demo.Db
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(DbHelper.ConnectionString);
+            optionsBuilder.UseSqlite(DbHelper.ConnectionStringSqLite);
         }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -31,8 +32,6 @@ namespace Demo.Db
                 .Property(e => e.Birth).HasConversion(
                     v => v.Value,
                     v => new Birth(v));
-
-
         }
     }
 }

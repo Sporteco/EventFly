@@ -24,6 +24,7 @@
 using System;
 using System.Collections.Generic;
 using Akka.Actor;
+using Akka.DI.Core;
 using Akka.Event;
 using Akkatecture.Aggregates;
 using Akkatecture.Core;
@@ -140,11 +141,10 @@ namespace Akkatecture.Sagas.AggregateSaga
 
         private IActorRef Spawn(TIdentity sagaId)
         {
-            var saga = Context.ActorOf(Props.Create<TAggregateSaga>(), sagaId.Value);
+            var saga = Context.ActorOf(Context.DI().Props<TAggregateSaga>(), sagaId.Value);
             Context.Watch(saga);
             return saga;
         }
-        
     }
     
 }

@@ -27,7 +27,6 @@ using Newtonsoft.Json;
 
 namespace Akkatecture.Examples.Domain.Model.UserAccount
 {
-    [JsonConverter(typeof(SingleValueObjectConverter))]
     public class UserAccountId : Identity<UserAccountId>
     {
         public UserAccountId(string value)

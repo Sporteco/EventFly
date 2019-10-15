@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Akka.Actor;
+using Akka.DI.Core;
 using Akkatecture.Commands;
 using Akkatecture.Commands.ExecutionResults;
 using Akkatecture.Core;
@@ -18,166 +19,172 @@ using Akkatecture.Queries;
 
 namespace Akkatecture.Definitions
 {
-  public class ApplicationDefinition : IApplicationDefinition
-  {
-    private readonly List<IDomainDefinition> _domains = new List<IDomainDefinition>();
-    private readonly EventAggregatedDefinitions _events = new EventAggregatedDefinitions();
-    private readonly JobAggregatedDefinitions _jobs = new JobAggregatedDefinitions();
-    private readonly SnapshotAggregatedDefinitions _snapshots = new SnapshotAggregatedDefinitions();
-    private readonly CommandAggregatedDefinitions _commands = new CommandAggregatedDefinitions();
-    private readonly ActorSystem _system;
-
-    public IReadOnlyCollection<IDomainDefinition> Domains
+    public class ApplicationDefinition : IApplicationDefinition
     {
-      get
-      {
-        return _domains;
-      }
-    }
+        private IServiceProvider _serviceProvider;
+        private readonly List<IDomainDefinition> _domains = new List<IDomainDefinition>();
+        private readonly EventAggregatedDefinitions _events = new EventAggregatedDefinitions();
+        private readonly JobAggregatedDefinitions _jobs = new JobAggregatedDefinitions();
+        private readonly SnapshotAggregatedDefinitions _snapshots = new SnapshotAggregatedDefinitions();
+        private readonly CommandAggregatedDefinitions _commands = new CommandAggregatedDefinitions();
+        private readonly ActorSystem _system;
 
-    public IReadOnlyCollection<IQueryDefinition> Queries
-    {
-      get
-      {
-        return _domains.SelectMany(i => i.Queries.Select(q => q)).ToList();
-      }
-    }
+        public IReadOnlyCollection<IDomainDefinition> Domains
+        {
+            get
+            {
+                return _domains;
+            }
+        }
 
-    public IReadOnlyCollection<IAggregateDefinition> Aggregates
-    {
-      get
-      {
-        return _domains.SelectMany(i => i.Aggregates.Select(q => q)).ToList();
-      }
-    }
+        public IReadOnlyCollection<IQueryDefinition> Queries
+        {
+            get
+            {
+                return _domains.SelectMany(i => i.Queries.Select(q => q)).ToList();
+            }
+        }
 
-    public IReadOnlyCollection<IReadModelDefinition> ReadModels
-    {
-      get
-      {
-        return _domains.SelectMany(i => i.ReadModels.Select(q => q)).ToList();
-      }
-    }
+        public IReadOnlyCollection<IAggregateDefinition> Aggregates
+        {
+            get
+            {
+                return _domains.SelectMany(i => i.Aggregates.Select(q => q)).ToList();
+            }
+        }
 
-    public IReadOnlyCollection<ISagaDefinition> Sagas
-    {
-      get
-      {
-        return _domains.SelectMany(i => i.Sagas.Select(q => q)).ToList();
-      }
-    }
+        public IReadOnlyCollection<IReadModelDefinition> ReadModels
+        {
+            get
+            {
+                return _domains.SelectMany(i => i.ReadModels.Select(q => q)).ToList();
+            }
+        }
 
-    public IEventDefinitions Events
-    {
-      get
-      {
-        return _events;
-      }
-    }
+        public IReadOnlyCollection<ISagaDefinition> Sagas
+        {
+            get
+            {
+                return _domains.SelectMany(i => i.Sagas.Select(q => q)).ToList();
+            }
+        }
 
-    public IJobDefinitions Jobs
-    {
-      get
-      {
-        return _jobs;
-      }
-    }
+        public IEventDefinitions Events
+        {
+            get
+            {
+                return _events;
+            }
+        }
 
-    public ISnapshotDefinitions Snapshots
-    {
-      get
-      {
-        return _snapshots;
-      }
-    }
+        public IJobDefinitions Jobs
+        {
+            get
+            {
+                return _jobs;
+            }
+        }
 
-    public ICommandDefinitions Commands
-    {
-      get
-      {
-        return _commands;
-      }
-    }
+        public ISnapshotDefinitions Snapshots
+        {
+            get
+            {
+                return _snapshots;
+            }
+        }
 
-    public IApplicationDefinition RegisterDomain<TDomainDefinition>() where TDomainDefinition : IDomainDefinition
-    {
-      var instance = (IDomainDefinition) Activator.CreateInstance(typeof (TDomainDefinition), (object) _system);
-      _domains.Add(instance);
-      _events.AddDefinitions(instance.Events);
-      _jobs.AddDefinitions(instance.Jobs);
-      _snapshots.AddDefinitions(instance.Snapshots);
-      _commands.AddDefinitions(instance.Commands);
-      return this;
-    }
+        public ICommandDefinitions Commands
+        {
+            get
+            {
+                return _commands;
+            }
+        }
 
-    public Task<TExecutionResult> PublishAsync<TExecutionResult, TIdentity>(
-      ICommand<TIdentity, TExecutionResult> command)
-      where TExecutionResult : IExecutionResult
-      where TIdentity : IIdentity
-    {
-      return GetAggregateManager(typeof (TIdentity)).Ask<TExecutionResult>(command, new TimeSpan?());
-    }
+        public IApplicationDefinition RegisterServiceProvider(IServiceProvider serviceProvider)
+        {
+            _serviceProvider = serviceProvider;
+            return this;
+        }
+        public IApplicationDefinition RegisterDomain<TDomainDefinition>() where TDomainDefinition : IDomainDefinition
+        {
+            var instance = (IDomainDefinition)Activator.CreateInstance(typeof(TDomainDefinition), (object)_system);
+            _domains.Add(instance);
+            _events.AddDefinitions(instance.Events);
+            _jobs.AddDefinitions(instance.Jobs);
+            _snapshots.AddDefinitions(instance.Snapshots);
+            _commands.AddDefinitions(instance.Commands);
+            return this;
+        }
 
-    public Task<IExecutionResult> PublishAsync(ICommand command)
-    {
-      return GetAggregateManager(command.GetAggregateId().GetType()).Ask<IExecutionResult>(command, new TimeSpan?());
-    }
+        public Task<TExecutionResult> PublishAsync<TExecutionResult, TIdentity>(
+          ICommand<TIdentity, TExecutionResult> command)
+          where TExecutionResult : IExecutionResult
+          where TIdentity : IIdentity
+        {
+            return GetAggregateManager(typeof(TIdentity)).Ask<TExecutionResult>(command, new TimeSpan?());
+        }
 
-    public Task<TResult> QueryAsync<TResult>(IQuery<TResult> query)
-    {
-      return GetQueryManager(query.GetType()).Ask<TResult>(query, new TimeSpan?());
-    }
+        public Task<IExecutionResult> PublishAsync(ICommand command)
+        {
+            return GetAggregateManager(command.GetAggregateId().GetType()).Ask<IExecutionResult>(command, new TimeSpan?());
+        }
 
-    public Task<object> QueryAsync(IQuery query)
-    {
-        return GetQueryManager(query.GetType()).Ask(query, new TimeSpan?());
-    }
+        public Task<TResult> QueryAsync<TResult>(IQuery<TResult> query)
+        {
+            return GetQueryManager(query.GetType()).Ask<TResult>(query, new TimeSpan?());
+        }
 
-    public IActorRef GetAggregateManager(Type type)
-    {
-      var manager = Aggregates.FirstOrDefault(i =>
-      {
-          if (!(i.Type == type))
-              return i.IdentityType == type;
-          return true;
-      })?.Manager;
-      if (manager == null)
-        throw new InvalidOperationException("Aggregate " + type.PrettyPrint() + " not registered");
-      return manager;
-    }
+        public Task<object> QueryAsync(IQuery query)
+        {
+            return GetQueryManager(query.GetType()).Ask(query, new TimeSpan?());
+        }
 
-    public IActorRef GetQueryManager(Type queryType)
-    {
-      var manager = Queries.FirstOrDefault(i => i.Type == queryType)?.Manager;
-      if (manager == null)
-        throw new InvalidOperationException("Query " + queryType.PrettyPrint() + " not registered");
-      return manager;
-    }
+        public IActorRef GetAggregateManager(Type type)
+        {
+            var manager = Aggregates.FirstOrDefault(i =>
+            {
+                if (!(i.Type == type))
+                    return i.IdentityType == type;
+                return true;
+            })?.Manager;
+            if (manager == null)
+                throw new InvalidOperationException("Aggregate " + type.PrettyPrint() + " not registered");
+            return manager;
+        }
 
-    public IActorRef GetSagaManager(Type type)
-    {
-      var manager = Sagas.FirstOrDefault(i =>
-      {
-          if (!(i.Type == type))
-              return i.IdentityType == type;
-          return true;
-      })?.Manager;
-      if (manager == null)
-        throw new InvalidOperationException("Saga " + type.PrettyPrint() + " not registered");
-      return manager;
-    }
+        public IActorRef GetQueryManager(Type queryType)
+        {
+            var manager = Queries.FirstOrDefault(i => i.Type == queryType)?.Manager;
+            if (manager == null)
+                throw new InvalidOperationException("Query " + queryType.PrettyPrint() + " not registered");
+            return manager;
+        }
 
-    public IActorRef GetReadModelManager(Type type)
-    {
-      var manager = ReadModels.FirstOrDefault(i => i.Type == type)?.Manager;
-      if (manager == null)
-        throw new InvalidOperationException("Saga " + type.PrettyPrint() + " not registered");
-      return manager;
-    }
+        public IActorRef GetSagaManager(Type type)
+        {
+            var manager = Sagas.FirstOrDefault(i =>
+            {
+                if (!(i.Type == type))
+                    return i.IdentityType == type;
+                return true;
+            })?.Manager;
+            if (manager == null)
+                throw new InvalidOperationException("Saga " + type.PrettyPrint() + " not registered");
+            return manager;
+        }
 
-    public ApplicationDefinition(ActorSystem system)
-    {
-      _system = system;
+        public IActorRef GetReadModelManager(Type type)
+        {
+            var manager = ReadModels.FirstOrDefault(i => i.Type == type)?.Manager;
+            if (manager == null)
+                throw new InvalidOperationException("Saga " + type.PrettyPrint() + " not registered");
+            return manager;
+        }
+
+        public ApplicationDefinition(ActorSystem system)
+        {
+            _system = system;
+        }
     }
-  }
 }

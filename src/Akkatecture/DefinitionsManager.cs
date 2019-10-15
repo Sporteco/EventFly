@@ -11,82 +11,89 @@ using Akkatecture.Queries;
 
 namespace Akkatecture
 {
-  public static class SystemHostExtensions
-  {
-    private static readonly ConcurrentDictionary<int, IApplicationDefinition> _hostmap = new ConcurrentDictionary<int, IApplicationDefinition>();
-
-    private static IApplicationDefinition GetInstance(ActorSystem system)
+    public static class SystemHostExtensions
     {
-      return _hostmap.GetOrAdd(system.GetHashCode(), new ApplicationDefinition(system));
-    }
+        private static readonly ConcurrentDictionary<int, IApplicationDefinition> _hostmap = new ConcurrentDictionary<int, IApplicationDefinition>();
 
-    public static IApplicationDefinition GetApplicationDefinition(
-      this ActorSystem system)
-    {
-      return GetInstance(system);
-    }
+        private static IApplicationDefinition GetInstance(ActorSystem system)
+        {
+            return _hostmap.GetOrAdd(system.GetHashCode(), new ApplicationDefinition(system));
+        }
 
-    public static IApplicationDefinition RegisterDomain<TDomainDefinition>(
-      this ActorSystem system)
-      where TDomainDefinition : IDomainDefinition
-    {
-      return GetInstance(system).RegisterDomain<TDomainDefinition>();
-    }
+        public static IApplicationDefinition GetApplicationDefinition(
+          this ActorSystem system)
+        {
+            return GetInstance(system);
+        }
 
-    public static Task<TExecutionResult> PublishCommandAsync<TIdentity, TExecutionResult>(
-      this ActorSystem system,
-      ICommand<TIdentity, TExecutionResult> command)
-      where TIdentity : IIdentity
-      where TExecutionResult : IExecutionResult
-    {
-      return GetInstance(system).PublishAsync(command);
-    }
+        public static IApplicationDefinition RegisterDomain<TDomainDefinition>(
+          this ActorSystem system)
+          where TDomainDefinition : IDomainDefinition
+        {
+            return GetInstance(system).RegisterDomain<TDomainDefinition>();
+        }
 
-    public static Task<TResult> ExecuteQueryAsync<TResult>(
-      this ActorSystem system,
-      IQuery<TResult> query)
-    {
-      return GetInstance(system).QueryAsync(query);
-    }
+        public static IApplicationDefinition RegisterServiceProvider(
+            this ActorSystem system, 
+            IServiceProvider serviceProvider)
+        {
+            return GetInstance(system).RegisterServiceProvider(serviceProvider);
+        }
 
-    public static IActorRef GetAggregateManager(
-      this ActorSystem system,
-      Type aggregateType)
-    {
-      return GetInstance(system).GetAggregateManager(aggregateType);
-    }
+        public static Task<TExecutionResult> PublishCommandAsync<TIdentity, TExecutionResult>(
+          this ActorSystem system,
+          ICommand<TIdentity, TExecutionResult> command)
+          where TIdentity : IIdentity
+          where TExecutionResult : IExecutionResult
+        {
+            return GetInstance(system).PublishAsync(command);
+        }
 
-    public static IActorRef GetSagaManager(this ActorSystem system, Type sagaType)
-    {
-      return GetInstance(system).GetSagaManager(sagaType);
-    }
+        public static Task<TResult> ExecuteQueryAsync<TResult>(
+          this ActorSystem system,
+          IQuery<TResult> query)
+        {
+            return GetInstance(system).QueryAsync(query);
+        }
 
-    public static IEventDefinitions GetEventDefinitions(this ActorSystem system)
-    {
-      return GetInstance(system).Events;
-    }
+        public static IActorRef GetAggregateManager(
+          this ActorSystem system,
+          Type aggregateType)
+        {
+            return GetInstance(system).GetAggregateManager(aggregateType);
+        }
 
-    public static IJobDefinitions GetJobDefinitions(this ActorSystem system)
-    {
-      return GetInstance(system).Jobs;
-    }
+        public static IActorRef GetSagaManager(this ActorSystem system, Type sagaType)
+        {
+            return GetInstance(system).GetSagaManager(sagaType);
+        }
 
-    public static ISnapshotDefinitions GetSnapshotDefinitions(
-      this ActorSystem system)
-    {
-      return GetInstance(system).Snapshots;
-    }
+        public static IEventDefinitions GetEventDefinitions(this ActorSystem system)
+        {
+            return GetInstance(system).Events;
+        }
 
-    public static IActorRef GetQueryManager(this ActorSystem system, Type queryType)
-    {
-      return GetInstance(system).GetQueryManager(queryType);
-    }
+        public static IJobDefinitions GetJobDefinitions(this ActorSystem system)
+        {
+            return GetInstance(system).Jobs;
+        }
 
-    public static IActorRef GetReadModelManager(
-      this ActorSystem system,
-      Type readModelType)
-    {
-      return GetInstance(system).GetReadModelManager(readModelType);
+        public static ISnapshotDefinitions GetSnapshotDefinitions(
+          this ActorSystem system)
+        {
+            return GetInstance(system).Snapshots;
+        }
+
+        public static IActorRef GetQueryManager(this ActorSystem system, Type queryType)
+        {
+            return GetInstance(system).GetQueryManager(queryType);
+        }
+
+        public static IActorRef GetReadModelManager(
+          this ActorSystem system,
+          Type readModelType)
+        {
+            return GetInstance(system).GetReadModelManager(readModelType);
+        }
     }
-  }
 }

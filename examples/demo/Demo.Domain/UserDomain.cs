@@ -19,7 +19,6 @@ namespace Demo.Domain
             RegisterQuery<UsersQueryHandler,UsersQuery,UsersResult>();
             RegisterQuery<EventPostersQueryHandler,EventPostersQuery,EventPosters>();
             RegisterEvents(typeof(UserCreatedEvent), typeof(UserRenamedEvent));
-
         }
     }
 

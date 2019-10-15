@@ -3,6 +3,7 @@ using System.Linq;
 using Akkatecture.Queries;
 using Dapper;
 using Demo.Queries;
+using Microsoft.Data.Sqlite;
 
 namespace Demo.Domain.QueryHandlers
 {
@@ -14,7 +15,7 @@ namespace Demo.Domain.QueryHandlers
             if (!string.IsNullOrEmpty(query.NameFilter))
                 filter = $"WHERE Name LIKE '%{query.NameFilter}%'";
 
-            using (var db = new SqlConnection(DbHelper.ConnectionString))
+            using (var db = new SqliteConnection(DbHelper.ConnectionStringSqLite))
             {
                 return new UsersResult(
                     db.Query<UserInfo>($"SELECT Id, Name FROM [User] {filter}").ToList(),

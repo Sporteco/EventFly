@@ -9,7 +9,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Title>Akkatecture</Title>
-    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
     <GenerateAssemblyInfo>True</GenerateAssemblyInfo>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
@@ -26,10 +26,15 @@
 
   <ItemGroup>
     <PackageReference Include="Akka" Version="$(AkkaVersion)" />
+    <PackageReference Include="Akka.DI.Core" Version="1.3.14" />
     <PackageReference Include="Akka.Persistence" Version="$(AkkaPersistenceVersion)" />
     <PackageReference Include="Akka.Persistence.Query" Version="$(AkkaPersistenceQueryVersion)" />
     <PackageReference Include="Cronos" Version="0.7.0" />
     <PackageReference Include="GraphQL" Version="2.4.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.6">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="$(SourceLinkGithubVersion)" PrivateAssets="All" />
     <PackageReference Include="Microsoft.CSharp" Version="4.5.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.2.0" />

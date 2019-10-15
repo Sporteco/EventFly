@@ -20,7 +20,7 @@ namespace Akkatecture.Commands
 
     public SerializedCommandPublisher(ActorSystem system)
     {
-      _applicationDefinition = system.GetApplicationDefinition();
+        _applicationDefinition = system.GetApplicationDefinition();
     }
 
     public async Task<IExecutionResult> PublishSerilizedCommandAsync(
@@ -29,26 +29,27 @@ namespace Akkatecture.Commands
       string json,
       CancellationToken cancellationToken)
     {
-      if (string.IsNullOrEmpty(name))
-        throw new ArgumentNullException(nameof (name));
-      if (version <= 0)
-        throw new ArgumentOutOfRangeException(nameof (version));
-      if (string.IsNullOrEmpty(json))
-        throw new ArgumentNullException(nameof (json));
-      CommandDefinition commandDefinition;
-      if (!_applicationDefinition.Commands.TryGetDefinition(name, version, out commandDefinition))
+        if (string.IsNullOrEmpty(name))
+            throw new ArgumentNullException(nameof (name));
+        if (version <= 0)
+            throw new ArgumentOutOfRangeException(nameof (version));
+        if (string.IsNullOrEmpty(json))
+            throw new ArgumentNullException(nameof (json));
+
+        if (!_applicationDefinition.Commands.TryGetDefinition(name, version, out CommandDefinition commandDefinition))
         throw new ArgumentException($"No command definition found for command '{name}' v{version}");
-      ICommand command;
-      try
-      {
-        command = (ICommand) JsonConvert.DeserializeObject(json, commandDefinition.Type);
-      }
-      catch (Exception ex)
-      {
-        throw new ArgumentException($"Failed to deserialize command '{name}' v{version}: {ex.Message}", ex);
-      }
-      var executionResult = await _applicationDefinition.PublishAsync(command);
-      return executionResult;
+      
+        ICommand command;
+        try
+        {
+            command = (ICommand) JsonConvert.DeserializeObject(json, commandDefinition.Type);
+        }
+        catch (Exception ex)
+        {
+            throw new ArgumentException($"Failed to deserialize command '{name}' v{version}: {ex.Message}", ex);
+        }
+        var executionResult = await _applicationDefinition.PublishAsync(command);
+        return executionResult;
     }
   }
 }

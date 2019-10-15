@@ -25,6 +25,8 @@ using System.ComponentModel;
 using Akka.TestKit.Xunit2;
 using Akkatecture.Aggregates;
 using Akkatecture.Commands;
+using Akkatecture.DependencyInjection;
+
 using Akkatecture.TestHelpers.Aggregates;
 using Akkatecture.TestHelpers.Aggregates.Commands;
 using Akkatecture.TestHelpers.Aggregates.Entities;
@@ -33,6 +35,7 @@ using Akkatecture.TestHelpers.Aggregates.Sagas.Test.Events;
 using Akkatecture.TestHelpers.Aggregates.Sagas.TestAsync;
 using Akkatecture.TestHelpers.Aggregates.Sagas.TestAsync.Events;
 using Akkatecture.Tests.UnitTests.Subscribers;
+using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -53,6 +56,7 @@ namespace Akkatecture.Tests.IntegrationTests.Aggregates.Sagas
         public void SendingTest_FromTestAggregate_CompletesSaga()
         {
             var eventProbe = CreateTestProbe("event-probe");
+            Sys.UseIoC(new ServiceCollection().AddScoped<TestSaga>().BuildServiceProvider());
             Sys.EventStream.Subscribe(eventProbe, typeof(DomainEvent<TestSaga, TestSagaId, TestSagaStartedEvent>));
             Sys.EventStream.Subscribe(eventProbe, typeof(DomainEvent<TestSaga, TestSagaId, TestSagaCompletedEvent>));
             Sys.EventStream.Subscribe(eventProbe, typeof(DomainEvent<TestSaga, TestSagaId, TestSagaTransactionCompletedEvent>));
@@ -76,8 +80,6 @@ namespace Akkatecture.Tests.IntegrationTests.Aggregates.Sagas
             var sagaStartingCommand = new GiveTestCommand(senderAggregateId, CommandId.New,receiverAggregateId,senderTest);
             Sys.PublishCommandAsync(sagaStartingCommand).GetAwaiter().GetResult();
             
-
-
             eventProbe.
                 ExpectMsg<DomainEvent<TestSaga, TestSagaId, TestSagaStartedEvent>>(
                     x => x.AggregateEvent.Sender.Equals(senderAggregateId)
@@ -96,6 +98,8 @@ namespace Akkatecture.Tests.IntegrationTests.Aggregates.Sagas
         public void SendingTest_FromTestAggregate_CompletesSagaAsync()
         {
             var eventProbe = CreateTestProbe("event-probe");
+            Sys.UseIoC(new ServiceCollection().AddScoped<TestAsyncSaga>().BuildServiceProvider());
+
             Sys.EventStream.Subscribe(eventProbe, typeof(DomainEvent<TestAsyncSaga, TestAsyncSagaId, TestAsyncSagaStartedEvent>));
             Sys.EventStream.Subscribe(eventProbe, typeof(DomainEvent<TestAsyncSaga, TestAsyncSagaId, TestAsyncSagaCompletedEvent>));
             Sys.EventStream.Subscribe(eventProbe, typeof(DomainEvent<TestAsyncSaga, TestAsyncSagaId, TestAsyncSagaTransactionCompletedEvent>));

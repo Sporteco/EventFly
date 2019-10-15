@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Akka.Actor;
+using Akka.DI.Core;
 using Akkatecture.Aggregates;
 using Akkatecture.Aggregates.Snapshot;
 using Akkatecture.Commands;

@@ -21,7 +21,6 @@ namespace Demo.Domain.Aggregates
     public class UserAggregate : EventDrivenAggregateRoot<UserAggregate, UserId, UserState>,
     IExecute<CreateUserCommand,UserId>
     {
-
         public UserAggregate(UserId id) : base(id)
         {
             Command<RenameUserCommand,RenameUserCommandHandler>();

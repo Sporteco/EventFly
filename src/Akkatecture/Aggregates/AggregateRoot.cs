@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Akka.Actor;
+using Akka.DI.Core;
 using Akka.Event;
 using Akkatecture.AggregateStorages;
 using Akkatecture.Commands;
@@ -93,8 +94,6 @@ namespace Akkatecture.Aggregates
             _aggregateStorage.SaveState<TAggregateState, TIdentity>(State);
         }
 
-        
-
         protected void Command<TCommand, TCommandHandler>(Predicate<TCommand> shouldHandle = null)
             where TCommand : ICommand<TIdentity, IExecutionResult>
             where TCommandHandler : CommandHandler<TAggregate, TIdentity, IExecutionResult, TCommand>
@@ -115,7 +114,7 @@ namespace Akkatecture.Aggregates
                     var result = handler.HandleCommand(this as TAggregate, Context, x);
                     Context.Sender.Tell(result);
 
-                },shouldHandle);
+                }, shouldHandle);
             }
             catch (Exception exception)
             {

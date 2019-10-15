@@ -7,17 +7,11 @@ namespace Demo.Queries
     [Description("Информация о пользователе")]
     public class UserInfo
     {
-        public UserInfo(string id, string name)
-        {
-            Id = id;
-            Name = name;
-        }
-
         [Description("ID")]
-        public string Id { get; }
+        public string Id { get; private set; }
 
         [Description("Имя пользователя")]
-        public string Name { get; }
+        public string Name { get; private set; }
     }
 
     [Description("Список пользвоателей")]
@@ -43,6 +37,6 @@ namespace Demo.Queries
     {
         [Description("Искомое слово в имени пользователя")]
 
-        public string NameFilter { get; set; }
+        public string NameFilter { get; private set; }
     }
 }

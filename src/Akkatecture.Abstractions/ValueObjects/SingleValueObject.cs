@@ -49,6 +49,11 @@ namespace Akkatecture.ValueObjects
             Value = value;
         }
 
+        public static implicit operator T(SingleValueObject<T> singleValueObject)
+        {
+            return singleValueObject.Value;
+        }
+
         public int CompareTo(object obj)
         {
             if (ReferenceEquals(null, obj))
