@@ -29,8 +29,12 @@ using Akkatecture.TestHelpers.Aggregates;
 using Akkatecture.TestHelpers.Aggregates.Commands;
 using Akkatecture.TestHelpers.Aggregates.Events;
 using Akkatecture.TestHelpers.Subscribers;
+using Akkatecture.DependencyInjection;
 using Xunit;
 using Xunit.Abstractions;
+using Microsoft.Extensions.DependencyInjection;
+using Akkatecture.TestHelpers.Aggregates.Sagas.TestAsync;
+using Akkatecture.Definitions;
 
 namespace Akkatecture.Tests.UnitTests.Subscribers
 {
@@ -42,7 +46,7 @@ namespace Akkatecture.Tests.UnitTests.Subscribers
         public SubscriberTests(ITestOutputHelper testOutputHelper)
             :base(TestHelpers.Akka.Configuration.Config, "subscriber-tests", testOutputHelper)
         {
-            Sys.RegisterDomain<TestDomain>();
+            Sys.RegisterDependencyResolver(new ServiceCollection().AddAkkatecture(Sys, db => db.RegisterDomainDefinitions<TestDomain>()).AddScoped<TestAsyncSaga>().BuildServiceProvider());
 
         }
 
@@ -53,11 +57,12 @@ namespace Akkatecture.Tests.UnitTests.Subscribers
             var eventProbe = CreateTestProbe("event-probe");
             Sys.EventStream.Subscribe(eventProbe, typeof(TestSubscribedEventHandled<TestCreatedEvent>));
             Sys.ActorOf(Props.Create(() => new TestAggregateSubscriber()), "test-subscriber");        
-            
+            var appDef = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<IApplicationDefinition>();
+
             var aggregateId = TestAggregateId.New;
             var commandId = CommandId.New;
             var command = new CreateTestCommand(aggregateId, commandId);
-            Sys.PublishCommandAsync(command).GetAwaiter().GetResult();
+            appDef.PublishAsync(command).GetAwaiter().GetResult();
 
             eventProbe.
                 ExpectMsg<TestSubscribedEventHandled<TestCreatedEvent>>(x =>
@@ -72,11 +77,12 @@ namespace Akkatecture.Tests.UnitTests.Subscribers
             var eventProbe = CreateTestProbe("event-probe");
             Sys.EventStream.Subscribe(eventProbe, typeof(TestAsyncSubscribedEventHandled<TestCreatedEvent>));
             Sys.ActorOf(Props.Create(() => new TestAsyncAggregateSubscriber()), "test-subscriber");        
-            
+            var appDef = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<IApplicationDefinition>();
+
             var aggregateId = TestAggregateId.New;
             var commandId = CommandId.New;
             var command = new CreateTestCommand(aggregateId, commandId);
-            Sys.PublishCommandAsync(command).GetAwaiter().GetResult();
+            appDef.PublishAsync(command).GetAwaiter().GetResult();
 
             eventProbe
                 .ExpectMsg<TestAsyncSubscribedEventHandled<TestCreatedEvent>>(x =>

@@ -22,7 +22,7 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using Akka.Actor;
-using Akkatecture.Configuration.DependancyInjection;
+using Akkatecture.DependencyInjection;
 using Akkatecture.Examples.Api.Domain.Repositories.Operations;
 using Akkatecture.Examples.Api.Domain.Repositories.Resources;
 using Microsoft.AspNetCore.Builder;
@@ -46,7 +46,8 @@ namespace Akkatecture.Examples.Api
 
             // Add Actors to DI as ActorRefProvider<T>
             services
-                .AddAkkatecture(actorSystem);
+                .AddAkkatecture(actorSystem, cb => { });
+            
             
             services
                 .AddMvc()

@@ -4,7 +4,8 @@ using Akkatecture.Core;
 
 namespace Akkatecture.AggregateStorages
 {
-    public interface IAggregateStorage : IDisposable
+    public interface IAggregateStorage<TAggregate> : IDisposable
+        where TAggregate : IAggregateRoot
     {
         void SaveState<TAggregateState, TIdentity>(TAggregateState state)
             where TAggregateState : IAggregateState<TIdentity>

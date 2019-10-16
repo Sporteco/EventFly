@@ -38,9 +38,11 @@ using Akkatecture.Commands;
 using Akkatecture.Commands.ExecutionResults;
 using Akkatecture.Core;
 using Akkatecture.Definitions;
+using Akkatecture.DependencyInjection;
 using Akkatecture.Exceptions;
 using Akkatecture.Extensions;
 using Akkatecture.Metadata;
+using Microsoft.Extensions.DependencyInjection;
 using SnapshotMetadata = Akkatecture.Aggregates.Snapshot.SnapshotMetadata;
 
 namespace Akkatecture.Aggregates
@@ -68,9 +70,14 @@ namespace Akkatecture.Aggregates
         public override Recovery Recovery => new Recovery(SnapshotSelectionCriteria.Latest);
         private AggregateRootSettings Settings { get; }
 
+        private readonly IServiceProvider _serviceProvider;
+        private IServiceScope _scope;
+
+
         protected EventSourcedAggregateRoot(TIdentity id)
         {
-            
+            _serviceProvider = Context.System.GetExtension<ServiceProviderHolder>().ServiceProvider;
+
             Settings = new AggregateRootSettings(Context.System.Settings.Config);
             
             if (id == null)
@@ -96,8 +103,9 @@ namespace Akkatecture.Aggregates
             }
 
             PinnedCommand = null;
-            _eventDefinitionService = Context.System.GetEventDefinitions();
-            _snapshotDefinitionService = Context.System.GetSnapshotDefinitions();
+            var app = _serviceProvider.GetService<IApplicationDefinition>();
+            _eventDefinitionService = app.Events;
+            _snapshotDefinitionService = app.Snapshots;
             Id = id;
             PersistenceId = id.Value;
             SetSourceIdHistory(100);

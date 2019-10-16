@@ -6,8 +6,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Akkatecture.Storages.EntityFramework
 {
-    public class EntityFrameworkStorage<TDbContext> : IAggregateStorage
-    where TDbContext : DbContext, new()
+    public class EntityFrameworkStorage<TAggregate, TDbContext> : IAggregateStorage<TAggregate>
+        where TAggregate : IAggregateRoot
+        where TDbContext : DbContext, new()
     {
         private TDbContext _dbContext;
 

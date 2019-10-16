@@ -11,9 +11,12 @@ using Akkatecture.TestFixture.Aggregates;
 using Akkatecture.TestHelpers.Aggregates;
 using Akkatecture.TestHelpers.Aggregates.Entities;
 using Akkatecture.TestHelpers.Aggregates.Events;
+using Akkatecture.TestHelpers.Aggregates.Sagas.TestAsync;
 using Akkatecture.TestHelpers.Aggregates.Snapshots;
 using Akkatecture.Tests.UnitTests.Subscribers;
 using FluentAssertions;
+using Akkatecture.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
 namespace Akkatecture.Tests.UnitTests.Fixtures
@@ -50,7 +53,7 @@ namespace Akkatecture.Tests.UnitTests.Fixtures
         {
             using (var testKit = new TestKit(_config,"fixture-tests-2"))
             {
-                testKit.Sys.RegisterDomain<TestDomain>();
+                testKit.Sys.RegisterDependencyResolver(new ServiceCollection().AddAkkatecture(testKit.Sys, db => db.RegisterDomainDefinitions<TestDomain>()).AddScoped<TestAsyncSaga>().BuildServiceProvider());
 
                 var fixture = new AggregateFixture<TestAggregate, TestAggregateId>(testKit);
                 var aggregateIdentity = TestAggregateId.New;

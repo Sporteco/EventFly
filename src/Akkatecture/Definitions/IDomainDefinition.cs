@@ -4,28 +4,37 @@
 // MVID: 61DF059E-E5F5-4992-B320-644C3E4F5C82
 // Assembly location: C:\Users\naych\source\repos\!!!!!\netcoreapp2.2\Akkatecture.dll
 
+using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;
 
 namespace Akkatecture.Definitions
 {
-  public interface IDomainDefinition
-  {
-    string Name { get; }
+    public interface IDomainDependencies<out TDomain>
+        where TDomain : IDomainDefinition
+    {
+        IServiceCollection Dependencies { get; }
+    }
 
-    IReadOnlyCollection<IAggregateDefinition> Aggregates { get; }
+    public interface IDomainDefinition
+    {
+        IDomainDependencies<IDomainDefinition> DomainDependencies { get; }
 
-    IReadOnlyCollection<ISagaDefinition> Sagas { get; }
+        string Name { get; }
 
-    IReadOnlyCollection<IQueryDefinition> Queries { get; }
+        IReadOnlyCollection<IAggregateDefinition> Aggregates { get; }
 
-    IReadOnlyCollection<IReadModelDefinition> ReadModels { get; }
+        IReadOnlyCollection<ISagaDefinition> Sagas { get; }
 
-    EventDefinitions Events { get; }
+        IReadOnlyCollection<IQueryDefinition> Queries { get; }
 
-    CommandDefinitions Commands { get; }
+        IReadOnlyCollection<IReadModelDefinition> ReadModels { get; }
 
-    SnapshotDefinitions Snapshots { get; }
+        EventDefinitions Events { get; }
 
-    JobDefinitions Jobs { get; }
-  }
+        CommandDefinitions Commands { get; }
+
+        SnapshotDefinitions Snapshots { get; }
+
+        JobDefinitions Jobs { get; }
+    }
 }

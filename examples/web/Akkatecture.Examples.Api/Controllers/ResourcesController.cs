@@ -24,11 +24,14 @@
 using System;
 using System.Threading.Tasks;
 using Akka.Actor;
+using Akkatecture.Definitions;
+using Akkatecture.DependencyInjection;
 using Akkatecture.Examples.Api.Controllers.Models;
 using Akkatecture.Examples.Api.Domain.Aggregates.Resource;
 using Akkatecture.Examples.Api.Domain.Aggregates.Resource.Commands;
 using Akkatecture.Examples.Api.Domain.Repositories.Resources;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Akkatecture.Examples.Api.Controllers
 {
@@ -49,7 +52,7 @@ namespace Akkatecture.Examples.Api.Controllers
             var id = resourceId.GetGuid();
             var command = new CreateResourceCommand(resourceId);
 
-            var result = await System.PublishCommandAsync(command);
+            var result = await System.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<IApplicationDefinition>().PublishAsync(command);
 
             if (result.IsSuccess)
             {

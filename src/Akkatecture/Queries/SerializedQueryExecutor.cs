@@ -12,9 +12,9 @@ namespace Akkatecture.Queries
     {
         private readonly IApplicationDefinition _applicationDefinition;
 
-        public SerializedQueryExecutor(ActorSystem system)
+        public SerializedQueryExecutor(IApplicationDefinition applicationDefinition)
         {
-            _applicationDefinition = system.GetApplicationDefinition();
+            _applicationDefinition = applicationDefinition;
         }
 
         public Task<object> ExecuteQueryAsync(string name, string json, CancellationToken cancellationToken)

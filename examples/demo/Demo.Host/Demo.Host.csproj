@@ -6,7 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Akka.DI.AutoFac" Version="1.3.9" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="5.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.2.6" />
   </ItemGroup>
@@ -14,6 +13,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\src\Akkatecture.Storages.EntityFramework\Akkatecture.Storages.EntityFramework.csproj" />
     <ProjectReference Include="..\Demo.Db\Demo.Db.csproj" />
+    <ProjectReference Include="..\Demo.Dependencies\Demo.Dependencies\Demo.Dependencies.csproj" />
     <ProjectReference Include="..\Demo.Domain\Demo.Domain.csproj" />
   </ItemGroup>
 

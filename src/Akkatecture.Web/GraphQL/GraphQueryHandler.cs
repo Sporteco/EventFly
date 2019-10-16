@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Akka.Actor;
+using Akkatecture.Definitions;
 using Akkatecture.Queries;
 using GraphQL.Resolvers;
 using GraphQL.Types;
@@ -15,11 +16,11 @@ namespace Akkatecture.Web.GraphQL
 {
     public sealed class GraphQueryHandler<TQuery, TResult> : IGraphQueryHandler<TQuery,TResult> where TQuery : IQuery<TResult> 
     {
-        private readonly ActorSystem _system;
+        private readonly IApplicationDefinition _definitions;
 
-        public GraphQueryHandler(ActorSystem system)
+        public GraphQueryHandler(IApplicationDefinition definitions)
         {
-            _system = system;
+            _definitions = definitions;
         }
 
         public async Task<object> ExecuteAsync(object query)
@@ -41,7 +42,7 @@ namespace Akkatecture.Web.GraphQL
 
         private Task<TResult> ReadAsync(TQuery query)
         {
-            return _system.GetApplicationDefinition().QueryAsync(query);
+            return _definitions.QueryAsync(query);
         }
 
         private Task<TResult> ExecuteQuery(ResolveFieldContext context) => ReadAsync(ParseModel<TQuery>(context.Arguments));

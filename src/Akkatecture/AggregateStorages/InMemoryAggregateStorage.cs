@@ -4,7 +4,8 @@ using Akkatecture.Core;
 
 namespace Akkatecture.AggregateStorages
 {
-    public class InMemoryAggregateStorage : IAggregateStorage
+    public class InMemoryAggregateStorage<TAggregate> : IAggregateStorage<TAggregate>
+        where TAggregate : IAggregateRoot
     {
         private readonly ConcurrentDictionary<string, object> _stages = new ConcurrentDictionary<string, object>();
         public void SaveState<TAggregateState, TIdentity>(TAggregateState state) where TAggregateState : IAggregateState<TIdentity> where TIdentity : IIdentity

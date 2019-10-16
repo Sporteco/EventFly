@@ -16,12 +16,12 @@ using Akkatecture.Core;
 using Akkatecture.Exceptions;
 using Akkatecture.Jobs;
 using Akkatecture.Queries;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Akkatecture.Definitions
 {
     public class ApplicationDefinition : IApplicationDefinition
     {
-        private IServiceProvider _serviceProvider;
         private readonly List<IDomainDefinition> _domains = new List<IDomainDefinition>();
         private readonly EventAggregatedDefinitions _events = new EventAggregatedDefinitions();
         private readonly JobAggregatedDefinitions _jobs = new JobAggregatedDefinitions();
@@ -101,12 +101,7 @@ namespace Akkatecture.Definitions
             }
         }
 
-        public IApplicationDefinition RegisterServiceProvider(IServiceProvider serviceProvider)
-        {
-            _serviceProvider = serviceProvider;
-            return this;
-        }
-        public IApplicationDefinition RegisterDomain<TDomainDefinition>() where TDomainDefinition : IDomainDefinition
+        public TDomainDefinition RegisterDomainDefenitions<TDomainDefinition>() where TDomainDefinition : IDomainDefinition
         {
             var instance = (IDomainDefinition)Activator.CreateInstance(typeof(TDomainDefinition), (object)_system);
             _domains.Add(instance);
@@ -114,7 +109,7 @@ namespace Akkatecture.Definitions
             _jobs.AddDefinitions(instance.Jobs);
             _snapshots.AddDefinitions(instance.Snapshots);
             _commands.AddDefinitions(instance.Commands);
-            return this;
+            return (TDomainDefinition)instance;
         }
 
         public Task<TExecutionResult> PublishAsync<TExecutionResult, TIdentity>(

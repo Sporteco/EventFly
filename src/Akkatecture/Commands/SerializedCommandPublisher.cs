@@ -14,42 +14,42 @@ using Newtonsoft.Json;
 
 namespace Akkatecture.Commands
 {
-  public class SerializedCommandPublisher : ISerializedCommandPublisher
-  {
-    private readonly IApplicationDefinition _applicationDefinition;
-
-    public SerializedCommandPublisher(ActorSystem system)
+    public class SerializedCommandPublisher : ISerializedCommandPublisher
     {
-        _applicationDefinition = system.GetApplicationDefinition();
-    }
+        private readonly IApplicationDefinition _applicationDefinition;
 
-    public async Task<IExecutionResult> PublishSerilizedCommandAsync(
-      string name,
-      int version,
-      string json,
-      CancellationToken cancellationToken)
-    {
-        if (string.IsNullOrEmpty(name))
-            throw new ArgumentNullException(nameof (name));
-        if (version <= 0)
-            throw new ArgumentOutOfRangeException(nameof (version));
-        if (string.IsNullOrEmpty(json))
-            throw new ArgumentNullException(nameof (json));
+        public SerializedCommandPublisher(IApplicationDefinition applicationDefinition)
+        {
+            _applicationDefinition = applicationDefinition;
+        }
 
-        if (!_applicationDefinition.Commands.TryGetDefinition(name, version, out CommandDefinition commandDefinition))
-        throw new ArgumentException($"No command definition found for command '{name}' v{version}");
-      
-        ICommand command;
-        try
+        public async Task<IExecutionResult> PublishSerilizedCommandAsync(
+          string name,
+          int version,
+          string json,
+          CancellationToken cancellationToken)
         {
-            command = (ICommand) JsonConvert.DeserializeObject(json, commandDefinition.Type);
+            if (string.IsNullOrEmpty(name))
+                throw new ArgumentNullException(nameof(name));
+            if (version <= 0)
+                throw new ArgumentOutOfRangeException(nameof(version));
+            if (string.IsNullOrEmpty(json))
+                throw new ArgumentNullException(nameof(json));
+
+            if (!_applicationDefinition.Commands.TryGetDefinition(name, version, out CommandDefinition commandDefinition))
+                throw new ArgumentException($"No command definition found for command '{name}' v{version}");
+
+            ICommand command;
+            try
+            {
+                command = (ICommand)JsonConvert.DeserializeObject(json, commandDefinition.Type);
+            }
+            catch (Exception ex)
+            {
+                throw new ArgumentException($"Failed to deserialize command '{name}' v{version}: {ex.Message}", ex);
+            }
+            var executionResult = await _applicationDefinition.PublishAsync(command);
+            return executionResult;
         }
-        catch (Exception ex)
-        {
-            throw new ArgumentException($"Failed to deserialize command '{name}' v{version}: {ex.Message}", ex);
-        }
-        var executionResult = await _applicationDefinition.PublishAsync(command);
-        return executionResult;
     }
-  }
 }

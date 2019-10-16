@@ -9,9 +9,11 @@ using Akkatecture.Commands;
 using Akkatecture.Commands.ExecutionResults;
 using Akkatecture.Core;
 using Akkatecture.Definitions;
+using Akkatecture.DependencyInjection;
 using Akkatecture.Exceptions;
 using Akkatecture.Extensions;
 using Akkatecture.Metadata;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Akkatecture.Aggregates
 {
@@ -32,12 +34,15 @@ namespace Akkatecture.Aggregates
         public long Version => 1;
         public bool IsNew => false;
         public TIdentity Id { get; }
-        private IAggregateStorage _aggregateStorage;
+
+        private IServiceScope _scope;
+        private IAggregateStorage<TAggregate> _aggregateStorage;
+        private readonly ServiceProviderHolder _serviceProvider;
 
         protected readonly ILoggingAdapter Log = Context.GetLogger();
         protected AggregateRoot(TIdentity id)
         {
-            
+            _serviceProvider = Context.System.GetExtension<ServiceProviderHolder>();
             if (id == null)
                 throw new ArgumentNullException(nameof(id));
             
@@ -51,7 +56,7 @@ namespace Akkatecture.Aggregates
             {
                 try
                 {
-                    State = (TAggregateState)Activator.CreateInstance(typeof(TAggregateState));
+                    State = new TAggregateState();
                 }
                 catch(Exception exception)
                 {
@@ -61,7 +66,7 @@ namespace Akkatecture.Aggregates
             }
 
             PinnedCommand = null;
-            _eventDefinitionService = Context.System.GetEventDefinitions();
+            _eventDefinitionService = _serviceProvider.ServiceProvider.GetService<IApplicationDefinition>().Events;
             Id = id;
             SetSourceIdHistory(100);
 
@@ -71,7 +76,9 @@ namespace Akkatecture.Aggregates
         protected override void PreStart()
         {
             base.PreStart();
-            _aggregateStorage = Context.GetAggregateStorage<TAggregate>() 
+            
+            _scope = _serviceProvider.ServiceProvider.CreateScope();
+            _aggregateStorage = _scope.ServiceProvider.GetRequiredService<IAggregateStorage<TAggregate>>()
                                 ?? throw new InvalidOperationException($"Aggregate [{typeof(TAggregate).PrettyPrint()}] storage not found.");
             State = LoadState();
         }
@@ -79,8 +86,7 @@ namespace Akkatecture.Aggregates
         protected override void PostStop()
         {
             base.PostStop();
-            _aggregateStorage?.Dispose();
-            _aggregateStorage = null;
+            _scope.Dispose();
         }
 
 

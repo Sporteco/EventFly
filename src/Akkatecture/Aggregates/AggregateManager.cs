@@ -32,6 +32,13 @@ using Akkatecture.Extensions;
 
 namespace Akkatecture.Aggregates
 {
+    public sealed class ResolveServiceForMe
+    {
+        public ResolveServiceForMe(Type type) => Type = type;
+
+        public Type Type { get; }
+    }
+
     public class AggregateManager<TAggregate, TIdentity> : ReceiveActor, IAggregateManager<TAggregate, TIdentity>
         where TAggregate : ActorBase, IAggregateRoot<TIdentity>
         where TIdentity : IIdentity
@@ -48,15 +55,15 @@ namespace Akkatecture.Aggregates
             Name = GetType().PrettyPrint();
             Receive<Terminated>(Terminate);
 
-            if(Settings.AutoDispatchOnReceive)
+            if (Settings.AutoDispatchOnReceive)
                 Receive<ICommand>(Dispatch);
 
-            if(Settings.HandleDeadLetters)
+            if (Settings.HandleDeadLetters)
             {
                 Context.System.EventStream.Subscribe(Self, typeof(DeadLetter));
                 Receive(DeadLetterHandler);
             }
-             
+
         }
 
         protected virtual bool Dispatch(ICommand command)
@@ -84,7 +91,7 @@ namespace Akkatecture.Aggregates
 
         protected bool Handle(DeadLetter deadLetter)
         {
-            if(deadLetter.Message is ICommand &&
+            if (deadLetter.Message is ICommand &&
                 (deadLetter.Message as dynamic).AggregateId.GetType() == typeof(TIdentity))
             {
                 var command = deadLetter.Message as dynamic;
@@ -98,7 +105,7 @@ namespace Akkatecture.Aggregates
 
         protected virtual bool Terminate(Terminated message)
         {
-            Logger.Warning("Aggregate of Type={0}, and Id={1}; has terminated.",typeof(TAggregate).PrettyPrint(), message.ActorRef.Path.Name);
+            Logger.Warning("Aggregate of Type={0}, and Id={1}; has terminated.", typeof(TAggregate).PrettyPrint(), message.ActorRef.Path.Name);
             Context.Unwatch(message.ActorRef);
             return true;
         }
@@ -107,7 +114,7 @@ namespace Akkatecture.Aggregates
         {
             var aggregate = Context.Child(aggregateId);
 
-            if(aggregate.IsNobody())
+            if (aggregate.IsNobody())
             {
                 aggregate = CreateAggregate(aggregateId);
             }
@@ -131,7 +138,7 @@ namespace Akkatecture.Aggregates
                 localOnlyDecider: x =>
                 {
 
-                    logger.Warning("AggregateManager of Type={0}; will supervise Exception={1} to be decided as {2}.",Name, x.ToString(), Directive.Restart);
+                    logger.Warning("AggregateManager of Type={0}; will supervise Exception={1} to be decided as {2}.", Name, x.ToString(), Directive.Restart);
                     return Directive.Restart;
                 });
         }

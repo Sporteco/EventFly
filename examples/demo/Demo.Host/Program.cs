@@ -14,6 +14,9 @@ using Demo.Queries;
 using Demo.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Akkatecture.Aggregates;
+using Akkatecture.Definitions;
+using Demo.Dependencies;
 
 namespace Demo.Host
 {
@@ -25,19 +28,26 @@ namespace Demo.Host
         }
         static async Task MainAsync()
         {
-            
+
             var aggregateId = UserId.New;
-            var createUserAccountCommand = new CreateUserCommand(aggregateId, new UserName("userName"),new Birth(DateTime.Now));
-            
+            var createUserAccountCommand = new CreateUserCommand(aggregateId, new UserName("userName"), new Birth(DateTime.Now));
+
             //Create actor system
             var system = ActorSystem.Create("user-example");
-
-            var serviceCollection = 
+            
+            var serviceCollection =
                 new ServiceCollection()
                     .AddSingleton("AAAA")
-                    .AddScoped<TestSaga>();
-            
-            system.UseIoC(serviceCollection.BuildServiceProvider());
+                    .AddAkkatecture(
+                        system,
+                        domainBuilder =>
+                        {
+                            domainBuilder
+                                .RegisterDomainDefinitions<UserDomain>()
+                                .WithDependencies<UserDomainDependencies>();
+                        });
+
+            system.RegisterDependencyResolver(serviceCollection.BuildServiceProvider());
 
             // migrations todo
             using (var st = new TestDbContext())
@@ -49,21 +59,18 @@ namespace Demo.Host
                 catch (Exception) { }
             }
 
-            system
-                .AddAggregateStorageFactory()
-                .RegisterDefaultStorage<InMemoryAggregateStorage>()
-                .RegisterStorage<UserAggregate, EntityFrameworkStorage<TestDbContext>>();
+            var holder = system.GetExtension<ServiceProviderHolder>();
 
-            system.RegisterDomain<UserDomain>();
+            var appDef = holder.ServiceProvider.GetRequiredService<IApplicationDefinition>();
 
-            await system.PublishCommandAsync(createUserAccountCommand);
-            
+            await appDef.PublishAsync(createUserAccountCommand);
+
             //await system.PublishCommandAsync(new RenameUserCommand(aggregateId, new UserName("TEST")));
             //await system.PublishCommandAsync(new CreateUserCommand(UserId.New, new UserName("userName2"),new Birth(DateTime.Today)));
 
-            var res = await system.ExecuteQueryAsync(new UsersQuery());
+            var res = await appDef.QueryAsync(new UsersQuery());
             Console.WriteLine(res?.Items.Count);
-            
+
             //block end of program
             Console.ReadLine();
 

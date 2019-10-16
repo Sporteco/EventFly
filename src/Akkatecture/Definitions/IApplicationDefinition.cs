@@ -36,9 +36,7 @@ namespace Akkatecture.Definitions
 
         ISnapshotDefinitions Snapshots { get; }
 
-        IApplicationDefinition RegisterDomain<TDomainDefinition>() where TDomainDefinition : IDomainDefinition;
-        IApplicationDefinition RegisterServiceProvider(IServiceProvider serviceProvider);
-
+        TDomainDefinition RegisterDomainDefenitions<TDomainDefinition>() where TDomainDefinition : IDomainDefinition;
         Task<TExecutionResult> PublishAsync<TExecutionResult, TIdentity>(
           ICommand<TIdentity, TExecutionResult> command)
           where TExecutionResult : IExecutionResult

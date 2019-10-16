@@ -41,10 +41,10 @@ namespace Akkatecture.Examples.Application
             var createUserAccountCommand = new CreateUserAccountCommand(aggregateId, "foo bar");
             
             //Send command, this is equivalent to command.publish() in other cqrs frameworks
-            system.PublishCommandAsync(createUserAccountCommand);
+            //system.PublishCommandAsync(createUserAccountCommand);
 
             var changeNameCommand = new UserAccountChangeNameCommand(aggregateId, "foo bar baz");
-            system.PublishCommandAsync(changeNameCommand);
+            //system.PublishCommandAsync(changeNameCommand);
                         
             //block end of program
             Console.ReadLine();

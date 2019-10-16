@@ -36,9 +36,12 @@ using Akkatecture.TestHelpers.Aggregates.Events;
 using Akkatecture.TestHelpers.Aggregates.Events.Signals;
 using Akkatecture.TestHelpers.Aggregates.Snapshots;
 using Akkatecture.Tests.UnitTests.Subscribers;
+using Akkatecture.DependencyInjection;
 using FluentAssertions;
 using Xunit;
 using Xunit.Abstractions;
+using Microsoft.Extensions.DependencyInjection;
+using Akkatecture.TestHelpers.Aggregates.Sagas.TestAsync;
 
 namespace Akkatecture.Tests.UnitTests.Aggregates
 {
@@ -50,10 +53,10 @@ namespace Akkatecture.Tests.UnitTests.Aggregates
         public AggregateTestsWithFixtures(ITestOutputHelper testOutputHelper)
             : base(TestHelpers.Akka.Configuration.Config, "aggregate-fixture-tests", testOutputHelper)
         {
-            Sys.RegisterDomain<TestDomain>();
+            Sys.RegisterDependencyResolver(new ServiceCollection().AddAkkatecture(Sys, db => db.RegisterDomainDefinitions<TestDomain>()).AddScoped<TestAsyncSaga>().BuildServiceProvider());
 
         }
-        
+
         [Fact]
         [Category(Category)]
         public void InitialEvent_AfterAggregateCreation_TestCreatedEventEmitted()

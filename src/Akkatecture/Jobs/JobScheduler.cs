@@ -28,10 +28,13 @@ using System;
 using System.Linq;
 using Akka.Actor;
 using Akka.Persistence;
+using Akkatecture.Definitions;
+using Akkatecture.DependencyInjection;
 using Akkatecture.Exceptions;
 using Akkatecture.Extensions;
 using Akkatecture.Jobs.Commands;
 using Akkatecture.Jobs.Events;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Akkatecture.Jobs
 {
@@ -70,8 +73,11 @@ namespace Akkatecture.Jobs
                     .Scheduler
                     .ScheduleTellRepeatedlyCancelable(Settings.TickInterval, Settings.TickInterval, Self, Tick<TJob,TIdentity>.Instance, ActorRefs.NoSender);
 
-            _jobDefinitionService = Context.System.GetJobDefinitions();
-            
+
+            var serviceProvider = Context.System.GetExtension<ServiceProviderHolder>().ServiceProvider;
+            _jobDefinitionService = serviceProvider.GetRequiredService<IApplicationDefinition>().Jobs;
+
+
             Command<Tick<TJob,TIdentity>>(Execute);
             Command<Schedule<TJob, TIdentity>>(Execute);
             Command<Cancel<TJob, TIdentity>>(Execute);

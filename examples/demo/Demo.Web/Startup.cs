@@ -1,7 +1,9 @@
 ﻿using Akka.Actor;
 using Akkatecture;
+using Akkatecture.Aggregates;
 using Akkatecture.AggregateStorages;
-using Akkatecture.Configuration.DependancyInjection;
+using Akkatecture.Definitions;
+using Akkatecture.DependencyInjection;
 using Akkatecture.Storages.EntityFramework;
 using Akkatecture.Web;
 using Akkatecture.Web.GraphQL;
@@ -33,16 +35,22 @@ namespace Demo.Web
         {
             //Create actor system
             var system = ActorSystem.Create("user-example");
-            services.AddAkkatecture(system);
 
-            system
-                .AddAggregateStorageFactory()
-                .RegisterDefaultStorage<InMemoryAggregateStorage>()
-                .RegisterStorage<UserAggregate, EntityFrameworkStorage<TestDbContext>>();
+            services.AddSingleton("AAAA")
+                    .AddScoped<TestSaga>()
+                    .AddScoped<IAggregateStorage<UserAggregate>, EntityFrameworkStorage<UserAggregate, TestDbContext>>()
+                    .AddScoped<EntityFrameworkStorage<UserAggregate, TestDbContext>>()
+                    .AddAkkatecture(
+                        system,
+                        b => b.RegisterDomainDefinitions<UserDomain>()
+                    );
 
-            system.RegisterDomain<UserDomain>();
+            // DO not inejct
+            system.RegisterDependencyResolver(services.BuildServiceProvider());
 
-            services.AddAkkatectureGraphQl(system.GetApplicationDefinition());
+            var applicationDef = system.GetExtension<ServiceProviderHolder>();
+
+            services.AddAkkatectureGraphQl(applicationDef.ServiceProvider.GetService<IApplicationDefinition>());
             services.AddAkkatectureSwagger();
 
             services.AddTransient<EnumerationGraphType<StringOperator>>();

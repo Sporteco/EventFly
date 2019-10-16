@@ -25,6 +25,7 @@ using System.ComponentModel;
 using Akka.TestKit.Xunit2;
 using Akkatecture.Aggregates;
 using Akkatecture.Commands;
+using Akkatecture.Definitions;
 using Akkatecture.DependencyInjection;
 
 using Akkatecture.TestHelpers.Aggregates;
@@ -48,7 +49,7 @@ namespace Akkatecture.Tests.IntegrationTests.Aggregates.Sagas
         public AggregateSagaTests(ITestOutputHelper testOutputHelper)
             : base(TestHelpers.Akka.Configuration.Config, "aggregate-saga-tests", testOutputHelper)
         {
-            Sys.RegisterDomain<TestDomain>();
+            Sys.RegisterDependencyResolver(new ServiceCollection().AddAkkatecture(Sys, db => db.RegisterDomainDefinitions<TestDomain>()).AddScoped<TestSaga>().AddScoped<TestAsyncSaga>().BuildServiceProvider());
         }
 
         [Fact]
@@ -56,72 +57,75 @@ namespace Akkatecture.Tests.IntegrationTests.Aggregates.Sagas
         public void SendingTest_FromTestAggregate_CompletesSaga()
         {
             var eventProbe = CreateTestProbe("event-probe");
-            Sys.UseIoC(new ServiceCollection().AddScoped<TestSaga>().BuildServiceProvider());
+            
             Sys.EventStream.Subscribe(eventProbe, typeof(DomainEvent<TestSaga, TestSagaId, TestSagaStartedEvent>));
             Sys.EventStream.Subscribe(eventProbe, typeof(DomainEvent<TestSaga, TestSagaId, TestSagaCompletedEvent>));
             Sys.EventStream.Subscribe(eventProbe, typeof(DomainEvent<TestSaga, TestSagaId, TestSagaTransactionCompletedEvent>));
             //var aggregateManager = Sys.ActorOf(Props.Create(() => new AggregateManager<TestAggregate,TestAggregateId>()), "test-aggregatemanager");
             //Sys.ActorOf(Props.Create(() => new TestSagaManager(() => new TestSaga(aggregateManager))), "test-sagaaggregatemanager");
+            var appDef = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<IApplicationDefinition>();
 
-            
+
+
             var senderAggregateId = TestAggregateId.New;
             var senderCreateAggregateCommand = new CreateTestCommand(senderAggregateId, CommandId.New);
-            Sys.PublishCommandAsync(senderCreateAggregateCommand).GetAwaiter().GetResult();
+            appDef.PublishAsync(senderCreateAggregateCommand).GetAwaiter().GetResult();
 
             var receiverAggregateId = TestAggregateId.New;
             var receiverCreateAggregateCommand = new CreateTestCommand(receiverAggregateId, CommandId.New);
-            Sys.PublishCommandAsync(receiverCreateAggregateCommand).GetAwaiter().GetResult();
+            appDef.PublishAsync(receiverCreateAggregateCommand).GetAwaiter().GetResult();
 
             var senderTestId = TestId.New;
             var senderTest = new Test(senderTestId);
             var nextAggregateCommand = new AddTestCommand(senderAggregateId, CommandId.New, senderTest);
-            Sys.PublishCommandAsync(nextAggregateCommand).GetAwaiter().GetResult();
+            appDef.PublishAsync(nextAggregateCommand).GetAwaiter().GetResult();
 
-            var sagaStartingCommand = new GiveTestCommand(senderAggregateId, CommandId.New,receiverAggregateId,senderTest);
-            Sys.PublishCommandAsync(sagaStartingCommand).GetAwaiter().GetResult();
-            
+            var sagaStartingCommand = new GiveTestCommand(senderAggregateId, CommandId.New, receiverAggregateId, senderTest);
+            appDef.PublishAsync(sagaStartingCommand).GetAwaiter().GetResult();
+
             eventProbe.
                 ExpectMsg<DomainEvent<TestSaga, TestSagaId, TestSagaStartedEvent>>(
                     x => x.AggregateEvent.Sender.Equals(senderAggregateId)
                          && x.AggregateEvent.Receiver.Equals(receiverAggregateId)
                          && x.AggregateEvent.SentTest.Equals(senderTest));
-            
+
             eventProbe.
                 ExpectMsg<DomainEvent<TestSaga, TestSagaId, TestSagaTransactionCompletedEvent>>();
-            
+
             eventProbe.
                 ExpectMsg<DomainEvent<TestSaga, TestSagaId, TestSagaCompletedEvent>>();
         }
-        
+
         [Fact]
         [Category(Category)]
         public void SendingTest_FromTestAggregate_CompletesSagaAsync()
         {
             var eventProbe = CreateTestProbe("event-probe");
-            Sys.UseIoC(new ServiceCollection().AddScoped<TestAsyncSaga>().BuildServiceProvider());
+
+            var appDef = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<IApplicationDefinition>();
 
             Sys.EventStream.Subscribe(eventProbe, typeof(DomainEvent<TestAsyncSaga, TestAsyncSagaId, TestAsyncSagaStartedEvent>));
             Sys.EventStream.Subscribe(eventProbe, typeof(DomainEvent<TestAsyncSaga, TestAsyncSagaId, TestAsyncSagaCompletedEvent>));
             Sys.EventStream.Subscribe(eventProbe, typeof(DomainEvent<TestAsyncSaga, TestAsyncSagaId, TestAsyncSagaTransactionCompletedEvent>));
             //var aggregateManager = Sys.ActorOf(Props.Create(() => new AggregateManager<TestAggregate,TestAggregateId>()), "test-aggregatemanager");
             //Sys.ActorOf(Props.Create(() => new TestAsyncSagaManager(() => new TestAsyncSaga(aggregateManager))), "test-sagaaggregatemanager");
-            
+
             var senderAggregateId = TestAggregateId.New;
             var senderCreateAggregateCommand = new CreateTestCommand(senderAggregateId, CommandId.New);
-            Sys.PublishCommandAsync(senderCreateAggregateCommand).GetAwaiter().GetResult();
+            appDef.PublishAsync(senderCreateAggregateCommand).GetAwaiter().GetResult();
 
             var receiverAggregateId = TestAggregateId.New;
             var receiverCreateAggregateCommand = new CreateTestCommand(receiverAggregateId, CommandId.New);
-            Sys.PublishCommandAsync(receiverCreateAggregateCommand).GetAwaiter().GetResult();
+            appDef.PublishAsync(receiverCreateAggregateCommand).GetAwaiter().GetResult();
 
             var senderTestId = TestId.New;
             var senderTest = new Test(senderTestId);
             var nextAggregateCommand = new AddTestCommand(senderAggregateId, CommandId.New, senderTest);
-            Sys.PublishCommandAsync(nextAggregateCommand).GetAwaiter().GetResult();
+            appDef.PublishAsync(nextAggregateCommand).GetAwaiter().GetResult();
 
-            var sagaStartingCommand = new GiveTestCommand(senderAggregateId, CommandId.New,receiverAggregateId,senderTest);
-            Sys.PublishCommandAsync(sagaStartingCommand).GetAwaiter().GetResult();
-            
+            var sagaStartingCommand = new GiveTestCommand(senderAggregateId, CommandId.New, receiverAggregateId, senderTest);
+            appDef.PublishAsync(sagaStartingCommand).GetAwaiter().GetResult();
+
 
 
             eventProbe.
@@ -130,10 +134,10 @@ namespace Akkatecture.Tests.IntegrationTests.Aggregates.Sagas
                          && x.AggregateEvent.Receiver.Equals(receiverAggregateId)
                          && x.AggregateEvent.SentTest.Equals(senderTest)
                          && x.Metadata.ContainsKey("some-key"));
-            
+
             eventProbe.
                 ExpectMsg<DomainEvent<TestAsyncSaga, TestAsyncSagaId, TestAsyncSagaTransactionCompletedEvent>>();
-            
+
             eventProbe.
                 ExpectMsg<DomainEvent<TestAsyncSaga, TestAsyncSagaId, TestAsyncSagaCompletedEvent>>();
         }
