@@ -11,13 +11,12 @@ using Akkatecture.TestHelpers.Aggregates.Sagas.TestAsync;
 using Akkatecture.TestHelpers.Aggregates.Sagas.TestAsync.Events;
 using Akkatecture.TestHelpers.Aggregates.Snapshots;
 using Akkatecture.TestHelpers.Jobs;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Akkatecture.Tests.UnitTests.Subscribers
 {
     public class TestDomain : DomainDefinition
     {
-        public TestDomain(ActorSystem system) : base(system)
+        public TestDomain(ActorSystem system) : base()
         {
             RegisterAggregate<TestAggregate, TestAggregateId>();
             RegisterSaga<TestSaga, TestSagaId>();

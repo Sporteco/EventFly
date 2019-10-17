@@ -100,11 +100,8 @@ namespace Akkatecture.DependencyInjection
         {
             var definitions = new ApplicationDefinition(actorSystem);
 
-            var app = new ApplicationRoot(definitions: definitions);
 
             services
-                .AddSingleton<IApplicationRoot>(app)
-                .AddSingleton(app)
                 .AddSingleton(actorSystem)
                 .AddSingleton<IApplicationDefinition>(definitions);
 
@@ -114,6 +111,11 @@ namespace Akkatecture.DependencyInjection
             domainsBuilder(
                 new DomainsBuilder(definitions, services)
             );
+
+            var app = new ApplicationRoot(actorSystem, definitions: definitions);
+            services
+                .AddSingleton<IApplicationRoot>(app)
+                .AddSingleton(app);
 
             return services;
         }

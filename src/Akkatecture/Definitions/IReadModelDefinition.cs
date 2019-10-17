@@ -9,12 +9,12 @@ using Akka.Actor;
 
 namespace Akkatecture.Definitions
 {
-  public interface IReadModelDefinition
-  {
-    string Name { get; }
+    public interface IReadModelDefinition
+    {
+        string Name { get; }
 
-    Type Type { get; }
+        Type Type { get; }
 
-    IActorRef Manager { get; }
-  }
+        IReadModelManagerDefinition ManagerDefinition { get; }
+    }
 }

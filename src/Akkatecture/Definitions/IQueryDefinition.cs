@@ -9,14 +9,13 @@ using Akka.Actor;
 
 namespace Akkatecture.Definitions
 {
-  public interface IQueryDefinition
-  {
-    string Name { get; }
+    public interface IQueryDefinition
+    {
+        string Name { get; }
 
-    Type Type { get; }
+        Type Type { get; }
 
-    Type QueryResultType { get; }
-
-    IActorRef Manager { get; }
-  }
+        Type QueryResultType { get; }
+        IQueryManagerDefinition ManagerDefinition { get; }
+    }
 }

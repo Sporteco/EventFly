@@ -5,19 +5,17 @@
 // Assembly location: C:\Users\naych\source\repos\!!!!!\netcoreapp2.2\Akkatecture.dll
 
 using System;
-using Akka.Actor;
 using Akkatecture.Aggregates;
 
 namespace Akkatecture.Definitions
 {
-  public interface IAggregateDefinition
-  {
-    AggregateName Name { get; }
+    public interface IAggregateDefinition
+    {
+        AggregateName Name { get; }
 
-    Type Type { get; }
+        Type Type { get; }
 
-    Type IdentityType { get; }
-
-    IActorRef Manager { get; }
-  }
+        Type IdentityType { get; }
+        IAggregateManagerDefinition ManagerDefinition { get; }
+    }
 }

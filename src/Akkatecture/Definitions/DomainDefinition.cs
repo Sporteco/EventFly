@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Akka.Actor;
-using Akka.DI.Core;
 using Akkatecture.Aggregates;
 using Akkatecture.Aggregates.Snapshot;
 using Akkatecture.Commands;
@@ -21,9 +20,8 @@ namespace Akkatecture.Definitions
         private readonly List<ISagaDefinition> _sagas = new List<ISagaDefinition>();
         private readonly List<IReadModelDefinition> _readModels = new List<IReadModelDefinition>();
         private readonly List<IQueryDefinition> _queries = new List<IQueryDefinition>();
-        private readonly ActorSystem _system;
 
-        public string Name { get; }
+        public string Name => GetType().Name;
 
         public IReadOnlyCollection<IAggregateDefinition> Aggregates => _aggregates;
 
@@ -46,10 +44,14 @@ namespace Akkatecture.Definitions
           where TAggregate : ActorBase, IAggregateRoot<TIdentity>
           where TIdentity : IIdentity
         {
-            var manager = _system.ActorOf(Props.Create(() => new AggregateManager<TAggregate, TIdentity>()),
-                $"aggregate-{typeof(TAggregate).GetAggregateName()}-manager");
+            //var manager = _system.ActorOf(Props.Create(() => new AggregateManager<TAggregate, TIdentity>()),
+            //    $"aggregate-{typeof(TAggregate).GetAggregateName()}-manager");
 
-            _aggregates.Add(new AggregateDefinition(typeof(TAggregate), typeof(TIdentity), manager));
+            _aggregates.Add(
+                new AggregateDefinition(typeof(TAggregate), typeof(TIdentity),
+                    new AggregateManagerDefinition(typeof(TAggregate), typeof(TIdentity))
+                )
+            );
             return this;
         }
 
@@ -57,10 +59,14 @@ namespace Akkatecture.Definitions
           where TQueryHandler : ActorBase, IQueryHandler<TQuery, TResult>
           where TQuery : IQuery<TResult>
         {
-            var manager = _system.ActorOf(Props.Create(() => new QueryManager<TQueryHandler, TQuery, TResult>()),
-                $"query-{typeof(TQuery).Name}-manager");
+            //var manager = _system.ActorOf(Props.Create(() => new QueryManager<TQueryHandler, TQuery, TResult>()),
+            //    $"query-{typeof(TQuery).Name}-manager");
 
-            _queries.Add(new QueryDefinition(typeof(TQuery), typeof(TResult), manager));
+            _queries.Add(
+                new QueryDefinition(typeof(TQuery), typeof(TResult),
+                    new QueryManagerDefinition(typeof(TQueryHandler), typeof(TQuery), typeof(TResult))
+                )
+            );
             return this;
         }
 
@@ -69,10 +75,14 @@ namespace Akkatecture.Definitions
           where TSagaId : IIdentity
           where TSagaLocator : class, ISagaLocator<TSagaId>, new()
         {
-            var manager = _system.ActorOf(Props.Create(() => new AggregateSagaManager<TSaga, TSagaId, TSagaLocator>()),
-                $"saga-{typeof(TSagaId).Name}-manager");
+            //var manager = _system.ActorOf(Props.Create(() => new AggregateSagaManager<TSaga, TSagaId, TSagaLocator>()),
+            //    $"saga-{typeof(TSagaId).Name}-manager");
 
-            _sagas.Add(new SagaDefinition(typeof(TSaga), typeof(TSagaId), manager));
+            _sagas.Add(
+                new SagaDefinition(typeof(TSaga), typeof(TSagaId),
+                    new AggregateSagaManagerDefinition(typeof(TSaga), typeof(TSagaId), typeof(TSagaLocator))
+                )
+            );
             return this;
         }
 
@@ -80,10 +90,14 @@ namespace Akkatecture.Definitions
           where TSaga : ActorBase, IAggregateSaga<TSagaId>
           where TSagaId : IIdentity
         {
-            var manager = _system.ActorOf(Props.Create(() => new AggregateSagaManager<TSaga, TSagaId, SagaLocatorByIdentity<TSagaId>>()),
-                $"saga-{typeof(TSagaId).Name}-manager");
+            //var manager = _system.ActorOf(Props.Create(() => new AggregateSagaManager<TSaga, TSagaId, SagaLocatorByIdentity<TSagaId>>()),
+            //    $"saga-{typeof(TSagaId).Name}-manager");
 
-            _sagas.Add(new SagaDefinition(typeof(TSaga), typeof(TSagaId), manager));
+            _sagas.Add(
+                new SagaDefinition(typeof(TSaga), typeof(TSagaId), 
+                    new AggregateSagaManagerDefinition(typeof(TSaga), typeof(TSagaId), typeof(SagaLocatorByIdentity<TSagaId>))
+                )
+            );
             return this;
         }
 
@@ -91,10 +105,14 @@ namespace Akkatecture.Definitions
           where TReadModel : IReadModel
           where TReadModelManager : ActorBase, IReadModelManager, new()
         {
-            var manager = _system.ActorOf(Props.Create(() => new TReadModelManager()),
-                $"read~model-{typeof(TReadModel).Name}-manager");
+            //var manager = _system.ActorOf(Props.Create(() => new TReadModelManager()),
+            //    $"read~model-{typeof(TReadModel).Name}-manager");
 
-            _readModels.Add(new ReadModelDefinition(typeof(TReadModel), manager));
+            _readModels.Add(
+                new ReadModelDefinition(typeof(TReadModel),
+                    new ReadModelManagerDefinition(typeof(TReadModelManager))
+                )
+            );
             return this;
         }
 
@@ -153,10 +171,5 @@ namespace Akkatecture.Definitions
             return this;
         }
 
-        protected DomainDefinition(ActorSystem system)
-        {
-            _system = system;
-            Name = GetType().Name;
-        }
     }
 }

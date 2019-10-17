@@ -11,27 +11,30 @@ using Akkatecture.Extensions;
 
 namespace Akkatecture.Definitions
 {
-  public class AggregateDefinition : IAggregateDefinition
-  {
-    public AggregateName Name { get; }
-
-    public Type Type { get; }
-
-    public Type IdentityType { get; }
-
-    public IActorRef Manager { get; }
-
-    public AggregateDefinition(Type aggregateType, Type queryIdentity, IActorRef manager)
+    public class AggregateDefinition : IAggregateDefinition
     {
-      Type = aggregateType;
-      IdentityType = queryIdentity;
-      Name = Type.GetAggregateName();
-      Manager = manager;
-    }
+        public AggregateName Name { get; }
 
-    public override string ToString()
-    {
-      return Name.Value;
+        public Type Type { get; }
+
+        public Type IdentityType { get; }
+
+        public IAggregateManagerDefinition ManagerDefinition { get; }
+
+        public AggregateDefinition(
+            Type aggregateType,
+            Type queryIdentity,
+            IAggregateManagerDefinition managerDefinition)
+        {
+            Type = aggregateType;
+            IdentityType = queryIdentity;
+            Name = Type.GetAggregateName();
+            ManagerDefinition = managerDefinition;
+        }
+
+        public override string ToString()
+        {
+            return Name.Value;
+        }
     }
-  }
 }

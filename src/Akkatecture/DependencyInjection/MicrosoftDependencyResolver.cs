@@ -66,13 +66,13 @@ namespace Akkatecture.DependencyInjection
         }
 
         /// <summary>
-        ///     Generate <see cref="T:Akka.Actor.Props" /> to create an actor of the specified type.
+        ///     Generate <see cref="Akka.Actor.Props" /> to create an actor of the specified type.
         /// </summary>
         /// <param name="actorType">
         ///     The type of actor to create.
         /// </param>
         /// <returns>
-        ///     The configured <see cref="T:Akka.Actor.Props" />.
+        ///     The configured <see cref="Akka.Actor.Props" />.
         /// </returns>
         public Props Create(Type actorType)
         {

@@ -5,30 +5,29 @@
 // Assembly location: C:\Users\naych\source\repos\!!!!!\netcoreapp2.2\Akkatecture.dll
 
 using System;
-using Akka.Actor;
 
 namespace Akkatecture.Definitions
 {
-  public class QueryDefinition : IQueryDefinition
-  {
-    public string Name { get; }
-
-    public Type Type { get; }
-    public Type QueryResultType { get; }
-
-    public IActorRef Manager { get; }
-
-    public QueryDefinition(Type queryType, Type modelType, IActorRef manager)
+    public class QueryDefinition : IQueryDefinition
     {
-      Type = queryType;
-      QueryResultType = modelType;
-      Name = queryType.Name;
-      Manager = manager;
-    }
+        public string Name { get; }
 
-    public override string ToString()
-    {
-      return Name;
+        public Type Type { get; }
+        public Type QueryResultType { get; }
+
+        public IQueryManagerDefinition ManagerDefinition { get; }
+
+        public QueryDefinition(Type queryType, Type modelType, IQueryManagerDefinition managerDefinition)
+        {
+            Type = queryType;
+            QueryResultType = modelType;
+            Name = queryType.Name;
+            ManagerDefinition = managerDefinition;
+        }
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
-  }
 }

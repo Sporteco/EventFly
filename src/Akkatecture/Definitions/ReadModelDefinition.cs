@@ -9,24 +9,24 @@ using Akka.Actor;
 
 namespace Akkatecture.Definitions
 {
-  public class ReadModelDefinition : IReadModelDefinition
-  {
-    public string Name { get; }
-
-    public Type Type { get; }
-
-    public IActorRef Manager { get; }
-
-    public ReadModelDefinition(Type readModelType, IActorRef manager)
+    public class ReadModelDefinition : IReadModelDefinition
     {
-      Type = readModelType;
-      Name = readModelType.Name;
-      Manager = manager;
-    }
+        public string Name { get; }
 
-    public override string ToString()
-    {
-      return Name;
+        public Type Type { get; }
+
+        public IReadModelManagerDefinition ManagerDefinition { get; }
+
+        public ReadModelDefinition(Type readModelType, IReadModelManagerDefinition managerDefinition)
+        {
+            Type = readModelType;
+            Name = readModelType.Name;
+            ManagerDefinition = managerDefinition;
+        }
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
-  }
 }

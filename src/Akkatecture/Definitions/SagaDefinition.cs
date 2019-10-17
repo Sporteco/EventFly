@@ -9,11 +9,13 @@ using Akka.Actor;
 
 namespace Akkatecture.Definitions
 {
-  public class SagaDefinition : AggregateDefinition, ISagaDefinition
-  {
-    public SagaDefinition(Type aggregateType, Type queryIdentity, IActorRef manager)
-      : base(aggregateType, queryIdentity, manager)
+    public class SagaDefinition : AggregateDefinition, ISagaDefinition
     {
+        public SagaDefinition(Type aggregateType, Type queryIdentity, ISagaManagerDefinition managerDefinition)
+          : base(aggregateType, queryIdentity, managerDefinition)
+        {
+        }
+
+        ISagaManagerDefinition ISagaDefinition.ManagerDefinition => (ISagaManagerDefinition)ManagerDefinition;
     }
-  }
 }

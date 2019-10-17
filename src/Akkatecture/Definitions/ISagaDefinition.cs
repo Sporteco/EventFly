@@ -6,7 +6,8 @@
 
 namespace Akkatecture.Definitions
 {
-  public interface ISagaDefinition : IAggregateDefinition
-  {
-  }
+    public interface ISagaDefinition : IAggregateDefinition
+    {
+        new ISagaManagerDefinition ManagerDefinition { get; }
+    }
 }
