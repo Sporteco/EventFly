@@ -63,7 +63,7 @@ namespace Akkatecture.Tests.IntegrationTests.Aggregates.Sagas
             Sys.EventStream.Subscribe(eventProbe, typeof(DomainEvent<TestSaga, TestSagaId, TestSagaTransactionCompletedEvent>));
             //var aggregateManager = Sys.ActorOf(Props.Create(() => new AggregateManager<TestAggregate,TestAggregateId>()), "test-aggregatemanager");
             //Sys.ActorOf(Props.Create(() => new TestSagaManager(() => new TestSaga(aggregateManager))), "test-sagaaggregatemanager");
-            var appDef = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<IApplicationDefinition>();
+            var appDef = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<IApplicationRoot>();
 
 
 
@@ -102,7 +102,7 @@ namespace Akkatecture.Tests.IntegrationTests.Aggregates.Sagas
         {
             var eventProbe = CreateTestProbe("event-probe");
 
-            var appDef = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<IApplicationDefinition>();
+            var appDef = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<IApplicationRoot>();
 
             Sys.EventStream.Subscribe(eventProbe, typeof(DomainEvent<TestAsyncSaga, TestAsyncSagaId, TestAsyncSagaStartedEvent>));
             Sys.EventStream.Subscribe(eventProbe, typeof(DomainEvent<TestAsyncSaga, TestAsyncSagaId, TestAsyncSagaCompletedEvent>));

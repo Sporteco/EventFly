@@ -57,7 +57,7 @@ namespace Akkatecture.Tests.UnitTests.Subscribers
             var eventProbe = CreateTestProbe("event-probe");
             Sys.EventStream.Subscribe(eventProbe, typeof(TestSubscribedEventHandled<TestCreatedEvent>));
             Sys.ActorOf(Props.Create(() => new TestAggregateSubscriber()), "test-subscriber");        
-            var appDef = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<IApplicationDefinition>();
+            var appDef = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<IApplicationRoot>();
 
             var aggregateId = TestAggregateId.New;
             var commandId = CommandId.New;
@@ -77,7 +77,7 @@ namespace Akkatecture.Tests.UnitTests.Subscribers
             var eventProbe = CreateTestProbe("event-probe");
             Sys.EventStream.Subscribe(eventProbe, typeof(TestAsyncSubscribedEventHandled<TestCreatedEvent>));
             Sys.ActorOf(Props.Create(() => new TestAsyncAggregateSubscriber()), "test-subscriber");        
-            var appDef = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<IApplicationDefinition>();
+            var appDef = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<IApplicationRoot>();
 
             var aggregateId = TestAggregateId.New;
             var commandId = CommandId.New;

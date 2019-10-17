@@ -7,16 +7,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Akka.Actor;
-using Akka.DI.Core;
-using Akkatecture.Commands;
-using Akkatecture.Commands.ExecutionResults;
-using Akkatecture.Core;
-using Akkatecture.Exceptions;
 using Akkatecture.Jobs;
-using Akkatecture.Queries;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Akkatecture.Definitions
 {
@@ -110,71 +102,6 @@ namespace Akkatecture.Definitions
             _snapshots.AddDefinitions(instance.Snapshots);
             _commands.AddDefinitions(instance.Commands);
             return (TDomainDefinition)instance;
-        }
-
-        public Task<TExecutionResult> PublishAsync<TExecutionResult, TIdentity>(
-          ICommand<TIdentity, TExecutionResult> command)
-          where TExecutionResult : IExecutionResult
-          where TIdentity : IIdentity
-        {
-            return GetAggregateManager(typeof(TIdentity)).Ask<TExecutionResult>(command, new TimeSpan?());
-        }
-
-        public Task<IExecutionResult> PublishAsync(ICommand command)
-        {
-            return GetAggregateManager(command.GetAggregateId().GetType()).Ask<IExecutionResult>(command, new TimeSpan?());
-        }
-
-        public Task<TResult> QueryAsync<TResult>(IQuery<TResult> query)
-        {
-            return GetQueryManager(query.GetType()).Ask<TResult>(query, new TimeSpan?());
-        }
-
-        public Task<object> QueryAsync(IQuery query)
-        {
-            return GetQueryManager(query.GetType()).Ask(query, new TimeSpan?());
-        }
-
-        public IActorRef GetAggregateManager(Type type)
-        {
-            var manager = Aggregates.FirstOrDefault(i =>
-            {
-                if (!(i.Type == type))
-                    return i.IdentityType == type;
-                return true;
-            })?.Manager;
-            if (manager == null)
-                throw new InvalidOperationException("Aggregate " + type.PrettyPrint() + " not registered");
-            return manager;
-        }
-
-        public IActorRef GetQueryManager(Type queryType)
-        {
-            var manager = Queries.FirstOrDefault(i => i.Type == queryType)?.Manager;
-            if (manager == null)
-                throw new InvalidOperationException("Query " + queryType.PrettyPrint() + " not registered");
-            return manager;
-        }
-
-        public IActorRef GetSagaManager(Type type)
-        {
-            var manager = Sagas.FirstOrDefault(i =>
-            {
-                if (!(i.Type == type))
-                    return i.IdentityType == type;
-                return true;
-            })?.Manager;
-            if (manager == null)
-                throw new InvalidOperationException("Saga " + type.PrettyPrint() + " not registered");
-            return manager;
-        }
-
-        public IActorRef GetReadModelManager(Type type)
-        {
-            var manager = ReadModels.FirstOrDefault(i => i.Type == type)?.Manager;
-            if (manager == null)
-                throw new InvalidOperationException("Saga " + type.PrettyPrint() + " not registered");
-            return manager;
         }
 
         public ApplicationDefinition(ActorSystem system)

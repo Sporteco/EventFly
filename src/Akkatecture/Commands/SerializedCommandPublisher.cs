@@ -17,10 +17,12 @@ namespace Akkatecture.Commands
     public class SerializedCommandPublisher : ISerializedCommandPublisher
     {
         private readonly IApplicationDefinition _applicationDefinition;
+        private readonly IApplicationRoot _app;
 
-        public SerializedCommandPublisher(IApplicationDefinition applicationDefinition)
+        public SerializedCommandPublisher(IApplicationDefinition applicationDefinition, IApplicationRoot applicationRoot)
         {
             _applicationDefinition = applicationDefinition;
+            _app = applicationRoot;
         }
 
         public async Task<IExecutionResult> PublishSerilizedCommandAsync(
@@ -48,7 +50,7 @@ namespace Akkatecture.Commands
             {
                 throw new ArgumentException($"Failed to deserialize command '{name}' v{version}: {ex.Message}", ex);
             }
-            var executionResult = await _applicationDefinition.PublishAsync(command);
+            var executionResult = await _app.PublishAsync(command);
             return executionResult;
         }
     }

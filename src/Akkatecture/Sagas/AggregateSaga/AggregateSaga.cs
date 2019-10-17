@@ -88,9 +88,9 @@ namespace Akkatecture.Sagas.AggregateSaga
                 command.Metadata.SagaIds = new List<string>(command.Metadata.SagaIds) { Id.Value };
             }
 
-            var appDefenitions = _scope.ServiceProvider.GetRequiredService<IApplicationDefinition>();
+            var app = _scope.ServiceProvider.GetRequiredService<IApplicationRoot>();
 
-            return await appDefenitions.PublishAsync(command);
+            return await app.PublishAsync(command);
         }
 
         public IAggregateName Name => SagaName;

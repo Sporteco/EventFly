@@ -60,7 +60,7 @@ namespace Akkatecture.Tests.UnitTests.Aggregates
         {
             var eventProbe = CreateTestProbe("event-probe");
             Sys.EventStream.Subscribe(eventProbe, typeof(IDomainEvent<TestAggregateId, TestCreatedEvent>));
-            var appDef = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<IApplicationDefinition>();
+            var appDef = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<IApplicationRoot>();
 
             var aggregateId = TestAggregateId.New;
             var commandId = CommandId.New;
@@ -80,7 +80,7 @@ namespace Akkatecture.Tests.UnitTests.Aggregates
         {
             var eventProbe = CreateTestProbe("event-probe");
             Sys.EventStream.Subscribe(eventProbe, typeof(IDomainEvent<TestAggregateId, TestCreatedEvent>));
-            var appDef = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<IApplicationDefinition>();
+            var appDef = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<IApplicationRoot>();
 
             var aggregateId = TestAggregateId.New;
             var commandId = CommandId.New;
@@ -97,7 +97,7 @@ namespace Akkatecture.Tests.UnitTests.Aggregates
         {
             var eventProbe = CreateTestProbe("event-probe");
             Sys.EventStream.Subscribe(eventProbe, typeof(IDomainEvent<TestAggregateId, TestCreatedEvent>));
-            var appDef = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<IApplicationDefinition>();
+            var appDef = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<IApplicationRoot>();
 
             var aggregateId = TestAggregateId.New;
             var commandId = CommandId.New;
@@ -123,7 +123,7 @@ namespace Akkatecture.Tests.UnitTests.Aggregates
         {
             var eventProbe = CreateTestProbe("event-probe");
             Sys.EventStream.Subscribe(eventProbe, typeof(IDomainEvent<TestAggregateId, TestStateSignalEvent>));
-            var appDef = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<IApplicationDefinition>();
+            var appDef = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<IApplicationRoot>();
 
             var aggregateId = TestAggregateId.New;
             var commandId = CommandId.New;
@@ -145,7 +145,7 @@ namespace Akkatecture.Tests.UnitTests.Aggregates
         {
             var eventProbe = CreateTestProbe("event-probe");
             Sys.EventStream.Subscribe(eventProbe, typeof(IDomainEvent<TestAggregateId, TestAddedEvent>));
-            var appDef = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<IApplicationDefinition>();
+            var appDef = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<IApplicationRoot>();
 
             var aggregateId = TestAggregateId.New;
             var commandId = CommandId.New;
@@ -168,7 +168,7 @@ namespace Akkatecture.Tests.UnitTests.Aggregates
         {
             var eventProbe = CreateTestProbe("event-probe");
             Sys.EventStream.Subscribe(eventProbe, typeof(IDomainEvent<TestAggregateId, TestAddedEvent>));
-            var appDef = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<IApplicationDefinition>();
+            var appDef = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<IApplicationRoot>();
 
 
             var aggregateId = TestAggregateId.New;
@@ -207,7 +207,7 @@ namespace Akkatecture.Tests.UnitTests.Aggregates
             Sys.EventStream.Subscribe(eventProbe, typeof(IDomainEvent<TestAggregateId, TestStateSignalEvent>));
             var aggregateId = TestAggregateId.New;
             var commandId = CommandId.New;
-            var appDef = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<IApplicationDefinition>();
+            var appDef = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<IApplicationRoot>();
 
             var command = new CreateTestCommand(aggregateId, commandId);
             appDef.PublishAsync(command).GetAwaiter().GetResult();
@@ -241,7 +241,7 @@ namespace Akkatecture.Tests.UnitTests.Aggregates
             var eventProbe = CreateTestProbe("event-probe");
             Sys.EventStream.Subscribe(eventProbe, typeof(IDomainEvent<TestAggregateId, TestCreatedEvent>));
             Sys.EventStream.Subscribe(eventProbe, typeof(IDomainEvent<TestAggregateId, TestAddedEvent>));
-            var appDef = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<IApplicationDefinition>();
+            var appDef = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<IApplicationRoot>();
 
             var aggregateId = TestAggregateId.New;
             var commandId = CommandId.New;
@@ -267,7 +267,7 @@ namespace Akkatecture.Tests.UnitTests.Aggregates
             Sys.EventStream.Subscribe(eventProbe, typeof(IDomainEvent<TestAggregateId, TestStateSignalEvent>));
             var aggregateId = TestAggregateId.New;
             var commandId = CommandId.New;
-            var appDef = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<IApplicationDefinition>();
+            var appDef = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<IApplicationRoot>();
 
 
             var command = new CreateTestCommand(aggregateId, commandId);
@@ -310,7 +310,7 @@ namespace Akkatecture.Tests.UnitTests.Aggregates
             var aggregateId = TestAggregateId.New;
             var commandId = CommandId.New;
 
-            var appDef = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<IApplicationDefinition>();
+            var appDef = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<IApplicationRoot>();
 
             var command = new CreateTestCommand(aggregateId, commandId);
             appDef.PublishAsync(command).GetAwaiter().GetResult();
@@ -339,7 +339,7 @@ namespace Akkatecture.Tests.UnitTests.Aggregates
             var aggregateId = TestAggregateId.New;
             var commandId = CommandId.New;
             var command = new TestSuccessExecutionResultCommand(aggregateId, commandId);
-            var appDef = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<IApplicationDefinition>();
+            var appDef = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<IApplicationRoot>();
 
             await appDef.PublishAsync(command);
         }
@@ -351,7 +351,7 @@ namespace Akkatecture.Tests.UnitTests.Aggregates
             var aggregateId = TestAggregateId.New;
             var commandId = CommandId.New;
             var command = new TestFailedExecutionResultCommand(aggregateId, commandId);
-            var appDef = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<IApplicationDefinition>();
+            var appDef = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<IApplicationRoot>();
 
             await appDef.PublishAsync(command);
         }

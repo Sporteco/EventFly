@@ -52,7 +52,7 @@ namespace Akkatecture.Examples.Api.Controllers
             var id = resourceId.GetGuid();
             var command = new CreateResourceCommand(resourceId);
 
-            var result = await System.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<IApplicationDefinition>().PublishAsync(command);
+            var result = await System.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<IApplicationRoot>().PublishAsync(command);
 
             if (result.IsSuccess)
             {

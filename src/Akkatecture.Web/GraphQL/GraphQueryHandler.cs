@@ -17,10 +17,12 @@ namespace Akkatecture.Web.GraphQL
     public sealed class GraphQueryHandler<TQuery, TResult> : IGraphQueryHandler<TQuery,TResult> where TQuery : IQuery<TResult> 
     {
         private readonly IApplicationDefinition _definitions;
+        private readonly IApplicationRoot _root;
 
-        public GraphQueryHandler(IApplicationDefinition definitions)
+        public GraphQueryHandler(IApplicationDefinition definitions, IApplicationRoot root)
         {
             _definitions = definitions;
+            _root = root;
         }
 
         public async Task<object> ExecuteAsync(object query)
@@ -42,7 +44,7 @@ namespace Akkatecture.Web.GraphQL
 
         private Task<TResult> ReadAsync(TQuery query)
         {
-            return _definitions.QueryAsync(query);
+            return _root.QueryAsync(query);
         }
 
         private Task<TResult> ExecuteQuery(ResolveFieldContext context) => ReadAsync(ParseModel<TQuery>(context.Arguments));

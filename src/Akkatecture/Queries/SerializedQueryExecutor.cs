@@ -11,10 +11,12 @@ namespace Akkatecture.Queries
     public class SerializedQueryExecutor : ISerializedQueryExecutor
     {
         private readonly IApplicationDefinition _applicationDefinition;
+        private readonly IApplicationRoot _app;
 
-        public SerializedQueryExecutor(IApplicationDefinition applicationDefinition)
+        public SerializedQueryExecutor(IApplicationDefinition applicationDefinition, IApplicationRoot applicationRoot)
         {
             _applicationDefinition = applicationDefinition;
+            _app = applicationRoot;
         }
 
         public Task<object> ExecuteQueryAsync(string name, string json, CancellationToken cancellationToken)
@@ -37,7 +39,7 @@ namespace Akkatecture.Queries
             {
                 throw new ArgumentException($"Failed to deserialize query '{name}': {ex.Message}", ex);
             }
-            return _applicationDefinition.QueryAsync(query);
+            return _app.QueryAsync(query);
         }
 
     }

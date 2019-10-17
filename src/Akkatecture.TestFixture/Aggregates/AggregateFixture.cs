@@ -86,7 +86,7 @@ namespace Akkatecture.TestFixture.Aggregates
             AggregateId = aggregateId;
             AggregateEventTestProbe = _testKit.CreateTestProbe("aggregate-event-test-probe");
             AggregateReplyTestProbe = _testKit.CreateTestProbe("aggregate-reply-test-probe");
-            AggregateRef = _testKit.Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<IApplicationDefinition>().GetAggregateManager(typeof(TIdentity));
+            AggregateRef = _testKit.Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<ApplicationRoot>().GetAggregateManager(typeof(TIdentity));
             UsesAggregateManager = false;
             AggregateProps = Props.Empty;
             
