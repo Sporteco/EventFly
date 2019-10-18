@@ -8,7 +8,6 @@ EventFly is a cqrs and event sourcing framework for dotnet core, build ontop of 
 
 Go ahead and take a look at [our documentation](http://EventFly.net/docs/getting-started), go over [some concepts](http://EventFly.net/docs/primitives), and read the [tips and tricks](http://EventFly.net/docs/tips-and-tricks).
 
-
 ### Features
 
 * **Distributed:** Each aggregate can operate concurrently in parallel inside of the actor system with isolated failure boundaries.
