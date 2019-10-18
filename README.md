@@ -1,6 +1,5 @@
 
-| nuget | master |
-|-------|:------:|| [![Nuget Package](https://img.shields.io/nuget/v/EventFly.svg?style=flat)](https://www.nuget.org/packages/EventFly/) | [![Build status]([![Build Status](https://dev.azure.com/sporteco/EventFly/_apis/build/status/Sporteco.EventFly?branchName=master)](https://dev.azure.com/sporteco/EventFly/_build/latest?definitionId=25&branchName=master))](https://dev.azure.com/lutando/EventFly/_build/latest?definitionId=2) | [![Build status](https://dev.azure.com/lutando/EventFly/_apis/build/status/EventFly%20Development%20CI%20CD?branchName=dev)](https://dev.azure.com/lutando/EventFly/_build/latest?definitionId=1) | [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=Lutando_EventFly&metric=coverage)](https://sonarcloud.io/dashboard?id=Lutando_EventFly) | [![Come Chat](https://img.shields.io/discord/440517592545755137.svg)](https://EventFly.net/community) | [![we are reactive](https://img.shields.io/badge/we_are-reactive-blue.svg?style=flat)](https://www.reactivemanifesto.org/) |
+[![Nuget Package](https://img.shields.io/nuget/v/EventFly.svg?style=flat)](https://www.nuget.org/packages/EventFly/)] [![Build Status](https://dev.azure.com/sporteco/EventFly/_apis/build/status/Sporteco.EventFly?branchName=master)](https://dev.azure.com/sporteco/EventFly/_build/latest?definitionId=25&branchName=master)
 
 # EventFly
 
