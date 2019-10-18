@@ -39,20 +39,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "postman", "postman", "{8811
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{F1C674D3-CC23-4708-9903-7B3CD3565899}"
 	ProjectSection(SolutionItems) = preProject
-		build\azure-pipelines-development-ci-cd.yaml = build\azure-pipelines-development-ci-cd.yaml
-		build\azure-pipelines-master-ci-cd.yaml = build\azure-pipelines-master-ci-cd.yaml
-		build\azure-pipelines-release-ci-cd.yaml = build\azure-pipelines-release-ci-cd.yaml
-		build\azure-pipelines-static-ci.yaml = build\azure-pipelines-static-ci.yaml
-		build\paket.dependencies = build\paket.dependencies
+		build-master.yml = build-master.yml
+		build-release.yml = build-release.yml
+		master.yml = master.yml
+		publish-release.yml = publish-release.yml
 		build\README.md = build\README.md
+		release.yml = release.yml
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventFly.TestFixture", "src\EventFly.TestFixture\EventFly.TestFixture.csproj", "{0CB7A8CC-E3CD-481C-81C9-BA830DC32361}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "templates", "templates", "{19634F28-9CC5-4B76-83B6-5AA41B3CA78E}"
-	ProjectSection(SolutionItems) = preProject
-		build\templates\fake-template.yaml = build\templates\fake-template.yaml
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "jobs", "jobs", "{94E321E7-073B-4B06-874B-A411D6971A7F}"
 	ProjectSection(SolutionItems) = preProject
@@ -81,7 +76,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventFly.Web", "src\EventFl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demo.Web", "examples\demo\Demo.Web\Demo.Web.csproj", "{9AF8A2F1-E35A-4426-B38E-67B96B1A05AE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo.Dependencies", "examples\demo\Demo.Dependencies\Demo.Dependencies\Demo.Dependencies.csproj", "{478A479B-E6D5-4DE0-9C22-64B0EFF8A16C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demo.Dependencies", "examples\demo\Demo.Dependencies\Demo.Dependencies\Demo.Dependencies.csproj", "{478A479B-E6D5-4DE0-9C22-64B0EFF8A16C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -176,7 +171,6 @@ Global
 		{F70444F1-9EBE-4101-9152-BF9A98A97D4E} = {2B7C892D-01E8-4FE5-A8BB-BBF130A42904}
 		{8811113F-775E-4371-8E71-942BD50844A6} = {2B7C892D-01E8-4FE5-A8BB-BBF130A42904}
 		{0CB7A8CC-E3CD-481C-81C9-BA830DC32361} = {C7A99371-DCC0-4726-A971-E35C8CDF4768}
-		{19634F28-9CC5-4B76-83B6-5AA41B3CA78E} = {F1C674D3-CC23-4708-9903-7B3CD3565899}
 		{94E321E7-073B-4B06-874B-A411D6971A7F} = {7522402D-176E-4305-A68B-F3FFBFD38158}
 		{D1FC3A57-86CD-4A83-8604-7811BF707022} = {94E321E7-073B-4B06-874B-A411D6971A7F}
 		{EDC2FA9D-B9DF-452C-8A7F-89237D891486} = {94E321E7-073B-4B06-874B-A411D6971A7F}
