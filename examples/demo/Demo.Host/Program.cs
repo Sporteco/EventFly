@@ -11,6 +11,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using EventFly.Definitions;
 using Demo.Dependencies;
+using EventFly.Queries;
+using EventFly.Commands;
 
 namespace Demo.Host
 {
@@ -50,14 +52,16 @@ namespace Demo.Host
 
             var holder = system.GetExtension<ServiceProviderHolder>();
 
-            var app = holder.ServiceProvider.GetRequiredService<IApplicationRoot>();
+            var bus = holder.ServiceProvider.GetRequiredService<ICommandBus>();
+            var queryProcessor = holder.ServiceProvider.GetRequiredService<IQueryProcessor>();
 
-            await app.PublishAsync(createUserAccountCommand);
+
+            await bus.Publish(createUserAccountCommand);
 
             //await system.PublishCommandAsync(new RenameUserCommand(aggregateId, new UserName("TEST")));
             //await system.PublishCommandAsync(new CreateUserCommand(UserId.New, new UserName("userName2"),new Birth(DateTime.Today)));
 
-            var res = await app.QueryAsync(new UsersQuery());
+            var res = await queryProcessor.Process(new UsersQuery());
             Console.WriteLine(res?.Items.Count);
 
             //block end of program

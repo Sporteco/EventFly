@@ -106,6 +106,8 @@ namespace EventFly.DependencyInjection
             services.AddTransient<ISerializedCommandPublisher, SerializedCommandPublisher>();
             services.AddTransient<ISerializedQueryExecutor, SerializedQueryExecutor>();
 
+            services.AddTransient<ICommandBus, CommandToAggregateManagerBus>();
+            services.AddTransient<IQueryProcessor, QueryToQueryHandlerProcessor>();
 
             var registry = new DefinitionToManagerRegistryBuilder()
                 .UseSystem(actorSystem)
@@ -116,9 +118,7 @@ namespace EventFly.DependencyInjection
                 .Build();
 
             services
-                .AddSingleton<IDefinitionToManagerRegistry>(registry)
-                .AddSingleton<IApplicationRoot, ApplicationRoot>()
-                .AddSingleton<ApplicationRoot>();
+                .AddSingleton<IDefinitionToManagerRegistry>(registry);
 
             return services;
         }

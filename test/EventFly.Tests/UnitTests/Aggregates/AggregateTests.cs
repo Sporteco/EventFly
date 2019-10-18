@@ -60,12 +60,12 @@ namespace EventFly.Tests.UnitTests.Aggregates
         {
             var eventProbe = CreateTestProbe("event-probe");
             Sys.EventStream.Subscribe(eventProbe, typeof(IDomainEvent<TestAggregateId, TestCreatedEvent>));
-            var appDef = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<IApplicationRoot>();
+            var bus = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<ICommandBus>();
 
             var aggregateId = TestAggregateId.New;
             var commandId = CommandId.New;
             var command = new CreateTestCommand(aggregateId, commandId);
-            appDef.PublishAsync(command).GetAwaiter().GetResult();
+            bus.Publish(command).GetAwaiter().GetResult();
             
             eventProbe
                 .ExpectMsg<IDomainEvent<TestAggregateId, TestCreatedEvent>>(
@@ -80,12 +80,12 @@ namespace EventFly.Tests.UnitTests.Aggregates
         {
             var eventProbe = CreateTestProbe("event-probe");
             Sys.EventStream.Subscribe(eventProbe, typeof(IDomainEvent<TestAggregateId, TestCreatedEvent>));
-            var appDef = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<IApplicationRoot>();
+            var bus = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<ICommandBus>();
 
             var aggregateId = TestAggregateId.New;
             var commandId = CommandId.New;
             var command = new CreateTestCommand(aggregateId, commandId);
-            var result = await appDef.PublishAsync(command);
+            var result = await bus.Publish(command);
 
             result.IsSuccess.Should().BeTrue();
             result.SourceId.Should().Be(command.Metadata.SourceId);
@@ -97,12 +97,12 @@ namespace EventFly.Tests.UnitTests.Aggregates
         {
             var eventProbe = CreateTestProbe("event-probe");
             Sys.EventStream.Subscribe(eventProbe, typeof(IDomainEvent<TestAggregateId, TestCreatedEvent>));
-            var appDef = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<IApplicationRoot>();
+            var bus = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<ICommandBus>();
 
             var aggregateId = TestAggregateId.New;
             var commandId = CommandId.New;
             var command = new CreateTestCommand(aggregateId, commandId);
-            appDef.PublishAsync(command).GetAwaiter().GetResult();
+            bus.Publish(command).GetAwaiter().GetResult();
 
             eventProbe
                 .ExpectMsg<IDomainEvent<TestAggregateId, TestCreatedEvent>>(
@@ -123,14 +123,14 @@ namespace EventFly.Tests.UnitTests.Aggregates
         {
             var eventProbe = CreateTestProbe("event-probe");
             Sys.EventStream.Subscribe(eventProbe, typeof(IDomainEvent<TestAggregateId, TestStateSignalEvent>));
-            var appDef = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<IApplicationRoot>();
+            var bus = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<ICommandBus>();
 
             var aggregateId = TestAggregateId.New;
             var commandId = CommandId.New;
             var command = new CreateTestCommand(aggregateId, commandId);
             var nextCommand = new PublishTestStateCommand(aggregateId);
-            appDef.PublishAsync(command).GetAwaiter().GetResult();
-            appDef.PublishAsync(nextCommand).GetAwaiter().GetResult();
+            bus.Publish(command).GetAwaiter().GetResult();
+            bus.Publish(nextCommand).GetAwaiter().GetResult();
 
             eventProbe
                 .ExpectMsg<IDomainEvent<TestAggregateId, TestStateSignalEvent>>(
@@ -145,7 +145,7 @@ namespace EventFly.Tests.UnitTests.Aggregates
         {
             var eventProbe = CreateTestProbe("event-probe");
             Sys.EventStream.Subscribe(eventProbe, typeof(IDomainEvent<TestAggregateId, TestAddedEvent>));
-            var appDef = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<IApplicationRoot>();
+            var bus = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<ICommandBus>();
 
             var aggregateId = TestAggregateId.New;
             var commandId = CommandId.New;
@@ -154,8 +154,8 @@ namespace EventFly.Tests.UnitTests.Aggregates
             var test = new Test(testId);
             var nextCommandId = CommandId.New;
             var nextCommand = new AddTestCommand(aggregateId, nextCommandId, test);
-            appDef.PublishAsync(command).GetAwaiter().GetResult();
-            appDef.PublishAsync(nextCommand).GetAwaiter().GetResult();
+            bus.Publish(command).GetAwaiter().GetResult();
+            bus.Publish(nextCommand).GetAwaiter().GetResult();
 
             eventProbe
                 .ExpectMsg<IDomainEvent<TestAggregateId, TestAddedEvent>>(
@@ -168,7 +168,7 @@ namespace EventFly.Tests.UnitTests.Aggregates
         {
             var eventProbe = CreateTestProbe("event-probe");
             Sys.EventStream.Subscribe(eventProbe, typeof(IDomainEvent<TestAggregateId, TestAddedEvent>));
-            var appDef = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<IApplicationRoot>();
+            var bus = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<ICommandBus>();
 
 
             var aggregateId = TestAggregateId.New;
@@ -182,9 +182,9 @@ namespace EventFly.Tests.UnitTests.Aggregates
             var test2 = new Test(test2Id);
             var nextCommandId2 = CommandId.New;
             var nextCommand2 = new AddTestCommand(aggregateId, nextCommandId2, test2);
-            appDef.PublishAsync(command).GetAwaiter().GetResult();
-            appDef.PublishAsync(nextCommand).GetAwaiter().GetResult();
-            appDef.PublishAsync(nextCommand2).GetAwaiter().GetResult();
+            bus.Publish(command).GetAwaiter().GetResult();
+            bus.Publish(nextCommand).GetAwaiter().GetResult();
+            bus.Publish(nextCommand2).GetAwaiter().GetResult();
 
 
             eventProbe
@@ -207,24 +207,24 @@ namespace EventFly.Tests.UnitTests.Aggregates
             Sys.EventStream.Subscribe(eventProbe, typeof(IDomainEvent<TestAggregateId, TestStateSignalEvent>));
             var aggregateId = TestAggregateId.New;
             var commandId = CommandId.New;
-            var appDef = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<IApplicationRoot>();
+            var bus = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<ICommandBus>();
 
             var command = new CreateTestCommand(aggregateId, commandId);
-            appDef.PublishAsync(command).GetAwaiter().GetResult();
+            bus.Publish(command).GetAwaiter().GetResult();
 
             for (var i = 0; i < 5; i++)
             {
                 var test = new Test(TestId.New);
                 var testCommandId = CommandId.New;
                 var testCommand = new AddTestCommand(aggregateId, testCommandId, test);
-                appDef.PublishAsync(testCommand).GetAwaiter().GetResult();
+                bus.Publish(testCommand).GetAwaiter().GetResult();
             }
             
             var poisonCommand = new PoisonTestAggregateCommand(aggregateId);
-            appDef.PublishAsync(poisonCommand).GetAwaiter().GetResult();
+            bus.Publish(poisonCommand).GetAwaiter().GetResult();
 
             var reviveCommand = new PublishTestStateCommand(aggregateId);
-            appDef.PublishAsync(reviveCommand).GetAwaiter().GetResult();
+            bus.Publish(reviveCommand).GetAwaiter().GetResult();
 
 
             eventProbe
@@ -241,7 +241,7 @@ namespace EventFly.Tests.UnitTests.Aggregates
             var eventProbe = CreateTestProbe("event-probe");
             Sys.EventStream.Subscribe(eventProbe, typeof(IDomainEvent<TestAggregateId, TestCreatedEvent>));
             Sys.EventStream.Subscribe(eventProbe, typeof(IDomainEvent<TestAggregateId, TestAddedEvent>));
-            var appDef = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<IApplicationRoot>();
+            var bus = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<ICommandBus>();
 
             var aggregateId = TestAggregateId.New;
             var commandId = CommandId.New;
@@ -249,7 +249,7 @@ namespace EventFly.Tests.UnitTests.Aggregates
             var secondTest = new Test(TestId.New);
             var command = new CreateAndAddTwoTestsCommand(aggregateId, commandId, firstTest, secondTest);
 
-            appDef.PublishAsync(command).GetAwaiter().GetResult();
+            bus.Publish(command).GetAwaiter().GetResult();
 
             eventProbe.ExpectMsg<IDomainEvent<TestAggregateId, TestCreatedEvent>>();
             eventProbe.ExpectMsg<IDomainEvent<TestAggregateId, TestAddedEvent>>();
@@ -267,22 +267,22 @@ namespace EventFly.Tests.UnitTests.Aggregates
             Sys.EventStream.Subscribe(eventProbe, typeof(IDomainEvent<TestAggregateId, TestStateSignalEvent>));
             var aggregateId = TestAggregateId.New;
             var commandId = CommandId.New;
-            var appDef = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<IApplicationRoot>();
+            var bus = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<ICommandBus>();
 
 
             var command = new CreateTestCommand(aggregateId, commandId);
-            appDef.PublishAsync(command).GetAwaiter().GetResult();
+            bus.Publish(command).GetAwaiter().GetResult();
 
             var test = new Test(TestId.New);
             var testSourceId = CommandId.New;
             var testCommand = new AddFourTestsCommand(aggregateId, testSourceId, test);
-            appDef.PublishAsync(testCommand).GetAwaiter().GetResult();
+            bus.Publish(testCommand).GetAwaiter().GetResult();
             
             var poisonCommand = new PoisonTestAggregateCommand(aggregateId);
-            appDef.PublishAsync(poisonCommand).GetAwaiter().GetResult();
+            bus.Publish(poisonCommand).GetAwaiter().GetResult();
 
             var reviveCommand = new PublishTestStateCommand(aggregateId);
-            appDef.PublishAsync(reviveCommand).GetAwaiter().GetResult();
+            bus.Publish(reviveCommand).GetAwaiter().GetResult();
 
             eventProbe
                 .ExpectMsg<IDomainEvent<TestAggregateId, TestAddedEvent>>();
@@ -310,17 +310,17 @@ namespace EventFly.Tests.UnitTests.Aggregates
             var aggregateId = TestAggregateId.New;
             var commandId = CommandId.New;
 
-            var appDef = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<IApplicationRoot>();
+            var bus = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<ICommandBus>();
 
             var command = new CreateTestCommand(aggregateId, commandId);
-            appDef.PublishAsync(command).GetAwaiter().GetResult();
+            bus.Publish(command).GetAwaiter().GetResult();
 
             for (var i = 0; i < 10; i++)
             {
                 var test = new Test(TestId.New);
                 var testCommandId = CommandId.New;
                 var testCommand = new AddTestCommand(aggregateId, testCommandId, test);
-                appDef.PublishAsync(testCommand).GetAwaiter().GetResult();
+                bus.Publish(testCommand).GetAwaiter().GetResult();
             }
             
             eventProbe
@@ -339,9 +339,9 @@ namespace EventFly.Tests.UnitTests.Aggregates
             var aggregateId = TestAggregateId.New;
             var commandId = CommandId.New;
             var command = new TestSuccessExecutionResultCommand(aggregateId, commandId);
-            var appDef = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<IApplicationRoot>();
+            var bus = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<ICommandBus>();
 
-            await appDef.PublishAsync(command);
+            await bus.Publish(command);
         }
         
         [Fact]
@@ -351,9 +351,9 @@ namespace EventFly.Tests.UnitTests.Aggregates
             var aggregateId = TestAggregateId.New;
             var commandId = CommandId.New;
             var command = new TestFailedExecutionResultCommand(aggregateId, commandId);
-            var appDef = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<IApplicationRoot>();
+            var bus = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<ICommandBus>();
 
-            await appDef.PublishAsync(command);
+            await bus.Publish(command);
         }
         [Fact]
         [Category(Category)]

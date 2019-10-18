@@ -16,13 +16,11 @@ namespace EventFly.Web.GraphQL
 {
     public sealed class GraphQueryHandler<TQuery, TResult> : IGraphQueryHandler<TQuery,TResult> where TQuery : IQuery<TResult> 
     {
-        private readonly IApplicationDefinition _definitions;
-        private readonly IApplicationRoot _root;
+        private readonly IQueryProcessor _queryProcessor;
 
-        public GraphQueryHandler(IApplicationDefinition definitions, IApplicationRoot root)
+        public GraphQueryHandler(IQueryProcessor queryProcessor)
         {
-            _definitions = definitions;
-            _root = root;
+            _queryProcessor = queryProcessor;
         }
 
         public async Task<object> ExecuteAsync(object query)
@@ -44,7 +42,7 @@ namespace EventFly.Web.GraphQL
 
         private Task<TResult> ReadAsync(TQuery query)
         {
-            return _root.QueryAsync(query);
+            return _queryProcessor.Process(query);
         }
 
         private Task<TResult> ExecuteQuery(ResolveFieldContext context) => ReadAsync(ParseModel<TQuery>(context.Arguments));

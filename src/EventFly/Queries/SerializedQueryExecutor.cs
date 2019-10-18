@@ -11,12 +11,12 @@ namespace EventFly.Queries
     public class SerializedQueryExecutor : ISerializedQueryExecutor
     {
         private readonly IApplicationDefinition _applicationDefinition;
-        private readonly IApplicationRoot _app;
+        private readonly IQueryProcessor _queryProcessor;
 
-        public SerializedQueryExecutor(IApplicationDefinition applicationDefinition, IApplicationRoot applicationRoot)
+        public SerializedQueryExecutor(IApplicationDefinition applicationDefinition, IQueryProcessor queryProcessor)
         {
             _applicationDefinition = applicationDefinition;
-            _app = applicationRoot;
+            _queryProcessor = queryProcessor;
         }
 
         public Task<object> ExecuteQueryAsync(string name, string json, CancellationToken cancellationToken)
@@ -39,7 +39,7 @@ namespace EventFly.Queries
             {
                 throw new ArgumentException($"Failed to deserialize query '{name}': {ex.Message}", ex);
             }
-            return _app.QueryAsync(query);
+            return _queryProcessor.Process(query);
         }
 
     }

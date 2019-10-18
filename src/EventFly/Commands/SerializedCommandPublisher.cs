@@ -17,12 +17,12 @@ namespace EventFly.Commands
     public class SerializedCommandPublisher : ISerializedCommandPublisher
     {
         private readonly IApplicationDefinition _applicationDefinition;
-        private readonly IApplicationRoot _app;
+        private readonly ICommandBus _bus;
 
-        public SerializedCommandPublisher(IApplicationDefinition applicationDefinition, IApplicationRoot applicationRoot)
+        public SerializedCommandPublisher(IApplicationDefinition applicationDefinition, ICommandBus bus)
         {
             _applicationDefinition = applicationDefinition;
-            _app = applicationRoot;
+            _bus = bus;
         }
 
         public async Task<IExecutionResult> PublishSerilizedCommandAsync(
@@ -50,7 +50,7 @@ namespace EventFly.Commands
             {
                 throw new ArgumentException($"Failed to deserialize command '{name}' v{version}: {ex.Message}", ex);
             }
-            var executionResult = await _app.PublishAsync(command);
+            var executionResult = await _bus.Publish(command);
             return executionResult;
         }
     }

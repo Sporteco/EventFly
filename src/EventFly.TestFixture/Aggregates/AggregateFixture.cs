@@ -22,6 +22,7 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
+using System.Linq;
 using Akka.Actor;
 using Akka.Persistence;
 using Akka.TestKit;
@@ -86,7 +87,9 @@ namespace EventFly.TestFixture.Aggregates
             AggregateId = aggregateId;
             AggregateEventTestProbe = _testKit.CreateTestProbe("aggregate-event-test-probe");
             AggregateReplyTestProbe = _testKit.CreateTestProbe("aggregate-reply-test-probe");
-            AggregateRef = _testKit.Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<ApplicationRoot>().GetAggregateManager(typeof(TIdentity));
+            AggregateRef = _testKit.Sys.GetExtension<ServiceProviderHolder>()
+                .ServiceProvider.GetRequiredService<IDefinitionToManagerRegistry>()
+                .DefinitionToAggregateManager.FirstOrDefault(a => a.Key.IdentityType == (typeof(TIdentity))).Value;
             UsesAggregateManager = false;
             AggregateProps = Props.Empty;
             

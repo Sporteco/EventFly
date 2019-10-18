@@ -63,25 +63,25 @@ namespace EventFly.Tests.IntegrationTests.Aggregates.Sagas
             Sys.EventStream.Subscribe(eventProbe, typeof(DomainEvent<TestSaga, TestSagaId, TestSagaTransactionCompletedEvent>));
             //var aggregateManager = Sys.ActorOf(Props.Create(() => new AggregateManager<TestAggregate,TestAggregateId>()), "test-aggregatemanager");
             //Sys.ActorOf(Props.Create(() => new TestSagaManager(() => new TestSaga(aggregateManager))), "test-sagaaggregatemanager");
-            var appDef = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<IApplicationRoot>();
+            var bus = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<ICommandBus>();
 
 
 
             var senderAggregateId = TestAggregateId.New;
             var senderCreateAggregateCommand = new CreateTestCommand(senderAggregateId, CommandId.New);
-            appDef.PublishAsync(senderCreateAggregateCommand).GetAwaiter().GetResult();
+            bus.Publish(senderCreateAggregateCommand).GetAwaiter().GetResult();
 
             var receiverAggregateId = TestAggregateId.New;
             var receiverCreateAggregateCommand = new CreateTestCommand(receiverAggregateId, CommandId.New);
-            appDef.PublishAsync(receiverCreateAggregateCommand).GetAwaiter().GetResult();
+            bus.Publish(receiverCreateAggregateCommand).GetAwaiter().GetResult();
 
             var senderTestId = TestId.New;
             var senderTest = new Test(senderTestId);
             var nextAggregateCommand = new AddTestCommand(senderAggregateId, CommandId.New, senderTest);
-            appDef.PublishAsync(nextAggregateCommand).GetAwaiter().GetResult();
+            bus.Publish(nextAggregateCommand).GetAwaiter().GetResult();
 
             var sagaStartingCommand = new GiveTestCommand(senderAggregateId, CommandId.New, receiverAggregateId, senderTest);
-            appDef.PublishAsync(sagaStartingCommand).GetAwaiter().GetResult();
+            bus.Publish(sagaStartingCommand).GetAwaiter().GetResult();
 
             eventProbe.
                 ExpectMsg<DomainEvent<TestSaga, TestSagaId, TestSagaStartedEvent>>(
@@ -102,7 +102,7 @@ namespace EventFly.Tests.IntegrationTests.Aggregates.Sagas
         {
             var eventProbe = CreateTestProbe("event-probe");
 
-            var appDef = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<IApplicationRoot>();
+            var bus = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<ICommandBus>();
 
             Sys.EventStream.Subscribe(eventProbe, typeof(DomainEvent<TestAsyncSaga, TestAsyncSagaId, TestAsyncSagaStartedEvent>));
             Sys.EventStream.Subscribe(eventProbe, typeof(DomainEvent<TestAsyncSaga, TestAsyncSagaId, TestAsyncSagaCompletedEvent>));
@@ -112,19 +112,19 @@ namespace EventFly.Tests.IntegrationTests.Aggregates.Sagas
 
             var senderAggregateId = TestAggregateId.New;
             var senderCreateAggregateCommand = new CreateTestCommand(senderAggregateId, CommandId.New);
-            appDef.PublishAsync(senderCreateAggregateCommand).GetAwaiter().GetResult();
+            bus.Publish(senderCreateAggregateCommand).GetAwaiter().GetResult();
 
             var receiverAggregateId = TestAggregateId.New;
             var receiverCreateAggregateCommand = new CreateTestCommand(receiverAggregateId, CommandId.New);
-            appDef.PublishAsync(receiverCreateAggregateCommand).GetAwaiter().GetResult();
+            bus.Publish(receiverCreateAggregateCommand).GetAwaiter().GetResult();
 
             var senderTestId = TestId.New;
             var senderTest = new Test(senderTestId);
             var nextAggregateCommand = new AddTestCommand(senderAggregateId, CommandId.New, senderTest);
-            appDef.PublishAsync(nextAggregateCommand).GetAwaiter().GetResult();
+            bus.Publish(nextAggregateCommand).GetAwaiter().GetResult();
 
             var sagaStartingCommand = new GiveTestCommand(senderAggregateId, CommandId.New, receiverAggregateId, senderTest);
-            appDef.PublishAsync(sagaStartingCommand).GetAwaiter().GetResult();
+            bus.Publish(sagaStartingCommand).GetAwaiter().GetResult();
 
 
 

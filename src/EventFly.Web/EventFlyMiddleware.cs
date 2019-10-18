@@ -36,7 +36,7 @@ namespace EventFly.Web
     public async Task Invoke(HttpContext context)
     {
       var path = context.Request.Path;
-      if (context.Request.Method == "PUT" && path.HasValue)
+      if (context.Request.Method == HttpMethods.Put && path.HasValue)
       {
         var match = CommandPath.Match(path.Value);
         if (match.Success)
@@ -45,7 +45,7 @@ namespace EventFly.Web
           return;
         }
       }
-      if (context.Request.Method == "POST" && path.HasValue)
+      if (context.Request.Method == HttpMethods.Post && path.HasValue)
       {
           var match = QueryPath.Match(path.Value);
           if (match.Success)

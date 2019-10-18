@@ -24,6 +24,7 @@
 using System;
 using System.Threading.Tasks;
 using Akka.Actor;
+using EventFly.Commands;
 using EventFly.Definitions;
 using EventFly.DependencyInjection;
 using EventFly.Examples.Api.Controllers.Models;
@@ -52,7 +53,7 @@ namespace EventFly.Examples.Api.Controllers
             var id = resourceId.GetGuid();
             var command = new CreateResourceCommand(resourceId);
 
-            var result = await System.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<IApplicationRoot>().PublishAsync(command);
+            var result = await System.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<ICommandBus>().Publish(command);
 
             if (result.IsSuccess)
             {

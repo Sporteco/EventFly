@@ -88,9 +88,9 @@ namespace EventFly.Sagas.AggregateSaga
                 command.Metadata.SagaIds = new List<string>(command.Metadata.SagaIds) { Id.Value };
             }
 
-            var app = _scope.ServiceProvider.GetRequiredService<IApplicationRoot>();
+            var bus = _scope.ServiceProvider.GetRequiredService<ICommandBus>();
 
-            return await app.PublishAsync(command);
+            return await bus.Publish(command);
         }
 
         public IAggregateName Name => SagaName;
