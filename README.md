@@ -1,5 +1,5 @@
 
-[![Nuget Package](https://img.shields.io/nuget/v/EventFly.svg?style=flat)](https://www.nuget.org/packages/EventFly/)] [![Build Status](https://dev.azure.com/sporteco/EventFly/_apis/build/status/Sporteco.EventFly?branchName=master)](https://dev.azure.com/sporteco/EventFly/_build/latest?definitionId=25&branchName=master)
+[![Nuget Package](https://img.shields.io/nuget/v/EventFly.svg?style=flat)](https://www.nuget.org/packages/EventFly/) [![Build Status](https://dev.azure.com/sporteco/EventFly/_apis/build/status/Sporteco.EventFly?branchName=master)](https://dev.azure.com/sporteco/EventFly/_build/latest?definitionId=25&branchName=master)
 
 # EventFly
 
@@ -130,9 +130,9 @@ Prerelease feeds and nightly feeds (called alpha feeds in this project). Provide
 ```
 The MIT License (MIT)
 
-Copyright (c) 2018 - 2019 Lutando Ngqakaza
+Copyright (c) 2018 - 2019 Sporteco
 
-https://github.com/Lutando/EventFly
+https://github.com/Sporteco/EventFly
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
