@@ -141,7 +141,18 @@ namespace EventFly.Sagas.AggregateSaga
 
         private IActorRef Spawn(TIdentity sagaId)
         {
-            var saga = Context.ActorOf(Context.DI().Props<TAggregateSaga>(), sagaId.Value);
+            Props props = null;
+            try
+            {
+                props = Context.DI().Props<TAggregateSaga>();
+            }
+            catch (Exception ex) 
+            {
+                Logger.Error(ex, "No DI available at the moment, falling back to default props creation.");
+                props = Props.Create<TAggregateSaga>();
+            }
+
+            var saga = Context.ActorOf(props, sagaId.Value);
             Context.Watch(saga);
             return saga;
         }

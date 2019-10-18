@@ -1,8 +1,10 @@
 ﻿using Akka.Actor;
+using Akka.DI.Core;
 using Akka.Event;
 using EventFly.Aggregates;
 using EventFly.Exceptions;
 using EventFly.Extensions;
+using System;
 
 namespace EventFly.ReadModels
 {
@@ -85,7 +87,18 @@ namespace EventFly.ReadModels
 
         protected virtual IActorRef CreateReadModelHandler(string readModelId)
         {
-            var aggregateRef = Context.ActorOf(Props.Create<TReadModel>(),readModelId);
+            Props props = null;
+            try
+            {
+                props = Context.DI().Props<TReadModel>();
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex, "No DI available at the moment, falling back to default props creation.");
+                props = Props.Create<TReadModel>();
+            }
+
+            var aggregateRef = Context.ActorOf(props, readModelId);
             Context.Watch(aggregateRef);
             return aggregateRef;
         }

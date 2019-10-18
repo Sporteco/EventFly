@@ -69,7 +69,7 @@ namespace EventFly.Aggregates
             _eventDefinitionService = _serviceProvider.ServiceProvider.GetService<IApplicationDefinition>().Events;
             Id = id;
             SetSourceIdHistory(100);
-
+            _scope = _serviceProvider.ServiceProvider.CreateScope();
             this.InitAggregateReceivers();
         }
 
@@ -77,7 +77,7 @@ namespace EventFly.Aggregates
         {
             base.PreStart();
             
-            _scope = _serviceProvider.ServiceProvider.CreateScope();
+            _scope ??= _serviceProvider.ServiceProvider.CreateScope();
             _aggregateStorage = _scope.ServiceProvider.GetRequiredService<IAggregateStorage<TAggregate>>()
                                 ?? throw new InvalidOperationException($"Aggregate [{typeof(TAggregate).PrettyPrint()}] storage not found.");
             State = LoadState();
@@ -114,7 +114,8 @@ namespace EventFly.Aggregates
         {
             try
             {
-                var handler = (TCommandHandler) Activator.CreateInstance(typeof(TCommandHandler));
+                // if no service available in the DI container then fall-back to simple activation!
+                var handler  =_scope.ServiceProvider.GetService<TCommandHandler>() ?? (TCommandHandler)Activator.CreateInstance(typeof(TCommandHandler));
                 Receive(x =>
                 {
                     var result = handler.HandleCommand(this as TAggregate, Context, x);

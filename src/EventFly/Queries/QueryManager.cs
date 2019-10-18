@@ -1,6 +1,8 @@
-﻿using System.Security.Cryptography;
+﻿using System;
+using System.Security.Cryptography;
 using System.Text;
 using Akka.Actor;
+using Akka.DI.Core;
 using Akka.Event;
 using EventFly.Exceptions;
 using Newtonsoft.Json;
@@ -95,7 +97,18 @@ namespace EventFly.Queries
 
         protected virtual IActorRef CreateQueryHandler(string queryId)
         {
-            var aggregateRef = Context.ActorOf(Props.Create<TQueryHandler>(),queryId);
+            Props props = null;
+            try
+            {
+                props = Context.DI().Props<TQueryHandler>();
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex, "No DI available at the moment, falling back to default props creation.");
+                props = Props.Create<TQueryHandler>();
+            }
+
+            var aggregateRef = Context.ActorOf(props, queryId);
             Context.Watch(aggregateRef);
             return aggregateRef;
         }

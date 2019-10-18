@@ -100,6 +100,14 @@ namespace EventFly.DependencyInjection
                 var actorRef = scope.ServiceProvider.GetService(actorType);
                 var actor = actorRef as ActorBase;
 
+                // fall-back
+                if (actorRef == null)
+                {
+                    _system.Log.Warning(
+                        "Actor of [{0}] was not registered in the DI layer, falling back to simple activation via Activator.CreateInstance(typeof({0}))", actorType);
+                    return Activator.CreateInstance(actorType) as ActorBase;
+                }
+
                 _references.Add(actor, scope);
 
                 return actor;
