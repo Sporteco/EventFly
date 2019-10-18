@@ -14,7 +14,6 @@ namespace Akkatecture.Definitions
 {
     public interface IApplicationRoot
     {
-        IApplicationDefinition Definitions { get; }
 
         Task<TExecutionResult> PublishAsync<TExecutionResult, TIdentity>(
           ICommand<TIdentity, TExecutionResult> command)

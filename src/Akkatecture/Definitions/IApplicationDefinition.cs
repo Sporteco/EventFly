@@ -30,6 +30,6 @@ namespace Akkatecture.Definitions
 
         ISnapshotDefinitions Snapshots { get; }
 
-        TDomainDefinition RegisterDomainDefenitions<TDomainDefinition>() where TDomainDefinition : IDomainDefinition;
+        TDomainDefinition RegisterDomainDefenitions<TDomainDefinition>() where TDomainDefinition : IDomainDefinition, new();
     }
 }

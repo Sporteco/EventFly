@@ -10,9 +10,8 @@ namespace Demo.Domain
 {
     public class UserDomain : DomainDefinition
     {
-        public UserDomain(ActorSystem system) : base()
+        public UserDomain()
         {
-
             RegisterAggregate<UserAggregate, UserId>();
             RegisterSaga<TestSaga, TestSagaId>();
             RegisterCommand<CreateUserCommand>();

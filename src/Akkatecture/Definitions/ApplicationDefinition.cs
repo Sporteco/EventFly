@@ -19,7 +19,6 @@ namespace Akkatecture.Definitions
         private readonly JobAggregatedDefinitions _jobs = new JobAggregatedDefinitions();
         private readonly SnapshotAggregatedDefinitions _snapshots = new SnapshotAggregatedDefinitions();
         private readonly CommandAggregatedDefinitions _commands = new CommandAggregatedDefinitions();
-        private readonly ActorSystem _system;
 
         public IReadOnlyCollection<IDomainDefinition> Domains
         {
@@ -93,20 +92,15 @@ namespace Akkatecture.Definitions
             }
         }
 
-        public TDomainDefinition RegisterDomainDefenitions<TDomainDefinition>() where TDomainDefinition : IDomainDefinition
+        public TDomainDefinition RegisterDomainDefenitions<TDomainDefinition>() where TDomainDefinition : IDomainDefinition, new()
         {
-            var instance = (IDomainDefinition)Activator.CreateInstance(typeof(TDomainDefinition), (object)_system);
+            var instance = new TDomainDefinition();
             _domains.Add(instance);
             _events.AddDefinitions(instance.Events);
             _jobs.AddDefinitions(instance.Jobs);
             _snapshots.AddDefinitions(instance.Snapshots);
             _commands.AddDefinitions(instance.Commands);
-            return (TDomainDefinition)instance;
-        }
-
-        public ApplicationDefinition(ActorSystem system)
-        {
-            _system = system;
+            return instance;
         }
     }
 }

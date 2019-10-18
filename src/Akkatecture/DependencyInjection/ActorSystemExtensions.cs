@@ -5,6 +5,7 @@ using Akkatecture.Definitions;
 using Akkatecture.Queries;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Linq;
 
 namespace Akkatecture.DependencyInjection
 {
@@ -73,7 +74,7 @@ namespace Akkatecture.DependencyInjection
         public IServiceCollection Services { get; }
 
         public DomainBuilder<TDomain> RegisterDomainDefinitions<TDomain>()
-            where TDomain : IDomainDefinition
+            where TDomain : IDomainDefinition, new()
         {
             return new DomainBuilder<TDomain>(ApplicationDefinition.RegisterDomainDefenitions<TDomain>(), Services);
         }
@@ -98,8 +99,11 @@ namespace Akkatecture.DependencyInjection
             ActorSystem actorSystem,
             Action<DomainsBuilder> domainsBuilder)
         {
-            var definitions = new ApplicationDefinition(actorSystem);
+            var definitions = new ApplicationDefinition();
 
+            domainsBuilder(
+                new DomainsBuilder(definitions, services)
+            );
 
             services
                 .AddSingleton(actorSystem)
@@ -108,14 +112,19 @@ namespace Akkatecture.DependencyInjection
             services.AddTransient<ISerializedCommandPublisher, SerializedCommandPublisher>();
             services.AddTransient<ISerializedQueryExecutor, SerializedQueryExecutor>();
 
-            domainsBuilder(
-                new DomainsBuilder(definitions, services)
-            );
 
-            var app = new ApplicationRoot(actorSystem, definitions: definitions);
+            var registry = new DefinitionToManagerRegistryBuilder()
+                .UseSystem(actorSystem)
+                    .RegisterAggregateManagers(definitions.Aggregates.Select(a => a.ManagerDefinition).ToList())
+                    .RegisterSagaManagers(definitions.Sagas.Select(a => a.ManagerDefinition).ToList())
+                    .RegisterQueryManagers(definitions.Queries.Select(a => a.ManagerDefinition).ToList())
+                    .RegisterReadModelManagers(definitions.ReadModels.Select(a => a.ManagerDefinition).ToList())
+                .Build();
+
             services
-                .AddSingleton<IApplicationRoot>(app)
-                .AddSingleton(app);
+                .AddSingleton<IDefinitionToManagerRegistry>(registry)
+                .AddSingleton<IApplicationRoot, ApplicationRoot>()
+                .AddSingleton<ApplicationRoot>();
 
             return services;
         }

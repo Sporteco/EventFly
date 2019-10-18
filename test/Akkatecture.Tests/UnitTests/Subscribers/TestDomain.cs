@@ -16,7 +16,7 @@ namespace Akkatecture.Tests.UnitTests.Subscribers
 {
     public class TestDomain : DomainDefinition
     {
-        public TestDomain(ActorSystem system) : base()
+        public TestDomain()
         {
             RegisterAggregate<TestAggregate, TestAggregateId>();
             RegisterSaga<TestSaga, TestSagaId>();
