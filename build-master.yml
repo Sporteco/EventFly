@@ -1,0 +1,26 @@
+jobs:
+- job:
+  pool:
+    vmImage: $(vmImage)
+
+  workspace:
+    clean: all
+
+  steps:
+  - task: UseDotNet@2
+    displayName: 'Use .NET Core sdk'
+    inputs:
+      packageType: 'sdk'
+      version: '3.0.100'
+      installationPath: $(Agent.ToolsDirectory)/dotnet
+
+  - task: DotNetCoreCLI@2
+    displayName: 'Build solution'
+    inputs:
+      command: build
+      arguments: -c $(buildConfiguration)
+
+  - task: DotNetCoreCLI@2
+    displayName: 'Run all tests from solution and publish results'
+    inputs:
+      command: 'test'

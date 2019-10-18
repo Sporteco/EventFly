@@ -1,10 +1,6 @@
 
-<a href="https://EventFly.net/"><img src="https://raw.githubusercontent.com/Lutando/EventFly/master/logo.svg?sanitize=true" width="100%" height="200"></a>
-
-
-| nuget | master | dev | code coverage | chat | who are we? |
-|-------|:------:|:---:|:---:|:----:|-------------|
-| [![Nuget Package](https://img.shields.io/nuget/v/EventFly.svg?style=flat)](https://www.nuget.org/packages/EventFly/) | [![Build status](https://dev.azure.com/lutando/EventFly/_apis/build/status/EventFly%20Master%20CI%20CD?branchName=master)](https://dev.azure.com/lutando/EventFly/_build/latest?definitionId=2) | [![Build status](https://dev.azure.com/lutando/EventFly/_apis/build/status/EventFly%20Development%20CI%20CD?branchName=dev)](https://dev.azure.com/lutando/EventFly/_build/latest?definitionId=1) | [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=Lutando_EventFly&metric=coverage)](https://sonarcloud.io/dashboard?id=Lutando_EventFly) | [![Come Chat](https://img.shields.io/discord/440517592545755137.svg)](https://EventFly.net/community) | [![we are reactive](https://img.shields.io/badge/we_are-reactive-blue.svg?style=flat)](https://www.reactivemanifesto.org/) |
+| nuget | master |
+|-------|:------:|| [![Nuget Package](https://img.shields.io/nuget/v/EventFly.svg?style=flat)](https://www.nuget.org/packages/EventFly/) | [![Build status]([![Build Status](https://dev.azure.com/sporteco/EventFly/_apis/build/status/Sporteco.EventFly?branchName=master)](https://dev.azure.com/sporteco/EventFly/_build/latest?definitionId=25&branchName=master))](https://dev.azure.com/lutando/EventFly/_build/latest?definitionId=2) | [![Build status](https://dev.azure.com/lutando/EventFly/_apis/build/status/EventFly%20Development%20CI%20CD?branchName=dev)](https://dev.azure.com/lutando/EventFly/_build/latest?definitionId=1) | [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=Lutando_EventFly&metric=coverage)](https://sonarcloud.io/dashboard?id=Lutando_EventFly) | [![Come Chat](https://img.shields.io/discord/440517592545755137.svg)](https://EventFly.net/community) | [![we are reactive](https://img.shields.io/badge/we_are-reactive-blue.svg?style=flat)](https://www.reactivemanifesto.org/) |
 
 # EventFly
 

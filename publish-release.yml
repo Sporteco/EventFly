@@ -1,0 +1,18 @@
+jobs:
+- job:
+  pool:
+    vmImage: $(vmImage)
+
+  steps:
+  - checkout: none
+
+  - download: current
+    artifact: 'packages'
+
+  - task: NuGetCommand@2
+    displayName: 'Push NuGet packages'
+    inputs:
+      command: 'push'
+      packagesToPush: '$(Pipeline.Workspace)/packages/*.nupkg'
+      nuGetFeedType: 'external'
+      externalEndpoint: 'sporteco-nuget'

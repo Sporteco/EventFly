@@ -1,0 +1,44 @@
+jobs:
+- job:
+  pool:
+    vmImage: $(vmImage)
+
+  variables:
+    pakagesVersion: '0.3.1'
+
+  workspace:
+    clean: all
+
+  steps:
+  - task: UseDotNet@2
+    displayName: 'Use .NET Core sdk'
+    inputs:
+      packageType: 'sdk'
+      version: '3.0.100'
+      installationPath: $(Agent.ToolsDirectory)/dotnet
+
+  - task: DotNetCoreCLI@2
+    displayName: 'Build solution'
+    inputs:
+      command: build
+      arguments: -c $(buildConfiguration)
+
+  - task: DotNetCoreCLI@2
+    displayName: 'Run all tests from solution and publish results'
+    inputs:
+      command: 'test'
+
+
+  - task: DotNetCoreCLI@2
+    displayName: 'Create NuGet packages'
+    inputs:
+      command: pack
+      packDirectory: '$(Build.ArtifactStagingDirectory)/packages'
+      configuration: '$(buildConfiguration)'
+      versioningScheme: byEnvVar
+      versionEnvVar: pakagesVersion
+      nobuild: true
+      packagesToPack: '**/EventFly.csproj;**/EventFly.Abstractions.csproj;**/EventFly.Web.csproj;**/EventFly.Storages.EntityFramework.csproj;**/EventFly.TestFixture.csproj'
+
+  - publish: '$(Build.ArtifactStagingDirectory)/packages'
+    artifact: 'packages'
