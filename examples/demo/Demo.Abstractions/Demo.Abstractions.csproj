@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\src\Akkatecture.Abstractions\Akkatecture.Abstractions.csproj" />
+    <ProjectReference Include="..\..\..\src\EventFly.Abstractions\EventFly.Abstractions.csproj" />
   </ItemGroup>
 
   <ItemGroup>

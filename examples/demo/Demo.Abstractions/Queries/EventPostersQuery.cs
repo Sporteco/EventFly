@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Akkatecture.Queries;
+using EventFly.Queries;
 using Demo.Predicates;
 
 namespace Demo.Queries

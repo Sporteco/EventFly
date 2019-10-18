@@ -1,6 +1,6 @@
-# Akkatecture Api Example
+# EventFly Api Example
 
-This api example serves as a reference as to how one might want to integrate Akkatecture into their Aspnet Core applications.
+This api example serves as a reference as to how one might want to integrate EventFly into their Aspnet Core applications.
 
 The example also shows the standard way of representing long running operations RESTfully.
 
@@ -10,11 +10,11 @@ When using async workflows in your API it becomes more tricky to coordinate long
 
 ### Startup
 
-One of the main issues with `IActorRef` is that people get confused as to how they can inject them into their Aspnet Core application. There are a few approaches to this, one being creating a static class of many `IActorRef` properties, this is how it has been suggested by [petabridge](https://petabridge.com/blog/akkadotnet-aspnet/). [Other community members](https://havret.io/akka-net-asp-net-core) use a clever way of typing the `IActorRef` by injecting a delegate that returns that `IActorRef`. All these approaches are perfectly fine to be honest, Akkatecture has its own way of doing the same thing. 
+One of the main issues with `IActorRef` is that people get confused as to how they can inject them into their Aspnet Core application. There are a few approaches to this, one being creating a static class of many `IActorRef` properties, this is how it has been suggested by [petabridge](https://petabridge.com/blog/akkadotnet-aspnet/). [Other community members](https://havret.io/akka-net-asp-net-core) use a clever way of typing the `IActorRef` by injecting a delegate that returns that `IActorRef`. All these approaches are perfectly fine to be honest, EventFly has its own way of doing the same thing. 
 
-#### IAkkatectureBuilder and ActorRefProvider<T>
+#### IEventFlyBuilder and ActorRefProvider<T>
 
-Akkatecture has built in a new IServiceCollection extension method to help you inject your akka.net dependancies. In your `ConfigureServices` method do the following.
+EventFly has built in a new IServiceCollection extension method to help you inject your akka.net dependancies. In your `ConfigureServices` method do the following.
 
 ```
 public void ConfigureServices(IServiceCollection services)
@@ -23,7 +23,7 @@ public void ConfigureServices(IServiceCollection services)
     var myActor = actorSystem.ActorOf(Props.Create(() => new MyActor()),"MyActor");
 
     services
-        .AddAkkatecture(actorSystem)
+        .AddEventFly(actorSystem)
         .AddActorReference<MyActor>(myActor);
 
     services

@@ -1,4 +1,4 @@
-﻿using Akkatecture.Queries;
+﻿using EventFly.Queries;
 using Demo.Queries;
 
 namespace Demo.Domain.QueryHandlers

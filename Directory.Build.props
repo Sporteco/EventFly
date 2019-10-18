@@ -5,11 +5,11 @@
     <Copyright>Copyright (c) Lutando Ngqakaza 2018 - 2019</Copyright>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/Lutando/Akkatecture</RepositoryUrl>
+    <RepositoryUrl>https://github.com/Lutando/EventFly</RepositoryUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <NeutralLanguage>en-GB</NeutralLanguage>
     <PackageReleaseNotes>Externally Updated</PackageReleaseNotes>
-    <PackageIconUrl>https://akkatecture.net/logos/logo-512.png</PackageIconUrl>
+    <PackageIconUrl>https://EventFly.net/logos/logo-512.png</PackageIconUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
   </PropertyGroup>

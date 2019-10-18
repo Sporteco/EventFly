@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <ProjectGuid>{EB7AAC0F-4961-4C91-96F2-88D4C790E02F}</ProjectGuid>
+    <SonarQubeExclude>true</SonarQubeExclude>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>$(NetCoreAppVersion)</TargetFramework>
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+    <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
+    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <Title>EventFly.Examples.ClusterClient</Title>
+    <Description>
+      The cluster client application for EventFly.Examples.Worker.
+    </Description>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\simple\EventFly.Examples.Domain\EventFly.Examples.Domain.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <None Update="client.conf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  
+</Project>

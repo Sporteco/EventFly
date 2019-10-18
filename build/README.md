@@ -1,6 +1,6 @@
 # Azure Pipelines Build Definitions
 
-Akkatecture is built in azure pipelines. A description of each of the build pipeline definitions can be found below.
+EventFly is built in azure pipelines. A description of each of the build pipeline definitions can be found below.
 
 **azure-pipelines-development-ci-cd.yaml** - Runs the pipeline for development builds that go into an internal feed. Packages are alpha.
 

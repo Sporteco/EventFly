@@ -129,7 +129,7 @@ let canGithubRelease = hasEnv "GITHUB_PAT"
 let runtimeIds = dict[Windows, "win-x64"; Linux, "linux-x64"; OSX, "osx-x64"]
 let runtimeId = runtimeIds.Item(platform);
 let configuration = DotNet.BuildConfiguration.Release
-let solution = IO.Path.GetFullPath(string "../Akkatecture.sln")
+let solution = IO.Path.GetFullPath(string "../EventFly.sln")
 let sourceDirectory =  IO.Path.GetFullPath(string "../")
 let sonarqubeDirectory = sourceDirectory @@ ".sonarqube"
 let toolsDirectory = sourceDirectory @@ "build" @@ "tools"
@@ -138,7 +138,7 @@ let coverageResults = sourceDirectory @@ "coverageresults"
 let multiNodeLogs = sourceDirectory @@ "multinodelogs"
 let multiNodeTestScript = sourceDirectory @@ "build" @@ "Run-MultiNodeTests.ps1"
 let feed = lazy(env "FEEDVERSION")
-let internalCredential = lazy ({ Endpoint = sprintf "https://pkgs.dev.azure.com/lutando/Akkatecture/_packaging/%s/nuget/v3/index.json" feed.Value; Username = "lutando"; Password = env "INTERNAL_FEED_PAT"})
+let internalCredential = lazy ({ Endpoint = sprintf "https://pkgs.dev.azure.com/lutando/EventFly/_packaging/%s/nuget/v3/index.json" feed.Value; Username = "lutando"; Password = env "INTERNAL_FEED_PAT"})
 let nugetCredential = lazy ({ Endpoint = "https://api.nuget.org/v3/index.json"; Username = "lutando"; Password = env "NUGET_FEED_PAT"})
 let sonarQubeKey =  lazy (env "SONARCLOUD_TOKEN")
 let githubKey = lazy (env "GITHUB_PAT")
@@ -214,8 +214,8 @@ Target.create "SonarQubeStart" (fun _ ->
         let sonarQubeOptions (defaults:SonarQube.SonarQubeParams) =
             {defaults with
                 ToolsPath = toolsDirectory </> "dotnet-sonarscanner"
-                Key = "Lutando_Akkatecture"
-                Name = "Akkatecture"
+                Key = "Lutando_EventFly"
+                Name = "EventFly"
                 Version = buildNumber
                 Organization = Some "lutando-github"
                 Settings = [
@@ -235,7 +235,7 @@ Target.create "Build" (fun _ ->
 
     let projects = 
         !! "src/**/*.*proj"
-        ++ "test/Akkatecture.Tests/Akkatecture.Tests.csproj"
+        ++ "test/EventFly.Tests/EventFly.Tests.csproj"
 
     let buildOptions (defaults:DotNet.BuildOptions) =
         { defaults with
@@ -259,7 +259,7 @@ Target.create "Build" (fun _ ->
 Target.create "Test" (fun _ ->
     Trace.log " --- Unit Tests --- "
 
-    let projects = !! "test/Akkatecture.Tests/Akkatecture.Tests.csproj"
+    let projects = !! "test/EventFly.Tests/EventFly.Tests.csproj"
     let coverletOutput = coverageResults </> "unit.opencover.xml"
     let testOptions (defaults:DotNet.TestOptions) =
         { defaults with
@@ -269,7 +269,7 @@ Target.create "Test" (fun _ ->
                         "CollectCoverage", "true";
                         "CoverletOutputFormat", "opencover"
                         "CoverletOutput", coverletOutput;
-                        "Exclude", @"[xunit*]*,[Akkatecture.TestHelpers]*,[Akkatecture.Tests*]*,[*TestRunner*]*"] }
+                        "Exclude", @"[xunit*]*,[EventFly.TestHelpers]*,[EventFly.Tests*]*,[*TestRunner*]*"] }
             Configuration = configuration
             NoBuild = true}
 
@@ -281,7 +281,7 @@ Target.create "MultiNodeTest" (fun _ ->
 
     installCoverlet toolsDirectory
 
-    let multiNodeTestProjects = !! "test/Akkatecture.Tests.MultiNode/Akkatecture.Tests.MultiNode.csproj"
+    let multiNodeTestProjects = !! "test/EventFly.Tests.MultiNode/EventFly.Tests.MultiNode.csproj"
 
     let multiNodeTestbuildOptions (defaults:DotNet.BuildOptions) =
         { defaults with
@@ -290,8 +290,8 @@ Target.create "MultiNodeTest" (fun _ ->
     multiNodeTestProjects |> Seq.iter (DotNet.build multiNodeTestbuildOptions)
 
     let nodeTestRunnerProjects = 
-        !! "test/Akkatecture.NodeTestRunner/Akkatecture.NodeTestRunner.csproj"
-        ++ "test/Akkatecture.MultiNodeTestRunner/Akkatecture.MultiNodeTestRunner.csproj"
+        !! "test/EventFly.NodeTestRunner/EventFly.NodeTestRunner.csproj"
+        ++ "test/EventFly.MultiNodeTestRunner/EventFly.MultiNodeTestRunner.csproj"
 
     let multiNodeRunnerbuildOptions (defaults:DotNet.BuildOptions) =
         { defaults with
@@ -300,10 +300,10 @@ Target.create "MultiNodeTest" (fun _ ->
 
     nodeTestRunnerProjects |> Seq.iter (DotNet.build multiNodeRunnerbuildOptions)
 
-    let testRunnerBinaryFolder = sourceDirectory @@ "test" @@ "Akkatecture.MultiNodeTestRunner" @@ "bin" @@ configuration.ToString() @@ "netcoreapp2.2" @@ runtimeId
+    let testRunnerBinaryFolder = sourceDirectory @@ "test" @@ "EventFly.MultiNodeTestRunner" @@ "bin" @@ configuration.ToString() @@ "netcoreapp2.2" @@ runtimeId
     let testRunnerDll = testRunnerBinaryFolder @@ "Akka.MultiNodeTestRunner.dll"
-    let testsBinaryFolder = sourceDirectory @@ "test" @@ "Akkatecture.Tests.MultiNode" @@ "bin" @@ configuration.ToString() @@ "netcoreapp2.2"
-    let testsDll = testsBinaryFolder @@ "Akkatecture.Tests.MultiNode.dll"
+    let testsBinaryFolder = sourceDirectory @@ "test" @@ "EventFly.Tests.MultiNode" @@ "bin" @@ configuration.ToString() @@ "netcoreapp2.2"
+    let testsDll = testsBinaryFolder @@ "EventFly.Tests.MultiNode.dll"
     let target = testRunnerBinaryFolder @@ "Newtonsoft.Json.dll"
     let file = testsBinaryFolder @@ "Newtonsoft.Json.dll"
     let results =(coverageResults </> "multinode.opencover.xml")
@@ -315,7 +315,7 @@ Target.create "MultiNodeTest" (fun _ ->
         File.delete multiNodeTestScript
     
     let coverletCommand = toolsDirectory </> "coverlet"
-    let coverletArgs = sprintf "'%s' --target='dotnet' --targetargs='%s %s -Dmultinode.platform=netcore -Dmultinode.output-directory=%s' --format='opencover' --include='[Akkatecture]' --include='[Akkatecture.Clustering]' --exclude='[xunit*]*' --exclude='[Akka.NodeTestRunner*]*' --exclude='[Akkatecture.NodeTestRunner*]*' --verbosity='detailed' --output='%s' --merge-with='%s'" testRunnerDll testRunnerDll testsDll multiNodeLogs results mergable
+    let coverletArgs = sprintf "'%s' --target='dotnet' --targetargs='%s %s -Dmultinode.platform=netcore -Dmultinode.output-directory=%s' --format='opencover' --include='[EventFly]' --include='[EventFly.Clustering]' --exclude='[xunit*]*' --exclude='[Akka.NodeTestRunner*]*' --exclude='[EventFly.NodeTestRunner*]*' --verbosity='detailed' --output='%s' --merge-with='%s'" testRunnerDll testRunnerDll testsDll multiNodeLogs results mergable
     let expression = sprintf "Invoke-Expression \"%s %s\"" coverletCommand coverletArgs
     
     Trace.log expression
@@ -337,8 +337,8 @@ Target.create "SonarQubeEnd" (fun _ ->
         let sonarQubeOptions (defaults:SonarQube.SonarQubeParams) =
             {defaults with
                 ToolsPath = toolsDirectory </> "dotnet-sonarscanner"
-                Key = "Lutando_Akkatecture"
-                Name = "Akkatecture"
+                Key = "Lutando_EventFly"
+                Name = "EventFly"
                 Version = buildNumber
                 Settings = [
                     sprintf "sonar.login=%s" sonarQubeKey.Value;]}
@@ -397,10 +397,10 @@ Target.create "GitHubRelease" (fun _ ->
     if canGithubRelease then
         let releaseNotes = 
             seq {
-                yield "*see the [changelog](https://github.com/Lutando/Akkatecture/blob/dev/CHANGELOG.md) for all other release information*"
+                yield "*see the [changelog](https://github.com/Lutando/EventFly/blob/dev/CHANGELOG.md) for all other release information*"
             } 
         GitHub.createClientWithToken githubKey.Value
-        |> GitHub.draftNewRelease "Lutando" "Akkatecture" buildNumber false releaseNotes
+        |> GitHub.draftNewRelease "Lutando" "EventFly" buildNumber false releaseNotes
         |> GitHub.publishDraft
         |> Async.RunSynchronously
 

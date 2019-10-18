@@ -1,5 +1,5 @@
-﻿using Akkatecture.Core;
-using Akkatecture.ValueObjects;
+﻿using EventFly.Core;
+using EventFly.ValueObjects;
 using Newtonsoft.Json;
 
 namespace Demo

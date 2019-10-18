@@ -1,4 +1,4 @@
-﻿using Akkatecture.Aggregates;
+﻿using EventFly.Aggregates;
 using Demo.ValueObjects;
 
 namespace Demo.Events

@@ -1,5 +1,5 @@
 using Akka.Actor;
-using Akkatecture.Definitions;
+using EventFly.Definitions;
 using Demo.Commands;
 using Demo.Domain.Aggregates;
 using Demo.Domain.QueryHandlers;

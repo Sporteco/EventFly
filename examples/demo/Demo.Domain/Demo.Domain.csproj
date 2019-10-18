@@ -12,8 +12,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\src\Akkatecture.Storages.EntityFramework\Akkatecture.Storages.EntityFramework.csproj" />
-    <ProjectReference Include="..\..\..\src\Akkatecture\Akkatecture.csproj" />
+    <ProjectReference Include="..\..\..\src\EventFly.Storages.EntityFramework\EventFly.Storages.EntityFramework.csproj" />
+    <ProjectReference Include="..\..\..\src\EventFly\EventFly.csproj" />
     <ProjectReference Include="..\Demo.Abstractions\Demo.Abstractions.csproj" />
   </ItemGroup>
 

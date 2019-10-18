@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <ProjectGuid>{D9461EE2-175F-4F2B-AD75-FB93C09ABCDE}</ProjectGuid>
+    <SonarQubeExclude>true</SonarQubeExclude>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TargetFramework>$(NetCoreAppVersion)</TargetFramework>
+    <IsPackable>false</IsPackable>
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+    <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
+    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <Title>EventFly.TestHelpers</Title>
+    <Description>
+        EventFly.TestHelpers project holds all the necassary helper classes and
+        methods to make the actual tests easier to maintain and read.
+    </Description>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\EventFly.Abstractions\EventFly.Abstractions.csproj" />
+    <ProjectReference Include="..\..\src\EventFly.TestFixture\EventFly.TestFixture.csproj" />
+    <ProjectReference Include="..\..\src\EventFly\EventFly.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="Akka.TestKit" Version="$(AkkaTestKitVersion)" />
+  </ItemGroup>
+  
+</Project>

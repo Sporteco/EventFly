@@ -1,4 +1,4 @@
-# Akkatecture Release CI CD pipeline definition
+# EventFly Release CI CD pipeline definition
 # This definition is responsible for building and testing
 # the project in the master branch. It pushes package
 # artefacts to a public nuget feed as production packages.
@@ -26,40 +26,40 @@ jobs:
     steps:
     - template: templates/fake-template.yaml
       parameters:
-        displayName: 'Restore [Akkatecture]'
+        displayName: 'Restore [EventFly]'
         target: Restore
 
     - template: templates/fake-template.yaml
       parameters:
-        displayName: 'Prepare Analysis [Akkatecture]'
+        displayName: 'Prepare Analysis [EventFly]'
         target: SonarQubeStart
 
     - template: templates/fake-template.yaml
       parameters:
-        displayName: 'Build [Akkatecture]'
+        displayName: 'Build [EventFly]'
         target: Build
 
     - template: templates/fake-template.yaml
       parameters:
-        displayName: 'Test [Akkatecture.Tests]'
+        displayName: 'Test [EventFly.Tests]'
         target: Test
 
     - template: templates/fake-template.yaml
       parameters:
-        displayName: 'Test [Akkatecture.Tests.MultiNode]'
+        displayName: 'Test [EventFly.Tests.MultiNode]'
         target: MultiNodeTest
 
     - template: templates/fake-template.yaml
       parameters:
-        displayName: 'Run Analysis [Akkatecture]'
+        displayName: 'Run Analysis [EventFly]'
         target: SonarQubeEnd
 
     - template: templates/fake-template.yaml
       parameters:
-        displayName: 'Push Packages [Akkatecture]'
+        displayName: 'Push Packages [EventFly]'
         target: Push
 
     - template: templates/fake-template.yaml
       parameters:
-        displayName: 'GitHub Release [Akkatecture]'
+        displayName: 'GitHub Release [EventFly]'
         target: GitHubRelease

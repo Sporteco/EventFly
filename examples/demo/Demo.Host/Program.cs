@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Akka.Actor;
-using Akkatecture.DependencyInjection;
+using EventFly.DependencyInjection;
 using Demo.Commands;
 using Demo.Db;
 using Demo.Domain;
@@ -9,7 +9,7 @@ using Demo.Queries;
 using Demo.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Akkatecture.Definitions;
+using EventFly.Definitions;
 using Demo.Dependencies;
 
 namespace Demo.Host
@@ -27,7 +27,7 @@ namespace Demo.Host
             var serviceCollection =
                 new ServiceCollection()
                     .AddSingleton("AAAA")
-                    .AddAkkatecture(
+                    .AddEventFly(
                         system,
                         domainBuilder =>
                         {

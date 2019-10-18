@@ -25,7 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - xUnit2 TestOutputHelper logging.
-- Akkatecture.Clustering Multi Node Tests.
+- EventFly.Clustering Multi Node Tests.
 - FAKE build system.
 - Delete Previous Snapshot .
 - CHANGELOG.md.
@@ -56,7 +56,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.4.3] - 2019-04-28
 
 ### Added
-- Akkatecture.TestFixture, a project for making testing your domain easier.
+- EventFly.TestFixture, a project for making testing your domain easier.
 
 ### Changed
 - Akka versions from 1.3.11 to 1.3.12
@@ -132,7 +132,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.3] - 2018-05-23
 
 ### Fixed
-- [Issue 21](https://github.com/Lutando/Akkatecture/issues/21) - Repository instantiated with a null parameter.
+- [Issue 21](https://github.com/Lutando/EventFly/issues/21) - Repository instantiated with a null parameter.
 
 ## [0.1.2] - 2018-05-20
 
@@ -149,7 +149,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.1] - 2018-05-14
 
 ### Changed
-- Explanation of akkatecture's features.
+- Explanation of EventFly's features.
 - Cluster example README.md.
 - Simple example README.md.
 
@@ -172,19 +172,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - MIT License.
 - Project logo.
 
-[Unreleased]: https://github.com/Lutando/Akkatecture/compare/0.5.0...HEAD
-[0.5.0]: https://github.com/Lutando/Akkatecture/compare/0.4.6...0.5.0
-[0.4.6]: https://github.com/Lutando/Akkatecture/compare/0.4.5...0.4.6
-[0.4.5]: https://github.com/Lutando/Akkatecture/compare/0.4.4...0.4.5
-[0.4.4]: https://github.com/Lutando/Akkatecture/compare/0.4.3...0.4.4
-[0.4.3]: https://github.com/Lutando/Akkatecture/compare/0.4.2...0.4.3
-[0.4.2]: https://github.com/Lutando/Akkatecture/compare/0.4.1...0.4.2
-[0.4.1]: https://github.com/Lutando/Akkatecture/compare/0.4.0...0.4.1
-[0.4.0]: https://github.com/Lutando/Akkatecture/compare/0.3.0...0.4.0
-[0.3.0]: https://github.com/Lutando/Akkatecture/compare/0.1.5...0.3.0
-[0.1.5]: https://github.com/Lutando/Akkatecture/compare/0.1.4...0.1.5
-[0.1.4]: https://github.com/Lutando/Akkatecture/compare/0.1.3...0.1.4
-[0.1.3]: https://github.com/Lutando/Akkatecture/compare/0.1.2...0.1.3
-[0.1.2]: https://github.com/Lutando/Akkatecture/compare/0.1.1...0.1.2
-[0.1.1]: https://github.com/Lutando/Akkatecture/compare/0.0.25...0.1.1
-[0.0.25]: https://github.com/Lutando/Akkatecture/releases/tag/0.0.25
+[Unreleased]: https://github.com/Lutando/EventFly/compare/0.5.0...HEAD
+[0.5.0]: https://github.com/Lutando/EventFly/compare/0.4.6...0.5.0
+[0.4.6]: https://github.com/Lutando/EventFly/compare/0.4.5...0.4.6
+[0.4.5]: https://github.com/Lutando/EventFly/compare/0.4.4...0.4.5
+[0.4.4]: https://github.com/Lutando/EventFly/compare/0.4.3...0.4.4
+[0.4.3]: https://github.com/Lutando/EventFly/compare/0.4.2...0.4.3
+[0.4.2]: https://github.com/Lutando/EventFly/compare/0.4.1...0.4.2
+[0.4.1]: https://github.com/Lutando/EventFly/compare/0.4.0...0.4.1
+[0.4.0]: https://github.com/Lutando/EventFly/compare/0.3.0...0.4.0
+[0.3.0]: https://github.com/Lutando/EventFly/compare/0.1.5...0.3.0
+[0.1.5]: https://github.com/Lutando/EventFly/compare/0.1.4...0.1.5
+[0.1.4]: https://github.com/Lutando/EventFly/compare/0.1.3...0.1.4
+[0.1.3]: https://github.com/Lutando/EventFly/compare/0.1.2...0.1.3
+[0.1.2]: https://github.com/Lutando/EventFly/compare/0.1.1...0.1.2
+[0.1.1]: https://github.com/Lutando/EventFly/compare/0.0.25...0.1.1
+[0.0.25]: https://github.com/Lutando/EventFly/releases/tag/0.0.25

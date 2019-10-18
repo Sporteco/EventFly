@@ -1,6 +1,6 @@
 ﻿using System;
-using Akkatecture.Aggregates;
-using Akkatecture.ReadModels;
+using EventFly.Aggregates;
+using EventFly.ReadModels;
 using Demo.Events;
 
 namespace Demo.Domain.ReadModels

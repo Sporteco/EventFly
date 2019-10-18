@@ -1,14 +1,15 @@
 ﻿using Akka.Actor;
-using Akkatecture;
-using Akkatecture.Aggregates;
-using Akkatecture.AggregateStorages;
-using Akkatecture.Definitions;
-using Akkatecture.DependencyInjection;
-using Akkatecture.Storages.EntityFramework;
-using Akkatecture.Web;
-using Akkatecture.Web.GraphQL;
-using Akkatecture.Web.Swagger;
+using EventFly;
+using EventFly.Aggregates;
+using EventFly.AggregateStorages;
+using EventFly.Definitions;
+using EventFly.DependencyInjection;
+using EventFly.Storages.EntityFramework;
+using EventFly.Web;
+using EventFly.Web.GraphQL;
+using EventFly.Web.Swagger;
 using Demo.Db;
+using Demo.Dependencies;
 using Demo.Domain;
 using Demo.Domain.Aggregates;
 using Demo.Predicates;
@@ -40,9 +41,10 @@ namespace Demo.Web
                     .AddScoped<TestSaga>()
                     .AddScoped<IAggregateStorage<UserAggregate>, EntityFrameworkStorage<UserAggregate, TestDbContext>>()
                     .AddScoped<EntityFrameworkStorage<UserAggregate, TestDbContext>>()
-                    .AddAkkatecture(
+                    .AddEventFly(
                         system,
-                        b => b.RegisterDomainDefinitions<UserDomain>()
+                        b => 
+                            b.RegisterDomainDefinitions<UserDomain>().WithDependencies<UserDomainDependencies>()
                     );
 
             // DO not inejct
@@ -50,8 +52,8 @@ namespace Demo.Web
 
             var applicationDef = system.GetExtension<ServiceProviderHolder>();
 
-            services.AddAkkatectureGraphQl(applicationDef.ServiceProvider.GetService<IApplicationDefinition>());
-            services.AddAkkatectureSwagger();
+            services.AddEventFlyGraphQl(applicationDef.ServiceProvider.GetService<IApplicationDefinition>());
+            services.AddEventFlySwagger();
 
             services.AddTransient<EnumerationGraphType<StringOperator>>();
 
@@ -61,11 +63,10 @@ namespace Demo.Web
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            app.UseMiddleware<AkkatectureMiddleware>();
+            app.UseMiddleware<EventFlyMiddleware>();
 
-            app.UseAkkatectureGraphQl();
-            app.UseAkkatectureSwagger();
-
+            app.UseEventFlyGraphQl();
+            app.UseEventFlySwagger();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

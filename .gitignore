@@ -255,7 +255,7 @@ paket-files/
 # JetBrains Rider
 .idea/
 *.sln.iml
-.idea/.idea.Akkatecture/.idea/contentModel.xml
+.idea/.idea.EventFly/.idea/contentModel.xml
 
 # CodeRush
 .cr/

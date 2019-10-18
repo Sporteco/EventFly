@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel;
-using Akkatecture.Commands;
+using EventFly.Commands;
 using Demo.ValueObjects;
 
 namespace Demo.Commands

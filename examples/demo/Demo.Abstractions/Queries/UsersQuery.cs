@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
-using Akkatecture.Queries;
+using EventFly.Queries;
 
 namespace Demo.Queries
 {

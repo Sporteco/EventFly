@@ -1,6 +1,6 @@
 parameters:
   target: 'Clean'
-  displayName: 'Restore [Akkatecture]'
+  displayName: 'Restore [EventFly]'
 
 steps:
   - task: isaacabraham.fsharp-helpers-extension.a2dadf20-1a83-4220-a4ee-b52f6c77f3cf.FAKE5@1

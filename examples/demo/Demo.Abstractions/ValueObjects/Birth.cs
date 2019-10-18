@@ -1,5 +1,5 @@
 ﻿using System;
-using Akkatecture.ValueObjects;
+using EventFly.ValueObjects;
 
 namespace Demo.ValueObjects
 {

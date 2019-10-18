@@ -1,6 +1,6 @@
 ﻿using System.Data.SqlClient;
 using System.Linq;
-using Akkatecture.Queries;
+using EventFly.Queries;
 using Dapper;
 using Demo.Queries;
 using Microsoft.Data.Sqlite;

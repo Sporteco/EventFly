@@ -1,4 +1,4 @@
-# Akkatecture Development CI CD pipeline definition
+# EventFly Development CI CD pipeline definition
 # This definition is responsible for building and testing
 # the project within the context of pull requests. as a
 # static build it only builds and tests the project.
@@ -39,20 +39,20 @@ jobs:
     steps:
     - template: templates/fake-template.yaml
       parameters:
-        displayName: 'Restore [Akkatecture]'
+        displayName: 'Restore [EventFly]'
         target: Restore
 
     - template: templates/fake-template.yaml
       parameters:
-        displayName: 'Build [Akkatecture]'
+        displayName: 'Build [EventFly]'
         target: Build
 
     - template: templates/fake-template.yaml
       parameters:
-        displayName: 'Test [Akkatecture.Tests]'
+        displayName: 'Test [EventFly.Tests]'
         target: Test
 
     - template: templates/fake-template.yaml
       parameters:
-        displayName: 'Test [Akkatecture.Tests.MultiNode]'
+        displayName: 'Test [EventFly.Tests.MultiNode]'
         target: MultiNodeTest

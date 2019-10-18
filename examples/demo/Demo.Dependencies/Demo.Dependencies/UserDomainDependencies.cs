@@ -1,6 +1,6 @@
-﻿using Akkatecture.AggregateStorages;
-using Akkatecture.Definitions;
-using Akkatecture.Storages.EntityFramework;
+﻿using EventFly.AggregateStorages;
+using EventFly.Definitions;
+using EventFly.Storages.EntityFramework;
 using Demo.Db;
 using Demo.Domain;
 using Demo.Domain.Aggregates;
