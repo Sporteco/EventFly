@@ -515,7 +515,7 @@ namespace EventFly.Aggregates
                 var handler = (TCommandHandler) Activator.CreateInstance(typeof(TCommandHandler));
                 Command(x =>
                 {
-                    var result = handler.HandleCommand(this as TAggregate, Context, x);
+                    var result = handler.Handle(this as TAggregate, Context, x);
                     Context.Sender.Tell(result);
                 },shouldHandle);
             }

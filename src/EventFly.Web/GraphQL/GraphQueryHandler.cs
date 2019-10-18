@@ -11,6 +11,7 @@ using EventFly.Queries;
 using GraphQL.Resolvers;
 using GraphQL.Types;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace EventFly.Web.GraphQL
 {

@@ -36,7 +36,6 @@ namespace Demo.Queries
     public class UsersQuery : IQuery<UsersResult>
     {
         [Description("Искомое слово в имени пользователя")]
-
-        public string NameFilter { get; private set; }
+        public string NameFilter { get; set; }
     }
 }

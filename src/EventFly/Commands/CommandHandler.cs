@@ -39,7 +39,7 @@ namespace EventFly.Commands
         where TCommand : ICommand<TIdentity,TResult>
         where TResult : IExecutionResult
     {
-        public abstract TResult HandleCommand(TAggregate aggregate,IActorContext context,TCommand command);
+        public abstract TResult Handle(TAggregate aggregate,IActorContext context,TCommand command);
     }
 
     public abstract class CommandHandler<TAggregate, TIdentity,TCommand> : CommandHandler<TAggregate, TIdentity,IExecutionResult,TCommand>

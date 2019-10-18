@@ -17,10 +17,10 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace EventFly.Aggregates
 {
-     public abstract class AggregateRoot<TAggregate, TIdentity, TAggregateState> : ReceiveActor, IAggregateRoot<TIdentity>
-        where TAggregate : AggregateRoot<TAggregate, TIdentity, TAggregateState>
-        where TAggregateState : class, IAggregateState<TIdentity>, new ()
-        where TIdentity : IIdentity
+    public abstract class AggregateRoot<TAggregate, TIdentity, TAggregateState> : ReceiveActor, IAggregateRoot<TIdentity>
+       where TAggregate : AggregateRoot<TAggregate, TIdentity, TAggregateState>
+       where TAggregateState : class, IAggregateState<TIdentity>, new()
+       where TIdentity : IIdentity
     {
 
         private readonly IEventDefinitions _eventDefinitionService;
@@ -45,7 +45,7 @@ namespace EventFly.Aggregates
             _serviceProvider = Context.System.GetExtension<ServiceProviderHolder>();
             if (id == null)
                 throw new ArgumentNullException(nameof(id));
-            
+
             if ((this as TAggregate) == null)
             {
                 throw new InvalidOperationException(
@@ -58,9 +58,9 @@ namespace EventFly.Aggregates
                 {
                     State = new TAggregateState();
                 }
-                catch(Exception exception)
+                catch (Exception exception)
                 {
-                    Context.GetLogger().Error(exception,"Unable to activate AggregateState of Type={0} for AggregateRoot of Name={1}.",typeof(TAggregateState).PrettyPrint(), Name);
+                    Context.GetLogger().Error(exception, "Unable to activate AggregateState of Type={0} for AggregateRoot of Name={1}.", typeof(TAggregateState).PrettyPrint(), Name);
                 }
 
             }
@@ -69,14 +69,13 @@ namespace EventFly.Aggregates
             _eventDefinitionService = _serviceProvider.ServiceProvider.GetService<IApplicationDefinition>().Events;
             Id = id;
             SetSourceIdHistory(100);
-            _scope = _serviceProvider.ServiceProvider.CreateScope();
             this.InitAggregateReceivers();
         }
 
         protected override void PreStart()
         {
             base.PreStart();
-            
+
             _scope ??= _serviceProvider.ServiceProvider.CreateScope();
             _aggregateStorage = _scope.ServiceProvider.GetRequiredService<IAggregateStorage<TAggregate>>()
                                 ?? throw new InvalidOperationException($"Aggregate [{typeof(TAggregate).PrettyPrint()}] storage not found.");
@@ -86,13 +85,13 @@ namespace EventFly.Aggregates
         protected override void PostStop()
         {
             base.PostStop();
-            _scope.Dispose();
+            _scope?.Dispose();
         }
 
 
         protected virtual TAggregateState LoadState()
         {
-            return _aggregateStorage.LoadState<TAggregateState, TIdentity>(Id.Value) ?? new TAggregateState{ Id = Id.Value };
+            return _aggregateStorage.LoadState<TAggregateState, TIdentity>(Id.Value) ?? new TAggregateState { Id = Id.Value };
         }
 
         protected virtual void SaveState()
@@ -115,21 +114,19 @@ namespace EventFly.Aggregates
             try
             {
                 // if no service available in the DI container then fall-back to simple activation!
-                var handler  =_scope.ServiceProvider.GetService<TCommandHandler>() ?? (TCommandHandler)Activator.CreateInstance(typeof(TCommandHandler));
                 Receive(x =>
                 {
-                    var result = handler.HandleCommand(this as TAggregate, Context, x);
+                    var handler = _scope.ServiceProvider.GetService<TCommandHandler>() ?? (TCommandHandler)Activator.CreateInstance(typeof(TCommandHandler));
+                    var result = handler.Handle(this as TAggregate, Context, x);
                     Context.Sender.Tell(result);
 
                 }, shouldHandle);
             }
             catch (Exception exception)
             {
-                Log.Error(exception,"Unable to activate CommandHandler of Type={0} for Aggregate of Type={1}.",typeof(TCommandHandler).PrettyPrint(), typeof(TAggregate).PrettyPrint());
+                Log.Error(exception, "Unable to activate CommandHandler of Type={0} for Aggregate of Type={1}.", typeof(TCommandHandler).PrettyPrint(), typeof(TAggregate).PrettyPrint());
             }
-
         }
-
 
         protected void SetSourceIdHistory(int count)
         {
@@ -181,41 +178,40 @@ namespace EventFly.Aggregates
                 EventName = eventDefinition.Name,
                 EventVersion = eventDefinition.Version
             };
-            
+
             eventMetadata.AddValue(MetadataKeys.TimestampEpoch, now.ToUnixTime().ToString());
             if (metadata != null)
             {
                 eventMetadata.AddRange(metadata);
             }
-            
-            var committedEvent = new CommittedEvent<TAggregate, TIdentity, TAggregateEvent>(Id, aggregateEvent,eventMetadata,now,aggregateSequenceNumber);
+
+            var committedEvent = new CommittedEvent<TAggregate, TIdentity, TAggregateEvent>(Id, aggregateEvent, eventMetadata, now, aggregateSequenceNumber);
             return committedEvent;
         }
 
-        protected void  ApplyCommittedEvent<TAggregateEvent>(ICommittedEvent<TAggregate, TIdentity, TAggregateEvent> committedEvent)
+        protected void ApplyCommittedEvent<TAggregateEvent>(ICommittedEvent<TAggregate, TIdentity, TAggregateEvent> committedEvent)
             where TAggregateEvent : class, IAggregateEvent<TIdentity>
         {
             Log.Info("Aggregate of Name={0}, and Id={1}; committed and applied an AggregateEvent of Type={2}.", Name, Id, typeof(TAggregateEvent).PrettyPrint());
 
-            var domainEvent = new DomainEvent<TAggregate,TIdentity,TAggregateEvent>(Id, committedEvent.AggregateEvent,committedEvent.EventMetadata,committedEvent.Timestamp,Version);
+            var domainEvent = new DomainEvent<TAggregate, TIdentity, TAggregateEvent>(Id, committedEvent.AggregateEvent, committedEvent.EventMetadata, committedEvent.Timestamp, Version);
 
             Publish(domainEvent);
             ReplyIfAvailable();
-            
         }
 
 
         protected virtual void Publish<TEvent>(TEvent aggregateEvent)
         {
             Context.System.EventStream.Publish(aggregateEvent);
-            Log.Info("Aggregate of Name={0}, and Id={1}; published DomainEvent of Type={2}.",Name, Id, typeof(TEvent).PrettyPrint());
+            Log.Info("Aggregate of Name={0}, and Id={1}; published DomainEvent of Type={2}.", Name, Id, typeof(TEvent).PrettyPrint());
         }
 
         protected override bool AroundReceive(Receive receive, object message)
         {
             if (message is Command<TIdentity> command)
             {
-                if(IsNew || Id.Equals(command.AggregateId))
+                if (IsNew || Id.Equals(command.AggregateId))
                     PinnedCommand = command;
             }
 
@@ -227,15 +223,15 @@ namespace EventFly.Aggregates
 
         protected virtual void Reply(object replyMessage)
         {
-            if(!Sender.IsNobody())
+            if (!Sender.IsNobody())
             {
                 PinnedReply = replyMessage;
             }
         }
-        
+
         protected virtual void ReplyFailure(object replyMessage)
         {
-            if(!Sender.IsNobody())
+            if (!Sender.IsNobody())
             {
                 Context.Sender.Tell(replyMessage);
             }
@@ -243,7 +239,7 @@ namespace EventFly.Aggregates
 
         protected virtual void ReplyIfAvailable()
         {
-            if(PinnedReply != null)
+            if (PinnedReply != null)
                 Sender.Tell(PinnedReply);
 
             PinnedReply = null;
@@ -252,7 +248,7 @@ namespace EventFly.Aggregates
 
         protected override void Unhandled(object message)
         {
-            Log.Warning("Aggregate of Name={0}, and Id={1}; has received an unhandled message of Type={2}.",Name, Id, message.GetType().PrettyPrint());
+            Log.Warning("Aggregate of Name={0}, and Id={1}; has received an unhandled message of Type={2}.", Name, Id, message.GetType().PrettyPrint());
             base.Unhandled(message);
         }
 
@@ -272,7 +268,7 @@ namespace EventFly.Aggregates
             Context.Stop(Self);
             return true;
         }
-        
+
         public override void AroundPreRestart(Exception cause, object message)
         {
             Log.Error(cause, "Aggregate of Name={0}, and Id={1}; has experienced an error and will now restart", Name, Id);
@@ -280,7 +276,7 @@ namespace EventFly.Aggregates
         }
 
 
-        protected void Command<TCommand, TResult>(Func<TCommand,TResult> handler)
+        protected void Command<TCommand, TResult>(Func<TCommand, TResult> handler)
             where TCommand : ICommand<TIdentity, TResult>
             where TResult : IExecutionResult
         {

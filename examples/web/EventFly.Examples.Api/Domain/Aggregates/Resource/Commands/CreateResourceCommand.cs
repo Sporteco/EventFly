@@ -40,7 +40,7 @@ namespace EventFly.Examples.Api.Domain.Aggregates.Resource.Commands
 
     public class CreateResourceCommandHandler : CommandHandler<Resource, ResourceId, CreateResourceCommand>
     {
-        public override IExecutionResult HandleCommand(Resource aggregate, IActorContext context, CreateResourceCommand command)
+        public override IExecutionResult Handle(Resource aggregate, IActorContext context, CreateResourceCommand command)
         {
             if (aggregate.IsNew)
             {
