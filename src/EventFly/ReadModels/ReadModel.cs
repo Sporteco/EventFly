@@ -9,7 +9,7 @@ namespace EventFly.ReadModels
 {
     public abstract class ReadModel : IReadModel
     {
-        public string Id { get; internal set; }
+        public string Id { get;  set; }
         public abstract void ApplyEvent(IDomainEvent e);
         internal IReadModelStorage Storage { get; set; }
 

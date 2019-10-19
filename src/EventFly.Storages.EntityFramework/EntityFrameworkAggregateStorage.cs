@@ -6,13 +6,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EventFly.Storages.EntityFramework
 {
-    public class EntityFrameworkStorage<TAggregate, TDbContext> : IAggregateStorage<TAggregate>
+    public class EntityFrameworkAggregateStorage<TAggregate, TDbContext> : IAggregateStorage<TAggregate>
         where TAggregate : IAggregateRoot
         where TDbContext : DbContext, new()
     {
         private TDbContext _dbContext;
 
-        public EntityFrameworkStorage()
+        public EntityFrameworkAggregateStorage()
         {
             _dbContext = new TDbContext();
         }

@@ -35,8 +35,8 @@ namespace Demo.Web
 
             services.AddSingleton("AAAA")
                     .AddScoped<TestSaga>()
-                    .AddScoped<IAggregateStorage<UserAggregate>, EntityFrameworkStorage<UserAggregate, TestDbContext>>()
-                    .AddScoped<EntityFrameworkStorage<UserAggregate, TestDbContext>>()
+                    .AddScoped<IAggregateStorage<UserAggregate>, EntityFrameworkAggregateStorage<UserAggregate, TestDbContext>>()
+                    .AddScoped<EntityFrameworkAggregateStorage<UserAggregate, TestDbContext>>()
                     .AddEventFly(
                         system,
                         b => 
