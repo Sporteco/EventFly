@@ -4,12 +4,15 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
+using EventFly.Queries;
 using GraphQL.Types;
+using GraphQLParser.AST;
 
 namespace EventFly.Web.GraphQL
 {
     internal static class QueryParametersHelper
     {
+
         public static QueryArguments GetArguments(Type parametersType, IGraphQueryHandler graphQuery)
         {
            var qas = new List<QueryArgument>();
@@ -17,10 +20,35 @@ namespace EventFly.Web.GraphQL
             {
                 var type = GetGraphType(prop.PropertyType);
 
+                var allowNulls = prop.GetCustomAttribute<AllowNullAttribute>() != null;
+
                 var description = prop.GetCustomAttribute<DescriptionAttribute>()?.Description;
-                qas.Add(type != null
-                    ? new QueryArgument(type) {Name = prop.Name, Description = description}
-                    : new QueryArgument(GetGraphTypeEx(prop.PropertyType, graphQuery, true)) {Name = prop.Name, Description = description});
+
+                if (type == null)
+                {
+                    var gType = GetGraphTypeEx(prop.PropertyType, graphQuery, true);
+                    if (!allowNulls)
+                        gType = new NonNullGraphType(gType);
+                    
+                    qas.Add(new QueryArgument(gType) {Name = prop.Name, Description = description});
+                }
+                else
+                {
+                    if (!allowNulls)
+                    {
+                        if (!type.IsGenericType || type.GetGenericTypeDefinition() != typeof(NonNullGraphType<>))
+                            type = typeof(NonNullGraphType<>).MakeGenericType(type);
+                    }
+                    else
+                    {
+                        if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(NonNullGraphType<>))
+                            type = type.GetGenericArguments()[0];
+                        
+                    }
+
+                    qas.Add(new QueryArgument(type) {Name = prop.Name, Description = description});
+                }
+
             }
             return new QueryArguments(qas);
 
@@ -28,17 +56,17 @@ namespace EventFly.Web.GraphQL
 
         static readonly Dictionary<Type, Type> MapTypes = new Dictionary<Type, Type>
         {
-            {typeof(Guid), typeof(IdGraphType)},
-            {typeof(string), typeof(StringGraphType)},
-            {typeof(bool), typeof(BooleanGraphType)},
-            {typeof(decimal), typeof(DecimalGraphType)},
-            {typeof(float), typeof(FloatGraphType)},
-            {typeof(TimeSpan), typeof(TimeSpanSecondsGraphType)},
-            {typeof(DateTime), typeof(DateGraphType)},
-            {typeof(DateTimeOffset), typeof(DateTimeOffsetGraphType)},
-            {typeof(double), typeof(FloatGraphType)},
-            {typeof(long), typeof(IntGraphType)},
-            {typeof(int), typeof(IntGraphType)},
+            {typeof(Guid), typeof(NonNullGraphType<IdGraphType>)},
+            {typeof(string), typeof(NonNullGraphType<StringGraphType>)},
+            {typeof(bool), typeof(NonNullGraphType<BooleanGraphType>)},
+            {typeof(decimal), typeof(NonNullGraphType<DecimalGraphType>)},
+            {typeof(float), typeof(NonNullGraphType<FloatGraphType>)},
+            {typeof(TimeSpan), typeof(NonNullGraphType<TimeSpanSecondsGraphType>)},
+            {typeof(DateTime), typeof(NonNullGraphType<DateGraphType>)},
+            {typeof(DateTimeOffset), typeof(NonNullGraphType<DateTimeOffsetGraphType>)},
+            {typeof(double), typeof(NonNullGraphType<FloatGraphType>)},
+            {typeof(long), typeof(NonNullGraphType<IntGraphType>)},
+            {typeof(int), typeof(NonNullGraphType<IntGraphType>)},
             {typeof(Guid?), typeof(IdGraphType)},
             {typeof(bool?), typeof(BooleanGraphType)},
             {typeof(decimal?), typeof(DecimalGraphType)},

@@ -26,11 +26,14 @@ namespace EventFly.Web.GraphQL
             return await ReadAsync((TQuery)query);
         }
 
+        private FieldType _fieldType;
         public FieldType GetFieldType(bool isInput)
         {
+            if (_fieldType != null) return _fieldType;
+
             var name = typeof(TQuery).Name;
             name = !name.EndsWith("Query") ? name : name.Substring(0, name.Length - "Query".Length);
-            return  new FieldType
+            _fieldType = new FieldType
             {
                 ResolvedType = GetQueryItemType(typeof(TResult),isInput),
                 Name = name,
@@ -38,6 +41,7 @@ namespace EventFly.Web.GraphQL
                 Arguments = QueryParametersHelper.GetArguments(typeof(TQuery), this),
                 Resolver = new FuncFieldResolver<TResult>(context => ExecuteQuery(context).GetAwaiter().GetResult()),
             };
+            return _fieldType;
         }
 
         private Task<TResult> ReadAsync(TQuery query)
