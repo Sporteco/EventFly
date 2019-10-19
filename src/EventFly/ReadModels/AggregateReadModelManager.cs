@@ -1,10 +1,9 @@
-﻿using Akka.Actor;
-using EventFly.Aggregates;
+﻿using EventFly.Aggregates;
 
 namespace EventFly.ReadModels
 {
-    public class AggregateReadModelManager<TReadModel, TIdentity> : ReadModelManager<TReadModel, TIdentity> 
-        where TReadModel : ActorBase, IReadModel<TIdentity>
+    public class AggregateReadModelManager<TReadModel, TIdentity> : ReadModelManager<TReadModel> 
+        where TReadModel : ReadModel, new()
     {
         protected override string GetReadModelId(IDomainEvent domainEvent)
         {

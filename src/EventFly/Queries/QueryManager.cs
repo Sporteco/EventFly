@@ -97,7 +97,7 @@ namespace EventFly.Queries
 
         protected virtual IActorRef CreateQueryHandler(string queryId)
         {
-            Props props = null;
+            Props props;
             try
             {
                 props = Context.DI().Props<TQueryHandler>();

@@ -6,7 +6,7 @@ namespace EventFly.Definitions
 {
     public sealed class ApplicationDefinition : IApplicationDefinition
     {
-        private readonly IReadOnlyList<IDomainDefinition> _domains = new List<IDomainDefinition>();
+        private readonly IReadOnlyList<IDomainDefinition> _domains;
         private readonly EventAggregatedDefinitions _events = new EventAggregatedDefinitions();
         private readonly JobAggregatedDefinitions _jobs = new JobAggregatedDefinitions();
         private readonly SnapshotAggregatedDefinitions _snapshots = new SnapshotAggregatedDefinitions();
@@ -25,13 +25,7 @@ namespace EventFly.Definitions
             _domains = domains;
         }
 
-        public IReadOnlyCollection<IDomainDefinition> Domains
-        {
-            get
-            {
-                return _domains;
-            }
-        }
+        public IReadOnlyCollection<IDomainDefinition> Domains => _domains;
 
         public IReadOnlyCollection<IQueryDefinition> Queries
         {
@@ -65,36 +59,12 @@ namespace EventFly.Definitions
             }
         }
 
-        public IEventDefinitions Events
-        {
-            get
-            {
-                return _events;
-            }
-        }
+        public IEventDefinitions Events => _events;
 
-        public IJobDefinitions Jobs
-        {
-            get
-            {
-                return _jobs;
-            }
-        }
+        public IJobDefinitions Jobs => _jobs;
 
-        public ISnapshotDefinitions Snapshots
-        {
-            get
-            {
-                return _snapshots;
-            }
-        }
+        public ISnapshotDefinitions Snapshots => _snapshots;
 
-        public ICommandDefinitions Commands
-        {
-            get
-            {
-                return _commands;
-            }
-        }
+        public ICommandDefinitions Commands => _commands;
     }
 }

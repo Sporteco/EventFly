@@ -20,20 +20,8 @@ namespace EventFly.Web.Swagger
       _type = type;
     }
 
-    public override string Name
-    {
-      get
-      {
-        return _name;
-      }
-    }
+    public override string Name => _name;
 
-    public override Type ParameterType
-    {
-      get
-      {
-        return _type;
-      }
-    }
+    public override Type ParameterType => _type;
   }
 }

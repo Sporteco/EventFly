@@ -7,6 +7,6 @@ namespace EventFly.ReadModels
         where TIdentity : IIdentity
         where TAggregateEvent : class, IAggregateEvent<TIdentity>
     {
-        void Apply(IReadModelContext context, IDomainEvent<TIdentity, TAggregateEvent> domainEvent);
+        void Apply(IDomainEvent<TIdentity, TAggregateEvent> domainEvent);
     }
 }

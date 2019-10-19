@@ -6,7 +6,6 @@ using System.Linq;
 using System.Reflection;
 using EventFly.Queries;
 using GraphQL.Types;
-using GraphQLParser.AST;
 
 namespace EventFly.Web.GraphQL
 {

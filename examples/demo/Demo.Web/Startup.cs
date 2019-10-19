@@ -1,7 +1,4 @@
-﻿using System;
-using Akka.Actor;
-using EventFly;
-using EventFly.Aggregates;
+﻿using Akka.Actor;
 using EventFly.AggregateStorages;
 using EventFly.Definitions;
 using EventFly.DependencyInjection;
@@ -13,8 +10,6 @@ using Demo.Db;
 using Demo.Dependencies;
 using Demo.Domain;
 using Demo.Domain.Aggregates;
-using Demo.Predicates;
-using GraphQL.Types;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;

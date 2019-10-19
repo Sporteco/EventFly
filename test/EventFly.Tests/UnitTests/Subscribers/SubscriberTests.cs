@@ -34,7 +34,6 @@ using Xunit;
 using Xunit.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
 using EventFly.TestHelpers.Aggregates.Sagas.TestAsync;
-using EventFly.Definitions;
 
 namespace EventFly.Tests.UnitTests.Subscribers
 {

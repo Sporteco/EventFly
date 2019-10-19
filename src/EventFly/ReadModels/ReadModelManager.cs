@@ -8,8 +8,8 @@ using System;
 
 namespace EventFly.ReadModels
 {
-    public abstract class ReadModelManager<TReadModel, TKey> : ReceiveActor, IReadModelManager
-        where TReadModel : ActorBase, IReadModel<TKey>
+    public abstract class ReadModelManager<TReadModel> : ReceiveActor, IReadModelManager
+        where TReadModel : ReadModel, new()
     {
         protected ILoggingAdapter Logger { get; set; }
 
@@ -87,15 +87,15 @@ namespace EventFly.ReadModels
 
         protected virtual IActorRef CreateReadModelHandler(string readModelId)
         {
-            Props props = null;
+            Props props;
             try
             {
-                props = Context.DI().Props<TReadModel>();
+                props = Context.DI().Props<ReadModelHandler<TReadModel>>();
             }
             catch (Exception ex)
             {
                 Logger.Error(ex, "No DI available at the moment, falling back to default props creation.");
-                props = Props.Create<TReadModel>();
+                props = Props.Create<ReadModelHandler<TReadModel>>();
             }
 
             var aggregateRef = Context.ActorOf(props, readModelId);

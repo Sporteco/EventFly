@@ -1,5 +1,4 @@
-﻿using Akka.Actor;
-using EventFly.Definitions;
+﻿using EventFly.Definitions;
 using EventFly.TestHelpers.Aggregates;
 using EventFly.TestHelpers.Aggregates.Commands;
 using EventFly.TestHelpers.Aggregates.Events;

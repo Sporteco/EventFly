@@ -63,16 +63,19 @@ namespace EventFly.Definitions
 
     internal sealed class ReadModelManagerDefinition : IReadModelManagerDefinition
     {
-        public ReadModelManagerDefinition(Type readModelManagerType)
+        public ReadModelManagerDefinition(Type readModelManagerType, Type readModelType)
         {
             ReadModelManagerType = readModelManagerType;
+            ReadModelType = readModelType;
         }
 
         public Type ReadModelManagerType { get; }
+        public Type ReadModelType { get; }
     }
 
     public interface IReadModelManagerDefinition
     {
         Type ReadModelManagerType { get; }
+        Type ReadModelType { get; }
     }
 }

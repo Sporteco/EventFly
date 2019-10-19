@@ -5,7 +5,7 @@ using Demo.Events;
 
 namespace Demo.Domain.ReadModels
 {
-    public class UsersInfoReadModel : ReadModel<UserId>,
+    public class UsersInfoReadModel : ReadModel<UsersInfoReadModel>,
         IAmReadModelFor<UserId, UserCreatedEvent>,
         IAmReadModelFor<UserId, UserRenamedEvent>
     {
@@ -13,15 +13,14 @@ namespace Demo.Domain.ReadModels
         public string UserName { get; private set; }
         public DateTime Birth { get; private set; }
 
-        public void Apply(IReadModelContext context, IDomainEvent<UserId, UserCreatedEvent> domainEvent)
+        public void Apply(IDomainEvent<UserId, UserCreatedEvent> domainEvent)
         {
-            Id = domainEvent.AggregateIdentity;
             Version = domainEvent.Metadata.EventVersion;
             UserName = domainEvent.AggregateEvent.Name.Value;
             Birth = domainEvent.AggregateEvent.Birth.Value;
         }
 
-        public void Apply(IReadModelContext context,IDomainEvent<UserId, UserRenamedEvent> domainEvent)
+        public void Apply(IDomainEvent<UserId, UserRenamedEvent> domainEvent)
         {
             Version = domainEvent.Metadata.EventVersion;
             UserName = domainEvent.AggregateEvent.NewName.Value;

@@ -1,5 +1,4 @@
 ﻿using Akka.Actor;
-using EventFly.Commands;
 using EventFly.Commands.ExecutionResults;
 using EventFly.Core;
 using EventFly.Definitions;
@@ -35,7 +34,7 @@ namespace EventFly.Commands
         {
             var manager = _definitionToManagerRegistry.DefinitionToAggregateManager.FirstOrDefault(i =>
             {
-                var (k, v) = (i.Key, i.Value);
+                var (k, _) = (i.Key, i.Value);
                 if (!(k.AggregateType == type))
                     return k.IdentityType == type;
                 return true;

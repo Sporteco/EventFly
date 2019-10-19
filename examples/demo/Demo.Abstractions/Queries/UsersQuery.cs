@@ -8,10 +8,10 @@ namespace Demo.Queries
     public class UserInfo
     {
         [Description("ID")]
-        public string Id { get; private set; }
+        public string Id { get; set; }
 
         [Description("Имя пользователя")]
-        public string Name { get; private set; }
+        public string Name { get; set; }
     }
 
     [Description("Список пользвоателей")]

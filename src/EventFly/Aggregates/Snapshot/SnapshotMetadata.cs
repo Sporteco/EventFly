@@ -53,43 +53,43 @@ namespace EventFly.Aggregates.Snapshot
         [JsonIgnore]
         public string AggregateId
         {
-            get { return GetMetadataValue(SnapshotMetadataKeys.AggregateId); }
-            set { AddValue(SnapshotMetadataKeys.AggregateId, value); }
+            get => GetMetadataValue(SnapshotMetadataKeys.AggregateId);
+            set => AddValue(SnapshotMetadataKeys.AggregateId, value);
         }
 
         [JsonIgnore]
         public string AggregateName
         {
-            get { return GetMetadataValue(SnapshotMetadataKeys.AggregateName); }
-            set { AddValue(SnapshotMetadataKeys.AggregateName, value); }
+            get => GetMetadataValue(SnapshotMetadataKeys.AggregateName);
+            set => AddValue(SnapshotMetadataKeys.AggregateName, value);
         }
 
         [JsonIgnore]
         public long AggregateSequenceNumber
         {
-            get { return GetMetadataValue(SnapshotMetadataKeys.AggregateSequenceNumber, long.Parse); }
-            set { AddValue(SnapshotMetadataKeys.AggregateSequenceNumber, value.ToString(CultureInfo.InvariantCulture)); }
+            get => GetMetadataValue(SnapshotMetadataKeys.AggregateSequenceNumber, long.Parse);
+            set => AddValue(SnapshotMetadataKeys.AggregateSequenceNumber, value.ToString(CultureInfo.InvariantCulture));
         }
 
         [JsonIgnore]
         public string SnapshotName
         {
-            get { return GetMetadataValue(SnapshotMetadataKeys.SnapshotName); }
-            set { AddValue(SnapshotMetadataKeys.SnapshotName, value); }
+            get => GetMetadataValue(SnapshotMetadataKeys.SnapshotName);
+            set => AddValue(SnapshotMetadataKeys.SnapshotName, value);
         }
         
         [JsonIgnore]
         public ISnapshotId SnapshotId
         {
-            get { return GetMetadataValue(SnapshotMetadataKeys.SnapshotId, Snapshot.SnapshotId.With); }
-            set { AddValue(SnapshotMetadataKeys.SnapshotId, value.Value); }
+            get => GetMetadataValue(SnapshotMetadataKeys.SnapshotId, Snapshot.SnapshotId.With);
+            set => AddValue(SnapshotMetadataKeys.SnapshotId, value.Value);
         }
 
         [JsonIgnore]
         public int SnapshotVersion
         {
-            get { return GetMetadataValue(SnapshotMetadataKeys.SnapshotVersion, int.Parse); }
-            set { AddValue(SnapshotMetadataKeys.SnapshotVersion, value.ToString(CultureInfo.InvariantCulture)); }
+            get => GetMetadataValue(SnapshotMetadataKeys.SnapshotVersion, int.Parse);
+            set => AddValue(SnapshotMetadataKeys.SnapshotVersion, value.ToString(CultureInfo.InvariantCulture));
         }
     }
 }

@@ -6,7 +6,6 @@
 
 using System.Collections.Generic;
 using System.Reflection;
-using Akka.Actor;
 using EventFly.Commands;
 using EventFly.Definitions;
 using EventFly.Queries;

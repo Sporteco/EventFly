@@ -5,7 +5,6 @@ using EventFly.Aggregates;
 using EventFly.Aggregates.Snapshot;
 using EventFly.Commands;
 using EventFly.Core;
-using EventFly.Extensions;
 using EventFly.Jobs;
 using EventFly.Queries;
 using EventFly.ReadModels;
@@ -110,18 +109,19 @@ namespace EventFly.Definitions
 
             _readModels.Add(
                 new ReadModelDefinition(typeof(TReadModel),
-                    new ReadModelManagerDefinition(typeof(TReadModelManager))
+                    new ReadModelManagerDefinition(typeof(TReadModelManager), typeof(TReadModel))
                 )
             );
             return this;
         }
 
         protected IDomainDefinition RegisterAggregateReadModel<TReadModel, TIdentity>()
-          where TReadModel : ActorBase, IReadModel<TIdentity>
-          where TIdentity : IIdentity
+          where TReadModel :  ReadModel, new()
+            where TIdentity : IIdentity
         {
             return RegisterReadModel<TReadModel, AggregateReadModelManager<TReadModel, TIdentity>>();
         }
+
 
         protected IDomainDefinition RegisterCommand<TCommand>() where TCommand : ICommand
         {

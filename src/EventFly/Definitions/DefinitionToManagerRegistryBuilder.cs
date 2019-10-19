@@ -85,7 +85,7 @@ namespace EventFly.Definitions
             {
                 var manager = System.ActorOf(
                     Props.Create(managerDef.ReadModelManagerType),
-                    $"saga-{managerDef.ReadModelManagerType.Name}-manager"
+                    $"readmodel-{managerDef.ReadModelType}-manager"
                 );
 
                 dictionaryReadModel.Add(managerDef, manager);

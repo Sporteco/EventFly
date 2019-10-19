@@ -1,6 +1,4 @@
 ﻿using EventFly.Core;
-using EventFly.ValueObjects;
-using Newtonsoft.Json;
 
 namespace Demo
 {

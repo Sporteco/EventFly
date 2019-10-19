@@ -16,7 +16,11 @@ namespace Demo.Web
                 try
                 {
                     st.Database.Migrate();
-                } catch(Exception ex) { }
+                }
+                catch (Exception)
+                {
+                    // ignored
+                }
             }
 
             CreateWebHostBuilder(args).Build().Run();

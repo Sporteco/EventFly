@@ -171,6 +171,27 @@ namespace EventFly.Extensions
                     mi => mi.GetParameters()[0].ParameterType,
                     mi => ReflectionHelper.CompileMethodInvocation<Action<TAggregateState, IAggregateEvent>>(type, "Apply", mi.GetParameters()[0].ParameterType));
         }
+        internal static IReadOnlyDictionary<Type, Action<TReadModel, IDomainEvent>> GetReadModelEventApplyMethods<TReadModel>(this Type type)
+            where TReadModel : IReadModel
+        {
+            var aggregateEventType = typeof(IDomainEvent);
+
+
+            return type
+                .GetTypeInfo()
+                .GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
+                .Where(mi =>
+                {
+                    if (mi.Name != "Apply") return false;
+                    var parameters = mi.GetParameters();
+                    return
+                        parameters.Length == 1 &&
+                        aggregateEventType.GetTypeInfo().IsAssignableFrom(parameters[0].ParameterType);
+                })
+                .ToDictionary(
+                    mi => mi.GetParameters()[0].ParameterType,
+                    mi => ReflectionHelper.CompileMethodInvocation<Action<TReadModel,IDomainEvent>>(type, "Apply", mi.GetParameters()[0].ParameterType));
+        }
 
         internal static IReadOnlyList<Type> GetAsyncDomainEventSubscriberSubscriptionTypes(this Type type)
         {

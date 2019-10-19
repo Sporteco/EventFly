@@ -30,7 +30,7 @@ namespace EventFly.Queries
         {
             var manager = _definitionToManagerRegistry.DefinitionToQueryManager.FirstOrDefault(i =>
             {
-                var (k, v) = (i.Key, i.Value);
+                var (k, _) = (i.Key, i.Value);
 
                 return k.QueryType == queryType;
             }).Value;

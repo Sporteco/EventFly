@@ -23,7 +23,6 @@
 
 using System;
 using Akka.Actor;
-using Akka.DI.Core;
 using Akka.Event;
 using EventFly.Commands;
 using EventFly.Core;

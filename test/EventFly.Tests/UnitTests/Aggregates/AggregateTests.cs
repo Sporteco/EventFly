@@ -39,7 +39,6 @@ using EventFly.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 using Xunit.Abstractions;
-using EventFly.Definitions;
 
 namespace EventFly.Tests.UnitTests.Aggregates
 {

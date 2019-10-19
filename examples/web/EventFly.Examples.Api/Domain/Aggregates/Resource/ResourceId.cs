@@ -22,8 +22,6 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using EventFly.Core;
-using EventFly.ValueObjects;
-using Newtonsoft.Json;
 
 namespace EventFly.Examples.Api.Domain.Aggregates.Resource
 {

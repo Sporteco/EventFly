@@ -19,9 +19,10 @@ namespace Demo.Domain.Aggregates
         ISagaIsStartedByAsync<UserId, UserCreatedEvent>,
         ISagaHandles<UserId,UserRenamedEvent>
     {
+        // ReSharper disable once NotAccessedField.Local
         private readonly string _s;
 
-        public TestSaga(string s) : base()
+        public TestSaga(string s)
         {
             _s = s;
         }

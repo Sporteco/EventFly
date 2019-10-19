@@ -1,11 +1,10 @@
-﻿namespace EventFly.ReadModels
+﻿using EventFly.Aggregates;
+
+namespace EventFly.ReadModels
 {
     public interface IReadModel
     {
-    }
-
-    public interface IReadModel<out TKey> : IReadModel
-    {
-        TKey Id { get; }
+        string Id { get;  }
+        void ApplyEvent(IDomainEvent e);
     }
 }

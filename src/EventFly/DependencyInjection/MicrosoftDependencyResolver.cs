@@ -108,7 +108,7 @@ namespace EventFly.DependencyInjection
                     return Activator.CreateInstance(actorType) as ActorBase;
                 }
 
-                _references.Add(actor, scope);
+                _references.Add(actor ?? throw new InvalidOperationException(), scope);
 
                 return actor;
             };

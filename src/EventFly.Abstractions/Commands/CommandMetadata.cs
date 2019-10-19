@@ -40,7 +40,7 @@ namespace EventFly.Commands
         [JsonIgnore]
         public string CorrelationId
         {
-            get { return GetMetadataValue(MetadataKeys.CorrelationId); }
+            get => GetMetadataValue(MetadataKeys.CorrelationId);
             set => AddValue(MetadataKeys.CorrelationId, value);
         }
 

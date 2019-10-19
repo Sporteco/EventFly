@@ -1,26 +1,27 @@
-﻿using System.Data.SqlClient;
+﻿using System;
 using System.Linq;
 using EventFly.Queries;
-using Dapper;
+using Demo.Domain.ReadModels;
 using Demo.Queries;
-using Microsoft.Data.Sqlite;
+using EventFly.ReadModels;
 
 namespace Demo.Domain.QueryHandlers
 {
     public class UsersQueryHandler : QueryHandler<UsersQuery, UsersResult>
     {
+        private readonly IQueryableReadModelStorage<UsersInfoReadModel> _storage;
+
+        public UsersQueryHandler(IReadModelStorage<UsersInfoReadModel> storage)
+        {
+            _storage = storage as IQueryableReadModelStorage<UsersInfoReadModel>;
+        }
         public override UsersResult ExecuteQuery(UsersQuery query)
         {
-            var filter = "";
-            if (!string.IsNullOrEmpty(query.NameFilter))
-                filter = $"WHERE Name LIKE '%{query.NameFilter}%'";
+            var items = _storage?.Items
+                .Where(i => query.NameFilter == null || i.UserName.StartsWith(query.NameFilter, StringComparison.InvariantCultureIgnoreCase))
+                .Select(i => new UserInfo {Id = i.Id, Name = i.UserName}).ToList();
 
-            using (var db = new SqliteConnection(DbHelper.ConnectionStringSqLite))
-            {
-                return new UsersResult(
-                    db.Query<UserInfo>($"SELECT Id, Name FROM [User] {filter}").ToList(),
-                    100);
-            }
+            return new UsersResult(items, 100);
         }
     }
 }

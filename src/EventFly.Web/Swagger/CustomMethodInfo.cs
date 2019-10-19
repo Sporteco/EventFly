@@ -36,29 +36,11 @@ namespace EventFly.Web.Swagger
       return false;
     }
 
-    public override Type DeclaringType
-    {
-      get
-      {
-        return typeof (object);
-      }
-    }
+    public override Type DeclaringType => typeof (object);
 
-    public override string Name
-    {
-      get
-      {
-        return _name;
-      }
-    }
+    public override string Name => _name;
 
-    public override Type ReflectedType
-    {
-      get
-      {
-        return typeof (object);
-      }
-    }
+    public override Type ReflectedType => typeof (object);
 
     public override MethodImplAttributes GetMethodImplementationFlags()
     {
@@ -80,33 +62,15 @@ namespace EventFly.Web.Swagger
       throw new NotImplementedException();
     }
 
-    public override MethodAttributes Attributes
-    {
-      get
-      {
-        return MethodAttributes.Public;
-      }
-    }
+    public override MethodAttributes Attributes => MethodAttributes.Public;
 
-    public override RuntimeMethodHandle MethodHandle
-    {
-      get
-      {
-        return new RuntimeMethodHandle();
-      }
-    }
+    public override RuntimeMethodHandle MethodHandle => new RuntimeMethodHandle();
 
     public override MethodInfo GetBaseDefinition()
     {
       return null;
     }
 
-    public override ICustomAttributeProvider ReturnTypeCustomAttributes
-    {
-      get
-      {
-        throw new InvalidOperationException();
-      }
-    }
+    public override ICustomAttributeProvider ReturnTypeCustomAttributes => throw new InvalidOperationException();
   }
 }

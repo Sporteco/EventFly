@@ -7,7 +7,6 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Akka.Actor;
 using EventFly.Commands.ExecutionResults;
 using EventFly.Definitions;
 using Newtonsoft.Json;

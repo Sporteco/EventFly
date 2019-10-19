@@ -141,7 +141,7 @@ namespace EventFly.Sagas.AggregateSaga
 
         private IActorRef Spawn(TIdentity sagaId)
         {
-            Props props = null;
+            Props props;
             try
             {
                 props = Context.DI().Props<TAggregateSaga>();

@@ -25,7 +25,6 @@ using System.ComponentModel;
 using Akka.TestKit.Xunit2;
 using EventFly.Aggregates;
 using EventFly.Commands;
-using EventFly.Definitions;
 using EventFly.DependencyInjection;
 
 using EventFly.TestHelpers.Aggregates;

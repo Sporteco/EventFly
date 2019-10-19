@@ -25,7 +25,6 @@ using System;
 using System.Threading.Tasks;
 using Akka.Actor;
 using EventFly.Commands;
-using EventFly.Definitions;
 using EventFly.DependencyInjection;
 using EventFly.Examples.Api.Controllers.Models;
 using EventFly.Examples.Api.Domain.Aggregates.Resource;

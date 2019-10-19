@@ -3,13 +3,10 @@ using System.Threading.Tasks;
 using Akka.Actor;
 using EventFly.DependencyInjection;
 using Demo.Commands;
-using Demo.Db;
 using Demo.Domain;
 using Demo.Queries;
 using Demo.ValueObjects;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using EventFly.Definitions;
 using Demo.Dependencies;
 using EventFly.Queries;
 using EventFly.Commands;
@@ -41,14 +38,14 @@ namespace Demo.Host
             system.RegisterDependencyResolver(serviceCollection.BuildServiceProvider());
 
             // migrations todo
-            using (var st = new TestDbContext())
+            /*using (var st = new TestDbContext())
             {
                 try
                 {
                     st.Database.Migrate();
                 }
                 catch (Exception) { }
-            }
+            }*/
 
             var holder = system.GetExtension<ServiceProviderHolder>();
 
@@ -58,8 +55,8 @@ namespace Demo.Host
 
             await bus.Publish(createUserAccountCommand);
 
-            //await system.PublishCommandAsync(new RenameUserCommand(aggregateId, new UserName("TEST")));
-            //await system.PublishCommandAsync(new CreateUserCommand(UserId.New, new UserName("userName2"),new Birth(DateTime.Today)));
+            await bus.Publish(new RenameUserCommand(aggregateId, new UserName("TEST")));
+            await bus.Publish(new CreateUserCommand(UserId.New, new UserName("userName2"),new Birth(DateTime.Today)));
 
             var res = await queryProcessor.Process(new UsersQuery());
             Console.WriteLine(res?.Items.Count);

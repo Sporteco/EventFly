@@ -70,8 +70,8 @@ namespace EventFly.Aggregates
         public override Recovery Recovery => new Recovery(SnapshotSelectionCriteria.Latest);
         private AggregateRootSettings Settings { get; }
 
-        private readonly IServiceProvider _serviceProvider;
-        private IServiceScope _scope;
+        protected readonly IServiceProvider _serviceProvider;
+        protected IServiceScope _scope;
 
 
         protected EventSourcedAggregateRoot(TIdentity id)

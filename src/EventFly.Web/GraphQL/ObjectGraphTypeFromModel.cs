@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using EventFly.Definitions;
-using GraphQL.Instrumentation;
 using GraphQL.Types;
 using Type = System.Type;
 
