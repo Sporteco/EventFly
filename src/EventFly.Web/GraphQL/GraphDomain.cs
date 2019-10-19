@@ -24,7 +24,9 @@ namespace EventFly.Web.GraphQL
             _provider = provider;
             foreach (var query in _domainDefinition.Queries)
             {
-                _handlers.Add(query.Name,typeof(IGraphQueryHandler<,>).MakeGenericType(query.Type,query.QueryResultType));
+                var name = query.Type.Name;
+                name = !name.EndsWith("Query") ? name : name.Substring(0, name.Length - "Query".Length);
+                _handlers.Add(name,typeof(IGraphQueryHandler<,>).MakeGenericType(query.Type,query.QueryResultType));
             }
         }
 

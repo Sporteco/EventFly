@@ -56,11 +56,11 @@ namespace Demo.Web
             services.AddEventFlyGraphQl(applicationDef.ServiceProvider.GetService<IApplicationDefinition>());
             services.AddEventFlySwagger();
 
-            services.AddTransient<EnumerationGraphType<StringOperator>>();
+            /*services.AddTransient<EnumerationGraphType<StringOperator>>();
             services.AddTransient<EnumerationGraphType<CollectionOperator>>();
             services.AddTransient<EnumerationGraphType<DateTimeOperator>>();
             services.AddTransient<EnumerationGraphType<NumericOperator>>();
-            services.AddTransient<EnumerationGraphType<UriHostNameType>>();
+            services.AddTransient<EnumerationGraphType<UriHostNameType>>();*/
 
             services.AddMvcCore().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
