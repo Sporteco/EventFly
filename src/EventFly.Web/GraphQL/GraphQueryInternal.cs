@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using EventFly.Definitions;
 using GraphQL.Types;
 
@@ -8,7 +9,7 @@ namespace EventFly.Web.GraphQL
     {
         public GraphQueryInternal(IApplicationDefinition app, IServiceProvider provider)
         {
-            foreach (var domain in app.Domains)
+            foreach (var domain in app.Domains.Where(i=>i.Queries.Any()))
             {
                 var graphDomain = new GraphDomain(domain,provider);
                 AddField(graphDomain.GetFieldType());

@@ -22,7 +22,7 @@
     <PackageTags>
       akka;cqrs;es;eventsourcing;actors;microservices;actor-model
     </PackageTags>
-    <Version>0.3.4</Version>
+    <Version>0.3.5</Version>
     <Authors>Sporteco</Authors>
     <Company>Sporteco</Company>
     <Copyright>Copyright (c) Sporteco 2018 - 2019</Copyright>
