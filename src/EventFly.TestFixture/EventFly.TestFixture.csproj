@@ -22,6 +22,11 @@
     <PackageTags>
       tdd;bdd;testing;akka;cqrs;es;eventsourcing;actors;actor-model
     </PackageTags>
+    <Version>0.3.2</Version>
+    <Authors>Sporteco</Authors>
+    <Company>Sporteco</Company>
+    <RepositoryUrl>https://github.com/Sporteco/EventFly</RepositoryUrl>
+    <Copyright>Copyright (c) Sporteco 2018 - 2019</Copyright>
   </PropertyGroup>
 
   <ItemGroup>

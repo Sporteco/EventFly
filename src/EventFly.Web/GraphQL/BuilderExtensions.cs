@@ -27,12 +27,11 @@ namespace EventFly.Web.GraphQL
 
         public static IServiceCollection AddEventFlyGraphQl(this IServiceCollection services, IApplicationDefinition app)
         {
-            services.AddScoped<IDependencyResolver>(s => new FuncDependencyResolver(s.GetRequiredServiceEx));
             services.AddSingleton<IDocumentExecuter, DocumentExecuter>();
             services.AddSingleton<IDocumentWriter, DocumentWriter>();
 
-            services.AddScoped<GraphQueryInternal>();
-            services.AddScoped<ISchema, GraphSchemaInternal>();
+            services.AddSingleton<GraphQueryInternal>();
+            services.AddSingleton<ISchema, GraphSchemaInternal>();
             services.AddGraphQL(_ =>
             {
                 _.EnableMetrics = true;
@@ -42,7 +41,9 @@ namespace EventFly.Web.GraphQL
             foreach (var query in app.Queries)
             {
                 var handlerType = typeof(GraphQueryHandler<,>).MakeGenericType(query.Type, query.QueryResultType);
-                services.AddScoped(typeof(IGraphQueryHandler),handlerType);
+                var handlerFullType = typeof(IGraphQueryHandler<,>).MakeGenericType(query.Type, query.QueryResultType);
+                services.AddSingleton(handlerFullType,handlerType);
+                //services.AddSingleton(provider => (IGraphQueryHandler) provider.GetService(handlerFullType));
             }
 
             return services;

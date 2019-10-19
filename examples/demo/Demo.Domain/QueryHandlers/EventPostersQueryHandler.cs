@@ -7,7 +7,7 @@ namespace Demo.Domain.QueryHandlers
     {
         public override EventPosters ExecuteQuery(EventPostersQuery query)
         {
-            throw new System.NotImplementedException();
+            return new EventPosters();
         }
     }
 }

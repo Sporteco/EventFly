@@ -5,13 +5,10 @@ using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using Akka.Actor;
-using EventFly.Definitions;
 using EventFly.Queries;
 using GraphQL.Resolvers;
 using GraphQL.Types;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 
 namespace EventFly.Web.GraphQL
 {
@@ -31,10 +28,12 @@ namespace EventFly.Web.GraphQL
 
         public FieldType GetFieldType(bool isInput)
         {
+            var name = typeof(TQuery).Name;
+            name = !name.EndsWith("Query") ? name : name.Substring(0, name.Length - "Query".Length);
             return  new FieldType
             {
                 ResolvedType = GetQueryItemType(typeof(TResult),isInput),
-                Name = typeof(TQuery).Name,
+                Name = name,
                 Description = typeof(TQuery).GetCustomAttribute<DescriptionAttribute>()?.Description,
                 Arguments = QueryParametersHelper.GetArguments(typeof(TQuery), this),
                 Resolver = new FuncFieldResolver<TResult>(context => ExecuteQuery(context).GetAwaiter().GetResult()),
@@ -44,6 +43,11 @@ namespace EventFly.Web.GraphQL
         private Task<TResult> ReadAsync(TQuery query)
         {
             return _queryProcessor.Process(query);
+        }
+
+        public async Task<object> ExecuteQuery(Dictionary<string, object> arguments)
+        {
+            return await ReadAsync(ParseModel<TQuery>(arguments));
         }
 
         private Task<TResult> ExecuteQuery(ResolveFieldContext context) => ReadAsync(ParseModel<TQuery>(context.Arguments));

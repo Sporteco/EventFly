@@ -3,6 +3,11 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>EventFly</RootNamespace>
+    <Version>0.3.2</Version>
+    <Authors>Sporteco</Authors>
+    <Company>Sporteco</Company>
+    <Copyright>Copyright (c) Sporteco 2018 - 2019</Copyright>
+    <RepositoryUrl>https://github.com/Sporteco/EventFly</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>

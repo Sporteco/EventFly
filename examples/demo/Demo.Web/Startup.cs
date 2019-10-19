@@ -1,4 +1,5 @@
-﻿using Akka.Actor;
+﻿using System;
+using Akka.Actor;
 using EventFly;
 using EventFly.Aggregates;
 using EventFly.AggregateStorages;
@@ -56,6 +57,10 @@ namespace Demo.Web
             services.AddEventFlySwagger();
 
             services.AddTransient<EnumerationGraphType<StringOperator>>();
+            services.AddTransient<EnumerationGraphType<CollectionOperator>>();
+            services.AddTransient<EnumerationGraphType<DateTimeOperator>>();
+            services.AddTransient<EnumerationGraphType<NumericOperator>>();
+            services.AddTransient<EnumerationGraphType<UriHostNameType>>();
 
             services.AddMvcCore().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
