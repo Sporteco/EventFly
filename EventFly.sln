@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventFly", "src\EventFly\EventFly.csproj", "{294B5F75-4BF1-4CD1-AA98-1369A4E4ACDE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{C7A99371-DCC0-4726-A971-E35C8CDF4768}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{86C56730-ABA0-411C-898C-5966EC483594}"
 EndProject
