@@ -49,7 +49,7 @@ namespace EventFly.Aggregates
 {
     public abstract class EventSourcedAggregateRoot<TAggregate, TIdentity, TAggregateState> : ReceivePersistentActor, IAggregateRoot<TIdentity>
         where TAggregate : EventSourcedAggregateRoot<TAggregate, TIdentity, TAggregateState>
-        where TAggregateState : AggregateState<TAggregate,TIdentity, IMessageApplier<TAggregate,TIdentity>>
+        where TAggregateState : AggregateState<TAggregate,TIdentity, IMessageApplier<TAggregate,TIdentity>>, new()
         where TIdentity : IIdentity
     {
         private static readonly IReadOnlyDictionary<Type, Action<TAggregateState, IAggregateEvent>> ApplyMethodsFromState = typeof(TAggregateState).GetAggregateStateEventApplyMethods<TAggregate, TIdentity, TAggregateState>();
@@ -93,7 +93,7 @@ namespace EventFly.Aggregates
             {
                 try
                 {
-                    State = (TAggregateState)Activator.CreateInstance(typeof(TAggregateState));
+                    State = new TAggregateState();
                 }
                 catch(Exception exception)
                 {
@@ -131,6 +131,18 @@ namespace EventFly.Aggregates
 
         }
 
+        protected override void PreStart()
+        {
+            base.PreStart();
+
+            _scope ??= _serviceProvider.CreateScope();
+        }
+
+        protected override void PostStop()
+        {
+            base.PostStop();
+            _scope?.Dispose();
+        }
 
         protected void SetSourceIdHistory(int count)
         {
@@ -512,9 +524,9 @@ namespace EventFly.Aggregates
         {
             try
             {
-                var handler = (TCommandHandler) Activator.CreateInstance(typeof(TCommandHandler));
                 Command(x =>
                 {
+                    var handler = _scope.ServiceProvider.GetService<TCommandHandler>() ?? (TCommandHandler)Activator.CreateInstance(typeof(TCommandHandler));
                     var result = handler.Handle(this as TAggregate, Context, x);
                     Context.Sender.Tell(result);
                 },shouldHandle);
