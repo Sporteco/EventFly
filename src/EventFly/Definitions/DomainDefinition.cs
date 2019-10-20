@@ -54,8 +54,7 @@ namespace EventFly.Definitions
             return this;
         }
 
-        protected IDomainDefinition RegisterQuery<TQueryHandler, TQuery, TResult>()
-          where TQueryHandler : ActorBase, IQueryHandler<TQuery, TResult>
+        protected IDomainDefinition RegisterQuery<TQuery, TResult>()
           where TQuery : IQuery<TResult>
         {
             //var manager = _system.ActorOf(Props.Create(() => new QueryManager<TQueryHandler, TQuery, TResult>()),
@@ -63,7 +62,7 @@ namespace EventFly.Definitions
 
             _queries.Add(
                 new QueryDefinition(typeof(TQuery), typeof(TResult),
-                    new QueryManagerDefinition(typeof(TQueryHandler), typeof(TQuery), typeof(TResult))
+                    new QueryManagerDefinition(typeof(QueryHandler<TQuery, TResult>), typeof(TQuery), typeof(TResult))
                 )
             );
             return this;

@@ -52,7 +52,6 @@ namespace Demo.Host
             var bus = holder.ServiceProvider.GetRequiredService<ICommandBus>();
             var queryProcessor = holder.ServiceProvider.GetRequiredService<IQueryProcessor>();
 
-
             await bus.Publish(createUserAccountCommand);
 
             await bus.Publish(new RenameUserCommand(aggregateId, new UserName("TEST")));

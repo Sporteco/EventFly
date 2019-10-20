@@ -16,8 +16,8 @@ namespace Demo.Domain
             RegisterSaga<TestSaga, TestSagaId>();
             RegisterCommand<CreateUserCommand>();
             RegisterCommand<RenameUserCommand>();
-            RegisterQuery<UsersQueryHandler,UsersQuery,UsersResult>();
-            RegisterQuery<EventPostersQueryHandler,EventPostersQuery,EventPosters>();
+            RegisterQuery<UsersQuery,UsersResult>();
+            RegisterQuery<EventPostersQuery,EventPosters>();
             RegisterAggregateReadModel<UsersInfoReadModel, UserId>();
             RegisterReadModel<TotalUsersReadModel, TotalUsersReadModelManager>();
             RegisterEvents(typeof(UserCreatedEvent), typeof(UserRenamedEvent));
