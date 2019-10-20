@@ -45,7 +45,7 @@ namespace EventFly.Tests.UnitTests.Subscribers
         public SubscriberTests(ITestOutputHelper testOutputHelper)
             :base(TestHelpers.Akka.Configuration.Config, "subscriber-tests", testOutputHelper)
         {
-            Sys.RegisterDependencyResolver(new ServiceCollection().AddEventFly(Sys, db => db.RegisterDomainDefinitions<TestDomain>()).AddScoped<TestAsyncSaga>().BuildServiceProvider());
+            Sys.RegisterDependencyResolver(new ServiceCollection().AddEventFly(Sys, db => db.RegisterDomainDefinitions<TestDomain>()).Services.AddScoped<TestAsyncSaga>().BuildServiceProvider());
 
         }
 

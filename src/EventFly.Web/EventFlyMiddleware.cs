@@ -12,6 +12,7 @@ using Newtonsoft.Json;
 
 namespace EventFly.Web
 {
+
     public class EventFlyMiddleware
     {
         private static readonly Regex CommandPath = new Regex("/*api/(?<name>[a-z]+)/(?<version>\\d+)/{0,1}", RegexOptions.IgnoreCase | RegexOptions.Compiled);

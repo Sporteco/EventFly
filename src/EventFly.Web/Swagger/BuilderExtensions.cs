@@ -4,6 +4,7 @@ using System.IO;
 using System.Reflection;
 using Akka.Util;
 using EventFly.Commands;
+using EventFly.DependencyInjection;
 using EventFly.Queries;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
@@ -17,8 +18,9 @@ namespace EventFly.Web.Swagger
 {
     public static class BuilderExtensions
     {
-        public static IServiceCollection AddEventFlySwagger(this IServiceCollection services)
+        public static EventFlyBuilder AddEventFlySwagger(this EventFlyBuilder builder)
         {
+            var services = builder.Services;
             services.TryAdd(ServiceDescriptor.Transient<IApiDescriptionGroupCollectionProvider, CommandsApiDescriptionGroupCollectionProvider>());
 
 
@@ -54,7 +56,7 @@ namespace EventFly.Web.Swagger
                 //	Scopes = currentScopes
                 //});
             });
-            return services;
+            return builder;
         }
 
         public static IApplicationBuilder UseEventFlySwagger(this IApplicationBuilder app)

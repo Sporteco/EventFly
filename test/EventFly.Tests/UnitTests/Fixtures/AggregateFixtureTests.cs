@@ -53,7 +53,7 @@ namespace EventFly.Tests.UnitTests.Fixtures
         {
             using (var testKit = new TestKit(_config,"fixture-tests-2"))
             {
-                testKit.Sys.RegisterDependencyResolver(new ServiceCollection().AddEventFly(testKit.Sys, db => db.RegisterDomainDefinitions<TestDomain>()).AddScoped<TestAsyncSaga>().BuildServiceProvider());
+                testKit.Sys.RegisterDependencyResolver(new ServiceCollection().AddEventFly(testKit.Sys, db => db.RegisterDomainDefinitions<TestDomain>()).Services.AddScoped<TestAsyncSaga>().BuildServiceProvider());
 
                 var fixture = new AggregateFixture<TestAggregate, TestAggregateId>(testKit);
                 var aggregateIdentity = TestAggregateId.New;

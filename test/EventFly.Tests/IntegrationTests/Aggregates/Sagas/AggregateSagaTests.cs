@@ -48,7 +48,14 @@ namespace EventFly.Tests.IntegrationTests.Aggregates.Sagas
         public AggregateSagaTests(ITestOutputHelper testOutputHelper)
             : base(TestHelpers.Akka.Configuration.Config, "aggregate-saga-tests", testOutputHelper)
         {
-            Sys.RegisterDependencyResolver(new ServiceCollection().AddEventFly(Sys, db => db.RegisterDomainDefinitions<TestDomain>()).AddScoped<TestSaga>().AddScoped<TestAsyncSaga>().BuildServiceProvider());
+            Sys.RegisterDependencyResolver(
+                new ServiceCollection()
+                .AddEventFly(Sys, db => db.RegisterDomainDefinitions<TestDomain>())
+                    .Services
+                .AddScoped<TestSaga>()
+                .AddScoped<TestAsyncSaga>()
+                .BuildServiceProvider()
+            );
         }
 
         [Fact]
@@ -56,7 +63,7 @@ namespace EventFly.Tests.IntegrationTests.Aggregates.Sagas
         public void SendingTest_FromTestAggregate_CompletesSaga()
         {
             var eventProbe = CreateTestProbe("event-probe");
-            
+
             Sys.EventStream.Subscribe(eventProbe, typeof(DomainEvent<TestSaga, TestSagaId, TestSagaStartedEvent>));
             Sys.EventStream.Subscribe(eventProbe, typeof(DomainEvent<TestSaga, TestSagaId, TestSagaCompletedEvent>));
             Sys.EventStream.Subscribe(eventProbe, typeof(DomainEvent<TestSaga, TestSagaId, TestSagaTransactionCompletedEvent>));

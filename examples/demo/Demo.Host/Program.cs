@@ -33,9 +33,9 @@ namespace Demo.Host
                             domainBuilder
                                 .RegisterDomainDefinitions<UserDomain>()
                                 .WithDependencies<UserDomainDependencies>();
-                        });
+                        }).Services.BuildServiceProvider();
 
-            system.RegisterDependencyResolver(serviceCollection.BuildServiceProvider());
+            system.RegisterDependencyResolver(serviceCollection);
 
             // migrations todo
             /*using (var st = new TestDbContext())

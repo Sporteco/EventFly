@@ -33,23 +33,18 @@ namespace Demo.Web
             //Create actor system
             var system = ActorSystem.Create("user-example");
 
-            services.AddSingleton("AAAA")
+            services
+                    .AddSingleton("AAAA")
                     .AddScoped<TestSaga>()
                     .AddScoped<IAggregateStorage<UserAggregate>, EntityFrameworkAggregateStorage<UserAggregate, TestDbContext>>()
                     .AddScoped<EntityFrameworkAggregateStorage<UserAggregate, TestDbContext>>()
-                    .AddEventFly(
-                        system,
-                        b => 
-                            b.RegisterDomainDefinitions<UserDomain>().WithDependencies<UserDomainDependencies>()
-                    );
-
-            // DO not inejct
-            system.RegisterDependencyResolver(services.BuildServiceProvider());
-
-            var applicationDef = system.GetExtension<ServiceProviderHolder>();
-
-            services.AddEventFlyGraphQl(applicationDef.ServiceProvider.GetService<IApplicationDefinition>());
-            services.AddEventFlySwagger();
+                        .AddEventFly(
+                            system,
+                            b => 
+                                b.RegisterDomainDefinitions<UserDomain>().WithDependencies<UserDomainDependencies>()
+                        )
+                        .AddEventFlyGraphQl()
+                        .AddEventFlySwagger();
 
             /*services.AddTransient<EnumerationGraphType<StringOperator>>();
             services.AddTransient<EnumerationGraphType<CollectionOperator>>();
@@ -65,6 +60,7 @@ namespace Demo.Web
         {
             app.UseMiddleware<EventFlyMiddleware>();
 
+            app.UseEventFlyDependencyInjection();
             app.UseEventFlyGraphQl();
             app.UseEventFlySwagger();
             app.UseMvc(routes =>

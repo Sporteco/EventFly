@@ -50,7 +50,7 @@ namespace EventFly.Tests.UnitTests.Aggregates
         public AggregateTests(ITestOutputHelper testOutputHelper)
             : base(TestHelpers.Akka.Configuration.Config, "aggregate-tests", testOutputHelper)
         {
-            Sys.RegisterDependencyResolver(new ServiceCollection().AddEventFly(Sys, db => db.RegisterDomainDefinitions<TestDomain>()).AddScoped<TestAsyncSaga>().BuildServiceProvider());
+            Sys.RegisterDependencyResolver(new ServiceCollection().AddEventFly(Sys, db => db.RegisterDomainDefinitions<TestDomain>()).Services.AddScoped<TestAsyncSaga>().BuildServiceProvider());
         }
 
         [Fact]

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using EventFly.Definitions;
+using EventFly.DependencyInjection;
 using GraphQL;
 using GraphQL.Http;
 using GraphQL.Server;
@@ -23,8 +24,9 @@ namespace EventFly.Web.GraphQL
             return provider.GetRequiredService(serviceType);
         }
 
-        public static IServiceCollection AddEventFlyGraphQl(this IServiceCollection services, IApplicationDefinition app)
+        public static EventFlyBuilder AddEventFlyGraphQl(this EventFlyBuilder builder)
         {
+            var services = builder.Services;
             services.AddSingleton<IDocumentExecuter, DocumentExecuter>();
             services.AddSingleton<IDocumentWriter, DocumentWriter>();
 
@@ -36,7 +38,7 @@ namespace EventFly.Web.GraphQL
                 _.ExposeExceptions = true;
             });
 
-            foreach (var query in app.Queries)
+            foreach (var query in builder.ApplicationDefinition.Queries)
             {
                 var handlerType = typeof(GraphQueryHandler<,>).MakeGenericType(query.Type, query.QueryResultType);
                 var handlerFullType = typeof(IGraphQueryHandler<,>).MakeGenericType(query.Type, query.QueryResultType);
@@ -44,7 +46,7 @@ namespace EventFly.Web.GraphQL
                 //services.AddSingleton(provider => (IGraphQueryHandler) provider.GetService(handlerFullType));
             }
 
-            return services;
+            return builder;
         }
         public static IApplicationBuilder UseEventFlyGraphQl(this IApplicationBuilder app)
         {
