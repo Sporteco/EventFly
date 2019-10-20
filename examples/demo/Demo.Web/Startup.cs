@@ -35,13 +35,11 @@ namespace Demo.Web
 
             services
                     .AddSingleton("AAAA")
-                    .AddScoped<TestSaga>()
-                    .AddScoped<IAggregateStorage<UserAggregate>, EntityFrameworkAggregateStorage<UserAggregate, TestDbContext>>()
-                    .AddScoped<EntityFrameworkAggregateStorage<UserAggregate, TestDbContext>>()
-                        .AddEventFly(
+                    .AddEventFly(
                             system,
                             b => 
-                                b.RegisterDomainDefinitions<UserDomain>().WithDependencies<UserDomainDependencies>()
+                                b.RegisterDomainDefinitions<UserDomain>()
+                                .WithDependencies<UserDomainDependencies>()
                         )
                         .AddEventFlyGraphQl()
                         .AddEventFlySwagger();

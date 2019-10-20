@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Demo.Dependencies;
 using EventFly.Queries;
 using EventFly.Commands;
+using System.Linq;
 
 namespace Demo.Host
 {
@@ -58,7 +59,7 @@ namespace Demo.Host
             await bus.Publish(new CreateUserCommand(UserId.New, new UserName("userName2"),new Birth(DateTime.Today)));
 
             var res = await queryProcessor.Process(new UsersQuery());
-            Console.WriteLine(res?.Items.Count);
+            Console.WriteLine(res?.Items.First().Name);
 
             //block end of program
             Console.ReadLine();
