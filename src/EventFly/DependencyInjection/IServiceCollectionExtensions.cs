@@ -70,6 +70,14 @@ namespace EventFly.DependencyInjection
         public IReadOnlyCollection<IReadModelDefinition> ReadModels => _readModelDefinitions;
         public IReadOnlyCollection<ISagaDefinition> Sagas => _sagaDefinitions;
 
+        public InfrastructureBuilder RegisterInfrastructureDefinitions<TInfrastructureDefinitions>()
+            where TInfrastructureDefinitions : IInfrastructureDefinitions, new()
+        {
+            var definitions = new TInfrastructureDefinitions();
+
+            definitions.Describe(this);
+            return this;
+        }
 
         public InfrastructureBuilder AddReadModel<TReadModel, TReadModelManager>()
             where TReadModel : IReadModel

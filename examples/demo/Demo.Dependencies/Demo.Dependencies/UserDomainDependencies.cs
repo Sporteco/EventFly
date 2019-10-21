@@ -8,10 +8,13 @@ using EventFly.ReadModels;
 using Microsoft.Extensions.DependencyInjection;
 using EventFly.Queries;
 using Demo.Queries;
+using EventFly.DependencyInjection;
 
 namespace Demo.Dependencies
 {
-    public class UserDomainDependencies : IDomainDependencies<UserDomain>
+    public class UserDomainDependencies :
+        IInfrastructureDefinitions,
+        IDomainDependencies<UserDomain>
     {
         public IServiceCollection Dependencies =>
             new ServiceCollection()
@@ -26,6 +29,13 @@ namespace Demo.Dependencies
 
                     .AddSingleton<IReadModelStorage<UsersInfoReadModel>, InMemoryReadModelStorage<UsersInfoReadModel>>()
                     .AddSingleton<IReadModelStorage<TotalUsersReadModel>, InMemoryReadModelStorage<TotalUsersReadModel>>();
+
+        public void Describe(InfrastructureBuilder infrastructureBuilder)
+        {
+            infrastructureBuilder.AddAggregateReadModel<UsersInfoReadModel, UserId>();
+            infrastructureBuilder.AddReadModel<TotalUsersReadModel, TotalUsersReadModelManager>();
+            infrastructureBuilder.AddSaga<TestSaga, TestSagaId>();
+        }
 
     }
 }

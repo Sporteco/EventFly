@@ -7,9 +7,6 @@ using EventFly.Commands;
 using EventFly.Core;
 using EventFly.Jobs;
 using EventFly.Queries;
-using EventFly.ReadModels;
-using EventFly.Sagas;
-using EventFly.Sagas.AggregateSaga;
 
 namespace EventFly.Definitions
 {

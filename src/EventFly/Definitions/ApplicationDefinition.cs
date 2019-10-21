@@ -1,9 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using EventFly.DependencyInjection;
 using EventFly.Jobs;
 
 namespace EventFly.Definitions
 {
+    public interface IInfrastructureDefinitions
+    {
+        void Describe(InfrastructureBuilder infrastructureBuilder);
+    }
+
     public sealed class ApplicationDefinition : IApplicationDefinition
     {
         private readonly EventAggregatedDefinitions _events = new EventAggregatedDefinitions();

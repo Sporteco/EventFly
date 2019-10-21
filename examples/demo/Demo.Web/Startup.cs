@@ -38,18 +38,13 @@ namespace Demo.Web
                     .AddSingleton("AAAA")
                     .AddEventFly(
                             system,
-                            infrastructureBuilder =>
-                            {
-                                infrastructureBuilder.AddAggregateReadModel<UsersInfoReadModel, UserId>();
-                                infrastructureBuilder.AddReadModel<TotalUsersReadModel, TotalUsersReadModelManager>();
-                                infrastructureBuilder.AddSaga<TestSaga, TestSagaId>();
-                            },
-                            b =>
-                                b.RegisterDomainDefinitions<UserDomain>()
-                                .WithDependencies<UserDomainDependencies>()
-                        )
-                        .AddGraphQl()
-                        .AddSwagger();
+                            infrastructureBuilder => infrastructureBuilder.RegisterInfrastructureDefinitions<UserDomainDependencies>(),
+                            domainBuilder => domainBuilder
+                                            .RegisterDomainDefinitions<UserDomain>()
+                                            .WithDependencies<UserDomainDependencies>()
+                    )
+                    .AddGraphQl()
+                    .AddSwagger();
 
             /*services.AddTransient<EnumerationGraphType<StringOperator>>();
             services.AddTransient<EnumerationGraphType<CollectionOperator>>();

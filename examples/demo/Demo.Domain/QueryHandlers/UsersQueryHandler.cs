@@ -4,6 +4,7 @@ using EventFly.Queries;
 using Demo.Domain.ReadModels;
 using Demo.Queries;
 using EventFly.ReadModels;
+using System.Threading.Tasks;
 
 namespace Demo.Domain.QueryHandlers
 {
@@ -15,13 +16,13 @@ namespace Demo.Domain.QueryHandlers
         {
             _storage = storage as IQueryableReadModelStorage<UsersInfoReadModel>;
         }
-        public override UsersResult ExecuteQuery(UsersQuery query)
+        public override Task<UsersResult> ExecuteQuery(UsersQuery query)
         {
             var items = _storage?.Items
                 .Where(i => query.NameFilter == null || i.UserName.StartsWith(query.NameFilter, StringComparison.InvariantCultureIgnoreCase))
                 .Select(i => new UserInfo {Id = i.Id, Name = i.UserName}).ToList();
 
-            return new UsersResult(items, 100);
+            return Task.FromResult(new UsersResult(items, 100));
         }
     }
 }

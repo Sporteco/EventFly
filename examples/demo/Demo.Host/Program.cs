@@ -26,25 +26,23 @@ namespace Demo.Host
             //Create actor system
             var system = ActorSystem.Create("user-example");
 
-            var serviceCollection =
+            var serviceProvider =
                 new ServiceCollection()
                     .AddSingleton("AAAA")
                     .AddEventFly(
                         system,
-                        infrastructureBuilder =>
-                        {
-                            infrastructureBuilder.AddAggregateReadModel<UsersInfoReadModel, UserId>();
-                            infrastructureBuilder.AddReadModel<TotalUsersReadModel, TotalUsersReadModelManager>();
-                            infrastructureBuilder.AddSaga<TestSaga, TestSagaId>();
-                        },
-                        domainBuilder =>
-                        {
-                            domainBuilder
-                                .RegisterDomainDefinitions<UserDomain>()
-                                .WithDependencies<UserDomainDependencies>();
-                        }).Services.BuildServiceProvider();
 
-            system.RegisterDependencyResolver(serviceCollection);
+                        infrastructureBuilder => 
+                                infrastructureBuilder
+                                .RegisterInfrastructureDefinitions<UserDomainDependencies>(),
+                        domainBuilder => 
+                                domainBuilder
+                                .RegisterDomainDefinitions<UserDomain>()
+                                .WithDependencies<UserDomainDependencies>()
+
+                    ).Services.BuildServiceProvider();
+
+            system.RegisterDependencyResolver(serviceProvider);
 
             // migrations todo
             /*using (var st = new TestDbContext())

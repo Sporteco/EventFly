@@ -17,10 +17,6 @@ namespace Demo.Domain
             RegisterCommand<RenameUserCommand>();
             RegisterQuery<UsersQuery, UsersResult>();
             RegisterQuery<EventPostersQuery, EventPosters>();
-            
-            // to inrastructure layer
-
-            // --------
 
             RegisterEvents(typeof(UserCreatedEvent), typeof(UserRenamedEvent));
         }

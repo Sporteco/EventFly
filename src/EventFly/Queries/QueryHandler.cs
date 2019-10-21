@@ -1,4 +1,5 @@
 ﻿using Akka.Actor;
+using System.Threading.Tasks;
 
 namespace EventFly.Queries
 {
@@ -6,13 +7,13 @@ namespace EventFly.Queries
     {
         protected QueryHandler()
         {
-            Receive<TQuery>(query =>
+            ReceiveAsync<TQuery>(async query =>
             {
-                var result = ExecuteQuery(query);
+                var result = await ExecuteQuery(query);
                 Context.Sender.Tell(result);
             });
         }
 
-        public abstract TResult ExecuteQuery(TQuery query);
+        public abstract Task<TResult> ExecuteQuery(TQuery query);
     }
 }
