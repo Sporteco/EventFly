@@ -13,13 +13,15 @@ namespace Demo.Domain
         public UserDomain()
         {
             RegisterAggregate<UserAggregate, UserId>();
-            RegisterSaga<TestSaga, TestSagaId>();
             RegisterCommand<CreateUserCommand>();
             RegisterCommand<RenameUserCommand>();
-            RegisterQuery<UsersQuery,UsersResult>();
-            RegisterQuery<EventPostersQuery,EventPosters>();
-            RegisterAggregateReadModel<UsersInfoReadModel, UserId>();
-            RegisterReadModel<TotalUsersReadModel, TotalUsersReadModelManager>();
+            RegisterQuery<UsersQuery, UsersResult>();
+            RegisterQuery<EventPostersQuery, EventPosters>();
+            
+            // to inrastructure layer
+
+            // --------
+
             RegisterEvents(typeof(UserCreatedEvent), typeof(UserRenamedEvent));
         }
     }

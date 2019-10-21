@@ -68,58 +68,58 @@ namespace EventFly.Definitions
             return this;
         }
 
-        protected IDomainDefinition RegisterSaga<TSaga, TSagaId, TSagaLocator>()
-          where TSaga : ActorBase, IAggregateSaga<TSagaId>
-          where TSagaId : IIdentity
-          where TSagaLocator : class, ISagaLocator<TSagaId>, new()
-        {
-            //var manager = _system.ActorOf(Props.Create(() => new AggregateSagaManager<TSaga, TSagaId, TSagaLocator>()),
-            //    $"saga-{typeof(TSagaId).Name}-manager");
+        //protected IDomainDefinition RegisterSaga<TSaga, TSagaId, TSagaLocator>()
+        //  where TSaga : ActorBase, IAggregateSaga<TSagaId>
+        //  where TSagaId : IIdentity
+        //  where TSagaLocator : class, ISagaLocator<TSagaId>, new()
+        //{
+        //    //var manager = _system.ActorOf(Props.Create(() => new AggregateSagaManager<TSaga, TSagaId, TSagaLocator>()),
+        //    //    $"saga-{typeof(TSagaId).Name}-manager");
 
-            _sagas.Add(
-                new SagaDefinition(typeof(TSaga), typeof(TSagaId),
-                    new AggregateSagaManagerDefinition(typeof(TSaga), typeof(TSagaId), typeof(TSagaLocator))
-                )
-            );
-            return this;
-        }
+        //    _sagas.Add(
+        //        new SagaDefinition(typeof(TSaga), typeof(TSagaId),
+        //            new AggregateSagaManagerDefinition(typeof(TSaga), typeof(TSagaId), typeof(TSagaLocator))
+        //        )
+        //    );
+        //    return this;
+        //}
 
-        protected IDomainDefinition RegisterSaga<TSaga, TSagaId>()
-          where TSaga : ActorBase, IAggregateSaga<TSagaId>
-          where TSagaId : IIdentity
-        {
-            //var manager = _system.ActorOf(Props.Create(() => new AggregateSagaManager<TSaga, TSagaId, SagaLocatorByIdentity<TSagaId>>()),
-            //    $"saga-{typeof(TSagaId).Name}-manager");
+        //protected IDomainDefinition RegisterSaga<TSaga, TSagaId>()
+        //  where TSaga : ActorBase, IAggregateSaga<TSagaId>
+        //  where TSagaId : IIdentity
+        //{
+        //    //var manager = _system.ActorOf(Props.Create(() => new AggregateSagaManager<TSaga, TSagaId, SagaLocatorByIdentity<TSagaId>>()),
+        //    //    $"saga-{typeof(TSagaId).Name}-manager");
 
-            _sagas.Add(
-                new SagaDefinition(typeof(TSaga), typeof(TSagaId), 
-                    new AggregateSagaManagerDefinition(typeof(TSaga), typeof(TSagaId), typeof(SagaLocatorByIdentity<TSagaId>))
-                )
-            );
-            return this;
-        }
+        //    _sagas.Add(
+        //        new SagaDefinition(typeof(TSaga), typeof(TSagaId), 
+        //            new AggregateSagaManagerDefinition(typeof(TSaga), typeof(TSagaId), typeof(SagaLocatorByIdentity<TSagaId>))
+        //        )
+        //    );
+        //    return this;
+        //}
 
-        protected IDomainDefinition RegisterReadModel<TReadModel, TReadModelManager>()
-          where TReadModel : IReadModel
-          where TReadModelManager : ActorBase, IReadModelManager, new()
-        {
-            //var manager = _system.ActorOf(Props.Create(() => new TReadModelManager()),
-            //    $"read~model-{typeof(TReadModel).Name}-manager");
+        //protected IDomainDefinition RegisterReadModel<TReadModel, TReadModelManager>()
+        //  where TReadModel : IReadModel
+        //  where TReadModelManager : ActorBase, IReadModelManager, new()
+        //{
+        //    //var manager = _system.ActorOf(Props.Create(() => new TReadModelManager()),
+        //    //    $"read~model-{typeof(TReadModel).Name}-manager");
 
-            _readModels.Add(
-                new ReadModelDefinition(typeof(TReadModel),
-                    new ReadModelManagerDefinition(typeof(TReadModelManager), typeof(TReadModel))
-                )
-            );
-            return this;
-        }
+        //    _readModels.Add(
+        //        new ReadModelDefinition(typeof(TReadModel),
+        //            new ReadModelManagerDefinition(typeof(TReadModelManager), typeof(TReadModel))
+        //        )
+        //    );
+        //    return this;
+        //}
 
-        protected IDomainDefinition RegisterAggregateReadModel<TReadModel, TIdentity>()
-          where TReadModel :  ReadModel, new()
-            where TIdentity : IIdentity
-        {
-            return RegisterReadModel<TReadModel, AggregateReadModelManager<TReadModel, TIdentity>>();
-        }
+        //protected IDomainDefinition RegisterAggregateReadModel<TReadModel, TIdentity>()
+        //  where TReadModel :  ReadModel, new()
+        //    where TIdentity : IIdentity
+        //{
+        //    return RegisterReadModel<TReadModel, AggregateReadModelManager<TReadModel, TIdentity>>();
+        //}
 
 
         protected IDomainDefinition RegisterCommand<TCommand>() where TCommand : ICommand

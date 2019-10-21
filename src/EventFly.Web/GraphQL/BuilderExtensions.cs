@@ -24,7 +24,7 @@ namespace EventFly.Web.GraphQL
             return provider.GetRequiredService(serviceType);
         }
 
-        public static EventFlyBuilder AddEventFlyGraphQl(this EventFlyBuilder builder)
+        public static EventFlyBuilder AddGraphQl(this EventFlyBuilder builder)
         {
             var services = builder.Services;
             services.AddSingleton<IDocumentExecuter, DocumentExecuter>();

@@ -46,7 +46,7 @@ namespace EventFly.Examples.Api
 
             // Add Actors to DI as ActorRefProvider<T>
             services
-                .AddEventFly(actorSystem, cb => { });
+                .AddEventFly(actorSystem, ib => { }, cb => { });
             
             
             services

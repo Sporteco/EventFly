@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Demo.Domain.ReadModels;
 
 namespace Demo.Web
 {
@@ -37,12 +38,18 @@ namespace Demo.Web
                     .AddSingleton("AAAA")
                     .AddEventFly(
                             system,
-                            b => 
+                            infrastructureBuilder =>
+                            {
+                                infrastructureBuilder.AddAggregateReadModel<UsersInfoReadModel, UserId>();
+                                infrastructureBuilder.AddReadModel<TotalUsersReadModel, TotalUsersReadModelManager>();
+                                infrastructureBuilder.AddSaga<TestSaga, TestSagaId>();
+                            },
+                            b =>
                                 b.RegisterDomainDefinitions<UserDomain>()
                                 .WithDependencies<UserDomainDependencies>()
                         )
-                        .AddEventFlyGraphQl()
-                        .AddEventFlySwagger();
+                        .AddGraphQl()
+                        .AddSwagger();
 
             /*services.AddTransient<EnumerationGraphType<StringOperator>>();
             services.AddTransient<EnumerationGraphType<CollectionOperator>>();

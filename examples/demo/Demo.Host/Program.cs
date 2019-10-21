@@ -11,6 +11,8 @@ using Demo.Dependencies;
 using EventFly.Queries;
 using EventFly.Commands;
 using System.Linq;
+using Demo.Domain.Aggregates;
+using Demo.Domain.ReadModels;
 
 namespace Demo.Host
 {
@@ -29,6 +31,12 @@ namespace Demo.Host
                     .AddSingleton("AAAA")
                     .AddEventFly(
                         system,
+                        infrastructureBuilder =>
+                        {
+                            infrastructureBuilder.AddAggregateReadModel<UsersInfoReadModel, UserId>();
+                            infrastructureBuilder.AddReadModel<TotalUsersReadModel, TotalUsersReadModelManager>();
+                            infrastructureBuilder.AddSaga<TestSaga, TestSagaId>();
+                        },
                         domainBuilder =>
                         {
                             domainBuilder

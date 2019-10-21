@@ -9,6 +9,7 @@ namespace EventFly.DependencyInjection
             where TDomain : IDomainDefinition
         {
             private readonly TDomain _domain;
+
             public DomainBuilder(TDomain domain)
             {
                 _domain = domain;

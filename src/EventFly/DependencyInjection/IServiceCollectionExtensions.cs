@@ -1,9 +1,14 @@
 ﻿using Akka.Actor;
 using EventFly.Commands;
+using EventFly.Core;
 using EventFly.Definitions;
 using EventFly.Queries;
+using EventFly.ReadModels;
+using EventFly.Sagas;
+using EventFly.Sagas.AggregateSaga;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace EventFly.DependencyInjection
@@ -13,17 +18,23 @@ namespace EventFly.DependencyInjection
         public static EventFlyBuilder AddEventFly(
             this IServiceCollection services,
             ActorSystem actorSystem,
+            Action<InfrastructureBuilder> infrastructureBuilder,
             Action<DomainsBuilder> domainsBuilderAction)
         {
             var domainsBuilder = new DomainsBuilder();
+            var infrastuctureBuilder = new InfrastructureBuilder();
+
+            infrastructureBuilder(
+                infrastuctureBuilder
+            );
 
             domainsBuilderAction(
                 domainsBuilder
             );
 
-            var appDef = new ApplicationDefinition(domainsBuilder.Domains.ToList());
+            var appDef = new ApplicationDefinition(domainsBuilder.Domains.ToList(), infrastuctureBuilder.ReadModels, infrastuctureBuilder.Sagas);
 
-            foreach(var dep in domainsBuilder.Domains.Where(d => d.DomainDependencies != null).SelectMany(d => d.DomainDependencies.Dependencies))
+            foreach (var dep in domainsBuilder.Domains.Where(d => d.DomainDependencies != null).SelectMany(d => d.DomainDependencies.Dependencies))
                 services.Add(dep);
 
             services
@@ -39,15 +50,70 @@ namespace EventFly.DependencyInjection
             var registry = new DefinitionToManagerRegistryBuilder()
                 .UseSystem(actorSystem)
                     .RegisterAggregateManagers(appDef.Aggregates.Select(a => a.ManagerDefinition).ToList())
-                    .RegisterSagaManagers(appDef.Sagas.Select(a => a.ManagerDefinition).ToList())
                     .RegisterQueryManagers(appDef.Queries.Select(a => a.ManagerDefinition).ToList())
                     .RegisterReadModelManagers(appDef.ReadModels.Select(a => a.ManagerDefinition).ToList())
+                    .RegisterSagaManagers(appDef.Sagas.Select(a => a.ManagerDefinition).ToList())
                 .Build();
 
             services
                 .AddSingleton<IDefinitionToManagerRegistry>(registry);
 
             return new EventFlyBuilder(appDef, services);
+        }
+    }
+
+    public sealed class InfrastructureBuilder
+    {
+        private readonly List<IReadModelDefinition> _readModelDefinitions = new List<IReadModelDefinition>();
+        private readonly List<ISagaDefinition> _sagaDefinitions = new List<ISagaDefinition>();
+
+        public IReadOnlyCollection<IReadModelDefinition> ReadModels => _readModelDefinitions;
+        public IReadOnlyCollection<ISagaDefinition> Sagas => _sagaDefinitions;
+
+
+        public InfrastructureBuilder AddReadModel<TReadModel, TReadModelManager>()
+            where TReadModel : IReadModel
+            where TReadModelManager : ActorBase, IReadModelManager, new()
+        {
+            _readModelDefinitions.Add(
+                new ReadModelDefinition(typeof(TReadModel),
+                    new ReadModelManagerDefinition(typeof(TReadModelManager), typeof(TReadModel))
+                ));
+            return this;
+        }
+
+        public InfrastructureBuilder AddAggregateReadModel<TReadModel, TIdentity>()
+            where TReadModel : ReadModel, new()
+            where TIdentity : IIdentity
+        {
+            return AddReadModel<TReadModel, AggregateReadModelManager<TReadModel, TIdentity>>();
+        }
+
+        public InfrastructureBuilder AddSaga<TSaga, TSagaId, TSagaLocator>()
+            where TSaga : ActorBase, IAggregateSaga<TSagaId>
+            where TSagaId : IIdentity
+            where TSagaLocator : class, ISagaLocator<TSagaId>, new()
+        {
+            _sagaDefinitions.Add(
+                new SagaDefinition(typeof(TSaga), typeof(TSagaId),
+                    new AggregateSagaManagerDefinition(typeof(TSaga), typeof(TSagaId), typeof(TSagaLocator))
+                )
+            );
+
+            return this;
+        }
+
+        public InfrastructureBuilder AddSaga<TSaga, TSagaId>()
+            where TSaga : ActorBase, IAggregateSaga<TSagaId>
+            where TSagaId : IIdentity
+        {
+            _sagaDefinitions.Add(
+                new SagaDefinition(typeof(TSaga), typeof(TSagaId),
+                    new AggregateSagaManagerDefinition(typeof(TSaga), typeof(TSagaId), typeof(SagaLocatorByIdentity<TSagaId>))
+                )
+            );
+
+            return this;
         }
     }
 }

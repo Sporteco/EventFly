@@ -23,11 +23,11 @@ namespace EventFly.Definitions
 
         IReadOnlyCollection<IAggregateDefinition> Aggregates { get; }
 
-        IReadOnlyCollection<ISagaDefinition> Sagas { get; }
+        //IReadOnlyCollection<ISagaDefinition> Sagas { get; }
 
         IReadOnlyCollection<IQueryDefinition> Queries { get; }
 
-        IReadOnlyCollection<IReadModelDefinition> ReadModels { get; }
+        //IReadOnlyCollection<IReadModelDefinition> ReadModels { get; }
 
         EventDefinitions Events { get; }
 

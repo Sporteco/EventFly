@@ -18,8 +18,7 @@ namespace EventFly.Tests.UnitTests.Subscribers
         public TestDomain()
         {
             RegisterAggregate<TestAggregate, TestAggregateId>();
-            RegisterSaga<TestSaga, TestSagaId>();
-            RegisterSaga<TestAsyncSaga, TestAsyncSagaId>();
+
             RegisterCommands(typeof(AddFourTestsCommand), typeof(AddTestCommand),typeof(CreateAndAddTwoTestsCommand),
                 typeof(CreateTestCommand), typeof(GiveTestCommand), typeof(PoisonTestAggregateCommand), typeof(PublishTestStateCommand),
                 typeof(ReceiveTestCommand), typeof(TestDomainErrorCommand), typeof(TestFailedExecutionResultCommand),
