@@ -33,7 +33,7 @@ namespace EventFly.Definitions
 
         public SnapshotDefinitions Snapshots { get; } = new SnapshotDefinitions();
 
-        public JobDefinitions Jobs { get; } = new JobDefinitions();
+        //public JobDefinitions Jobs { get; } = new JobDefinitions();
         public IDomainDependencies<IDomainDefinition> DomainDependencies { get; internal set; }
 
         protected IDomainDefinition RegisterAggregate<TAggregate, TIdentity>()
@@ -155,17 +155,17 @@ namespace EventFly.Definitions
             return this;
         }
 
-        protected IDomainDefinition RegisterJob<TJob>() where TJob : IJob
-        {
-            Jobs.Load(typeof(TJob));
-            return this;
-        }
+        //protected IDomainDefinition RegisterJob<TJob>() where TJob : IJob
+        //{
+        //    Jobs.Load(typeof(TJob));
+        //    return this;
+        //}
 
-        protected IDomainDefinition RegisterJobs(params Type[] types)
-        {
-            Jobs.Load(types);
-            return this;
-        }
+        //protected IDomainDefinition RegisterJobs(params Type[] types)
+        //{
+        //    Jobs.Load(types);
+        //    return this;
+        //}
 
     }
 }

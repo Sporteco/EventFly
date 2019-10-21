@@ -28,7 +28,7 @@ namespace EventFly.Tests.UnitTests.Subscribers
                 typeof(TestSentEvent), typeof(TestSagaCompletedEvent), typeof(TestSagaStartedEvent), typeof(TestSagaTransactionCompletedEvent),
                 typeof(TestAsyncSagaCompletedEvent), typeof(TestAsyncSagaStartedEvent), typeof(TestAsyncSagaTransactionCompletedEvent));
             RegisterSnapshots(typeof(TestAggregateSnapshot));
-            RegisterJobs(typeof(TestJob));
+            //RegisterJobs(typeof(TestJob));
 
         }
     }

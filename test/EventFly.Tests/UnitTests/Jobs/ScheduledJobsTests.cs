@@ -49,7 +49,8 @@ namespace EventFly.Tests.UnitTests.Jobs
         public ScheduledJobsTests(ITestOutputHelper testOutputHelper)
             : base(TestHelpers.Akka.Configuration.ConfigWithTestScheduler, "jobs-tests", testOutputHelper)
         {
-            Sys.RegisterDependencyResolver(new ServiceCollection().AddEventFly(Sys, ib => ib.AddSaga<TestSaga, TestSagaId>().AddSaga<TestAsyncSaga, TestAsyncSagaId>(), db => db.RegisterDomainDefinitions<TestDomain>()).Services.AddScoped<TestAsyncSaga>().BuildServiceProvider());
+            Sys.RegisterDependencyResolver(new ServiceCollection()
+                .AddEventFly(Sys, ib => ib.AddJob<TestJob>().AddSaga<TestSaga, TestSagaId>().AddSaga<TestAsyncSaga, TestAsyncSagaId>(), db => db.RegisterDomainDefinitions<TestDomain>()).Services.AddScoped<TestAsyncSaga>().BuildServiceProvider());
         }
 
         [Fact]

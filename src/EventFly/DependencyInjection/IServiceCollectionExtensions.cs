@@ -2,6 +2,7 @@
 using EventFly.Commands;
 using EventFly.Core;
 using EventFly.Definitions;
+using EventFly.Jobs;
 using EventFly.Queries;
 using EventFly.ReadModels;
 using EventFly.Sagas;
@@ -18,21 +19,26 @@ namespace EventFly.DependencyInjection
         public static EventFlyBuilder AddEventFly(
             this IServiceCollection services,
             ActorSystem actorSystem,
-            Action<InfrastructureBuilder> infrastructureBuilder,
+            Action<InfrastructureBuilder> infrastructureBuilderAction,
             Action<DomainsBuilder> domainsBuilderAction)
         {
             var domainsBuilder = new DomainsBuilder();
-            var infrastuctureBuilder = new InfrastructureBuilder();
+            var infrasrtuctureBuilder = new InfrastructureBuilder();
 
-            infrastructureBuilder(
-                infrastuctureBuilder
+            infrastructureBuilderAction(
+                infrasrtuctureBuilder
             );
 
             domainsBuilderAction(
                 domainsBuilder
             );
 
-            var appDef = new ApplicationDefinition(domainsBuilder.Domains.ToList(), infrastuctureBuilder.ReadModels, infrastuctureBuilder.Sagas);
+            var appDef = new ApplicationDefinition(
+                domainsBuilder.Domains.ToList(),
+                infrasrtuctureBuilder.ReadModels,
+                infrasrtuctureBuilder.Sagas,
+                infrasrtuctureBuilder.Jobs
+            );
 
             foreach (var dep in domainsBuilder.Domains.Where(d => d.DomainDependencies != null).SelectMany(d => d.DomainDependencies.Dependencies))
                 services.Add(dep);
@@ -69,6 +75,7 @@ namespace EventFly.DependencyInjection
 
         public IReadOnlyCollection<IReadModelDefinition> ReadModels => _readModelDefinitions;
         public IReadOnlyCollection<ISagaDefinition> Sagas => _sagaDefinitions;
+        public JobDefinitions Jobs { get; } = new JobDefinitions();
 
         public InfrastructureBuilder RegisterInfrastructureDefinitions<TInfrastructureDefinitions>()
             where TInfrastructureDefinitions : IInfrastructureDefinitions, new()
@@ -87,6 +94,18 @@ namespace EventFly.DependencyInjection
                 new ReadModelDefinition(typeof(TReadModel),
                     new ReadModelManagerDefinition(typeof(TReadModelManager), typeof(TReadModel))
                 ));
+            return this;
+        }
+
+        public InfrastructureBuilder AddJob<TJob>() where TJob : IJob
+        {
+            Jobs.Load(typeof(TJob));
+            return this;
+        }
+
+        public InfrastructureBuilder AddJobs(params Type[] types)
+        {
+            Jobs.Load(types);
             return this;
         }
 

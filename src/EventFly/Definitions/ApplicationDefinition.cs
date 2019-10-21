@@ -20,15 +20,16 @@ namespace EventFly.Definitions
         public ApplicationDefinition(
             IReadOnlyCollection<IDomainDefinition> domains,
             IReadOnlyCollection<IReadModelDefinition> readModelDefinitions,
-            IReadOnlyCollection<ISagaDefinition> sagaDefinitions
+            IReadOnlyCollection<ISagaDefinition> sagaDefinitions,
+            JobDefinitions jobsDefinitions
         )
         {
             ReadModels = readModelDefinitions;
             Sagas = sagaDefinitions;
+            _jobs.AddDefinitions(jobsDefinitions);
             foreach (var instance in domains)
             {
                 _events.AddDefinitions(instance.Events);
-                _jobs.AddDefinitions(instance.Jobs); // TODO: ?? to infrastcture layer
                 _snapshots.AddDefinitions(instance.Snapshots);
                 _commands.AddDefinitions(instance.Commands);
             }

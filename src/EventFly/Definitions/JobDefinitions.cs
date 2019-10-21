@@ -10,14 +10,14 @@ using EventFly.Jobs;
 
 namespace EventFly.Definitions
 {
-  public class JobDefinitions : VersionedTypeDefinitions<IJob, JobVersionAttribute, JobDefinition>, IJobDefinitions
-  {
-    protected override JobDefinition CreateDefinition(
-      int version,
-      Type type,
-      string name)
+    public class JobDefinitions : VersionedTypeDefinitions<IJob, JobVersionAttribute, JobDefinition>, IJobDefinitions
     {
-      return new JobDefinition(version, type, name);
+        protected override JobDefinition CreateDefinition(
+          int version,
+          Type type,
+          string name)
+        {
+            return new JobDefinition(version, type, name);
+        }
     }
-  }
 }

@@ -31,6 +31,6 @@ namespace EventFly.Definitions
 
         SnapshotDefinitions Snapshots { get; }
 
-        JobDefinitions Jobs { get; }
+        //JobDefinitions Jobs { get; }
     }
 }
