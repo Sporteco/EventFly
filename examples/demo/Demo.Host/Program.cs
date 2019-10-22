@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Akka.Actor;
 using EventFly.DependencyInjection;
 using Demo.Commands;
-using Demo.Domain;
 using Demo.Queries;
 using Demo.ValueObjects;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,8 +10,6 @@ using Demo.Dependencies;
 using EventFly.Queries;
 using EventFly.Commands;
 using System.Linq;
-using Demo.Domain.Aggregates;
-using Demo.Domain.ReadModels;
 
 namespace Demo.Host
 {
@@ -35,7 +32,8 @@ namespace Demo.Host
 
                     .BuildServiceProvider();
 
-            system.RegisterDependencyResolver(serviceProvider);
+            system
+                .RegisterDependencyResolver(serviceProvider);
 
 
             var holder = system.GetExtension<ServiceProviderHolder>();

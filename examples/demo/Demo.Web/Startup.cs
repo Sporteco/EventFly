@@ -7,7 +7,6 @@ using EventFly.Web;
 using EventFly.Web.GraphQL;
 using EventFly.Web.Swagger;
 using Demo.Db;
-using Demo.Dependencies;
 using Demo.Domain;
 using Demo.Domain.Aggregates;
 using Microsoft.AspNetCore.Builder;
@@ -16,6 +15,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Demo.Domain.ReadModels;
+using Demo.Dependencies;
 
 namespace Demo.Web
 {
@@ -35,21 +35,18 @@ namespace Demo.Web
             var system = ActorSystem.Create("user-example");
 
             services
-                    .AddSingleton("AAAA")
+                .AddSingleton("AAAA");
 
-                    .AddEventFly(system)
-                        .WithContext<UserContext>()
-                        .AddGraphQl()
-                        .AddSwagger()
-                    .BuildEventFly();
+            services
+                .AddEventFly(system)
+                    .WithContext<UserContext>()
+                    .AddGraphQl()
+                    .AddSwagger()
+                .BuildEventFly();
 
-            /*services.AddTransient<EnumerationGraphType<StringOperator>>();
-            services.AddTransient<EnumerationGraphType<CollectionOperator>>();
-            services.AddTransient<EnumerationGraphType<DateTimeOperator>>();
-            services.AddTransient<EnumerationGraphType<NumericOperator>>();
-            services.AddTransient<EnumerationGraphType<UriHostNameType>>();*/
-
-            services.AddMvcCore().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services
+                .AddMvcCore()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
