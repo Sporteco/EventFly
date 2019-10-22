@@ -25,7 +25,7 @@ namespace EventFly.Web.GraphQL
 
                 if (type == null)
                 {
-                    var gType = GetGraphTypeEx(prop.PropertyType, graphQuery, isInput);
+                    var gType = GetGraphTypeEx(prop.PropertyType, graphQuery, true);
                     if (!allowNulls && isInput)
                         gType = new NonNullGraphType(gType);
                     
