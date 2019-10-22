@@ -8,7 +8,7 @@ using EventFly.Commands;
 
 namespace EventFly.Definitions
 {
-  public class CommandAggregatedDefinitions : AggregatedDefinitions<CommandDefinitions, CommandVersionAttribute, CommandDefinition>, ICommandDefinitions
-  {
-  }
+    public class CommandAggregatedDefinitions : AggregatedDefinitions<CommandDefinitions, CommandVersionAttribute, CommandDefinition>, ICommandDefinitions
+    {
+    }
 }

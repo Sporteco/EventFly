@@ -30,7 +30,7 @@ namespace EventFly.Web.GraphQL
     internal sealed class ObjectGraphTypeFromDomain : ObjectGraphType<object>
     {
 
-        public ObjectGraphTypeFromDomain(IDomainDefinition domainDefinition, IServiceProvider provider)
+        public ObjectGraphTypeFromDomain(IContextDefinition domainDefinition, IServiceProvider provider)
         {
             var modelType1 = domainDefinition.GetType();
             IsTypeOf = type => true;

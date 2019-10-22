@@ -54,8 +54,15 @@ namespace EventFly.Tests.UnitTests.Aggregates
         public AggregateTestsWithFixtures(ITestOutputHelper testOutputHelper)
             : base(TestHelpers.Akka.Configuration.Config, "aggregate-fixture-tests", testOutputHelper)
         {
-            Sys.RegisterDependencyResolver(new ServiceCollection().AddEventFly(Sys, ib => ib.AddSaga<TestSaga, TestSagaId>().AddSaga<TestAsyncSaga, TestAsyncSagaId>(), db => db.RegisterDomainDefinitions<TestDomain>()).Services.AddScoped<TestAsyncSaga>().BuildServiceProvider());
-
+            Sys.RegisterDependencyResolver(
+                new ServiceCollection()
+                .AddEventFly(Sys)
+                    .WithContext<TestContext>()
+                    .BuildEventFly()
+                .AddScoped<TestSaga>()
+                .AddScoped<TestAsyncSaga>()
+                .BuildServiceProvider()
+            );
         }
 
         [Fact]
@@ -74,7 +81,7 @@ namespace EventFly.Tests.UnitTests.Aggregates
 
 
         }
-        
+
         [Fact]
         [Category(Category)]
         public void InitialEvent_AfterAggregateCreationWithNoTestPredicate_TestCreatedEventEmitted()
@@ -82,13 +89,13 @@ namespace EventFly.Tests.UnitTests.Aggregates
             var aggregateId = TestAggregateId.New;
             var commandId = CommandId.New;
             var testId = TestId.New;
-            
-            this.FixtureFor<TestAggregate,TestAggregateId>(aggregateId)
+
+            this.FixtureFor<TestAggregate, TestAggregateId>(aggregateId)
                 .Given(new TestCreatedEvent(aggregateId), new TestAddedEvent(new Test(TestId.New)))
                 .When(new AddTestCommand(aggregateId, commandId, new Test(testId)))
                 .ThenExpect<TestAddedEvent>();
         }
-        
+
         [Fact]
         [Category(Category)]
         public void InitialEvent_AfterAggregateCreation_TestCreatedDomainEventEmitted()
@@ -96,13 +103,13 @@ namespace EventFly.Tests.UnitTests.Aggregates
             var aggregateId = TestAggregateId.New;
             var commandId = CommandId.New;
             var testId = TestId.New;
-            
-            this.FixtureFor<TestAggregate,TestAggregateId>(aggregateId)
+
+            this.FixtureFor<TestAggregate, TestAggregateId>(aggregateId)
                 .Given(new TestCreatedEvent(aggregateId), new TestAddedEvent(new Test(TestId.New)))
                 .When(new AddTestCommand(aggregateId, commandId, new Test(testId)))
                 .ThenExpectDomainEvent<TestAddedEvent>();
         }
-        
+
         [Fact]
         [Category(Category)]
         public void InitialCommand_AfterAggregateCreation_TestCreatedEventEmitted()
@@ -110,13 +117,13 @@ namespace EventFly.Tests.UnitTests.Aggregates
             var aggregateId = TestAggregateId.New;
             var commandId = CommandId.New;
             var testId = TestId.New;
-            
-            this.FixtureFor<TestAggregate,TestAggregateId>(aggregateId)
+
+            this.FixtureFor<TestAggregate, TestAggregateId>(aggregateId)
                 .Given(new CreateTestCommand(aggregateId, commandId))
                 .When(new AddTestCommand(aggregateId, CommandId.New, new Test(testId)))
                 .ThenExpect<TestAddedEvent>(x => x.Test.Id == testId);
         }
-        
+
         [Fact]
         [Category(Category)]
         public void NullInitialCommand_AfterAggregateCreation_ExceptionThrown()
@@ -126,30 +133,30 @@ namespace EventFly.Tests.UnitTests.Aggregates
             this.Invoking(test =>
                     this.FixtureFor<TestAggregate, TestAggregateId>(aggregateId)
                         .Given(commands: null))
-                .Should().Throw<ArgumentNullException>(); 
+                .Should().Throw<ArgumentNullException>();
         }
-        
+
         [Fact]
         [Category(Category)]
         public void NullInInitialCommands_AfterAggregateCreation_ExceptionThrown()
         {
             var aggregateId = TestAggregateId.New;
-            var commands = new List<ICommand> {null};
+            var commands = new List<ICommand> { null };
 
             this.Invoking(test =>
                     this.FixtureFor<TestAggregate, TestAggregateId>(aggregateId)
                         .Given(commands.ToArray()))
-                .Should().Throw<NullReferenceException>(); 
+                .Should().Throw<NullReferenceException>();
         }
-        
+
         [Fact]
         [Category(Category)]
         public void InitialSnapshot_After_TestCreatedEventEmitted()
         {
             var aggregateId = TestAggregateId.New;
-            
-            this.FixtureFor<TestAggregate,TestAggregateId>(aggregateId)
-                .Given(new TestAggregateSnapshot(Enumerable.Range(0,10).Select(x => new TestAggregateSnapshot.TestModel(Guid.NewGuid())).ToList()), 10)
+
+            this.FixtureFor<TestAggregate, TestAggregateId>(aggregateId)
+                .Given(new TestAggregateSnapshot(Enumerable.Range(0, 10).Select(x => new TestAggregateSnapshot.TestModel(Guid.NewGuid())).ToList()), 10)
                 .When(new PublishTestStateCommand(aggregateId))
                 .ThenExpect<TestStateSignalEvent>(x => x.AggregateState.FromHydration);
         }
@@ -160,8 +167,8 @@ namespace EventFly.Tests.UnitTests.Aggregates
         {
             var aggregateId = TestAggregateId.New;
             var commandId = CommandId.New;
-            
-            this.FixtureFor<TestAggregate,TestAggregateId>(aggregateId)
+
+            this.FixtureFor<TestAggregate, TestAggregateId>(aggregateId)
                 .GivenNothing()
                 .When(new CreateTestCommand(aggregateId, commandId))
                 .ThenExpect<TestCreatedEvent>(x => x.TestAggregateId == aggregateId);
@@ -173,8 +180,8 @@ namespace EventFly.Tests.UnitTests.Aggregates
         {
             var aggregateId = TestAggregateId.New;
             var commandId = CommandId.New;
-            
-            this.FixtureFor<TestAggregate,TestAggregateId>(aggregateId)
+
+            this.FixtureFor<TestAggregate, TestAggregateId>(aggregateId)
                 .GivenNothing()
                 .When(new CreateTestCommand(aggregateId, commandId))
                 .ThenExpectDomainEvent<TestCreatedEvent>(
@@ -195,7 +202,7 @@ namespace EventFly.Tests.UnitTests.Aggregates
             var fixture = new AggregateFixture<TestAggregate, TestAggregateId>(this);
             var aggregateId = TestAggregateId.New;
             var commandId = CommandId.New;
-            
+
             fixture
                 .For(aggregateId)
                 .GivenNothing()
@@ -215,10 +222,10 @@ namespace EventFly.Tests.UnitTests.Aggregates
             var commandId2 = CommandId.New;
             var testId = TestId.New;
             var test = new Test(testId);
-            
-            this.FixtureFor<TestAggregate,TestAggregateId>(aggregateId)
+
+            this.FixtureFor<TestAggregate, TestAggregateId>(aggregateId)
                 .GivenNothing()
-                .When(new CreateTestCommand(aggregateId, commandId), new AddTestCommand(aggregateId, commandId2 ,test))
+                .When(new CreateTestCommand(aggregateId, commandId), new AddTestCommand(aggregateId, commandId2, test))
                 .ThenExpect<TestAddedEvent>(x => x.Test.Equals(test));
         }
 
@@ -235,11 +242,11 @@ namespace EventFly.Tests.UnitTests.Aggregates
             var test = new Test(testId);
             var test2Id = TestId.New;
             var test2 = new Test(test2Id);
-            
+
             fixture
                 .For(aggregateId)
                 .GivenNothing()
-                .When(new CreateTestCommand(aggregateId, commandId), new AddTestCommand(aggregateId, commandId2,test),new AddTestCommand(aggregateId, commandId3,test2))
+                .When(new CreateTestCommand(aggregateId, commandId), new AddTestCommand(aggregateId, commandId2, test), new AddTestCommand(aggregateId, commandId3, test2))
                 .ThenExpectDomainEvent<TestAddedEvent>(
                     x => x.AggregateEvent.Test.Equals(test)
                          && x.AggregateSequenceNumber == 2)
@@ -255,7 +262,7 @@ namespace EventFly.Tests.UnitTests.Aggregates
             var aggregateId = TestAggregateId.New;
             var commands = new List<ICommand>();
             commands.AddRange(Enumerable.Range(0, 5).Select(x => new AddTestCommand(aggregateId, CommandId.New, new Test(TestId.New))));
-            
+
             this.FixtureFor<TestAggregate, TestAggregateId>(aggregateId)
                 .Given(new TestCreatedEvent(aggregateId))
                 .When(commands.ToArray())
@@ -266,7 +273,7 @@ namespace EventFly.Tests.UnitTests.Aggregates
                          && x.AggregateEvent.Version == 6
                          && x.AggregateEvent.AggregateState.TestCollection.Count == 5);
         }
-        
+
         [Fact]
         [Category(Category)]
         public void TestEventMultipleEmitSourcing_AfterManyMultiCreateCommand_EventsEmitted()
@@ -283,13 +290,13 @@ namespace EventFly.Tests.UnitTests.Aggregates
                 .ThenExpect<TestAddedEvent>()
                 .ThenExpect<TestAddedEvent>();
         }
-        
+
         [Fact]
         [Category(Category)]
         public void TestEventMultipleEmitSourcing_AfterManyMultiCommand_TestStateSignalled()
         {
             var aggregateId = TestAggregateId.New;
-            
+
             this.FixtureFor<TestAggregate, TestAggregateId>(aggregateId)
                 .Given(new TestCreatedEvent(aggregateId))
                 .When(new AddFourTestsCommand(aggregateId, CommandId.New, new Test(TestId.New)))
@@ -308,7 +315,7 @@ namespace EventFly.Tests.UnitTests.Aggregates
             var aggregateId = TestAggregateId.New;
             var commands = new List<ICommand>();
             commands.AddRange(Enumerable.Range(0, 10).Select(x => new AddTestCommand(aggregateId, CommandId.New, new Test(TestId.New))));
-            
+
             this.FixtureFor<TestAggregate, TestAggregateId>(aggregateId)
                 .Given(new TestCreatedEvent(aggregateId))
                 .When(commands.ToArray())

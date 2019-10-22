@@ -54,9 +54,18 @@ namespace EventFly.Tests.UnitTests.Fixtures
         {
             using (var testKit = new TestKit(_config,"fixture-tests-2"))
             {
-                testKit.Sys.RegisterDependencyResolver(new ServiceCollection().AddEventFly(testKit.Sys, ib => ib.AddSaga<TestSaga, TestSagaId>().AddSaga<TestAsyncSaga, TestAsyncSagaId>(), db => db.RegisterDomainDefinitions<TestDomain>()).Services.AddScoped<TestAsyncSaga>().BuildServiceProvider());
+                testKit.Sys.RegisterDependencyResolver(
+                    new ServiceCollection()
+                    .AddEventFly(testKit.Sys)
+                        .WithContext<TestContext>()
+                        .BuildEventFly()
+                    .AddScoped<TestSaga>()
+                    .AddScoped<TestAsyncSaga>()
+                    .BuildServiceProvider()
+                );
 
-                var fixture = new AggregateFixture<TestAggregate, TestAggregateId>(testKit);
+
+            var fixture = new AggregateFixture<TestAggregate, TestAggregateId>(testKit);
                 var aggregateIdentity = TestAggregateId.New;
 
                 fixture.Using(aggregateIdentity);

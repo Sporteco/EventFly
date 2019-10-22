@@ -36,15 +36,12 @@ namespace Demo.Web
 
             services
                     .AddSingleton("AAAA")
-                    .AddEventFly(
-                            system,
-                            infrastructureBuilder => infrastructureBuilder.RegisterInfrastructureDefinitions<UserDomainDependencies>(),
-                            domainBuilder => domainBuilder
-                                            .RegisterDomainDefinitions<UserDomain>()
-                                            .WithDependencies<UserDomainDependencies>()
-                    )
-                    .AddGraphQl()
-                    .AddSwagger();
+
+                    .AddEventFly(system)
+                        .WithContext<UserContext>()
+                        .AddGraphQl()
+                        .AddSwagger()
+                    .BuildEventFly();
 
             /*services.AddTransient<EnumerationGraphType<StringOperator>>();
             services.AddTransient<EnumerationGraphType<CollectionOperator>>();
@@ -58,11 +55,11 @@ namespace Demo.Web
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            app.UseMiddleware<EventFlyMiddleware>();
+            app.UseEventFly();
 
-            app.UseEventFlyDependencyInjection();
             app.UseEventFlyGraphQl();
             app.UseEventFlySwagger();
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

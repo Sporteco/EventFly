@@ -50,14 +50,11 @@ namespace EventFly.Tests.IntegrationTests.Aggregates.Sagas
         {
             Sys.RegisterDependencyResolver(
                 new ServiceCollection()
-                .AddEventFly(
-                    Sys,
-                    ib => ib.AddSaga<TestSaga, TestSagaId>().AddSaga<TestAsyncSaga, TestAsyncSagaId>(),
-                    db => db.RegisterDomainDefinitions<TestDomain>()
-                )
-                .Services
-                    .AddScoped<TestSaga>()
-                    .AddScoped<TestAsyncSaga>()
+                .AddEventFly(Sys)
+                    .WithContext<TestContext>()
+                    .BuildEventFly()
+                .AddScoped<TestSaga>()
+                .AddScoped<TestAsyncSaga>()
                 .BuildServiceProvider()
             );
         }
