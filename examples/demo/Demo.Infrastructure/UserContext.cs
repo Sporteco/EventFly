@@ -6,9 +6,10 @@ using Demo.Queries;
 using Microsoft.Extensions.DependencyInjection;
 using EventFly.AggregateStorages;
 using EventFly.Queries;
-using Demo.Domain.QueryHandlers;
 using EventFly.ReadModels;
-using Demo.Domain.ReadModels;
+using Demo.Infrastructure.ReadModels;
+using Demo.Application;
+using Demo.Infrastructure.QueryHandlers;
 
 namespace Demo.Dependencies
 {

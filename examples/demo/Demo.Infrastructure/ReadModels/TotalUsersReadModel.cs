@@ -2,10 +2,10 @@
 using EventFly.ReadModels;
 using Demo.Events;
 
-namespace Demo.Domain.ReadModels
+namespace Demo.Infrastructure.ReadModels
 {
     public class TotalUsersReadModel : ReadModel<TotalUsersReadModel>,
-    IAmReadModelFor<UserId, UserCreatedEvent>
+        IAmReadModelFor<UserId, UserCreatedEvent>
     {
         public int UsersCount { get; private set; }
 

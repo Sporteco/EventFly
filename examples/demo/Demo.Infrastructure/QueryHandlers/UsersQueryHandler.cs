@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Linq;
 using EventFly.Queries;
-using Demo.Domain.ReadModels;
 using Demo.Queries;
 using EventFly.ReadModels;
 using System.Threading.Tasks;
+using Demo.Infrastructure.ReadModels;
 
-namespace Demo.Domain.QueryHandlers
+namespace Demo.Infrastructure.QueryHandlers
 {
     public class UsersQueryHandler : QueryHandler<UsersQuery, UsersResult>
     {

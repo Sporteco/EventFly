@@ -2,7 +2,7 @@
 using Demo.Queries;
 using System.Threading.Tasks;
 
-namespace Demo.Domain.QueryHandlers
+namespace Demo.Infrastructure.QueryHandlers
 {
     public class EventPostersQueryHandler : QueryHandler<EventPostersQuery, EventPosters>
     {

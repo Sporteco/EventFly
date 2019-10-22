@@ -8,7 +8,7 @@ using Demo.Commands;
 using Demo.Events;
 using Demo.ValueObjects;
 
-namespace Demo.Domain.Aggregates
+namespace Demo.Application
 {
     #region TestSagaId
     public class TestSagaId : Identity<TestSagaId> { public TestSagaId(string value) : base(value){} }

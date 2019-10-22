@@ -1,9 +1,9 @@
 ﻿using EventFly.Aggregates;
 using EventFly.Commands.ExecutionResults;
 using Demo.Commands;
-using Demo.Domain.CommandHandlers;
 using Demo.Events;
 using Demo.ValueObjects;
+using Demo.Domain.CommandHandlers;
 
 namespace Demo.Domain.Aggregates
 {
@@ -19,7 +19,7 @@ namespace Demo.Domain.Aggregates
     }
 
     public class UserAggregate : EventDrivenAggregateRoot<UserAggregate, UserId, UserState>,
-    IExecute<CreateUserCommand, UserId>
+        IExecute<CreateUserCommand, UserId>
     {
         public UserAggregate(UserId id) : base(id)
         {

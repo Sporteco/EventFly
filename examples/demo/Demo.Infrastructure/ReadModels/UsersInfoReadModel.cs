@@ -3,7 +3,7 @@ using EventFly.Aggregates;
 using EventFly.ReadModels;
 using Demo.Events;
 
-namespace Demo.Domain.ReadModels
+namespace Demo.Infrastructure.ReadModels
 {
     public class UsersInfoReadModel : ReadModel<UsersInfoReadModel>,
         IAmReadModelFor<UserId, UserCreatedEvent>,
