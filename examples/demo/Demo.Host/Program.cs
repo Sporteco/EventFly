@@ -26,33 +26,17 @@ namespace Demo.Host
             //Create actor system
             var system = ActorSystem.Create("user-example");
 
-            var serviceProvider =
+           var serviceProvider =
                 new ServiceCollection()
-                    .AddSingleton("AAAA")
-                    .AddEventFly(
-                        system,
+                    .AddSingleton("aa")
+                    .AddEventFly(system)
+                        .WithContext<UserContext>()
+                    .BuildEventFly()
 
-                        infrastructureBuilder => 
-                                infrastructureBuilder
-                                .RegisterInfrastructureDefinitions<UserDomainDependencies>(),
-                        domainBuilder => 
-                                domainBuilder
-                                .RegisterDomainDefinitions<UserDomain>()
-                                .WithDependencies<UserDomainDependencies>()
-
-                    ).Services.BuildServiceProvider();
+                    .BuildServiceProvider();
 
             system.RegisterDependencyResolver(serviceProvider);
 
-            // migrations todo
-            /*using (var st = new TestDbContext())
-            {
-                try
-                {
-                    st.Database.Migrate();
-                }
-                catch (Exception) { }
-            }*/
 
             var holder = system.GetExtension<ServiceProviderHolder>();
 

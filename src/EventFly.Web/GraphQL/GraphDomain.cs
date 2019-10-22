@@ -14,11 +14,11 @@ namespace EventFly.Web.GraphQL
 {
     public sealed class GraphDomain 
     {
-        private readonly IDomainDefinition _domainDefinition;
+        private readonly IContextDefinition _domainDefinition;
         private readonly IServiceProvider _provider;
         public Dictionary<string,Type> _handlers = new Dictionary<string, Type>();
 
-        public GraphDomain(IDomainDefinition domainDefinition, IServiceProvider provider)
+        public GraphDomain(IContextDefinition domainDefinition, IServiceProvider provider)
         {
             _domainDefinition = domainDefinition;
             _provider = provider;
@@ -35,7 +35,7 @@ namespace EventFly.Web.GraphQL
             return  new FieldType
             {
                 ResolvedType = new ObjectGraphTypeFromDomain(_domainDefinition, _provider),
-                Name = !_domainDefinition.Name.EndsWith("Domain") ? _domainDefinition.Name : _domainDefinition.Name.Substring(0, _domainDefinition.Name.Length - "Domain".Length),
+                Name = !_domainDefinition.Name.EndsWith("Context") ? _domainDefinition.Name : _domainDefinition.Name.Substring(0, _domainDefinition.Name.Length - "Context".Length),
                 Description = _domainDefinition.GetType().GetCustomAttribute<DescriptionAttribute>()?.Description,
                 Arguments = new QueryArguments(),
                 Resolver = new FuncFieldResolver<object>(Execute),

@@ -10,12 +10,13 @@ using EventFly.TestHelpers.Aggregates.Sagas.TestAsync;
 using EventFly.TestHelpers.Aggregates.Sagas.TestAsync.Events;
 using EventFly.TestHelpers.Aggregates.Snapshots;
 using EventFly.TestHelpers.Jobs;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace EventFly.Tests.UnitTests.Subscribers
 {
-    public class TestDomain : DomainDefinition
+    public class TestContext : ContextDefinition
     {
-        public TestDomain()
+        public TestContext()
         {
             RegisterAggregate<TestAggregate, TestAggregateId>();
 
@@ -28,8 +29,14 @@ namespace EventFly.Tests.UnitTests.Subscribers
                 typeof(TestSentEvent), typeof(TestSagaCompletedEvent), typeof(TestSagaStartedEvent), typeof(TestSagaTransactionCompletedEvent),
                 typeof(TestAsyncSagaCompletedEvent), typeof(TestAsyncSagaStartedEvent), typeof(TestAsyncSagaTransactionCompletedEvent));
             RegisterSnapshots(typeof(TestAggregateSnapshot));
-            //RegisterJobs(typeof(TestJob));
+            RegisterJobs(typeof(TestJob));
+            RegisterSaga<TestSaga, TestSagaId>();
+            RegisterSaga<TestAsyncSaga, TestAsyncSagaId>();
+        }
 
+        public override IServiceCollection DI(IServiceCollection serviceDescriptors)
+        {
+            return serviceDescriptors;
         }
     }
 }

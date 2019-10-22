@@ -9,7 +9,7 @@ using System.Collections.Generic;
 
 namespace EventFly.Web.Swagger
 {
-  public class QueriesList : List<Type>
-  {
-  }
+    public class QueriesList : List<Type>
+    {
+    }
 }

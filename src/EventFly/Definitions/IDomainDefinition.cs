@@ -9,28 +9,21 @@ using System.Collections.Generic;
 
 namespace EventFly.Definitions
 {
-    public interface IDomainDependencies<out TDomain>
-        where TDomain : IDomainDefinition
+    public interface IContextDefinition
     {
-        IServiceCollection Dependencies { get; }
-    }
-
-    public interface IDomainDefinition
-    {
-        IDomainDependencies<IDomainDefinition> DomainDependencies { get; }
-
         string Name { get; }
 
         IReadOnlyCollection<IAggregateDefinition> Aggregates { get; }
 
         IReadOnlyCollection<IQueryDefinition> Queries { get; }
-
+        IReadOnlyCollection<IReadModelDefinition> ReadModels { get; }
+        IReadOnlyCollection<ISagaDefinition> Sagas { get; }
         EventDefinitions Events { get; }
 
         CommandDefinitions Commands { get; }
 
         SnapshotDefinitions Snapshots { get; }
 
-        //JobDefinitions Jobs { get; }
+        JobDefinitions Jobs { get; }
     }
 }

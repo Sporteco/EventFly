@@ -48,7 +48,7 @@ namespace EventFly.Web.Swagger
           List<ApiDescription> apis,
           ApiDescriptionGroupCollection data)
         {
-            foreach (var domain in _metadata.Domains)
+            foreach (var domain in _metadata.Contexts)
             {
                 foreach (var query in domain.Queries)
                 {
@@ -116,7 +116,7 @@ namespace EventFly.Web.Swagger
 
         private void PrepareCommands(List<ApiDescription> apis)
         {
-            foreach (var domain in _metadata.Domains)
+            foreach (var domain in _metadata.Contexts)
             {
                 foreach (var allDefinition in domain.Commands.GetAllDefinitions())
                 {

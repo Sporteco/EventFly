@@ -12,7 +12,7 @@ namespace EventFly.Definitions
 
     public interface IApplicationDefinition
     {
-        IReadOnlyCollection<IDomainDefinition> Domains { get; }
+        IReadOnlyCollection<IContextDefinition> Contexts { get; }
 
         IReadOnlyCollection<IQueryDefinition> Queries { get; }
 

@@ -1,49 +1,37 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using EventFly.DependencyInjection;
 using EventFly.Jobs;
 
 namespace EventFly.Definitions
 {
-    public interface IInfrastructureDefinitions
-    {
-        void Describe(InfrastructureBuilder infrastructureBuilder);
-    }
 
-    public sealed class ApplicationDefinition : IApplicationDefinition
+    internal sealed class ApplicationDefinition : IApplicationDefinition
     {
         private readonly EventAggregatedDefinitions _events = new EventAggregatedDefinitions();
         private readonly JobAggregatedDefinitions _jobs = new JobAggregatedDefinitions();
         private readonly SnapshotAggregatedDefinitions _snapshots = new SnapshotAggregatedDefinitions();
         private readonly CommandAggregatedDefinitions _commands = new CommandAggregatedDefinitions();
+        private readonly List<IContextDefinition> _contexts = new List<IContextDefinition>();
 
-        public ApplicationDefinition(
-            IReadOnlyCollection<IDomainDefinition> domains,
-            IReadOnlyCollection<IReadModelDefinition> readModelDefinitions,
-            IReadOnlyCollection<ISagaDefinition> sagaDefinitions,
-            JobDefinitions jobsDefinitions
-        )
+        public void RegisterContext(IContextDefinition context)
         {
-            ReadModels = readModelDefinitions;
-            Sagas = sagaDefinitions;
-            _jobs.AddDefinitions(jobsDefinitions);
-            foreach (var instance in domains)
-            {
-                _events.AddDefinitions(instance.Events);
-                _snapshots.AddDefinitions(instance.Snapshots);
-                _commands.AddDefinitions(instance.Commands);
-            }
+            _contexts.Add(context);
 
-            Domains = domains;
+            _events.AddDefinitions(context.Events);
+            _snapshots.AddDefinitions(context.Snapshots);
+            _commands.AddDefinitions(context.Commands);
+            _jobs.AddDefinitions(context.Jobs);
         }
 
-        public IReadOnlyCollection<IDomainDefinition> Domains { get; }
+        public IReadOnlyCollection<IContextDefinition> Contexts => _contexts;
 
         public IReadOnlyCollection<IQueryDefinition> Queries
         {
             get
             {
-                return Domains.SelectMany(i => i.Queries.Select(q => q)).ToList();
+                return Contexts.SelectMany(i => i.Queries.Select(q => q)).ToList();
             }
         }
 
@@ -51,13 +39,13 @@ namespace EventFly.Definitions
         {
             get
             {
-                return Domains.SelectMany(i => i.Aggregates.Select(q => q)).ToList();
+                return Contexts.SelectMany(i => i.Aggregates.Select(q => q)).ToList();
             }
         }
 
-        public IReadOnlyCollection<IReadModelDefinition> ReadModels { get; }
+        public IReadOnlyCollection<IReadModelDefinition> ReadModels => Contexts.SelectMany(i => i.ReadModels.Select(q => q)).ToList();
 
-        public IReadOnlyCollection<ISagaDefinition> Sagas { get; }
+        public IReadOnlyCollection<ISagaDefinition> Sagas => Contexts.SelectMany(i => i.Sagas.Select(q => q)).ToList();
 
         public IEventDefinitions Events => _events;
 
