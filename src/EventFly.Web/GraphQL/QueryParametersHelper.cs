@@ -12,7 +12,7 @@ namespace EventFly.Web.GraphQL
     internal static class QueryParametersHelper
     {
 
-        public static QueryArguments GetArguments(Type parametersType, IGraphQueryHandler graphQuery)
+        public static QueryArguments GetArguments(Type parametersType, IGraphQueryHandler graphQuery, bool isInput)
         {
            var qas = new List<QueryArgument>();
             foreach (var prop in parametersType.GetProperties().Where(i=>i.CanWrite))
@@ -25,15 +25,15 @@ namespace EventFly.Web.GraphQL
 
                 if (type == null)
                 {
-                    var gType = GetGraphTypeEx(prop.PropertyType, graphQuery, true);
-                    if (!allowNulls)
+                    var gType = GetGraphTypeEx(prop.PropertyType, graphQuery, isInput);
+                    if (!allowNulls && isInput)
                         gType = new NonNullGraphType(gType);
                     
                     qas.Add(new QueryArgument(gType) {Name = prop.Name, Description = description});
                 }
                 else
                 {
-                    if (!allowNulls)
+                    if (!allowNulls && isInput)
                     {
                         if (!type.IsGenericType || type.GetGenericTypeDefinition() != typeof(NonNullGraphType<>))
                             type = typeof(NonNullGraphType<>).MakeGenericType(type);

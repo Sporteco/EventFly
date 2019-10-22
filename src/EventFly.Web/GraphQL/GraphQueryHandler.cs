@@ -38,7 +38,7 @@ namespace EventFly.Web.GraphQL
                 ResolvedType = GetQueryItemType(typeof(TResult),isInput),
                 Name = name,
                 Description = typeof(TQuery).GetCustomAttribute<DescriptionAttribute>()?.Description,
-                Arguments = QueryParametersHelper.GetArguments(typeof(TQuery), this),
+                Arguments = QueryParametersHelper.GetArguments(typeof(TQuery), this, isInput),
                 Resolver = new FuncFieldResolver<TResult>(context => ExecuteQuery(context).GetAwaiter().GetResult()),
             };
             return _fieldType;
