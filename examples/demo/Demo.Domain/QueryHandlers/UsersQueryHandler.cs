@@ -25,4 +25,21 @@ namespace Demo.Domain.QueryHandlers
             return Task.FromResult(new UsersResult(items, 100));
         }
     }
+
+    public class UsersQuery1Handler : QueryHandler<User1Query, UsersResult>
+    {
+        public override Task<UsersResult> ExecuteQuery(User1Query query)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class UsersQuery2Handler : QueryHandler<User2Query, UsersResult>
+    {
+        public override Task<UsersResult> ExecuteQuery(User2Query query)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
 }

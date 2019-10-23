@@ -19,6 +19,7 @@ namespace Demo.Queries
         public DateTimeRangePredicate Period { get; set; }
     }
 
+
     public class EventPosters
     {
         public IEnumerable<EventPoster> Items { get; set; }

@@ -46,18 +46,7 @@ namespace EventFly.Web.GraphQL
                 AddField(handler.GetFieldType(false));
             }
         }
-        private static IGraphType GetGraphTypeEx(Type propType, IGraphQueryHandler graphQuery)
-        {
-            if (propType.IsGenericType && propType.GetGenericArguments().Length == 1 && typeof(IEnumerable).IsAssignableFrom(propType))
-            {
-                var innerType = propType.GetGenericArguments().First();
-                if (innerType != null)
-                    return new ListGraphType(graphQuery.GetQueryItemType(innerType, false));
-                return null;
-            }
 
-            return  new ObjectGraphTypeFromModel(propType, graphQuery);
-        }
     }
 
 

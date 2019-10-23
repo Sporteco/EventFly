@@ -20,6 +20,8 @@ namespace Demo.Dependencies
             RegisterCommand<CreateUserCommand>();
             RegisterCommand<RenameUserCommand>();
             RegisterQuery<UsersQuery, UsersResult>();
+            RegisterQuery<User1Query, UsersResult>();
+            RegisterQuery<User2Query, UsersResult>();
             RegisterQuery<EventPostersQuery, EventPosters>();
             RegisterAggregateReadModel<UsersInfoReadModel, UserId>();
             RegisterReadModel<TotalUsersReadModel, TotalUsersReadModelManager>();
@@ -32,6 +34,8 @@ namespace Demo.Dependencies
             .AddScoped<IAggregateStorage<UserAggregate>, InMemoryAggregateStorage<UserAggregate>>()
 
             .AddScoped<QueryHandler<UsersQuery, UsersResult>, UsersQueryHandler>()
+            .AddScoped<QueryHandler<User1Query, UsersResult>, UsersQuery1Handler>()
+            .AddScoped<QueryHandler<User2Query, UsersResult>, UsersQuery2Handler>()
             .AddScoped<QueryHandler<EventPostersQuery, EventPosters>, EventPostersQueryHandler>()
 
             .AddScoped<ReadModelHandler<TotalUsersReadModel>>()

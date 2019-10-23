@@ -35,13 +35,18 @@ namespace EventFly.Web.GraphQL
             name = !name.EndsWith("Query") ? name : name.Substring(0, name.Length - "Query".Length);
             _fieldType = new FieldType
             {
-                ResolvedType = GetQueryItemType(typeof(TResult),isInput),
+                ResolvedType = QueryParametersHelper.GetQueryItemType(this, typeof(TResult),false),
                 Name = name,
                 Description = typeof(TQuery).GetCustomAttribute<DescriptionAttribute>()?.Description,
-                Arguments = QueryParametersHelper.GetArguments(typeof(TQuery), this, isInput),
+                Arguments = QueryParametersHelper.GetArguments(typeof(TQuery), this, true),
                 Resolver = new FuncFieldResolver<TResult>(context => ExecuteQuery(context).GetAwaiter().GetResult()),
             };
             return _fieldType;
+        }
+
+        public IGraphType GetQueryItemType(Type modelType, bool isInput)
+        {
+            return QueryParametersHelper.GetQueryItemType(this, modelType, false);
         }
 
         private Task<TResult> ReadAsync(TQuery query)
@@ -58,34 +63,7 @@ namespace EventFly.Web.GraphQL
 
         private T ParseModel<T>(Dictionary<string, object> arguments) where T : IQuery<TResult>
             => JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(arguments));
-
-
-        public IGraphType GetQueryItemType(Type modelType, bool isInput)
-        {
-            lock (_declaredTypes)
-            {
-                if (_declaredTypes.ContainsKey(modelType)) return _declaredTypes[modelType];
-                var result = GetGraphTypeEx(modelType, this,isInput);
-                _declaredTypes.Add(modelType, result);
-                return result;
-            }
-        }
-        private readonly Dictionary<Type,IGraphType> _declaredTypes = new Dictionary<Type, IGraphType>();
-
+       
         public static Func<object,object> ConvertFunc<TParent, TRes>(Func<TParent, TRes> func) => arg => func((TParent)arg);
-
-        private static IGraphType GetGraphTypeEx(Type propType, IGraphQueryHandler graphQuery, bool isInput)
-        {
-            if (propType.IsGenericType && propType.GetGenericArguments().Length == 1 && typeof(IEnumerable).IsAssignableFrom(propType))
-            {
-                var innerType = propType.GetGenericArguments().First();
-                if (innerType != null)
-                    return new ListGraphType(graphQuery.GetQueryItemType(innerType,isInput));
-                return null;
-            }
-
-            return isInput ? (IGraphType) new InputObjectGraphTypeFromModel(propType, graphQuery) 
-                : new ObjectGraphTypeFromModel(propType, graphQuery);
-        }
     }
 }

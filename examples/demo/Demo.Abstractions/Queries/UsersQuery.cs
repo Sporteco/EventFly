@@ -38,4 +38,15 @@ namespace Demo.Queries
         [Description("Искомое слово в имени пользователя")]
         public string NameFilter { get; set; }
     }
+
+    public class User1Query : IQuery<UsersResult>
+    {
+        public UserId Id { get; set; }
+    }
+    public class User2Query : IQuery<UsersResult>
+    {
+        public UserId Id { get; set; }
+    }
+
 }
+

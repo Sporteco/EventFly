@@ -11,6 +11,18 @@ namespace EventFly.Web.GraphQL
 {
     internal static class QueryParametersHelper
     {
+        public static IGraphType GetQueryItemType(IGraphQueryHandler handler, Type modelType, bool isInput)
+        {
+            lock (DeclaredTypes)
+            {
+                if (DeclaredTypes.ContainsKey(modelType)) return DeclaredTypes[modelType];
+                var result = GetGraphTypeEx(modelType, handler,isInput);
+                DeclaredTypes.Add(modelType, result);
+                return result;
+            }
+        }
+        internal static readonly Dictionary<Type,IGraphType> DeclaredTypes = new Dictionary<Type, IGraphType>();
+
 
         public static QueryArguments GetArguments(Type parametersType, IGraphQueryHandler graphQuery, bool isInput)
         {
@@ -25,7 +37,7 @@ namespace EventFly.Web.GraphQL
 
                 if (type == null)
                 {
-                    var gType = GetGraphTypeEx(prop.PropertyType, graphQuery, true);
+                    var gType = GetQueryItemType(graphQuery, prop.PropertyType, true);
                     if (!allowNulls && isInput)
                         gType = new NonNullGraphType(gType);
                     
@@ -120,7 +132,7 @@ namespace EventFly.Web.GraphQL
                     ? new FieldType {Type = type, Name = prop.Name, Description = description}
                     : new FieldType
                     {
-                        ResolvedType = GetGraphTypeEx(prop.PropertyType, graphQuery, isInput), Name = prop.Name,
+                        ResolvedType = GetQueryItemType(graphQuery,prop.PropertyType, isInput), Name = prop.Name,
                         Description = description,
                     });
             }
@@ -138,7 +150,8 @@ namespace EventFly.Web.GraphQL
                 return null;
             }
 
-            return graphQuery.GetQueryItemType(propType, isInput);
+            return  isInput ? new InputObjectGraphTypeFromModel(propType, graphQuery) : 
+                (IGraphType)new ObjectGraphTypeFromModel(propType, graphQuery);
         }
     }
 }
