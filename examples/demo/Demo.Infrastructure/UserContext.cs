@@ -12,7 +12,7 @@ using Demo.Infrastructure.ReadModels;
 using Demo.Application;
 using Demo.Infrastructure.QueryHandlers;
 
-namespace Demo.Dependencies
+namespace Demo.Infrastructure
 {
     public class UserContext : ContextDefinition
     {

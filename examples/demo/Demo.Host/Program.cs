@@ -6,10 +6,10 @@ using Demo.Commands;
 using Demo.Queries;
 using Demo.ValueObjects;
 using Microsoft.Extensions.DependencyInjection;
-using Demo.Dependencies;
 using EventFly.Queries;
 using EventFly.Commands;
 using System.Linq;
+using Demo.Infrastructure;
 
 namespace Demo.Host
 {

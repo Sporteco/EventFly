@@ -25,27 +25,26 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using Akka.Actor;
+using System;
+using System.Collections.Generic;
 using EventFly.Aggregates;
-using EventFly.Commands.ExecutionResults;
-using EventFly.Core;
+using EventFly.Metadata;
 
-namespace EventFly.Commands
+namespace EventFly.Domain.Aggregates
 {
-    public abstract class CommandHandler<TAggregate, TIdentity,TResult,TCommand> :
-        ICommandHandler<TAggregate, TIdentity,TResult, TCommand>
-        where TAggregate : ActorBase, IAggregateRoot<TIdentity>
-        where TIdentity : IIdentity
-        where TCommand : ICommand<TIdentity,TResult>
-        where TResult : IExecutionResult
+    public interface IEventMetadata : ICommonMetadata
     {
-        public abstract TResult Handle(TAggregate aggregate, TCommand command);
+        IEventId EventId { get; }
+        string EventName { get; }
+        int EventVersion { get; }
+        DateTimeOffset Timestamp { get; }
+        long TimestampEpoch { get; }
+        long AggregateSequenceNumber { get; }
+        string AggregateId { get; }
+        string CausationId { get; }
+
+        IEventMetadata CloneWith(params KeyValuePair<string, string>[] keyValuePairs);
+        IEventMetadata CloneWith(IEnumerable<KeyValuePair<string, string>> keyValuePairs);
     }
-
-    public abstract class CommandHandler<TAggregate, TIdentity,TCommand> : CommandHandler<TAggregate, TIdentity,IExecutionResult,TCommand>
-        where TAggregate : ActorBase, IAggregateRoot<TIdentity>
-        where TIdentity : IIdentity
-        where TCommand : ICommand<TIdentity,IExecutionResult>
-    {}
-
+    
 }

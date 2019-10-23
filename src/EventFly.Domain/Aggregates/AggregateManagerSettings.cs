@@ -1,9 +1,5 @@
 ﻿// The MIT License (MIT)
 //
-// Copyright (c) 2015-2019 Rasmus Mikkelsen
-// Copyright (c) 2015-2019 eBay Software Foundation
-// Modified from original source https://github.com/eventflow/EventFlow
-//
 // Copyright (c) 2018 - 2019 Lutando Ngqakaza
 // https://github.com/Lutando/EventFly 
 // 
@@ -25,27 +21,25 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using Akka.Actor;
-using EventFly.Aggregates;
-using EventFly.Commands.ExecutionResults;
-using EventFly.Core;
+using Akka.Configuration;
+using EventFly.Configuration;
 
-namespace EventFly.Commands
+namespace EventFly.Domain.Aggregates
 {
-    public abstract class CommandHandler<TAggregate, TIdentity,TResult,TCommand> :
-        ICommandHandler<TAggregate, TIdentity,TResult, TCommand>
-        where TAggregate : ActorBase, IAggregateRoot<TIdentity>
-        where TIdentity : IIdentity
-        where TCommand : ICommand<TIdentity,TResult>
-        where TResult : IExecutionResult
+    public class AggregateManagerSettings
     {
-        public abstract TResult Handle(TAggregate aggregate, TCommand command);
+        private static readonly string _section = "EventFly.aggregate-manager";
+        public readonly bool HandleDeadLetters;
+        public readonly bool AutoDispatchOnReceive;
+
+        public AggregateManagerSettings(Config config)
+        {
+            var aggregateManagerConfig = config.WithFallback(EventFlyDefaultSettings.DefaultConfig());
+            aggregateManagerConfig = aggregateManagerConfig.GetConfig(_section);
+
+            HandleDeadLetters = aggregateManagerConfig.GetBoolean("handle-deadletters");
+            AutoDispatchOnReceive = aggregateManagerConfig.GetBoolean("auto-dispatch-on-receive");
+
+        }
     }
-
-    public abstract class CommandHandler<TAggregate, TIdentity,TCommand> : CommandHandler<TAggregate, TIdentity,IExecutionResult,TCommand>
-        where TAggregate : ActorBase, IAggregateRoot<TIdentity>
-        where TIdentity : IIdentity
-        where TCommand : ICommand<TIdentity,IExecutionResult>
-    {}
-
 }

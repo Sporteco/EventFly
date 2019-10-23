@@ -1,30 +1,56 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using Akka.Actor;
 using Akka.Event;
-using EventFly.AggregateStorages;
+using EventFly.Aggregates;
 using EventFly.Commands;
 using EventFly.Commands.ExecutionResults;
 using EventFly.Core;
 using EventFly.Definitions;
 using EventFly.DependencyInjection;
+using EventFly.Domain.Commands;
 using EventFly.Exceptions;
-using EventFly.Extensions;
 using EventFly.Metadata;
-using Microsoft.Extensions.DependencyInjection;
 
-namespace EventFly.Aggregates
+using Microsoft.Extensions.DependencyInjection;
+using System.Collections.Concurrent;
+using System.Reflection;
+using EventFly.Domain.Definitions;
+
+namespace EventFly.Domain.Aggregates
 {
+
     public abstract class AggregateRoot<TAggregate, TIdentity, TAggregateState> : ReceiveActor, IAggregateRoot<TIdentity>
        where TAggregate : AggregateRoot<TAggregate, TIdentity, TAggregateState>
        where TAggregateState : class, IAggregateState<TIdentity>, new()
        where TIdentity : IIdentity
     {
+        private static readonly ConcurrentDictionary<Type, AggregateName> AggregateNames = new ConcurrentDictionary<Type, AggregateName>();
+
+        private static AggregateName GetAggregateName(
+            Type aggregateType)
+        {
+            return AggregateNames.GetOrAdd(
+                aggregateType,
+                t =>
+                {
+                    if (!typeof(IAggregateRoot).GetTypeInfo().IsAssignableFrom(aggregateType))
+                    {
+                        throw new ArgumentException($"Type '{aggregateType.PrettyPrint()}' is not an aggregate root");
+                    }
+
+                    return new AggregateName(
+                        t.GetTypeInfo().GetCustomAttributes<AggregateNameAttribute>().SingleOrDefault()?.Name ??
+                        t.Name);
+                });
+        }
+
+
+
         private readonly IEventDefinitions _eventDefinitionService;
 
-        private static readonly IAggregateName AggregateName = typeof(TAggregate).GetAggregateName();
+        private static readonly IAggregateName AggregateName = GetAggregateName(typeof(TAggregate));
         private CircularBuffer<ISourceId> _previousSourceIds = new CircularBuffer<ISourceId>(100);
         private ICommand PinnedCommand { get; set; }
         private object PinnedReply { get; set; }
@@ -65,7 +91,7 @@ namespace EventFly.Aggregates
             }
 
             PinnedCommand = null;
-            _eventDefinitionService = _serviceProvider.ServiceProvider.GetService<IApplicationDefinition>().Events;
+            _eventDefinitionService = _serviceProvider.ServiceProvider.GetService<IEventDefinitions>();
             Id = id;
             SetSourceIdHistory(100);
             this.InitAggregateReceivers();

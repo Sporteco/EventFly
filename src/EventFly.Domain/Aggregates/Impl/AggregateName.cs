@@ -25,27 +25,15 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using Akka.Actor;
-using EventFly.Aggregates;
-using EventFly.Commands.ExecutionResults;
-using EventFly.Core;
+using EventFly.ValueObjects;
 
-namespace EventFly.Commands
+namespace EventFly.Domain.Aggregates
 {
-    public abstract class CommandHandler<TAggregate, TIdentity,TResult,TCommand> :
-        ICommandHandler<TAggregate, TIdentity,TResult, TCommand>
-        where TAggregate : ActorBase, IAggregateRoot<TIdentity>
-        where TIdentity : IIdentity
-        where TCommand : ICommand<TIdentity,TResult>
-        where TResult : IExecutionResult
+    public class AggregateName : SingleValueObject<string>, IAggregateName
     {
-        public abstract TResult Handle(TAggregate aggregate, TCommand command);
+        public AggregateName(string value) 
+            : base(value)
+        {
+        }
     }
-
-    public abstract class CommandHandler<TAggregate, TIdentity,TCommand> : CommandHandler<TAggregate, TIdentity,IExecutionResult,TCommand>
-        where TAggregate : ActorBase, IAggregateRoot<TIdentity>
-        where TIdentity : IIdentity
-        where TCommand : ICommand<TIdentity,IExecutionResult>
-    {}
-
 }

@@ -10,9 +10,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using EventFly.Core.VersionedTypes;
 using EventFly.Exceptions;
 
-namespace EventFly.Core.VersionedTypes
+namespace EventFly.Domain.VersionedTypes
 {
     public abstract class VersionedTypeDefinitions<TTypeCheck, TAttribute, TDefinition> : IVersionedTypeDefinitions<TAttribute, TDefinition>
       where TAttribute : VersionedTypeAttribute

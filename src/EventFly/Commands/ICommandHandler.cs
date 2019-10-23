@@ -42,6 +42,6 @@ namespace EventFly.Commands
         where TCommand : ICommand<TIdentity,TResult>
         where TResult : IExecutionResult
     {
-        TResult Handle(TAggregate aggregate, IActorContext context, TCommand command);
+        TResult Handle(TAggregate aggregate, TCommand command);
     }
 }

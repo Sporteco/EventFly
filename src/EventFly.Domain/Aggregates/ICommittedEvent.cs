@@ -25,27 +25,35 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using Akka.Actor;
+using System;
 using EventFly.Aggregates;
-using EventFly.Commands.ExecutionResults;
 using EventFly.Core;
 
-namespace EventFly.Commands
+namespace EventFly.Domain.Aggregates
 {
-    public abstract class CommandHandler<TAggregate, TIdentity,TResult,TCommand> :
-        ICommandHandler<TAggregate, TIdentity,TResult, TCommand>
-        where TAggregate : ActorBase, IAggregateRoot<TIdentity>
-        where TIdentity : IIdentity
-        where TCommand : ICommand<TIdentity,TResult>
-        where TResult : IExecutionResult
+    public interface ICommittedEvent
     {
-        public abstract TResult Handle(TAggregate aggregate, TCommand command);
+
+        long AggregateSequenceNumber { get; }
+        EventMetadata EventMetadata { get; }
+        DateTimeOffset Timestamp { get; }
+
+        IIdentity GetIdentity();
+        IAggregateEvent GetAggregateEvent();
     }
 
-    public abstract class CommandHandler<TAggregate, TIdentity,TCommand> : CommandHandler<TAggregate, TIdentity,IExecutionResult,TCommand>
-        where TAggregate : ActorBase, IAggregateRoot<TIdentity>
+    public interface ICommittedEvent<TAggregate, out TIdentity> : ICommittedEvent
+        where TAggregate : IAggregateRoot<TIdentity>
         where TIdentity : IIdentity
-        where TCommand : ICommand<TIdentity,IExecutionResult>
-    {}
+    {
+        TIdentity AggregateIdentity { get; }
+    }
 
+    public interface ICommittedEvent<TAggregate, out TIdentity, out TAggregateEvent> : ICommittedEvent<TAggregate, TIdentity>
+        where TAggregate : IAggregateRoot<TIdentity>
+        where TIdentity : IIdentity
+        where TAggregateEvent : class, IAggregateEvent<TIdentity>
+    {
+        TAggregateEvent AggregateEvent { get; }
+    }
 }

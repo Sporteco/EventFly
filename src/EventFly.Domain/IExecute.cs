@@ -1,8 +1,4 @@
-﻿// The MIT License (MIT)
-//
-// Copyright (c) 2015-2019 Rasmus Mikkelsen
-// Copyright (c) 2015-2019 eBay Software Foundation
-// Modified from original source https://github.com/eventflow/EventFlow
+// The MIT License (MIT)
 //
 // Copyright (c) 2018 - 2019 Lutando Ngqakaza
 // https://github.com/Lutando/EventFly 
@@ -25,27 +21,27 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using Akka.Actor;
-using EventFly.Aggregates;
+using EventFly.Commands;
 using EventFly.Commands.ExecutionResults;
 using EventFly.Core;
 
-namespace EventFly.Commands
+namespace EventFly.Domain
 {
-    public abstract class CommandHandler<TAggregate, TIdentity,TResult,TCommand> :
-        ICommandHandler<TAggregate, TIdentity,TResult, TCommand>
-        where TAggregate : ActorBase, IAggregateRoot<TIdentity>
+
+    public interface IExecute
+    {
+        
+    }
+    
+    public interface IExecute<in TCommand, out TResult,TIdentity> : IExecute
+        where TCommand : ICommand<TIdentity, TResult>
         where TIdentity : IIdentity
-        where TCommand : ICommand<TIdentity,TResult>
         where TResult : IExecutionResult
     {
-        public abstract TResult Handle(TAggregate aggregate, TCommand command);
+        TResult Execute(TCommand command);
     }
-
-    public abstract class CommandHandler<TAggregate, TIdentity,TCommand> : CommandHandler<TAggregate, TIdentity,IExecutionResult,TCommand>
-        where TAggregate : ActorBase, IAggregateRoot<TIdentity>
+    public interface IExecute<in TCommand,TIdentity> : IExecute<TCommand,IExecutionResult,TIdentity>
+        where TCommand : ICommand<TIdentity, IExecutionResult>
         where TIdentity : IIdentity
-        where TCommand : ICommand<TIdentity,IExecutionResult>
     {}
-
 }

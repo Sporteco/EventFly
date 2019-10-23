@@ -1,4 +1,5 @@
 ﻿using Akka.Actor;
+using Demo.Infrastructure;
 using EventFly.DependencyInjection;
 using EventFly.Web;
 using EventFly.Web.GraphQL;

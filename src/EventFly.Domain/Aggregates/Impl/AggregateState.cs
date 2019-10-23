@@ -25,27 +25,34 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using Akka.Actor;
+using System;
 using EventFly.Aggregates;
-using EventFly.Commands.ExecutionResults;
 using EventFly.Core;
+using EventFly.Exceptions;
 
-namespace EventFly.Commands
+namespace EventFly.Domain.Aggregates
 {
-    public abstract class CommandHandler<TAggregate, TIdentity,TResult,TCommand> :
-        ICommandHandler<TAggregate, TIdentity,TResult, TCommand>
-        where TAggregate : ActorBase, IAggregateRoot<TIdentity>
+    public abstract class AggregateState<TAggregate, TIdentity> : AggregateState<TAggregate, TIdentity, IMessageApplier<TAggregate, TIdentity>>,
+        IAggregateState<TIdentity>
+        where TAggregate : IAggregateRoot<TIdentity>
         where TIdentity : IIdentity
-        where TCommand : ICommand<TIdentity,TResult>
-        where TResult : IExecutionResult
     {
-        public abstract TResult Handle(TAggregate aggregate, TCommand command);
+        public string Id { get; set; }
     }
-
-    public abstract class CommandHandler<TAggregate, TIdentity,TCommand> : CommandHandler<TAggregate, TIdentity,IExecutionResult,TCommand>
-        where TAggregate : ActorBase, IAggregateRoot<TIdentity>
+    
+    public abstract class AggregateState<TAggregate, TIdentity, TMessageApplier> : IMessageApplier<TAggregate, TIdentity>
+        where TMessageApplier : class, IMessageApplier<TAggregate, TIdentity>
+        where TAggregate : IAggregateRoot<TIdentity>
         where TIdentity : IIdentity
-        where TCommand : ICommand<TIdentity,IExecutionResult>
-    {}
+    {
+        protected AggregateState()
+        {
+            var me = this as TMessageApplier;
+            
+            if (me == null)
+                throw new InvalidOperationException($"MessageApplier of Type={GetType().PrettyPrint()} has a wrong generic argument Type={typeof(TMessageApplier).PrettyPrint()}.");
+            
+        }
 
+    }
 }

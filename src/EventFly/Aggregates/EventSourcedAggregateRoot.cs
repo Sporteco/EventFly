@@ -527,7 +527,7 @@ namespace EventFly.Aggregates
                 Command(x =>
                 {
                     var handler = _scope.ServiceProvider.GetService<TCommandHandler>() ?? (TCommandHandler)Activator.CreateInstance(typeof(TCommandHandler));
-                    var result = handler.Handle(this as TAggregate, Context, x);
+                    var result = handler.Handle(this as TAggregate, x);
                     Context.Sender.Tell(result);
                 },shouldHandle);
             }
