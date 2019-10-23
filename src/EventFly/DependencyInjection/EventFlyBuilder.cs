@@ -1,7 +1,6 @@
 ﻿using Akka.Actor;
 using EventFly.Definitions;
 using Microsoft.Extensions.DependencyInjection;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace EventFly.DependencyInjection
@@ -44,6 +43,7 @@ namespace EventFly.DependencyInjection
                     .RegisterQueryManagers(ApplicationDefinition.Queries.Select(a => a.ManagerDefinition).ToList())
                     .RegisterReadModelManagers(ApplicationDefinition.ReadModels.Select(a => a.ManagerDefinition).ToList())
                     .RegisterSagaManagers(ApplicationDefinition.Sagas.Select(a => a.ManagerDefinition).ToList())
+                    .RegisterDomainServiceManagers(ApplicationDefinition.DomainServices.Select(a => a.ManagerDefinition).ToList())
                 .Build();
 
             return Services.AddSingleton<IDefinitionToManagerRegistry>(registry);

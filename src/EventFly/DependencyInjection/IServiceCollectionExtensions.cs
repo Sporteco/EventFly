@@ -1,16 +1,7 @@
 ﻿using Akka.Actor;
 using EventFly.Commands;
-using EventFly.Core;
-using EventFly.Definitions;
-using EventFly.Jobs;
 using EventFly.Queries;
-using EventFly.ReadModels;
-using EventFly.Sagas;
-using EventFly.Sagas.AggregateSaga;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace EventFly.DependencyInjection
 {

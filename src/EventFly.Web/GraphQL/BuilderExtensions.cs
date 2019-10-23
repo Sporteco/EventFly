@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using EventFly.Definitions;
 using EventFly.DependencyInjection;
 using GraphQL;
 using GraphQL.Http;
