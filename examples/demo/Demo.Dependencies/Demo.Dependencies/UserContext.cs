@@ -9,6 +9,7 @@ using EventFly.Queries;
 using Demo.Domain.QueryHandlers;
 using EventFly.ReadModels;
 using Demo.Domain.ReadModels;
+using Demo.Domain.Services;
 
 namespace Demo.Dependencies
 {
@@ -27,6 +28,7 @@ namespace Demo.Dependencies
             RegisterReadModel<TotalUsersReadModel, TotalUsersReadModelManager>();
             RegisterSaga<TestSaga, TestSagaId>();
             RegisterEvents(typeof(UserCreatedEvent), typeof(UserRenamedEvent));
+            RegisterDomainService<TestDomainService, TestDomainServiceId>();
         }
 
         public override IServiceCollection DI(IServiceCollection services) => services

@@ -21,6 +21,7 @@ namespace EventFly.Definitions
         IReadOnlyCollection<IReadModelDefinition> ReadModels { get; }
 
         IReadOnlyCollection<ISagaDefinition> Sagas { get; }
+        IReadOnlyCollection<IDomainServiceDefinition> DomainServices { get; }
 
         ICommandDefinitions Commands { get; }
 

@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections;
 using System.ComponentModel;
-using System.Linq;
 using System.Reflection;
 using EventFly.Definitions;
 using GraphQL.Types;

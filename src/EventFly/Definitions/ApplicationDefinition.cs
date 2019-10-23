@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using EventFly.DependencyInjection;
 using EventFly.Jobs;
 
 namespace EventFly.Definitions
@@ -46,6 +44,7 @@ namespace EventFly.Definitions
         public IReadOnlyCollection<IReadModelDefinition> ReadModels => Contexts.SelectMany(i => i.ReadModels.Select(q => q)).ToList();
 
         public IReadOnlyCollection<ISagaDefinition> Sagas => Contexts.SelectMany(i => i.Sagas.Select(q => q)).ToList();
+        public IReadOnlyCollection<IDomainServiceDefinition> DomainServices => Contexts.SelectMany(i => i.DomainServices.Select(q => q)).ToList();
 
         public IEventDefinitions Events => _events;
 

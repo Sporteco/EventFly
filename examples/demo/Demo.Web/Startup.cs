@@ -1,21 +1,14 @@
 ﻿using Akka.Actor;
-using EventFly.AggregateStorages;
-using EventFly.Definitions;
 using EventFly.DependencyInjection;
-using EventFly.Storages.EntityFramework;
 using EventFly.Web;
 using EventFly.Web.GraphQL;
 using EventFly.Web.Swagger;
-using Demo.Db;
 using Demo.Dependencies;
-using Demo.Domain;
-using Demo.Domain.Aggregates;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Demo.Domain.ReadModels;
 
 namespace Demo.Web
 {

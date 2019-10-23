@@ -83,9 +83,9 @@ namespace EventFly.Sagas.AggregateSaga
                 command.Metadata.Merge(PinnedEvent.Metadata);
             }
 
-            if (!command.Metadata.SagaIds.Contains(Id.Value))
+            if (!command.Metadata.CorrellationIds.Contains(Id.Value))
             {
-                command.Metadata.SagaIds = new List<string>(command.Metadata.SagaIds) { Id.Value };
+                command.Metadata.CorrellationIds = new List<string>(command.Metadata.CorrellationIds) { Id.Value };
             }
 
             var bus = _scope.ServiceProvider.GetRequiredService<ICommandBus>();

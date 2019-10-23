@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Akka.Actor;
 using EventFly.Aggregates;
+using EventFly.DomainService;
 using EventFly.Extensions;
 using EventFly.Queries;
 using EventFly.Sagas.AggregateSaga;
@@ -14,6 +15,7 @@ namespace EventFly.Definitions
         private IReadOnlyDictionary<IAggregateManagerDefinition, IActorRef> DefinitionToAggregateManager { get; set; } = new Dictionary<IAggregateManagerDefinition, IActorRef>();
         private IReadOnlyDictionary<IQueryManagerDefinition, IActorRef> DefinitionToQueryManager { get; set; } = new Dictionary<IQueryManagerDefinition, IActorRef>();
         private IReadOnlyDictionary<ISagaManagerDefinition, IActorRef> DefinitionToSagaManager { get; set; } = new Dictionary<ISagaManagerDefinition, IActorRef>();
+        private IReadOnlyDictionary<IDomainServiceManagerDefinition, IActorRef> DefinitionToDomainServiceManager { get; set; } = new Dictionary<IDomainServiceManagerDefinition, IActorRef>();
         private IReadOnlyDictionary<IReadModelManagerDefinition, IActorRef> DefinitionToReadModelManager { get; set; } = new Dictionary<IReadModelManagerDefinition, IActorRef>();
 
         public DefinitionToManagerRegistryBuilder UseSystem(ActorSystem actorSystem)
@@ -78,6 +80,23 @@ namespace EventFly.Definitions
             return this;
         }
 
+        public DefinitionToManagerRegistryBuilder RegisterDomainServiceManagers(IReadOnlyCollection<IDomainServiceManagerDefinition> definitions)
+        {
+            var dictionaryDomainService = new Dictionary<IDomainServiceManagerDefinition, IActorRef>();
+            foreach (var managerDef in definitions)
+            {
+                var type = typeof(DomainServiceManager<,,>);
+                var generics = type.MakeGenericType(managerDef.ServiceType, managerDef.IdentityType, managerDef.ServiceLocatorType);
+
+                var manager = System.ActorOf(
+                    Props.Create(generics),
+                    $"service-{managerDef.IdentityType.Name}-manager"
+                );
+                dictionaryDomainService.Add(managerDef, manager);
+            }
+            DefinitionToDomainServiceManager = dictionaryDomainService;
+            return this;
+        }
         public DefinitionToManagerRegistryBuilder RegisterReadModelManagers(IReadOnlyCollection<IReadModelManagerDefinition> definitions)
         {
             var dictionaryReadModel = new Dictionary<IReadModelManagerDefinition, IActorRef>();

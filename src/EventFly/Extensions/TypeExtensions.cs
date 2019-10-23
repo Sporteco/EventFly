@@ -33,6 +33,7 @@ using System.Reflection;
 using EventFly.Aggregates;
 using EventFly.Aggregates.Snapshot;
 using EventFly.Core;
+using EventFly.DomainService;
 using EventFly.Events;
 using EventFly.Exceptions;
 using EventFly.Jobs;
@@ -345,7 +346,7 @@ namespace EventFly.Extensions
 
             return startedByEventTypes;
         }
-        
+
         internal static IReadOnlyList<Type> GetSagaEventSubscriptionTypes(this Type type)
         {
             var interfaces = type
@@ -362,6 +363,30 @@ namespace EventFly.Extensions
 
             var startedByEventTypes = interfaces
                 .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ISagaIsStartedBy<,>))
+                .Select(t => typeof(IDomainEvent<,>).MakeGenericType(t.GetGenericArguments()[0],
+                    t.GetGenericArguments()[1]))
+                .ToList();
+            
+            startedByEventTypes.AddRange(handleEventTypes);
+
+            return startedByEventTypes;
+        }
+        internal static IReadOnlyList<Type> GetDomainServiceEventSubscriptionTypes(this Type type)
+        {
+            var interfaces = type
+                .GetTypeInfo()
+                .GetInterfaces()
+                .Select(i => i.GetTypeInfo())
+                .ToList();
+
+            var handleEventTypes = interfaces
+                .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IDomainServiceHandles<,>))
+                .Select(t => typeof(IDomainEvent<,>).MakeGenericType(t.GetGenericArguments()[0],
+                    t.GetGenericArguments()[1]))
+                .ToList();
+
+            var startedByEventTypes = interfaces
+                .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IDomainServiceIsStartedBy<,>))
                 .Select(t => typeof(IDomainEvent<,>).MakeGenericType(t.GetGenericArguments()[0],
                     t.GetGenericArguments()[1]))
                 .ToList();

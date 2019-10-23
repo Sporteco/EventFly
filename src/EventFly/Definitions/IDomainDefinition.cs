@@ -4,7 +4,6 @@
 // MVID: 61DF059E-E5F5-4992-B320-644C3E4F5C82
 // Assembly location: C:\Users\naych\source\repos\!!!!!\netcoreapp2.2\EventFly.dll
 
-using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;
 
 namespace EventFly.Definitions
@@ -18,6 +17,8 @@ namespace EventFly.Definitions
         IReadOnlyCollection<IQueryDefinition> Queries { get; }
         IReadOnlyCollection<IReadModelDefinition> ReadModels { get; }
         IReadOnlyCollection<ISagaDefinition> Sagas { get; }
+        IReadOnlyCollection<IDomainServiceDefinition> DomainServices { get; }
+
         EventDefinitions Events { get; }
 
         CommandDefinitions Commands { get; }
