@@ -5,15 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Dapper" Version="2.0.30" />
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="2.2.6" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.2.6" />
-    <PackageReference Include="System.Data.SqlClient" Version="4.7.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\src\EventFly.Storages.EntityFramework\EventFly.Storages.EntityFramework.csproj" />
-    <ProjectReference Include="..\..\..\src\EventFly\EventFly.csproj" />
+    <ProjectReference Include="..\..\..\src\EventFly.Domain\EventFly.Domain.csproj" />
     <ProjectReference Include="..\Demo.Abstractions\Demo.Abstractions.csproj" />
   </ItemGroup>
 
