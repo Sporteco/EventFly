@@ -15,16 +15,5 @@ namespace EventFly.Web
 
             return builder;
         }
-
-
-        public static IApplicationBuilder UseEventFlyDependencyInjection(this IApplicationBuilder builder)
-        {
-            var serviceProvider = builder.ApplicationServices;
-            var actorSystem = (ActorSystem)serviceProvider.GetService(typeof(ActorSystem));
-
-            actorSystem.RegisterDependencyResolver(serviceProvider);
-
-            return builder;
-        }
     }
 }
