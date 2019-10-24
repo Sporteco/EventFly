@@ -56,8 +56,11 @@ namespace EventFly.Tests.UnitTests.Jobs
                 .AddSingleton<TestJobRunnerProbeAccessor>()
                 .AddEventFly(Sys)
                     .WithContext<TestContext>()
-                    .BuildEventFly()
+                    .Services
+                .AddScoped<TestSaga>()
+                .AddScoped<TestAsyncSaga>()
                 .BuildServiceProvider()
+                .UseEventFly()
             );
         }
 

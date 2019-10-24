@@ -17,7 +17,9 @@ namespace EventFly.DependencyInjection
             _actorSystem = actorSystem;
             Services = services;
             _applicationDefinition = new ApplicationDefinition();
-            Services.AddSingleton<IApplicationDefinition>(_applicationDefinition);
+            Services
+                .AddSingleton<IApplicationDefinition>(_applicationDefinition)
+                .AddSingleton<IDefinitionToManagerRegistry, DefinitionToManagerRegistry>();
         }
 
         public EventFlyBuilder WithContext<TContext>()
@@ -29,27 +31,6 @@ namespace EventFly.DependencyInjection
 
             _applicationDefinition.RegisterContext(context);
             return this;
-        }
-
-        /// <summary>
-        /// Will build EventFly and run actors based on definitions. Actor ran will be removed in the future.
-        /// </summary>
-        /// <returns></returns>
-        public IServiceCollection BuildEventFly()
-        {
-            var registry = new DefinitionToManagerRegistryBuilder()
-                .UseSystem(_actorSystem)
-                    .RegisterAggregateManagers(ApplicationDefinition.Aggregates.Select(a => a.ManagerDefinition).ToList())
-                    .RegisterQueryManagers(ApplicationDefinition.Queries.Select(a => a.ManagerDefinition).ToList())
-                    .RegisterReadModelManagers(ApplicationDefinition.ReadModels.Select(a => a.ManagerDefinition).ToList())
-                    .RegisterSagaManagers(ApplicationDefinition.Sagas.Select(a => a.ManagerDefinition).ToList())
-                    .RegisterJobManagers(ApplicationDefinition.Jobs.Select(a => a.ManagerDefinition).ToList())
-                    .RegisterDomainServiceManagers(ApplicationDefinition.DomainServices.Select(a => a.ManagerDefinition).ToList())
-                    .RegisterCommandsScheduler()
-                    .RegisterEventsScheduler()
-                .Build();
-
-            return Services.AddSingleton<IDefinitionToManagerRegistry>(registry);
         }
     }
 }

@@ -28,7 +28,7 @@ namespace EventFly.Tests.UnitTests.Fixtures
         private const string Category = "AggregateFixture";
         private readonly string _config = TestHelpers.Akka.Configuration.Config;
 
-        
+
         [Fact]
         [Category(Category)]
         public void FixtureArrangerWithIdentity_CreatesAggregateRef()
@@ -52,20 +52,22 @@ namespace EventFly.Tests.UnitTests.Fixtures
         [Category(Category)]
         public void FixtureArrangerWithAggregateManager_CreatesAggregateManagerRef()
         {
-            using (var testKit = new TestKit(_config,"fixture-tests-2"))
+            using (var testKit = new TestKit(_config, "fixture-tests-2"))
             {
-                testKit.Sys.RegisterDependencyResolver(
-                    new ServiceCollection()
-                    .AddEventFly(testKit.Sys)
-                        .WithContext<TestContext>()
-                        .BuildEventFly()
-                    .AddScoped<TestSaga>()
-                    .AddScoped<TestAsyncSaga>()
-                    .BuildServiceProvider()
-                );
+                testKit
+                    .Sys.RegisterDependencyResolver(
+                        new ServiceCollection()
+                        .AddEventFly(testKit.Sys)
+                            .WithContext<TestContext>()
+                            .Services
+                        .AddScoped<TestSaga>()
+                        .AddScoped<TestAsyncSaga>()
+                        .BuildServiceProvider()
+                        .UseEventFly()
+                    );
 
 
-            var fixture = new AggregateFixture<TestAggregate, TestAggregateId>(testKit);
+                var fixture = new AggregateFixture<TestAggregate, TestAggregateId>(testKit);
                 var aggregateIdentity = TestAggregateId.New;
 
                 fixture.Using(aggregateIdentity);
@@ -74,12 +76,12 @@ namespace EventFly.Tests.UnitTests.Fixtures
                 fixture.AggregateId.Should().Be(aggregateIdentity);
             }
         }
-        
+
         [Fact]
         [Category(Category)]
         public void FixtureArrangerWithEvents_CanBeReplayed()
         {
-            using (var testKit = new TestKit(_config,"fixture-tests-3"))
+            using (var testKit = new TestKit(_config, "fixture-tests-3"))
             {
                 var fixture = new AggregateFixture<TestAggregate, TestAggregateId>(testKit);
                 var aggregateIdentity = TestAggregateId.New;
@@ -91,11 +93,11 @@ namespace EventFly.Tests.UnitTests.Fixtures
                 fixture
                     .For(aggregateIdentity)
                     .Given(events.ToArray());
-                
-                
+
+
                 journal.Tell(new ReplayMessages(1, long.MaxValue, long.MaxValue, aggregateIdentity.ToString(), receiverProbe.Ref));
 
-                
+
                 var from = 1;
                 foreach (var _ in events)
                 {
@@ -103,19 +105,19 @@ namespace EventFly.Tests.UnitTests.Fixtures
                     receiverProbe.ExpectMsg<ReplayedMessage>(x =>
                         x.Persistent.SequenceNr == index &&
                         x.Persistent.Payload is ICommittedEvent<TestAggregate, TestAggregateId, IAggregateEvent<TestAggregateId>>);
-                    
+
                     from++;
                 }
-                
+
                 receiverProbe.ExpectMsg<RecoverySuccess>();
             }
-        } 
-        
+        }
+
         [Fact]
         [Category(Category)]
         public void FixtureArrangerWithSnapshot_CanBeLoaded()
         {
-            using (var testKit = new TestKit(_config,"fixture-tests-4"))
+            using (var testKit = new TestKit(_config, "fixture-tests-4"))
             {
                 var fixture = new AggregateFixture<TestAggregate, TestAggregateId>(testKit);
                 var aggregateIdentity = TestAggregateId.New;
@@ -127,20 +129,20 @@ namespace EventFly.Tests.UnitTests.Fixtures
                 fixture
                     .For(aggregateIdentity)
                     .Given(snapshot, snapshotSequenceNumber);
-                
+
                 snapshotStore.Tell(new LoadSnapshot(aggregateIdentity.Value, new SnapshotSelectionCriteria(long.MaxValue, DateTime.MaxValue), long.MaxValue), receiverProbe.Ref);
-                
+
                 receiverProbe.ExpectMsg<LoadSnapshotResult>(x =>
                     x.Snapshot.Snapshot is CommittedSnapshot<TestAggregate, TestAggregateId, IAggregateSnapshot<TestAggregate, TestAggregateId>> &&
                     x.Snapshot.Metadata.SequenceNr == snapshotSequenceNumber &&
                     x.Snapshot.Metadata.PersistenceId == aggregateIdentity.Value &&
                     x.Snapshot.Snapshot
-                        .As<CommittedSnapshot<TestAggregate, TestAggregateId,IAggregateSnapshot<TestAggregate, TestAggregateId>>>().AggregateSnapshot
+                        .As<CommittedSnapshot<TestAggregate, TestAggregateId, IAggregateSnapshot<TestAggregate, TestAggregateId>>>().AggregateSnapshot
                         .As<TestAggregateSnapshot>().Tests.Count == snapshot.Tests.Count &&
                     x.ToSequenceNr == long.MaxValue);
-                
+
             }
         }
-        
+
     }
 }
