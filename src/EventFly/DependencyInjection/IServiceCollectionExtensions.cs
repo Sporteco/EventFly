@@ -1,12 +1,25 @@
 ﻿using Akka.Actor;
 using EventFly.Commands;
+using EventFly.Definitions;
 using EventFly.Queries;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 
 namespace EventFly.DependencyInjection
 {
     public static class IServiceCollectionExtensions
     {
+        public static IServiceProvider UseEventFly(this IServiceProvider serviceProvider)
+        {
+            var actorSystem = serviceProvider.GetService<ActorSystem>();
+            actorSystem.RegisterDependencyResolver(serviceProvider);
+            var wow = serviceProvider.GetService<IDefinitionToManagerRegistry>() as DefinitionToManagerRegistry;
+
+            if (wow == null) throw new InvalidOperationException("");
+
+            return serviceProvider;
+        }
+
         public static EventFlyBuilder AddEventFly(
             this IServiceCollection services,
             ActorSystem actorSystem)

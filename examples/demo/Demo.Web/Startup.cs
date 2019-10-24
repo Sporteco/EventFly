@@ -33,8 +33,7 @@ namespace Demo.Web
                     .AddEventFly(system)
                         .WithContext<UserContext>()
                         .AddGraphQl()
-                        .AddSwagger()
-                    .BuildEventFly();
+                        .AddSwagger();
 
             /*services.AddTransient<EnumerationGraphType<StringOperator>>();
             services.AddTransient<EnumerationGraphType<CollectionOperator>>();

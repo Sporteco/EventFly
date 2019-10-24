@@ -53,10 +53,11 @@ namespace EventFly.Tests.UnitTests.Jobs
                 new ServiceCollection()
                 .AddEventFly(Sys)
                     .WithContext<TestContext>()
-                    .BuildEventFly()
+                    .Services
                 .AddScoped<TestSaga>()
                 .AddScoped<TestAsyncSaga>()
                 .BuildServiceProvider()
+                .UseEventFly()
             );
         }
 

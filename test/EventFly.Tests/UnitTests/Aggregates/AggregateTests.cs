@@ -52,14 +52,15 @@ namespace EventFly.Tests.UnitTests.Aggregates
             : base(TestHelpers.Akka.Configuration.Config, "aggregate-tests", testOutputHelper)
         {
             Sys.RegisterDependencyResolver(
-                 new ServiceCollection()
-                 .AddEventFly(Sys)
-                     .WithContext<TestContext>()
-                     .BuildEventFly()
-                 .AddScoped<TestSaga>()
-                 .AddScoped<TestAsyncSaga>()
-                 .BuildServiceProvider()
-             );
+                new ServiceCollection()
+                .AddEventFly(Sys)
+                    .WithContext<TestContext>()
+                    .Services
+                .AddScoped<TestSaga>()
+                .AddScoped<TestAsyncSaga>()
+                .BuildServiceProvider()
+                .UseEventFly()
+            );
         }
 
         [Fact]

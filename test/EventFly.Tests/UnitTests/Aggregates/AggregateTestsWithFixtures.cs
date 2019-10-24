@@ -58,10 +58,11 @@ namespace EventFly.Tests.UnitTests.Aggregates
                 new ServiceCollection()
                 .AddEventFly(Sys)
                     .WithContext<TestContext>()
-                    .BuildEventFly()
+                    .Services
                 .AddScoped<TestSaga>()
                 .AddScoped<TestAsyncSaga>()
                 .BuildServiceProvider()
+                .UseEventFly()
             );
         }
 

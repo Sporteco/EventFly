@@ -23,16 +23,17 @@ namespace Demo.Host
             //Create actor system
             var system = ActorSystem.Create("user-example");
 
-           var serviceProvider =
-                new ServiceCollection()
-                    .AddSingleton("aa")
-                    .AddEventFly(system)
-                        .WithContext<UserContext>()
-                    .BuildEventFly()
+            var serviceProvider =
+                 new ServiceCollection()
+                     .AddSingleton("aa")
 
+                     .AddEventFly(system)
+                         .WithContext<UserContext>()
+                     .Services
                     .BuildServiceProvider();
 
-            system.RegisterDependencyResolver(serviceProvider);
+            serviceProvider
+                .UseEventFly();
 
 
             var holder = system.GetExtension<ServiceProviderHolder>();
@@ -43,7 +44,7 @@ namespace Demo.Host
             await bus.Publish(createUserAccountCommand);
 
             await bus.Publish(new RenameUserCommand(aggregateId, new UserName("TEST")));
-            await bus.Publish(new CreateUserCommand(UserId.New, new UserName("userName2"),new Birth(DateTime.Today)));
+            await bus.Publish(new CreateUserCommand(UserId.New, new UserName("userName2"), new Birth(DateTime.Today)));
 
             var res = await queryProcessor.Process(new UsersQuery());
             Console.WriteLine(res?.Items.First().Name);
