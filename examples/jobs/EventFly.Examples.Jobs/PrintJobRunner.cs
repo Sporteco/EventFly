@@ -27,7 +27,7 @@ using EventFly.Jobs;
 namespace EventFly.Examples.Jobs
 {
     public class PrintJobRunner : JobRunner<PrintJob, PrintJobId>,
-        IRun<PrintJob>
+        IRun<PrintJob, PrintJobId>
     {
         public bool Run(PrintJob job)
         {

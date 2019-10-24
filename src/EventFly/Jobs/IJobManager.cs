@@ -29,7 +29,7 @@ namespace EventFly.Jobs
     }
 
     public interface IJobManager<TJob, TIdentity> : IJobManager
-        where TJob : IJob
+        where TJob : IJob<TIdentity>
         where TIdentity : IJobId
     {
         

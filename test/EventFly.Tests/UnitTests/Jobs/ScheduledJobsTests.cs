@@ -23,12 +23,8 @@
 
 using System;
 using System.ComponentModel;
-using System.Linq.Expressions;
-using Akka.Actor;
 using Akka.TestKit;
 using Akka.TestKit.Xunit2;
-using EventFly.Jobs;
-using EventFly.Jobs.Commands;
 using EventFly.TestHelpers.Aggregates.Sagas.TestAsync;
 using EventFly.TestHelpers.Jobs;
 using EventFly.Tests.UnitTests.Subscribers;
@@ -38,6 +34,8 @@ using EventFly.DependencyInjection;
 using Xunit;
 using Xunit.Abstractions;
 using EventFly.TestHelpers.Aggregates.Sagas.Test;
+using System.Threading.Tasks;
+using EventFly.Jobs;
 
 namespace EventFly.Tests.UnitTests.Jobs
 {
@@ -51,6 +49,11 @@ namespace EventFly.Tests.UnitTests.Jobs
         {
             Sys.RegisterDependencyResolver(
                 new ServiceCollection()
+                .AddScoped<TestSaga>()
+                .AddScoped<TestAsyncSaga>()
+                .AddScoped<TestJobRunner>()
+                .AddScoped<AsyncTestJobRunner>()
+                .AddSingleton<TestJobRunnerProbeAccessor>()
                 .AddEventFly(Sys)
                     .WithContext<TestContext>()
                     .Services
@@ -61,44 +64,33 @@ namespace EventFly.Tests.UnitTests.Jobs
             );
         }
 
-        //[Fact]
+        [Fact]
         [Category(Category)]
-        public void SchedulingJob_For5minutes_DispatchesJobMessage()
+        public async Task SchedulingJob_For5minutes_DispatchesJobMessage()
         {
             var probe = CreateTestProbe("job-probe");
-            var scheduler = (TestScheduler) Sys.Scheduler;
+            var sysScheduler = (TestScheduler) Sys.Scheduler;
             var jobId = TestJobId.New;
             var greeting = $"hi here here is a random guid {Guid.NewGuid()}";
-            var job = new TestJob(greeting);
+            var job = new TestJob(jobId, greeting);
             var when = DateTime.UtcNow.AddDays(1);
-            Expression<Func<TestJobScheduler>> testJobSchedulerExpression = () => new TestJobScheduler();
-            Expression<Func<TestJobRunner>> testJobRunnerExpression = () => new TestJobRunner(probe);
-            
-            var testJobManager = Sys.ActorOf(
-                Props.Create(() =>
-                new JobManager<TestJobScheduler, TestJobRunner, TestJob, TestJobId>(
-                    testJobSchedulerExpression,
-                    testJobRunnerExpression))
-                .WithDispatcher(CallingThreadDispatcher.Id));
-            
-            var schedule = new Schedule<TestJob, TestJobId>(jobId, job, when)
-                .WithAck(TestJobAck.Instance)
-                .WithNack(TestJobNack.Instance);
-            
-            
-            
-            testJobManager.Tell(schedule, probe);
-            probe.ExpectMsg<TestJobAck>();
-            scheduler.AdvanceTo(when);
 
-            
-            
+            var accessor = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<TestJobRunnerProbeAccessor>();
+            accessor.Put(jobId, probe);
+
+            var scheduler = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<IScheduler>();
+
+            var result = await scheduler.Schedule<TestJob, TestJobId>(job, when);
+            result.Should().BeTrue();
+
+            sysScheduler.AdvanceTo(when);
+
             probe.ExpectMsg<TestJobDone>(x =>
             {
-                x.At.Should().BeCloseTo(when);
+                x.At.Should().BeCloseTo(when, 50);
                 return x.Greeting == greeting;
             });
-            
+
             // last assertions do not work probably has to do with time
             // see https://gist.github.com/Lutando/6c68a93faace4a0403f468358193ee41
             //scheduler.Advance(day);
@@ -108,162 +100,169 @@ namespace EventFly.Tests.UnitTests.Jobs
             //scheduler.Advance(day);
             //probe.ExpectNoMsg();
         }
-        
-        //[Fact]
+
+        [Fact]
         [Category(Category)]
-        public void SchedulingJob_ForEvery5minutes_DispatchesJobMessage()
+        public async Task SchedulingJob_For5minutes_DispatchesJobMessageFromAsynRunner()
         {
             var probe = CreateTestProbe("job-probe");
-            var scheduler = (TestScheduler) Sys.Scheduler;
-            var jobId = TestJobId.New;
+            var sysScheduler = (TestScheduler)Sys.Scheduler;
+            var jobId = AsyncTestJobId.New;
             var greeting = $"hi here here is a random guid {Guid.NewGuid()}";
-            var job = new TestJob(greeting);
+            var job = new AsyncTestJob(jobId, greeting);
             var when = DateTime.UtcNow.AddDays(1);
-            var fiveMinutes = TimeSpan.FromMinutes(5);
-            Expression<Func<TestJobScheduler>> testJobSchedulerExpression = () => new TestJobScheduler();
-            Expression<Func<TestJobRunner>> testJobRunnerExpression = () => new TestJobRunner(probe);
-            
-            var testJobManager = Sys.ActorOf(
-                Props.Create(() =>
-                        new JobManager<TestJobScheduler, TestJobRunner, TestJob, TestJobId>(
-                            testJobSchedulerExpression,
-                            testJobRunnerExpression))
-                    .WithDispatcher(CallingThreadDispatcher.Id));
-            
-            var schedule = new ScheduleRepeatedly<TestJob, TestJobId>(jobId, job, fiveMinutes, when)
-                .WithAck(TestJobAck.Instance)
-                .WithNack(TestJobNack.Instance);
-            
-            
-            
-            testJobManager.Tell(schedule, probe);
-            probe.ExpectMsg<TestJobAck>();
-            scheduler.AdvanceTo(when);
-            
-            
-            
-            probe.ExpectMsg<TestJobDone>(x =>
-            {
-                x.At.Should().BeCloseTo(when);
-                return x.Greeting == greeting;
-            });
-            scheduler.Advance(fiveMinutes);
-            probe.ExpectMsg<TestJobDone>(x =>
-            {
-                x.At.Should().BeCloseTo(when.Add(fiveMinutes));
-                return x.Greeting == greeting;
-            });
-            scheduler.Advance(fiveMinutes);
-            probe.ExpectMsg<TestJobDone>(x =>
-            {
-                x.At.Should().BeCloseTo(when.Add( fiveMinutes * 2));
-                return x.Greeting == greeting;
-            });
-        }
-        
-        //[Fact]
-        [Category(Category)]
-        public void SchedulingJob_ForEveryCronTrigger_DispatchesJobMessage()
-        {
-            var probe = CreateTestProbe("job-probe");
-            var scheduler = (TestScheduler) Sys.Scheduler;
-            var cronExpression = "* */12 * * *";
-            var jobId = TestJobId.New;
-            var greeting = $"hi here here is a random guid {Guid.NewGuid()}";
-            var job = new TestJob(greeting);
-            var when = DateTime.UtcNow.AddMonths(1);
-            var twelveHours = TimeSpan.FromHours(12);
-            Expression<Func<TestJobScheduler>> testJobSchedulerExpression = () => new TestJobScheduler();
-            Expression<Func<TestJobRunner>> testJobRunnerExpression = () => new TestJobRunner(probe);
-            
-            var testJobManager = Sys.ActorOf(
-                Props.Create(() =>
-                        new JobManager<TestJobScheduler, TestJobRunner, TestJob, TestJobId>(
-                            testJobSchedulerExpression,
-                            testJobRunnerExpression))
-                    .WithDispatcher(CallingThreadDispatcher.Id));
-            
-            var schedule = new ScheduleCron<TestJob, TestJobId>(jobId, job, cronExpression, when)
-                .WithAck(TestJobAck.Instance)
-                .WithNack(TestJobNack.Instance);
-            
-            testJobManager.Tell(schedule, probe);
-            probe.ExpectMsg<TestJobAck>();
-            scheduler.AdvanceTo(when);
-            
-            
+
+            var accessor = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<TestJobRunnerProbeAccessor>();
+            accessor.Put(jobId, probe);
+
+            var scheduler = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<IScheduler>();
+
+            var result = await scheduler.Schedule<AsyncTestJob, AsyncTestJobId>(job, when);
+            result.Should().BeTrue();
+
+            sysScheduler.AdvanceTo(when);
 
             probe.ExpectMsg<TestJobDone>(x =>
             {
                 x.At.Should().BeCloseTo(when);
                 return x.Greeting == greeting;
             });
-            scheduler.Advance(twelveHours);
+
+            // last assertions do not work probably has to do with time
+            // see https://gist.github.com/Lutando/6c68a93faace4a0403f468358193ee41
+            //scheduler.Advance(day);
+            //probe.ExpectNoMsg(TimeSpan.FromSeconds(1));
+            //scheduler.Advance(day);
+            //probe.ExpectNoMsg();
+            //scheduler.Advance(day);
+            //probe.ExpectNoMsg();
+        }
+
+
+        [Fact]
+        [Category(Category)]
+        public async Task SchedulingJob_ForEvery5minutes_DispatchesJobMessage()
+        {
+            var probe = CreateTestProbe("job-probe");
+            var sysScheduler = (TestScheduler)Sys.Scheduler;
+            var jobId = TestJobId.New;
+            var greeting = $"hi here here is a random guid {Guid.NewGuid()}";
+            var job = new TestJob(jobId, greeting);
+            var when = DateTime.UtcNow.AddDays(1);
+            var fiveMinutes = TimeSpan.FromMinutes(5);
+
+            var accessor = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<TestJobRunnerProbeAccessor>();
+            accessor.Put(jobId, probe);
+
+            var scheduler = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<IScheduler>();
+
+            var result = await scheduler.Schedule<TestJob, TestJobId>(job, fiveMinutes, when);
+            result.Should().BeTrue();
+
+            sysScheduler.AdvanceTo(when);
+
+            probe.ExpectMsg<TestJobDone>(x =>
+            {
+                x.At.Should().BeCloseTo(when);
+                return x.Greeting == greeting;
+            });
+            sysScheduler.Advance(fiveMinutes);
+            probe.ExpectMsg<TestJobDone>(x =>
+            {
+                x.At.Should().BeCloseTo(when.Add(fiveMinutes));
+                return x.Greeting == greeting;
+            });
+            sysScheduler.Advance(fiveMinutes);
+            probe.ExpectMsg<TestJobDone>(x =>
+            {
+                x.At.Should().BeCloseTo(when.Add(fiveMinutes * 2));
+                return x.Greeting == greeting;
+            }, TimeSpan.FromSeconds(3));
+        }
+
+        [Fact]
+        [Category(Category)]
+        public async Task SchedulingJob_ForEveryCronTrigger_DispatchesJobMessage()
+        {
+            var probe = CreateTestProbe("job-probe");
+            var sysScheduler = (TestScheduler)Sys.Scheduler;
+            var cronExpression = "* */12 * * *";
+            var jobId = TestJobId.New;
+            var greeting = $"hi here here is a random guid {Guid.NewGuid()}";
+            var job = new TestJob(jobId, greeting);
+            var when = DateTime.UtcNow.AddMonths(1);
+            var twelveHours = TimeSpan.FromHours(12);
+
+            var accessor = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<TestJobRunnerProbeAccessor>();
+            accessor.Put(jobId, probe);
+
+            var scheduler = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<IScheduler>();
+
+            var result = await scheduler.Schedule<TestJob, TestJobId>(job, cronExpression, when);
+            result.Should().BeTrue();
+
+            sysScheduler.AdvanceTo(when);
+
+            probe.ExpectMsg<TestJobDone>(x =>
+            {
+                x.At.Should().BeCloseTo(when);
+                return x.Greeting == greeting;
+            });
+            sysScheduler.Advance(twelveHours);
             probe.ExpectMsg<TestJobDone>(x =>
             {
                 x.At.Should().BeCloseTo(when.Add(twelveHours));
                 return x.Greeting == greeting;
             });
-            scheduler.Advance(twelveHours);
+            sysScheduler.Advance(twelveHours);
             probe.ExpectMsg<TestJobDone>(x =>
             {
                 x.At.Should().BeCloseTo(when.Add(twelveHours * 2));
-                
+
                 return x.Greeting == greeting;
             });
         }
-        
-        
-        //[Fact]
+
+
+        [Fact]
         [Category(Category)]
-        public void SchedulingJob_AndThenCancellingJob_CeasesDispatching()
+        public async Task SchedulingJob_AndThenCancellingJob_CeasesDispatching()
         {
             var probe = CreateTestProbe("job-probe");
-            var scheduler = (TestScheduler) Sys.Scheduler;
+            var SysScheduler = (TestScheduler)Sys.Scheduler;
             var jobId = TestJobId.New;
             var greeting = $"hi here here is a random guid {Guid.NewGuid()}";
-            var job = new TestJob(greeting);
+            var job = new TestJob(jobId, greeting);
             var when = DateTime.UtcNow.AddDays(1);
             var fiveMinutes = TimeSpan.FromMinutes(5);
-            Expression<Func<TestJobScheduler>> testJobSchedulerExpression = () => new TestJobScheduler();
-            Expression<Func<TestJobRunner>> testJobRunnerExpression = () => new TestJobRunner(probe);
-            
-            var testJobManager = Sys.ActorOf(
-                Props.Create(() =>
-                        new JobManager<TestJobScheduler, TestJobRunner, TestJob, TestJobId>(
-                            testJobSchedulerExpression,
-                            testJobRunnerExpression))
-                    .WithDispatcher(CallingThreadDispatcher.Id));
-            
-            var schedule = new ScheduleRepeatedly<TestJob, TestJobId>(jobId, job, fiveMinutes, when)
-                .WithAck(TestJobAck.Instance)
-                .WithNack(TestJobNack.Instance);
-            
-            testJobManager.Tell(schedule, probe);
-            probe.ExpectMsg<TestJobAck>();
-            scheduler.AdvanceTo(when);
+
+            var accessor = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<TestJobRunnerProbeAccessor>();
+            accessor.Put(jobId, probe);
+
+            var scheduler = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<IScheduler>();
+
+            var result = await scheduler.Schedule<TestJob, TestJobId>(job, fiveMinutes, when);
+            result.Should().BeTrue();
+
+            SysScheduler.AdvanceTo(when);
             probe.ExpectMsg<TestJobDone>(x =>
             {
                 x.At.Should().BeCloseTo(when);
-                
+
                 return x.Greeting == greeting;
             });
-            
-            var cancelSchedule = new Cancel<TestJob, TestJobId>(jobId)
-                .WithAck(TestJobAck.Instance)
-                .WithNack(TestJobNack.Instance);
-            
-            testJobManager.Tell(cancelSchedule, probe);
-            
-            probe.ExpectMsg<TestJobAck>();
-            scheduler.Advance(fiveMinutes);
-            
+
+            result = await scheduler.Cancel<TestJob, TestJobId>(jobId);
+            result.Should().BeTrue();
+
+            SysScheduler.Advance(fiveMinutes);
+
             probe.ExpectNoMsg();
-            
-            scheduler.Advance(fiveMinutes);
-            
+
+            SysScheduler.Advance(fiveMinutes);
+
             probe.ExpectNoMsg();
         }
-        
+
     }
 }

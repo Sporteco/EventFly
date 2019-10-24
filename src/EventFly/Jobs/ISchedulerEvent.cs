@@ -31,7 +31,7 @@ namespace EventFly.Jobs
     }
 
     public interface ISchedulerEvent<TJob, TIdentity> : ISchedulerEvent
-        where TJob : IJob
+        where TJob : IJob<TIdentity>
         where TIdentity : IJobId
     {
     }

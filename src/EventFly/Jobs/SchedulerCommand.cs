@@ -27,13 +27,13 @@ using EventFly.ValueObjects;
 namespace EventFly.Jobs
 {
     public abstract class SchedulerMessage<TJob, TIdentity> : ValueObject
-        where TJob : IJob
+        where TJob : IJob<TIdentity>
         where TIdentity : IJobId
     {
-        
     }
+
     public abstract class SchedulerCommand<TJob, TIdentity> : SchedulerMessage<TJob, TIdentity>
-        where TJob : IJob
+        where TJob : IJob<TIdentity>
         where TIdentity : IJobId
     {
         public TIdentity JobId { get; }
@@ -46,7 +46,7 @@ namespace EventFly.Jobs
             object nack = null)
         {
             if (jobId == null) throw new ArgumentNullException(nameof(jobId));
-            
+
             JobId = jobId;
             Ack = ack;
             Nack = nack;

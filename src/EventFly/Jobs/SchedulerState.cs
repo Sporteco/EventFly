@@ -27,7 +27,7 @@ using EventFly.Jobs.Commands;
 namespace EventFly.Jobs
 {
     public class SchedulerState<TJob, TIdentity>
-        where TJob : IJob
+        where TJob : IJob<TIdentity>
         where TIdentity : IJobId
     {
         public static SchedulerState<TJob, TIdentity> New { get; } = new SchedulerState<TJob, TIdentity>(ImmutableDictionary<TIdentity, Schedule<TJob,TIdentity>>.Empty);
