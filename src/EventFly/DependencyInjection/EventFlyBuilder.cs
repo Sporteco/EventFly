@@ -44,6 +44,7 @@ namespace EventFly.DependencyInjection
                     .RegisterReadModelManagers(ApplicationDefinition.ReadModels.Select(a => a.ManagerDefinition).ToList())
                     .RegisterSagaManagers(ApplicationDefinition.Sagas.Select(a => a.ManagerDefinition).ToList())
                     .RegisterJobManagers(ApplicationDefinition.Jobs.Select(a => a.ManagerDefinition).ToList())
+                    .RegisterDomainServiceManagers(ApplicationDefinition.DomainServices.Select(a => a.ManagerDefinition).ToList())
                     .RegisterCommandsScheduler()
                     .RegisterEventsScheduler()
                 .Build();

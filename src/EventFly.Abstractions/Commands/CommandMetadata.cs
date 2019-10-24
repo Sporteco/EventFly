@@ -45,7 +45,7 @@ namespace EventFly.Commands
         }
 
         [JsonIgnore]
-        public IReadOnlyCollection<string> SagaIds
+        public IReadOnlyCollection<string> CorrellationIds
         {
             get => ContainsKey(MetadataKeys.SagaIds) ? 
                 (IReadOnlyCollection<string>) GetMetadataValue(MetadataKeys.SagaIds)?.Split(',') : 

@@ -7,8 +7,8 @@ namespace Demo.Commands
     [Description("Создание нового пользователя")]
     public class CreateUserCommand : Command<UserId>
     {
-        public readonly UserName UserName;
-        public readonly Birth Birth;
+        public UserName UserName { get; }
+        public Birth Birth { get; }
 
         public CreateUserCommand(UserId aggregateId, UserName userName, Birth birth) : base(aggregateId)
         {

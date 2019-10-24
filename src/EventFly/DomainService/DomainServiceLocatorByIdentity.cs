@@ -5,11 +5,11 @@ using System.Reflection;
 using EventFly.Aggregates;
 using EventFly.Core;
 
-namespace EventFly.Sagas
+namespace EventFly.DomainService
 {
-    public class SagaLocatorByIdentity<TIdentity> : ISagaLocator<TIdentity> where TIdentity : IIdentity
+    public class DomainServiceLocatorByIdentity<TIdentity> : IDomainServiceLocator<TIdentity> where TIdentity : IIdentity
     {
-        public TIdentity LocateSaga(IDomainEvent domainEvent)
+        public TIdentity LocateService(IDomainEvent domainEvent)
         {
             return FindSagaIdInMetadata(domainEvent.Metadata.CorrellationIds, domainEvent.GetIdentity());
         }
@@ -47,5 +47,4 @@ namespace EventFly.Sagas
                 ?.Invoke(null,new object[]{guid});
         }
     }
-    internal class EmptyIdentity : Identity<EmptyIdentity> { public EmptyIdentity(string value) : base(value){}}
 }

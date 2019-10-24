@@ -41,6 +41,7 @@ namespace EventFly.Web.Swagger
                 //c.OperationFilter<AuthorizeCheckOperationFilter>();
                 //c.OperationFilter<OperationFilter>();
                 c.OperationFilter<DescriptionFilter>();
+                c.SchemaFilter<ReadOnlyFilter>();
                 var basePath = AppDomain.CurrentDomain.BaseDirectory;
                 var files = Directory.GetFiles(basePath, "*.xml");
                 foreach (var file in files)
@@ -86,6 +87,26 @@ namespace EventFly.Web.Swagger
                 if (actionType.Implements(typeof(ICommand)) || actionType.Implements(typeof(IQuery)))
                 {
                     operation.Summary = actionType.GetCustomAttribute<DescriptionAttribute>()?.Description;
+                }
+            }
+        }
+    }
+    public class ReadOnlyFilter : ISchemaFilter
+    {
+        public void Apply(Schema model, SchemaFilterContext context)
+        {
+            if (model.Properties == null)
+            {
+                return;
+            }
+
+            foreach (var schemaProperty in model.Properties)
+            {
+                var property = context.SystemType.GetProperty(schemaProperty.Key, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
+
+                if (property != null)
+                {
+                    schemaProperty.Value.ReadOnly = false;
                 }
             }
         }

@@ -1,7 +1,6 @@
 ﻿using Akka.Actor;
 using EventFly.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
-using Newtonsoft.Json;
 
 namespace EventFly.Web
 {

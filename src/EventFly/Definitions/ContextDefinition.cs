@@ -5,6 +5,7 @@ using EventFly.Aggregates;
 using EventFly.Aggregates.Snapshot;
 using EventFly.Commands;
 using EventFly.Core;
+using EventFly.DomainService;
 using EventFly.Jobs;
 using EventFly.Queries;
 using EventFly.ReadModels;
@@ -17,6 +18,7 @@ namespace EventFly.Definitions
     public abstract class ContextDefinition : IContextDefinition
     {
         private readonly List<IAggregateDefinition> _aggregates = new List<IAggregateDefinition>();
+        private readonly List<IDomainServiceDefinition> _services = new List<IDomainServiceDefinition>();
         private readonly List<ISagaDefinition> _sagas = new List<ISagaDefinition>();
         private readonly List<IReadModelDefinition> _readModels = new List<IReadModelDefinition>();
         private readonly List<IQueryDefinition> _queries = new List<IQueryDefinition>();
@@ -27,6 +29,8 @@ namespace EventFly.Definitions
         public IReadOnlyCollection<IAggregateDefinition> Aggregates => _aggregates;
 
         public IReadOnlyCollection<ISagaDefinition> Sagas => _sagas;
+        public IReadOnlyCollection<IDomainServiceDefinition> DomainServices => _services;
+
 
         public IReadOnlyCollection<IReadModelDefinition> ReadModels => _readModels;
 
@@ -87,9 +91,39 @@ namespace EventFly.Definitions
             return this;
         }
 
+        protected IContextDefinition RegisterDomainService<TService, TServiceId,TDomainServiceLocator>()
+            where TService : ActorBase, IDomainService<TServiceId>
+            where TServiceId : IIdentity
+            where TDomainServiceLocator : class, IDomainServiceLocator<TServiceId>, new()
+        {
+            //var manager = _system.ActorOf(Props.Create(() => new AggregateSagaManager<TSaga, TSagaId, TSagaLocator>()),
+            //    $"saga-{typeof(TSagaId).Name}-manager");
+
+            _services.Add(
+                new DomainServiceDefinition(typeof(TService), typeof(TService),
+                    new DomainServiceManagerDefinition(typeof(TService), typeof(TServiceId), typeof(TDomainServiceLocator))
+                )
+            );
+            return this;
+        }
+        protected IContextDefinition RegisterDomainService<TService, TServiceId>()
+            where TService : ActorBase, IDomainService<TServiceId>
+            where TServiceId : IIdentity
+        {
+            //var manager = _system.ActorOf(Props.Create(() => new AggregateSagaManager<TSaga, TSagaId, SagaLocatorByIdentity<TSagaId>>()),
+            //    $"saga-{typeof(TSagaId).Name}-manager");
+
+            _services.Add(
+                new DomainServiceDefinition(typeof(TService), typeof(TService),
+                    new DomainServiceManagerDefinition(typeof(TService), typeof(TServiceId), typeof(DomainServiceLocatorByIdentity<TServiceId>))
+                )
+            );
+            return this;
+        }
+
         protected IContextDefinition RegisterSaga<TSaga, TSagaId>()
           where TSaga : ActorBase, IAggregateSaga<TSagaId>
-          where TSagaId : IIdentity
+          where TSagaId : class, IIdentity
         {
             //var manager = _system.ActorOf(Props.Create(() => new AggregateSagaManager<TSaga, TSagaId, SagaLocatorByIdentity<TSagaId>>()),
             //    $"saga-{typeof(TSagaId).Name}-manager");

@@ -22,7 +22,6 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using Akka.Actor;
-using EventFly.DependencyInjection;
 using EventFly.Examples.Api.Domain.Repositories.Operations;
 using EventFly.Examples.Api.Domain.Repositories.Resources;
 using Microsoft.AspNetCore.Builder;
@@ -42,7 +41,7 @@ namespace EventFly.Examples.Api
         
         public void ConfigureServices(IServiceCollection services)
         {
-            var actorSystem = ActorSystem.Create("api-system");
+            ActorSystem.Create("api-system");
 
             // Add Actors to DI as ActorRefProvider<T>
             //services
