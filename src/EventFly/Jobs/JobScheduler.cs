@@ -123,7 +123,7 @@ namespace EventFly.Jobs
                         sender.Tell(command.Ack);
                     }
 
-                    Log.Info("JobScheduler for Job of Name={0} and Id={2}; has been successfully scheduled to run at TriggerDate={3}.", Name, e.Entry.JobId, e.Entry.TriggerDate);
+                    Log.Info("JobScheduler for Job of Name={0} and Id={1}; has been successfully scheduled to run at TriggerDate={2}.", Name, e.Entry.JobId, e.Entry.TriggerDate);
                 });
             }
             catch (Exception error)
@@ -133,7 +133,7 @@ namespace EventFly.Jobs
                     sender.Tell(command.Nack);
                 }
 
-                Log.Error(error, "JobScheduler for Job of Name={0} and Id={2}; has failed to schedule a job.", Name, command.JobId);
+                Log.Error(error, "JobScheduler for Job of Name={0} and Id={1}; has failed to schedule a job.", Name, command.JobId);
             }
 
             return true;

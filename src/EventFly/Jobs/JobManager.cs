@@ -93,16 +93,7 @@ namespace EventFly.Jobs
         //TODO: move to constructor
         private IActorRef SpawnRunner()
         {
-            Props runnerProps;
-            try
-            {
-                runnerProps = Context.DI().Props<TJobRunner>().WithDispatcher(Context.Props.Dispatcher);
-            }
-            catch (Exception ex)
-            {
-                Context.GetLogger().Error(ex, "No DI available at the moment, falling back to default props creation.");
-                runnerProps = Props.Create<TJobRunner>().WithDispatcher(Context.Props.Dispatcher);
-            }
+            var runnerProps = Context.DI().Props<TJobRunner>().WithDispatcher(Context.Props.Dispatcher);
 
             var runnerSupervisorProps =
                 BackoffSupervisor.Props(

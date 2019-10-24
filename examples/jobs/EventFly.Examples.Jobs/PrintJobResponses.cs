@@ -27,7 +27,6 @@ namespace EventFly.Examples.Jobs
     {
         public class PrintJobResponse
         {
-            
         }
 
         public class Success : PrintJobResponse
