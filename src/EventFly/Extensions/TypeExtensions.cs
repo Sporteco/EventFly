@@ -84,7 +84,7 @@ namespace EventFly.Extensions
                         t.Name);
                 });
         }
-        
+
         private static readonly ConcurrentDictionary<Type, JobName> JobNames = new ConcurrentDictionary<Type, JobName>();
 
         public static JobName GetJobName(
@@ -126,7 +126,7 @@ namespace EventFly.Extensions
                     mi => mi.GetParameters()[0].ParameterType,
                     mi => ReflectionHelper.CompileMethodInvocation<Action<T, IAggregateEvent>>(type, "Apply", mi.GetParameters()[0].ParameterType));
         }
-        
+
         internal static IReadOnlyDictionary<Type, Action<T, IAggregateSnapshot>> GetAggregateSnapshotHydrateMethods<TAggregate, TIdentity, T>(this Type type)
             where TAggregate : IAggregateRoot<TIdentity>
             where TIdentity : IIdentity
@@ -190,7 +190,7 @@ namespace EventFly.Extensions
                 })
                 .ToDictionary(
                     mi => mi.GetParameters()[0].ParameterType,
-                    mi => ReflectionHelper.CompileMethodInvocation<Action<TReadModel,IDomainEvent>>(type, "Apply", mi.GetParameters()[0].ParameterType));
+                    mi => ReflectionHelper.CompileMethodInvocation<Action<TReadModel, IDomainEvent>>(type, "Apply", mi.GetParameters()[0].ParameterType));
         }
 
         internal static IReadOnlyList<Type> GetAsyncDomainEventSubscriberSubscriptionTypes(this Type type)
@@ -202,14 +202,14 @@ namespace EventFly.Extensions
                 .ToList();
             var domainEventTypes = interfaces
                 .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ISubscribeToAsync<,>))
-                .Select(i =>   typeof(IDomainEvent<,>).MakeGenericType(i.GetGenericArguments()[0],i.GetGenericArguments()[1]))
+                .Select(i => typeof(IDomainEvent<,>).MakeGenericType(i.GetGenericArguments()[0], i.GetGenericArguments()[1]))
                 .ToList();
-            
+
 
             return domainEventTypes;
         }
-        
-        internal static IReadOnlyList<Tuple<Type,Type>> GetAggregateExecuteTypes(this Type type)
+
+        internal static IReadOnlyList<Tuple<Type, Type>> GetAggregateExecuteTypes(this Type type)
         {
             var interfaces = type
                 .GetTypeInfo()
@@ -218,13 +218,13 @@ namespace EventFly.Extensions
                 .ToList();
             var domainEventTypes = interfaces
                 .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IExecute<,,>))
-                .Select(i => new Tuple<Type,Type>(i.GetGenericArguments()[0],i.GetGenericArguments()[1]))
+                .Select(i => new Tuple<Type, Type>(i.GetGenericArguments()[0], i.GetGenericArguments()[1]))
                 .ToList();
-            
+
 
             return domainEventTypes;
         }
-        internal static IReadOnlyList<Tuple<Type,Type>> GetReadModelSubscribersTypes(this Type type)
+        internal static IReadOnlyList<Tuple<Type, Type>> GetReadModelSubscribersTypes(this Type type)
         {
             var interfaces = type
                 .GetTypeInfo()
@@ -233,7 +233,7 @@ namespace EventFly.Extensions
                 .ToList();
             var types = interfaces
                 .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IAmReadModelFor<,>))
-                .Select(i => new Tuple<Type,Type>(i.GetGenericArguments()[0],i.GetGenericArguments()[1]))
+                .Select(i => new Tuple<Type, Type>(i.GetGenericArguments()[0], i.GetGenericArguments()[1]))
                 .ToList();
 
             return types;
@@ -248,9 +248,9 @@ namespace EventFly.Extensions
                 .ToList();
             var domainEventTypes = interfaces
                 .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ISubscribeTo<,>))
-                .Select(i => typeof(IDomainEvent<,>).MakeGenericType(i.GetGenericArguments()[0],i.GetGenericArguments()[1]))
+                .Select(i => typeof(IDomainEvent<,>).MakeGenericType(i.GetGenericArguments()[0], i.GetGenericArguments()[1]))
                 .ToList();
-            
+
 
             return domainEventTypes;
         }
@@ -279,7 +279,7 @@ namespace EventFly.Extensions
                     throw new ArgumentException(nameof(type));
                 });
         }
-        
+
         private static readonly ConcurrentDictionary<Type, Type> AggregateEventTypeCache = new ConcurrentDictionary<Type, Type>();
         internal static Type GetCommittedEventAggregateEventType(this Type type)
         {
@@ -304,7 +304,7 @@ namespace EventFly.Extensions
                     throw new ArgumentException(nameof(type));
                 });
         }
-        
+
         internal static IReadOnlyList<Type> GetJobRunTypes(this Type type)
         {
             var interfaces = type
@@ -313,14 +313,31 @@ namespace EventFly.Extensions
                 .Select(i => i.GetTypeInfo())
                 .ToList();
             var jobRunTypes = interfaces
-                .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IRun<>))
-                .Select(i =>   i.GetGenericArguments()[0])
+                .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IRun<,>))
+                .Select(i => i.GetGenericArguments()[0])
                 .ToList();
-            
+
 
             return jobRunTypes;
         }
-        
+
+        internal static IReadOnlyList<Type> GetAsyncJobRunTypes(this Type type)
+        {
+            var interfaces = type
+                .GetTypeInfo()
+                .GetInterfaces()
+                .Select(i => i.GetTypeInfo())
+                .ToList();
+
+            var jobRunTypes = interfaces
+                .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IRunAsync<,>))
+                .Select(i => i.GetGenericArguments()[0])
+                .ToList();
+
+
+            return jobRunTypes;
+        }
+
         internal static IReadOnlyList<Type> GetAsyncSagaEventSubscriptionTypes(this Type type)
         {
             var interfaces = type
@@ -340,12 +357,12 @@ namespace EventFly.Extensions
                 .Select(t => typeof(IDomainEvent<,>).MakeGenericType(t.GetGenericArguments()[0],
                     t.GetGenericArguments()[1]))
                 .ToList();
-            
+
             startedByEventTypes.AddRange(handleEventTypes);
 
             return startedByEventTypes;
         }
-        
+
         internal static IReadOnlyList<Type> GetSagaEventSubscriptionTypes(this Type type)
         {
             var interfaces = type
@@ -365,37 +382,37 @@ namespace EventFly.Extensions
                 .Select(t => typeof(IDomainEvent<,>).MakeGenericType(t.GetGenericArguments()[0],
                     t.GetGenericArguments()[1]))
                 .ToList();
-            
+
             startedByEventTypes.AddRange(handleEventTypes);
 
             return startedByEventTypes;
         }
-        
-        internal static IReadOnlyDictionary<Type, Func<T,IAggregateEvent, IAggregateEvent>> GetAggregateEventUpcastMethods<TAggregate, TIdentity, T>(this Type type)
+
+        internal static IReadOnlyDictionary<Type, Func<T, IAggregateEvent, IAggregateEvent>> GetAggregateEventUpcastMethods<TAggregate, TIdentity, T>(this Type type)
             where TAggregate : IAggregateRoot<TIdentity>
             where TIdentity : IIdentity
         {
             var aggregateEventType = typeof(IAggregateEvent<TIdentity>);
-            
+
             return type
                 .GetTypeInfo()
                 .GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
                 .Where(mi =>
                 {
-                    if (mi.Name != "Upcast") 
+                    if (mi.Name != "Upcast")
                         return false;
                     var parameters = mi.GetParameters();
                     return
                         parameters.Length == 1 &&
                         aggregateEventType.GetTypeInfo().IsAssignableFrom(parameters[0].ParameterType);
-                    
+
                 })
                 .ToDictionary(
                     //problem might be here
                     mi => mi.GetParameters()[0].ParameterType,
-                    mi => ReflectionHelper.CompileMethodInvocation<Func<T,IAggregateEvent, IAggregateEvent>>(type, "Upcast", mi.GetParameters()[0].ParameterType));           
+                    mi => ReflectionHelper.CompileMethodInvocation<Func<T, IAggregateEvent, IAggregateEvent>>(type, "Upcast", mi.GetParameters()[0].ParameterType));
         }
-        
+
         internal static IReadOnlyList<Type> GetAggregateEventUpcastTypes(this Type type)
         {
             var interfaces = type
@@ -403,10 +420,10 @@ namespace EventFly.Extensions
                 .GetInterfaces()
                 .Select(i => i.GetTypeInfo())
                 .ToList();
-            
+
             var upcastableEventTypes = interfaces
                 .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IUpcast<,>))
-                .Select(i =>   i.GetGenericArguments()[0])
+                .Select(i => i.GetGenericArguments()[0])
                 .ToList();
 
             return upcastableEventTypes;

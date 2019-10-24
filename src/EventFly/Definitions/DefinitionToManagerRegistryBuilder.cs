@@ -2,8 +2,11 @@
 using Akka.Actor;
 using EventFly.Aggregates;
 using EventFly.Extensions;
+using EventFly.Jobs;
 using EventFly.Queries;
 using EventFly.Sagas.AggregateSaga;
+using EventFly.Schedulers.Commands;
+using EventFly.Schedulers.Events;
 
 namespace EventFly.Definitions
 {
@@ -15,6 +18,7 @@ namespace EventFly.Definitions
         private IReadOnlyDictionary<IQueryManagerDefinition, IActorRef> DefinitionToQueryManager { get; set; } = new Dictionary<IQueryManagerDefinition, IActorRef>();
         private IReadOnlyDictionary<ISagaManagerDefinition, IActorRef> DefinitionToSagaManager { get; set; } = new Dictionary<ISagaManagerDefinition, IActorRef>();
         private IReadOnlyDictionary<IReadModelManagerDefinition, IActorRef> DefinitionToReadModelManager { get; set; } = new Dictionary<IReadModelManagerDefinition, IActorRef>();
+        private IReadOnlyDictionary<IJobManagerDefinition, IActorRef> DefinitionToJobManager { get; set; } = new Dictionary<IJobManagerDefinition, IActorRef>();
 
         public DefinitionToManagerRegistryBuilder UseSystem(ActorSystem actorSystem)
         {
@@ -94,9 +98,41 @@ namespace EventFly.Definitions
             return this;
         }
 
+        public DefinitionToManagerRegistryBuilder RegisterJobManagers(IReadOnlyCollection<IJobManagerDefinition> definitions)
+        {
+            var dictionaryJob = new Dictionary<IJobManagerDefinition, IActorRef>();
+            foreach (var managerDef in definitions)
+            {
+                var type = typeof(JobManager<,,,>);
+                var generic = type.MakeGenericType(new[] { managerDef.JobSchedulreType, managerDef.JobRunnerType, managerDef.JobType, managerDef.IdentityType });
+
+                var manager = System.ActorOf(
+                    Props.Create(generic),
+                    $"job-{managerDef.IdentityType.Name}-manager"
+                );
+                dictionaryJob.Add(managerDef, manager);
+            }
+
+            DefinitionToJobManager = dictionaryJob;
+
+            return this;
+        }
+
+        public DefinitionToManagerRegistryBuilder RegisterCommandsScheduler()
+        {
+            System.ActorOf(Props.Create(typeof(JobManager<PublishCommandJobScheduler, PublishCommandJobRunner, PublishCommandJob, PublishCommandJobId>)), $"job-commands-publisher-manager");
+            return this;
+        }
+
+        public DefinitionToManagerRegistryBuilder RegisterEventsScheduler()
+        {
+            System.ActorOf(Props.Create(typeof(JobManager<PublishEventJobScheduler, PublishEventJobRunner, PublishEventJob, PublishEventJobId>)), $"job-events-publisher-manager");
+            return this;
+        }
+
         public DefinitionToManagerRegistry Build()
         {
-            return new DefinitionToManagerRegistry(DefinitionToAggregateManager, DefinitionToQueryManager, DefinitionToSagaManager, DefinitionToReadModelManager);
+            return new DefinitionToManagerRegistry(DefinitionToAggregateManager, DefinitionToQueryManager, DefinitionToSagaManager, DefinitionToReadModelManager, DefinitionToJobManager);
         }
     }
 }

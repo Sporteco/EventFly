@@ -20,6 +20,7 @@ namespace EventFly.Definitions
         private readonly List<ISagaDefinition> _sagas = new List<ISagaDefinition>();
         private readonly List<IReadModelDefinition> _readModels = new List<IReadModelDefinition>();
         private readonly List<IQueryDefinition> _queries = new List<IQueryDefinition>();
+        private readonly List<IJobDefinition> _jobs = new List<IJobDefinition>();
 
         public string Name => GetType().Name;
 
@@ -31,14 +32,13 @@ namespace EventFly.Definitions
 
         public IReadOnlyCollection<IQueryDefinition> Queries => _queries;
 
+        public IReadOnlyCollection<IJobDefinition> Jobs => _jobs;
+
         public EventDefinitions Events { get; } = new EventDefinitions();
 
         public CommandDefinitions Commands { get; } = new CommandDefinitions();
 
         public SnapshotDefinitions Snapshots { get; } = new SnapshotDefinitions();
-
-
-        public JobDefinitions Jobs { get; } = new JobDefinitions();
 
         protected IContextDefinition RegisterAggregate<TAggregate, TIdentity>()
           where TAggregate : ActorBase, IAggregateRoot<TIdentity>
@@ -102,6 +102,21 @@ namespace EventFly.Definitions
             return this;
         }
 
+        protected IContextDefinition RegisterJob<TJob, TJobId, TJobRunner, TJobScheduler>()
+            where TJob : IJob<TJobId>
+            where TJobId : IJobId
+            where TJobRunner : JobRunner<TJob, TJobId>
+            where TJobScheduler: JobScheduler<TJobScheduler, TJob, TJobId>
+        {
+            _jobs.Add(
+                new JobDefinition(typeof(TJob), typeof(TJobId),
+                    new JobManagerDefinition(typeof(TJobRunner), typeof(TJobScheduler), typeof(TJob), typeof(TJobId))
+                )
+            );
+
+            return this;
+        }
+
         protected IContextDefinition RegisterReadModel<TReadModel, TReadModelManager>()
           where TReadModel : IReadModel
           where TReadModelManager : ActorBase, IReadModelManager, new()
@@ -160,18 +175,5 @@ namespace EventFly.Definitions
             Snapshots.Load(types);
             return this;
         }
-
-        protected IContextDefinition RegisterJob<TJob>() where TJob : IJob
-        {
-            Jobs.Load(typeof(TJob));
-            return this;
-        }
-
-        protected IContextDefinition RegisterJobs(params Type[] types)
-        {
-            Jobs.Load(types);
-            return this;
-        }
-
     }
 }

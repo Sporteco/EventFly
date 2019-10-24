@@ -24,7 +24,7 @@
 namespace EventFly.Jobs.Commands
 {
     public class Cancel<TJob, TIdentity> : SchedulerCommand<TJob, TIdentity>
-        where TJob : IJob
+        where TJob : IJob<TIdentity>
         where TIdentity : IJobId
     {
         public Cancel(
@@ -33,15 +33,14 @@ namespace EventFly.Jobs.Commands
             object nack = null)
             : base(jobId, ack, nack)
         {
-            
         }
-        
+
         public virtual Cancel<TJob, TIdentity> WithAck(object ack)
         {
             return new Cancel<TJob, TIdentity>(JobId, ack, Nack);
         }
-        
-        public virtual Cancel<TJob,TIdentity> WithNack(object nack)
+
+        public virtual Cancel<TJob, TIdentity> WithNack(object nack)
         {
             return new Cancel<TJob, TIdentity>(JobId, Ack, nack);
         }

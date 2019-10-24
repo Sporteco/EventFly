@@ -22,8 +22,8 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
-using System.Linq.Expressions;
 using Akka.Actor;
+using Akka.DI.Core;
 using Akka.Event;
 using Akka.Pattern;
 using EventFly.Exceptions;
@@ -31,37 +31,22 @@ using EventFly.Extensions;
 
 namespace EventFly.Jobs
 {
-    public class JobManager<TJobScheduler, TJobRunner ,TJob, TIdentity> :  ReceiveActor, IJobManager<TJob, TIdentity>
-        where TJobScheduler :  JobScheduler<TJobScheduler, TJob, TIdentity>
+    public class JobManager<TJobScheduler, TJobRunner, TJob, TIdentity> : ReceiveActor, IJobManager<TJob, TIdentity>
+        where TJobScheduler : JobScheduler<TJobScheduler, TJob, TIdentity>
         where TJobRunner : JobRunner<TJob, TIdentity>
-        where TJob : IJob
+        where TJob : IJob<TIdentity>
         where TIdentity : IJobId
     {
         private static readonly IJobName JobName = typeof(TJob).GetJobName();
         public IJobName Name => JobName;
         protected ILoggingAdapter Log { get; }
         protected IActorRef JobScheduler { get; }
-        protected IActorRef JobRunner { get; }
-        public JobManager(
-            Expression<Func<TJobScheduler>> jobSchedulerFactory,
-            Expression<Func<TJobRunner>> jobRunnerFactory)
+        public JobManager()
         {
-            var runnerProps = Props.Create(jobRunnerFactory).WithDispatcher(Context.Props.Dispatcher);
-            var schedulerProps = Props.Create(jobSchedulerFactory).WithDispatcher(Context.Props.Dispatcher);
-            var runnerName = $"{Name}-runner";
+            var schedulerProps = Props.Create(typeof(TJobScheduler)).WithDispatcher(Context.Props.Dispatcher);
             var schedulerName = $"{Name}-scheduler";
-            
-            var runnerSupervisorProps = 
-                BackoffSupervisor.Props(
-                    Backoff.OnFailure(
-                        runnerProps,
-                        runnerName,
-                        TimeSpan.FromSeconds(10),
-                        TimeSpan.FromSeconds(60),
-                        0.2,
-                        3)).WithDispatcher(Context.Props.Dispatcher);
-            
-            var schedulerSupervisorProps = 
+
+            var schedulerSupervisorProps =
                 BackoffSupervisor.Props(
                     Backoff.OnFailure(
                         schedulerProps,
@@ -70,9 +55,8 @@ namespace EventFly.Jobs
                         TimeSpan.FromSeconds(60),
                         0.2,
                         3)).WithDispatcher(Context.Props.Dispatcher);
-            
-            JobRunner = Context.ActorOf(runnerSupervisorProps,$"{runnerName}-supervisor");
-            JobScheduler = Context.ActorOf(schedulerSupervisorProps,$"{schedulerName}-supervisor");
+
+            JobScheduler = Context.ActorOf(schedulerSupervisorProps, $"{schedulerName}-supervisor");
 
             Log = Context.GetLogger();
 
@@ -82,16 +66,56 @@ namespace EventFly.Jobs
 
         private bool Forward(TJob command)
         {
-            Log.Info("JobManager for Job of Name={0} is forwarding job command of Type={1} to JobRunner at ActorPath={2}", Name, typeof(TJob).PrettyPrint(), JobRunner.Path);
-            JobRunner.Forward(command);
+            var jobRunner = FindOrSpawnJobRunner();
+            Log.Info("JobManager for Job of Name={0} is forwarding job command of Type={1} to JobRunner at ActorPath={2}", Name, typeof(TJob).PrettyPrint(), jobRunner.Path);
+            jobRunner.Forward(command);
             return true;
         }
-        
+
         private bool Forward(SchedulerMessage<TJob, TIdentity> command)
         {
             Log.Info("JobManager for Job of Name={0} is forwarding job command of Type={1} to JobScheduler at ActorPath={2}", Name, typeof(TJob).PrettyPrint(), JobScheduler.Path);
             JobScheduler.Forward(command);
             return true;
+        }
+
+        protected IActorRef FindOrSpawnJobRunner()
+        {
+            var runner = Context.Child($"{Name}-runner-supervisor");
+            if (runner.IsNobody())
+            {
+                return SpawnRunner();
+            }
+            return runner;
+        }
+
+        //TODO: move to constructor
+        private IActorRef SpawnRunner()
+        {
+            Props runnerProps;
+            try
+            {
+                runnerProps = Context.DI().Props<TJobRunner>().WithDispatcher(Context.Props.Dispatcher);
+            }
+            catch (Exception ex)
+            {
+                Context.GetLogger().Error(ex, "No DI available at the moment, falling back to default props creation.");
+                runnerProps = Props.Create<TJobRunner>().WithDispatcher(Context.Props.Dispatcher);
+            }
+
+            var runnerSupervisorProps =
+                BackoffSupervisor.Props(
+                    Backoff.OnFailure(
+                        runnerProps,
+                        $"{Name}-runner",
+                        TimeSpan.FromSeconds(10),
+                        TimeSpan.FromSeconds(60),
+                        0.2,
+                        3)).WithDispatcher(Context.Props.Dispatcher);
+
+            var runner = Context.ActorOf(runnerSupervisorProps, $"{Name}-runner-supervisor");
+            //Context.Watch(runner);
+            return runner;
         }
     }
 }

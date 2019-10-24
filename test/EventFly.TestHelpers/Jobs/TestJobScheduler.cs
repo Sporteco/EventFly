@@ -25,9 +25,14 @@ using EventFly.Jobs;
 
 namespace EventFly.TestHelpers.Jobs
 {
-    
-    public class TestJobScheduler  : JobScheduler<TestJobScheduler, TestJob, TestJobId>
+
+    public class TestJobScheduler : JobScheduler<TestJobScheduler, TestJob, TestJobId>
     {
-        
+
+    }
+
+    public class AsyncTestJobScheduler : JobScheduler<AsyncTestJobScheduler, AsyncTestJob, AsyncTestJobId>
+    {
+
     }
 }

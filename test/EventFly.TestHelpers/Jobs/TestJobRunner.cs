@@ -22,6 +22,7 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
+using System.Threading.Tasks;
 using Akka.Actor;
 using Akka.Event;
 using EventFly.Jobs;
@@ -29,22 +30,42 @@ using EventFly.Jobs;
 namespace EventFly.TestHelpers.Jobs
 {
     public class TestJobRunner : JobRunner<TestJob, TestJobId>,
-        IRun<TestJob>
+        IRun<TestJob, TestJobId>
     {
-        public IActorRef ProbeRef { get; }
+        private readonly TestJobRunnerProbeAccessor _accessor;
 
-        public TestJobRunner(
-            IActorRef probeRef)
+        public TestJobRunner(TestJobRunnerProbeAccessor accessor)
         {
-            ProbeRef = probeRef;
+            _accessor = accessor;
         }
 
         public bool Run(TestJob job)
         {
             var time = Context.System.Settings.System.Scheduler.Now.DateTime;
-            ProbeRef.Tell(new TestJobDone(job.Greeting, time));
+            IActorRef probe = _accessor.Get(job.JobId);
+            probe.Tell(new TestJobDone(job.Greeting, time));
             Context.GetLogger().Info("JobRunner has processed TestJob.");
             return true;
+        }
+    }
+
+    public class AsyncTestJobRunner : JobRunner<AsyncTestJob, AsyncTestJobId>,
+        IRunAsync<AsyncTestJob, AsyncTestJobId>
+    {
+        private readonly TestJobRunnerProbeAccessor _accessor;
+
+        public AsyncTestJobRunner(TestJobRunnerProbeAccessor accessor)
+        {
+            _accessor = accessor;
+        }
+
+        public async Task<bool> RunAsync(AsyncTestJob job)
+        {
+            var time = Context.System.Settings.System.Scheduler.Now.DateTime;
+            IActorRef probe = _accessor.Get(job.JobId);
+            probe.Tell(new TestJobDone(job.Greeting, time));
+            Context.GetLogger().Info("AsyncJobRunner has processed TestJob.");
+            return await Task.FromResult(true);
         }
     }
 

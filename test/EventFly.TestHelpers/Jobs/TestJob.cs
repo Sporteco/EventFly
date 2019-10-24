@@ -26,10 +26,24 @@ using EventFly.Jobs;
 namespace EventFly.TestHelpers.Jobs
 {
     [JobName("test-job")]
-    public class TestJob : IJob
+    public class TestJob : Job<TestJobId>
     {
         public string Greeting { get; }
-        public TestJob(string greeting)
+
+        public TestJob(TestJobId jobId, string greeting)
+            : base(jobId)
+        {
+            Greeting = greeting;
+        }
+    }
+
+    [JobName("async-test-job")]
+    public class AsyncTestJob : Job<AsyncTestJobId>
+    {
+        public string Greeting { get; }
+
+        public AsyncTestJob(AsyncTestJobId jobId, string greeting)
+            : base(jobId)
         {
             Greeting = greeting;
         }

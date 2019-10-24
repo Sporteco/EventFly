@@ -5,15 +5,59 @@
 // Assembly location: C:\Users\naych\source\repos\!!!!!\netcoreapp2.2\EventFly.dll
 
 using System;
-using EventFly.Core.VersionedTypes;
+using EventFly.Extensions;
+using EventFly.Jobs;
 
 namespace EventFly.Definitions
 {
-  public class JobDefinition : VersionedTypeDefinition
-  {
-    public JobDefinition(int version, Type type, string name)
-      : base(version, type, name)
+    public interface IJobDefinition
     {
+        JobName Name { get; }
+        Type Type { get; }
+        Type IdentityType { get; }
+        IJobManagerDefinition ManagerDefinition { get; }
     }
-  }
+
+    public interface IJobManagerDefinition
+    {
+        Type JobSchedulreType { get; }
+        Type JobRunnerType { get; }
+        Type JobType { get; }
+        Type IdentityType { get; }
+    }
+
+    internal class JobDefinition : IJobDefinition
+    {
+        internal JobDefinition(Type type, Type identityType, IJobManagerDefinition managerDefinition)
+        {
+            Type = type;
+            Name = type.GetJobName();
+            IdentityType = identityType;
+            ManagerDefinition = managerDefinition;
+        }
+
+        public JobName Name { get; }
+
+        public Type Type { get; }
+
+        public Type IdentityType { get; }
+
+        public IJobManagerDefinition ManagerDefinition { get; }
+    }
+
+    internal sealed class JobManagerDefinition : IJobManagerDefinition
+    {
+        internal JobManagerDefinition(Type jobRunnerType, Type jobSchedulreType, Type jobType, Type identityType)
+        {
+            JobRunnerType = jobRunnerType;
+            JobSchedulreType = jobSchedulreType;
+            JobType = jobType;
+            IdentityType = identityType;
+        }
+
+        public Type JobRunnerType { get; }
+        public Type JobSchedulreType { get; }
+        public Type JobType { get; }
+        public Type IdentityType { get; }
+    }
 }

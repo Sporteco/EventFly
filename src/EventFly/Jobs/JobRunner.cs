@@ -24,6 +24,7 @@
 using System;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using Akka.Actor;
 using EventFly.Extensions;
 
@@ -34,6 +35,7 @@ namespace EventFly.Jobs
         public JobRunner()
         {
             InitReceives();
+            InitAsyncReceives();
         }
 
         public void InitReceives()
@@ -84,9 +86,60 @@ namespace EventFly.Jobs
                 actorReceiveMethod.Invoke(this, new object[] { subscriptionFunction });
             }
         }
+
+        public void InitAsyncReceives()
+        {
+            var type = GetType();
+
+            var subscriptionTypes =
+                type
+                    .GetAsyncJobRunTypes();
+
+            var methods = type
+                .GetTypeInfo()
+                .GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
+                .Where(mi =>
+                {
+                    if (mi.Name != "RunAsync")
+                        return false;
+
+                    var parameters = mi.GetParameters();
+
+                    return
+                        parameters.Length == 1;
+                })
+                .ToDictionary(
+                    mi => mi.GetParameters()[0].ParameterType,
+                    mi => mi);
+
+
+            var method = type
+                .GetBaseType("ReceiveActor")
+                .GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
+                .Where(mi =>
+                {
+                    if (mi.Name != "ReceiveAsync") return false;
+                    var parameters = mi.GetParameters();
+                    return
+                        parameters.Length == 2
+                        && parameters[0].ParameterType.Name.Contains("Func")
+                        && parameters[1].ParameterType.Name.Contains("Predicate");
+                })
+                .First();
+
+
+            foreach (var subscriptionType in subscriptionTypes)
+            {
+                var funcType = typeof(Func<,>).MakeGenericType(subscriptionType, typeof(Task));
+                var subscriptionFunction = Delegate.CreateDelegate(funcType, this, methods[subscriptionType]);
+                var actorReceiveMethod = method.MakeGenericMethod(subscriptionType);
+
+                actorReceiveMethod.Invoke(this, new[] { subscriptionFunction, null });
+            }
+        }
     }
     public abstract class JobRunner<TJob, TIdentity> : JobRunner
-        where TJob : IJob
+        where TJob : IJob<TIdentity>
         where TIdentity : IJobId
     {
     }

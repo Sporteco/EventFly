@@ -26,46 +26,45 @@ using Cronos;
 
 namespace EventFly.Jobs.Commands
 {
-    
+
     public sealed class ScheduleCron<TJob, TIdentity> : Schedule<TJob, TIdentity>
-        where TJob : IJob
+        where TJob : IJob<TIdentity>
         where TIdentity : IJobId
     {
         public string CronExpression { get; }
         private readonly CronExpression _expression;
 
         public ScheduleCron(
-            TIdentity jobId,
             TJob job,
             string cronExpression,
             DateTime triggerDate,
             object ack = null,
             object nack = null)
-            : base(jobId, job, triggerDate, ack, nack)
+            : base(job, triggerDate, ack, nack)
         {
             if (string.IsNullOrWhiteSpace(cronExpression)) throw new ArgumentNullException(nameof(cronExpression));
-            
+
             CronExpression = cronExpression;
             _expression = Cronos.CronExpression.Parse(cronExpression);
         }
-        
+
         public override Schedule<TJob, TIdentity> WithNextTriggerDate(DateTime utcDate)
         {
             var next = _expression.GetNextOccurrence(utcDate);
             if (next.HasValue)
-                return new ScheduleCron<TJob, TIdentity>(JobId, Job, CronExpression, next.Value);
-            
+                return new ScheduleCron<TJob, TIdentity>(Job, CronExpression, next.Value);
+
             return null;
         }
-        
-        public override Schedule<TJob,TIdentity> WithAck(object ack)
+
+        public override Schedule<TJob, TIdentity> WithAck(object ack)
         {
-            return new ScheduleCron<TJob, TIdentity>(JobId, Job, CronExpression, TriggerDate, ack, Nack);
+            return new ScheduleCron<TJob, TIdentity>(Job, CronExpression, TriggerDate, ack, Nack);
         }
-        
-        public override Schedule<TJob,TIdentity> WithNack(object nack)
+
+        public override Schedule<TJob, TIdentity> WithNack(object nack)
         {
-            return new ScheduleCron<TJob, TIdentity>(JobId, Job, CronExpression, TriggerDate, Ack, nack);
+            return new ScheduleCron<TJob, TIdentity>(Job, CronExpression, TriggerDate, Ack, nack);
         }
     }
 }

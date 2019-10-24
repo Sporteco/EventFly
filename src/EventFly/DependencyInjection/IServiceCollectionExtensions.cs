@@ -1,16 +1,9 @@
 ﻿using Akka.Actor;
 using EventFly.Commands;
-using EventFly.Core;
-using EventFly.Definitions;
 using EventFly.Jobs;
 using EventFly.Queries;
-using EventFly.ReadModels;
-using EventFly.Sagas;
-using EventFly.Sagas.AggregateSaga;
+using EventFly.Schedulers;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace EventFly.DependencyInjection
 {
@@ -28,8 +21,9 @@ namespace EventFly.DependencyInjection
 
             services.AddTransient<ICommandBus, CommandToAggregateManagerBus>();
             services.AddTransient<IQueryProcessor, QueryToQueryHandlerProcessor>();
-
-
+            services.AddTransient<Jobs.IScheduler, JobToJobMannagerScheduler>();
+            services.AddTransient<ICommandsScheduler, JobCommandsScheduler>();
+            services.AddTransient<IEventsScheduler, JobEventsScheduler>();
 
             return new EventFlyBuilder(actorSystem, services);
         }
