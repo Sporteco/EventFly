@@ -28,28 +28,31 @@
 using System;
 using EventFly.Aggregates;
 using EventFly.Core;
+using EventFly.Domain.Aggregates;
 
-namespace EventFly.Domain.Aggregates
+namespace EventFly.Domain
 {
-    public interface IDomainEvent
+    public interface ICommittedEvent
     {
-        Type AggregateType { get; }
-        Type IdentityType { get; }
-        Type EventType { get; }
+
         long AggregateSequenceNumber { get; }
-        EventMetadata Metadata { get; }
+        EventMetadata EventMetadata { get; }
         DateTimeOffset Timestamp { get; }
 
         IIdentity GetIdentity();
         IAggregateEvent GetAggregateEvent();
     }
 
-    public interface IDomainEvent<out TIdentity> : IDomainEvent where TIdentity : IIdentity
+    public interface ICommittedEvent<TAggregate, out TIdentity> : ICommittedEvent
+        where TAggregate : IAggregateRoot<TIdentity>
+        where TIdentity : IIdentity
     {
         TIdentity AggregateIdentity { get; }
     }
 
-    public interface IDomainEvent<out TIdentity, out TAggregateEvent> : IDomainEvent<TIdentity> where TIdentity : IIdentity
+    public interface ICommittedEvent<TAggregate, out TIdentity, out TAggregateEvent> : ICommittedEvent<TAggregate, TIdentity>
+        where TAggregate : IAggregateRoot<TIdentity>
+        where TIdentity : IIdentity
         where TAggregateEvent : class, IAggregateEvent<TIdentity>
     {
         TAggregateEvent AggregateEvent { get; }

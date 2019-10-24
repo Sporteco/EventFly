@@ -46,8 +46,6 @@ namespace EventFly.Domain.Aggregates
                 });
         }
 
-
-
         private readonly IEventDefinitions _eventDefinitionService;
 
         private static readonly IAggregateName AggregateName = GetAggregateName(typeof(TAggregate));

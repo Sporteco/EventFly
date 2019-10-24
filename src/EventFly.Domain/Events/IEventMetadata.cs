@@ -26,34 +26,25 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
+using System.Collections.Generic;
 using EventFly.Aggregates;
-using EventFly.Core;
+using EventFly.Metadata;
 
-namespace EventFly.Domain.Aggregates
+namespace EventFly.Domain
 {
-    public interface ICommittedEvent
+    public interface IEventMetadata : ICommonMetadata
     {
-
-        long AggregateSequenceNumber { get; }
-        EventMetadata EventMetadata { get; }
+        IEventId EventId { get; }
+        string EventName { get; }
+        int EventVersion { get; }
         DateTimeOffset Timestamp { get; }
+        long TimestampEpoch { get; }
+        long AggregateSequenceNumber { get; }
+        string AggregateId { get; }
+        string CausationId { get; }
 
-        IIdentity GetIdentity();
-        IAggregateEvent GetAggregateEvent();
+        IEventMetadata CloneWith(params KeyValuePair<string, string>[] keyValuePairs);
+        IEventMetadata CloneWith(IEnumerable<KeyValuePair<string, string>> keyValuePairs);
     }
-
-    public interface ICommittedEvent<TAggregate, out TIdentity> : ICommittedEvent
-        where TAggregate : IAggregateRoot<TIdentity>
-        where TIdentity : IIdentity
-    {
-        TIdentity AggregateIdentity { get; }
-    }
-
-    public interface ICommittedEvent<TAggregate, out TIdentity, out TAggregateEvent> : ICommittedEvent<TAggregate, TIdentity>
-        where TAggregate : IAggregateRoot<TIdentity>
-        where TIdentity : IIdentity
-        where TAggregateEvent : class, IAggregateEvent<TIdentity>
-    {
-        TAggregateEvent AggregateEvent { get; }
-    }
+    
 }

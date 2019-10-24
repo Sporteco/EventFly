@@ -28,9 +28,10 @@
 using System;
 using EventFly.Aggregates;
 using EventFly.Core;
+using EventFly.Domain.Aggregates;
 using EventFly.Exceptions;
 
-namespace EventFly.Domain.Aggregates
+namespace EventFly.Domain
 {
     public class CommittedEvent<TAggregate, TIdentity, TAggregateEvent> : ICommittedEvent<TAggregate, TIdentity, TAggregateEvent>
         where TAggregate : IAggregateRoot<TIdentity>

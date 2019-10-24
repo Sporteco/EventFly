@@ -33,7 +33,7 @@ using EventFly.Core;
 using EventFly.Metadata;
 using Newtonsoft.Json;
 
-namespace EventFly.Domain.Aggregates
+namespace EventFly.Domain
 {
     public class EventMetadata : MetadataContainer, IEventMetadata
     {
