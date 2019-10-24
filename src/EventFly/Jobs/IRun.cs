@@ -21,10 +21,21 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using System.Threading.Tasks;
+
 namespace EventFly.Jobs
 {
-    public interface IRun<in TJob>
+    public interface IRun<in TJob, TIdentity>
+        where TJob : IJob<TIdentity>
+        where TIdentity : IJobId
     {
         bool Run(TJob job);
+    }
+
+    public interface IRunAsync<in TJob, TIdentity>
+        where TJob : IJob<TIdentity>
+        where TIdentity : IJobId
+    {
+        Task<bool> RunAsync(TJob job);
     }
 }

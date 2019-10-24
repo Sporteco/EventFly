@@ -9,5 +9,6 @@ namespace EventFly.Definitions
         IReadOnlyDictionary<IQueryManagerDefinition, IActorRef> DefinitionToQueryManager { get; }
         IReadOnlyDictionary<ISagaManagerDefinition, IActorRef> DefinitionToSagaManager { get; }
         IReadOnlyDictionary<IReadModelManagerDefinition, IActorRef> DefinitionToReadModelManager { get; }
+        IReadOnlyDictionary<IJobManagerDefinition, IActorRef> DefinitionToJobManager { get; }
     }
 }

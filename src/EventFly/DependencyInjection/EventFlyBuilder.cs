@@ -43,7 +43,10 @@ namespace EventFly.DependencyInjection
                     .RegisterQueryManagers(ApplicationDefinition.Queries.Select(a => a.ManagerDefinition).ToList())
                     .RegisterReadModelManagers(ApplicationDefinition.ReadModels.Select(a => a.ManagerDefinition).ToList())
                     .RegisterSagaManagers(ApplicationDefinition.Sagas.Select(a => a.ManagerDefinition).ToList())
+                    .RegisterJobManagers(ApplicationDefinition.Jobs.Select(a => a.ManagerDefinition).ToList())
                     .RegisterDomainServiceManagers(ApplicationDefinition.DomainServices.Select(a => a.ManagerDefinition).ToList())
+                    .RegisterCommandsScheduler()
+                    .RegisterEventsScheduler()
                 .Build();
 
             return Services.AddSingleton<IDefinitionToManagerRegistry>(registry);

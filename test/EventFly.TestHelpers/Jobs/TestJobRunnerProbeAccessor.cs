@@ -1,4 +1,4 @@
-// The MIT License (MIT)
+﻿// The MIT License (MIT)
 //
 // Copyright (c) 2018 - 2019 Lutando Ngqakaza
 // https://github.com/Lutando/EventFly 
@@ -21,12 +21,27 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using EventFly.Core.VersionedTypes;
-using EventFly.Definitions;
+using Akka.Actor;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 
-namespace EventFly.Jobs
+namespace EventFly.TestHelpers.Jobs
 {
-    public interface IJobDefinitions : IVersionedTypeDefinitions<JobVersionAttribute, JobDefinition>
+    public sealed class TestJobRunnerProbeAccessor
     {
+        private IDictionary<EventFly.Jobs.IJobId, IActorRef> _results = new ConcurrentDictionary<EventFly.Jobs.IJobId, IActorRef>();
+
+        public void Put(EventFly.Jobs.IJobId jobId, IActorRef probeRef)
+        {
+            _results.Add(jobId, probeRef);
+        }
+
+        public IActorRef Get(EventFly.Jobs.IJobId jobId)
+        {
+            if (_results.ContainsKey(jobId))
+                return _results[jobId];
+
+            return null;
+        }
     }
 }

@@ -26,19 +26,18 @@ using System;
 namespace EventFly.Jobs.Commands
 {
     public class Schedule<TJob,TIdentity> : SchedulerCommand<TJob,TIdentity>
-        where TJob : IJob
+        where TJob : IJob<TIdentity>
         where TIdentity : IJobId
     {
         public TJob Job { get; }
         public DateTime TriggerDate  { get; }
         
         public Schedule(
-            TIdentity jobId,
             TJob job,
             DateTime triggerDate,
             object ack = null,
             object nack = null)
-            : base(jobId, ack, nack)
+            : base(job.JobId, ack, nack)
         {
             if (job == null) throw new ArgumentNullException(nameof(job));
             if (triggerDate == default) throw new ArgumentException(nameof(triggerDate));
@@ -54,12 +53,12 @@ namespace EventFly.Jobs.Commands
         
         public virtual Schedule<TJob, TIdentity> WithAck(object ack)
         {
-            return new Schedule<TJob, TIdentity>(JobId, Job, TriggerDate, ack, Nack);
+            return new Schedule<TJob, TIdentity>(Job, TriggerDate, ack, Nack);
         }
         
         public virtual Schedule<TJob,TIdentity> WithNack(object nack)
         {
-            return new Schedule<TJob, TIdentity>(JobId, Job, TriggerDate, Ack, nack);
+            return new Schedule<TJob, TIdentity>(Job, TriggerDate, Ack, nack);
         }
 
         public virtual Schedule<TJob, TIdentity> WithOutAcks()

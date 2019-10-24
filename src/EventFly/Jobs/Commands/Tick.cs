@@ -24,7 +24,7 @@
 namespace EventFly.Jobs.Commands
 {
     internal sealed class Tick <TJob,TIdentity> : SchedulerMessage<TJob, TIdentity>
-        where TJob : IJob
+        where TJob : IJob<TIdentity>
         where TIdentity : IJobId
     {
         public static Tick<TJob,TIdentity> Instance { get; } = new Tick<TJob,TIdentity>();
