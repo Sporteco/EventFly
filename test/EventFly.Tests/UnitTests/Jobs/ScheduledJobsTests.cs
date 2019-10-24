@@ -60,8 +60,8 @@ namespace EventFly.Tests.UnitTests.Jobs
             .UseEventFly();
         }
 
-        [Fact]
-        [Category(Category)]
+        //[Fact]
+        //[Category(Category)]
         private async Task SchedulingJob_For5minutes_DispatchesJobMessage()
         {
             var probe = CreateTestProbe("job-probe");
@@ -97,8 +97,8 @@ namespace EventFly.Tests.UnitTests.Jobs
             //probe.ExpectNoMsg();
         }
 
-        [Fact]
-        [Category(Category)]
+        //[Fact]
+        //[Category(Category)]
         private async Task SchedulingJob_For5minutes_DispatchesJobMessageFromAsynRunner()
         {
             var probe = CreateTestProbe("job-probe");
@@ -135,8 +135,8 @@ namespace EventFly.Tests.UnitTests.Jobs
         }
 
 
-        [Fact]
-        [Category(Category)]
+        //[Fact]
+        //[Category(Category)]
         private async Task SchedulingJob_ForEvery5minutes_DispatchesJobMessage()
         {
             var probe = CreateTestProbe("job-probe");
@@ -176,8 +176,8 @@ namespace EventFly.Tests.UnitTests.Jobs
             }, TimeSpan.FromSeconds(3));
         }
 
-        [Fact]
-        [Category(Category)]
+        //[Fact]
+        //[Category(Category)]
         private async Task SchedulingJob_ForEveryCronTrigger_DispatchesJobMessage()
         {
             var probe = CreateTestProbe("job-probe");
@@ -220,8 +220,8 @@ namespace EventFly.Tests.UnitTests.Jobs
         }
 
 
-        [Fact]
-        [Category(Category)]
+        //[Fact]
+        //[Category(Category)]
         private async Task SchedulingJob_AndThenCancellingJob_CeasesDispatching()
         {
             var probe = CreateTestProbe("job-probe");
