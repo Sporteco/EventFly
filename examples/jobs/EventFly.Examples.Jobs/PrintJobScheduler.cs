@@ -27,6 +27,5 @@ namespace EventFly.Examples.Jobs
 {
     public class PrintJobScheduler : JobScheduler<PrintJobScheduler, PrintJob, PrintJobId>
     {
-        
     }
 }

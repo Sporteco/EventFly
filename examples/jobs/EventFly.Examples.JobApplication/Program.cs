@@ -23,12 +23,11 @@
 
 using System;
 using System.Threading.Tasks;
-using Akka;
 using Akka.Actor;
+using EventFly.Definitions;
+using EventFly.DependencyInjection;
 using EventFly.Examples.Jobs;
-using EventFly.Jobs;
-using EventFly.Jobs.Commands;
-using static EventFly.Examples.Jobs.PrintJobSchedulerResponses;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace EventFly.Examples.JobApplication
 {
@@ -36,35 +35,51 @@ namespace EventFly.Examples.JobApplication
     {
         public static async Task Main(string[] args)
         {
-            //Create our actor system and JobManager for the print job 
-            //var actorSystem = ActorSystem.Create("print-job-system", Configuration.Config);
+            var actorSystem = ActorSystem.Create("print-job-system", Configuration.Config);
 
-            //var jobManager = actorSystem.ActorOf(
-            //    Props.Create(
-            //        () => new JobManager<PrintJobScheduler, PrintJobRunner, PrintJob, PrintJobId>(
-            //            (() => new PrintJobScheduler()),
-            //            () => new PrintJobRunner())));
+            var sp = new ServiceCollection()
+            .AddEventFly(actorSystem)
+                .WithContext<TestContext>()
+                .Services
+            .BuildServiceProvider();
 
-            //var jobId = PrintJobId.New;
-            //var job = new PrintJob("repeated job");
-            //var interval = TimeSpan.FromSeconds(10);
-            //var when = DateTime.UtcNow;
-            
-            ////Create a message that will Ack with [Success] and will fail with [Failed]
-            //var scheduleMessage = new ScheduleRepeatedly<PrintJob, PrintJobId>(jobId, job, interval, when)
-            //    .WithAck(Success.Instance)
-            //    .WithNack(Failed.Instance);
+            sp.UseEventFly();
 
-            //var scheduled = await jobManager.Ask<PrintJobResponse>(scheduleMessage);
+            var scheduler = sp.GetService<EventFly.Jobs.IScheduler>();
 
-            //// ReSharper disable once UnusedVariable
-            //var result = scheduled
-            //    .Match()
-            //    .With<Success>(x => Console.WriteLine("Job was Scheduled"))
-            //    .With<Failed>(x => Console.WriteLine("Job was NOT scheduled."))
-            //    .WasHandled;
+            var firstJobId = PrintJobId.New;
+            var secondJobId = PrintJobId.New;
+            var thirdJobId = PrintJobId.New;
 
-            //Console.ReadLine();
+            var time = DateTime.UtcNow;
+
+            await scheduler.Schedule<PrintJob, PrintJobId>(new PrintJob(firstJobId, "first"), TimeSpan.FromSeconds(5), time.AddSeconds(5));
+            await scheduler.Schedule<PrintJob, PrintJobId>(new PrintJob(secondJobId, "second"), TimeSpan.FromSeconds(5), time.AddSeconds(6));
+            await scheduler.Schedule<PrintJob, PrintJobId>(new PrintJob(thirdJobId, "THIRD"), time.AddSeconds(10));
+
+            Console.ReadKey();
+
+            await scheduler.Cancel<PrintJob, PrintJobId>(secondJobId);
+
+            Console.ReadKey();
+
+            Task shutdownTask = CoordinatedShutdown.Get(actorSystem)
+                .Run(CoordinatedShutdown.ClrExitReason.Instance);
+
+            await shutdownTask;
+        }
+    }
+
+    public class TestContext : ContextDefinition
+    {
+        public TestContext()
+        {
+            RegisterJob<PrintJob, PrintJobId, PrintJobRunner, PrintJobScheduler>();
+        }
+
+        public override IServiceCollection DI(IServiceCollection serviceDescriptors)
+        {
+            return serviceDescriptors;
         }
     }
 }
