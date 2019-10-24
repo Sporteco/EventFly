@@ -27,13 +27,13 @@
 
 using EventFly.Core;
 
-namespace EventFly.Domain.Aggregates
+namespace EventFly.Aggregates
 {
     public interface IAggregateRoot
     {
         IAggregateName Name { get; }
         long Version { get; }
-        bool IsNew { get; }
+        bool IsNew { get; }      
         bool HasSourceId(ISourceId sourceId);
         IIdentity GetIdentity();
     }

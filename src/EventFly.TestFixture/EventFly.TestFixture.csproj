@@ -31,7 +31,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\EventFly.Abstractions\EventFly.Abstractions.csproj" />
-    <ProjectReference Include="..\EventFly\EventFly.csproj" />
+    <ProjectReference Include="..\EventFly.Infrastructure\EventFly.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>

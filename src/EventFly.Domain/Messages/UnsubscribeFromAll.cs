@@ -1,4 +1,4 @@
-namespace EventFly.Domain.Messages
+namespace EventFly.Messages
 {
     public class UnsubscribeFromAll
     {

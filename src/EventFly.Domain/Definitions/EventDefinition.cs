@@ -5,7 +5,7 @@
 // Assembly location: C:\Users\naych\source\repos\!!!!!\netcoreapp2.2\EventFly.dll
 
 using System;
-using EventFly.Domain.VersionedTypes;
+using EventFly.Core.VersionedTypes;
 
 namespace EventFly.Definitions
 {

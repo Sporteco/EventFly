@@ -1,4 +1,4 @@
-﻿namespace EventFly.Domain.Aggregates
+﻿namespace EventFly.Aggregates
 {
     public interface IAggregateState<TIdentity> 
     {

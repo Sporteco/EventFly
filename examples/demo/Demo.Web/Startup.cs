@@ -28,12 +28,11 @@ namespace Demo.Web
             var system = ActorSystem.Create("user-example");
 
             services
-                .AddSingleton("AAAA");
-
-                    .AddEventFly(system)
-                        .WithContext<UserContext>()
-                        .AddGraphQl()
-                        .AddSwagger();
+                .AddSingleton("AAAA")
+                .AddEventFly(system)
+                    .WithContext<UserContext>()
+                    .AddGraphQl()
+                    .AddSwagger();
 
             services
                 .AddMvcCore()

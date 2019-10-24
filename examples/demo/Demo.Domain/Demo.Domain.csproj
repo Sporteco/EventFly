@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\src\EventFly\EventFly.csproj" />
+    <ProjectReference Include="..\..\..\src\EventFly.Domain\EventFly.Domain.csproj" />
     <ProjectReference Include="..\Demo.Abstractions\Demo.Abstractions.csproj" />
   </ItemGroup>
 

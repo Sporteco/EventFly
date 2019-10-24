@@ -27,7 +27,7 @@
 
 using System;
 
-namespace EventFly.Domain.Aggregates
+namespace EventFly.Aggregates
 {
     [AttributeUsage(AttributeTargets.Class, Inherited = false)]
     public class AggregateNameAttribute : Attribute

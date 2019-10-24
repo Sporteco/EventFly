@@ -23,7 +23,7 @@
 
 using System;
 
-namespace EventFly.Domain
+namespace EventFly.Extensions
 {
     public static class DateTimeOffsetExtensions
     {

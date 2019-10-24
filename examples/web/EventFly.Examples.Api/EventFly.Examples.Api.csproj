@@ -16,8 +16,7 @@
   </ItemGroup>
   
   <ItemGroup>
-    <ProjectReference Include="..\..\..\src\EventFly.Abstractions\EventFly.Abstractions.csproj" />
-    <ProjectReference Include="..\..\..\src\EventFly\EventFly.csproj" />
+    <ProjectReference Include="..\..\..\src\EventFly.Infrastructure\EventFly.Infrastructure.csproj" />
   </ItemGroup>
   
 </Project>

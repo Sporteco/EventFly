@@ -23,7 +23,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\EventFly.Abstractions\EventFly.Abstractions.csproj" />
     <ProjectReference Include="..\..\src\EventFly.TestFixture\EventFly.TestFixture.csproj" />
-    <ProjectReference Include="..\..\src\EventFly\EventFly.csproj" />
   </ItemGroup>
   
   <ItemGroup>

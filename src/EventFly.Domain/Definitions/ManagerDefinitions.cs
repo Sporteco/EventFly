@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace EventFly.Domain.Definitions
+namespace EventFly.Definitions
 {
     public interface IAggregateManagerDefinition
     {

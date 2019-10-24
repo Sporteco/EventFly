@@ -25,12 +25,12 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using EventFly.Commands;
+using Akka.Actor;
+using EventFly.Aggregates;
 using EventFly.Commands.ExecutionResults;
 using EventFly.Core;
-using EventFly.Domain.Aggregates;
 
-namespace EventFly.Domain.Commands
+namespace EventFly.Commands
 {
     public interface ICommandHandler
     {

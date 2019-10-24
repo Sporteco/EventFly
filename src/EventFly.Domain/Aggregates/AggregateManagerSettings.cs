@@ -24,7 +24,7 @@
 using Akka.Configuration;
 using EventFly.Configuration;
 
-namespace EventFly.Domain.Aggregates
+namespace EventFly.Aggregates
 {
     public class AggregateManagerSettings
     {
