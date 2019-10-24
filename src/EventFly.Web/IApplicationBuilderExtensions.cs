@@ -8,18 +8,10 @@ namespace EventFly.Web
     {
         public static IApplicationBuilder UseEventFly(this IApplicationBuilder builder)
         {
-            return builder
+            builder
                 .UseMiddleware<EventFlyMiddleware>()
-                .UseEventFlyDependencyInjection();
-        }
-
-
-        public static IApplicationBuilder UseEventFlyDependencyInjection(this IApplicationBuilder builder)
-        {
-            var serviceProvider =  builder.ApplicationServices;
-            var actorSystem = (ActorSystem) serviceProvider.GetService(typeof(ActorSystem));
-
-            actorSystem.RegisterDependencyResolver(serviceProvider);
+                .ApplicationServices
+                .UseEventFly();
 
             return builder;
         }

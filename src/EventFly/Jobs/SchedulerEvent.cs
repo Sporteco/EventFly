@@ -26,7 +26,7 @@ using EventFly.Exceptions;
 namespace EventFly.Jobs
 {
     public abstract class SchedulerEvent<TJob, TIdentity> : ISchedulerEvent<TJob, TIdentity>
-        where TJob : IJob
+        where TJob : IJob<TIdentity>
         where TIdentity : IJobId
     {
         public override string ToString()

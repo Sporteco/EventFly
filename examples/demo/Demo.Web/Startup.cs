@@ -30,12 +30,10 @@ namespace Demo.Web
             services
                 .AddSingleton("AAAA");
 
-            services
-                .AddEventFly(system)
-                    .WithContext<UserContext>()
-                    .AddGraphQl()
-                    .AddSwagger()
-                .BuildEventFly();
+                    .AddEventFly(system)
+                        .WithContext<UserContext>()
+                        .AddGraphQl()
+                        .AddSwagger();
 
             services
                 .AddMvcCore()

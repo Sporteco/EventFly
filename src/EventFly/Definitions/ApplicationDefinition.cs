@@ -8,7 +8,6 @@ namespace EventFly.Definitions
     internal sealed class ApplicationDefinition : IApplicationDefinition
     {
         private readonly EventAggregatedDefinitions _events = new EventAggregatedDefinitions();
-        private readonly JobAggregatedDefinitions _jobs = new JobAggregatedDefinitions();
         private readonly SnapshotAggregatedDefinitions _snapshots = new SnapshotAggregatedDefinitions();
         private readonly CommandAggregatedDefinitions _commands = new CommandAggregatedDefinitions();
         private readonly List<IContextDefinition> _contexts = new List<IContextDefinition>();
@@ -20,35 +19,22 @@ namespace EventFly.Definitions
             _events.AddDefinitions(context.Events);
             _snapshots.AddDefinitions(context.Snapshots);
             _commands.AddDefinitions(context.Commands);
-            _jobs.AddDefinitions(context.Jobs);
         }
 
         public IReadOnlyCollection<IContextDefinition> Contexts => _contexts;
 
-        public IReadOnlyCollection<IQueryDefinition> Queries
-        {
-            get
-            {
-                return Contexts.SelectMany(i => i.Queries.Select(q => q)).ToList();
-            }
-        }
+        public IReadOnlyCollection<IQueryDefinition> Queries => Contexts.SelectMany(i => i.Queries.Select(q => q)).ToList();
 
-        public IReadOnlyCollection<IAggregateDefinition> Aggregates
-        {
-            get
-            {
-                return Contexts.SelectMany(i => i.Aggregates.Select(q => q)).ToList();
-            }
-        }
+        public IReadOnlyCollection<IAggregateDefinition> Aggregates => Contexts.SelectMany(i => i.Aggregates.Select(q => q)).ToList();
 
         public IReadOnlyCollection<IReadModelDefinition> ReadModels => Contexts.SelectMany(i => i.ReadModels.Select(q => q)).ToList();
 
         public IReadOnlyCollection<ISagaDefinition> Sagas => Contexts.SelectMany(i => i.Sagas.Select(q => q)).ToList();
         public IReadOnlyCollection<IDomainServiceDefinition> DomainServices => Contexts.SelectMany(i => i.DomainServices.Select(q => q)).ToList();
 
-        public IEventDefinitions Events => _events;
+        public IReadOnlyCollection<IJobDefinition> Jobs => Contexts.SelectMany(i => i.Jobs.Select(q => q)).ToList();
 
-        public IJobDefinitions Jobs => _jobs;
+        public IEventDefinitions Events => _events;
 
         public ISnapshotDefinitions Snapshots => _snapshots;
 

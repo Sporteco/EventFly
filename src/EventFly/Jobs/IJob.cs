@@ -28,4 +28,21 @@ namespace EventFly.Jobs
     public interface IJob : IVersionedType
     {
     }
+
+    public interface IJob<out TIdentity> : IJob
+        where TIdentity : IJobId
+    {
+        TIdentity JobId { get; }
+    }
+
+    public abstract class Job<TIdentity> : IJob<TIdentity>
+        where TIdentity : IJobId
+    {
+        public Job(TIdentity jobId)
+        {
+            JobId = jobId;
+        }
+
+        public TIdentity JobId { get; }
+    }
 }

@@ -27,7 +27,7 @@ using EventFly.Jobs.Commands;
 namespace EventFly.Jobs.Events
 {
     public class Scheduled<TJob, TIdentity> : SchedulerEvent<TJob, TIdentity>
-        where TJob : IJob
+        where TJob : IJob<TIdentity>
         where TIdentity : IJobId
     {
         public Schedule<TJob, TIdentity> Entry { get; }

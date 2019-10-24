@@ -17,6 +17,7 @@ namespace EventFly.Definitions
         IReadOnlyCollection<IQueryDefinition> Queries { get; }
         IReadOnlyCollection<IReadModelDefinition> ReadModels { get; }
         IReadOnlyCollection<ISagaDefinition> Sagas { get; }
+        IReadOnlyCollection<IJobDefinition> Jobs { get; }
         IReadOnlyCollection<IDomainServiceDefinition> DomainServices { get; }
 
         EventDefinitions Events { get; }
@@ -24,7 +25,5 @@ namespace EventFly.Definitions
         CommandDefinitions Commands { get; }
 
         SnapshotDefinitions Snapshots { get; }
-
-        JobDefinitions Jobs { get; }
     }
 }

@@ -26,7 +26,7 @@ using System;
 namespace EventFly.Jobs.Events
 {
     public class Cancelled<TJob, TIdentity> : SchedulerEvent<TJob, TIdentity>
-        where TJob : IJob
+        where TJob : IJob<TIdentity>
         where TIdentity : IJobId
     {
         public TIdentity JobId { get; }

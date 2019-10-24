@@ -52,10 +52,11 @@ namespace EventFly.Tests.IntegrationTests.Aggregates.Sagas
                 new ServiceCollection()
                 .AddEventFly(Sys)
                     .WithContext<TestContext>()
-                    .BuildEventFly()
+                    .Services
                 .AddScoped<TestSaga>()
                 .AddScoped<TestAsyncSaga>()
                 .BuildServiceProvider()
+                .UseEventFly()
             );
         }
 

@@ -37,34 +37,34 @@ namespace EventFly.Examples.JobApplication
         public static async Task Main(string[] args)
         {
             //Create our actor system and JobManager for the print job 
-            var actorSystem = ActorSystem.Create("print-job-system", Configuration.Config);
+            //var actorSystem = ActorSystem.Create("print-job-system", Configuration.Config);
 
-            var jobManager = actorSystem.ActorOf(
-                Props.Create(
-                    () => new JobManager<PrintJobScheduler, PrintJobRunner, PrintJob, PrintJobId>(
-                        (() => new PrintJobScheduler()),
-                        () => new PrintJobRunner())));
+            //var jobManager = actorSystem.ActorOf(
+            //    Props.Create(
+            //        () => new JobManager<PrintJobScheduler, PrintJobRunner, PrintJob, PrintJobId>(
+            //            (() => new PrintJobScheduler()),
+            //            () => new PrintJobRunner())));
 
-            var jobId = PrintJobId.New;
-            var job = new PrintJob("repeated job");
-            var interval = TimeSpan.FromSeconds(10);
-            var when = DateTime.UtcNow;
+            //var jobId = PrintJobId.New;
+            //var job = new PrintJob("repeated job");
+            //var interval = TimeSpan.FromSeconds(10);
+            //var when = DateTime.UtcNow;
             
-            //Create a message that will Ack with [Success] and will fail with [Failed]
-            var scheduleMessage = new ScheduleRepeatedly<PrintJob, PrintJobId>(jobId, job, interval, when)
-                .WithAck(Success.Instance)
-                .WithNack(Failed.Instance);
+            ////Create a message that will Ack with [Success] and will fail with [Failed]
+            //var scheduleMessage = new ScheduleRepeatedly<PrintJob, PrintJobId>(jobId, job, interval, when)
+            //    .WithAck(Success.Instance)
+            //    .WithNack(Failed.Instance);
 
-            var scheduled = await jobManager.Ask<PrintJobResponse>(scheduleMessage);
+            //var scheduled = await jobManager.Ask<PrintJobResponse>(scheduleMessage);
 
-            // ReSharper disable once UnusedVariable
-            var result = scheduled
-                .Match()
-                .With<Success>(x => Console.WriteLine("Job was Scheduled"))
-                .With<Failed>(x => Console.WriteLine("Job was NOT scheduled."))
-                .WasHandled;
+            //// ReSharper disable once UnusedVariable
+            //var result = scheduled
+            //    .Match()
+            //    .With<Success>(x => Console.WriteLine("Job was Scheduled"))
+            //    .With<Failed>(x => Console.WriteLine("Job was NOT scheduled."))
+            //    .WasHandled;
 
-            Console.ReadLine();
+            //Console.ReadLine();
         }
     }
 }

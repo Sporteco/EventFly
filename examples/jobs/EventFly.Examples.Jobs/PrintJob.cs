@@ -26,10 +26,11 @@ using EventFly.Jobs;
 namespace EventFly.Examples.Jobs
 {
     [JobName("test-job")]
-    public class PrintJob : IJob
+    public class PrintJob : Job<PrintJobId>
     {
         public string Content { get; }
-        public PrintJob(string content)
+
+        public PrintJob(PrintJobId jobId, string content) : base(jobId)
         {
             Content = content;
         }
