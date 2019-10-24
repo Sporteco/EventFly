@@ -40,6 +40,7 @@ namespace EventFly.Jobs
         private static readonly IJobName JobName = typeof(TJob).GetJobName();
         public IJobName Name => JobName;
         protected ILoggingAdapter Log { get; }
+        protected IActorRef JobRunner { get; }
         protected IActorRef JobScheduler { get; }
         public JobManager()
         {
@@ -56,6 +57,7 @@ namespace EventFly.Jobs
                         0.2,
                         3)).WithDispatcher(Context.Props.Dispatcher);
 
+            JobRunner = SpawnRunner();
             JobScheduler = Context.ActorOf(schedulerSupervisorProps, $"{schedulerName}-supervisor");
 
             Log = Context.GetLogger();
@@ -66,9 +68,8 @@ namespace EventFly.Jobs
 
         private bool Forward(TJob command)
         {
-            var jobRunner = FindOrSpawnJobRunner();
-            Log.Info("JobManager for Job of Name={0} is forwarding job command of Type={1} to JobRunner at ActorPath={2}", Name, typeof(TJob).PrettyPrint(), jobRunner.Path);
-            jobRunner.Forward(command);
+            Log.Info("JobManager for Job of Name={0} is forwarding job command of Type={1} to JobRunner at ActorPath={2}", Name, typeof(TJob).PrettyPrint(), JobRunner.Path);
+            JobRunner.Forward(command);
             return true;
         }
 
@@ -114,7 +115,6 @@ namespace EventFly.Jobs
                         3)).WithDispatcher(Context.Props.Dispatcher);
 
             var runner = Context.ActorOf(runnerSupervisorProps, $"{Name}-runner-supervisor");
-            //Context.Watch(runner);
             return runner;
         }
     }
