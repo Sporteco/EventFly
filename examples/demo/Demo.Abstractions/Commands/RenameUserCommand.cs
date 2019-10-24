@@ -5,7 +5,7 @@ namespace Demo.Commands
 {
     public class RenameUserCommand : Command<UserId>
     {
-        public readonly UserName UserName;
+        public  UserName UserName { get; }
 
         public RenameUserCommand(UserId aggregateId, UserName userName) : base(aggregateId)
         {
