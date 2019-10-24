@@ -4,8 +4,11 @@ using Akka.Actor;
 using EventFly.Aggregates;
 using EventFly.DomainService;
 using EventFly.Extensions;
+using EventFly.Jobs;
 using EventFly.Queries;
 using EventFly.Sagas.AggregateSaga;
+using EventFly.Schedulers.Commands;
+using EventFly.Schedulers.Events;
 
 namespace EventFly.Definitions
 {
@@ -23,6 +26,10 @@ namespace EventFly.Definitions
             DefinitionToReadModelManager = RegisterReadModelManagers(applicationDefinition.ReadModels.Select(a => a.ManagerDefinition).ToList());
             DefinitionToSagaManager = RegisterSagaManagers(applicationDefinition.Sagas.Select(a => a.ManagerDefinition).ToList());
             DefinitionToDomainServiceManager = RegisterDomainServiceManagers(applicationDefinition.DomainServices.Select(a => a.ManagerDefinition).ToList());
+            DefinitionToJobManager = RegisterJobManagers(applicationDefinition.Jobs.Select(a => a.ManagerDefinition).ToList());
+
+            RegisterCommandsScheduler();
+            RegisterEventsScheduler();
         }
 
         public IReadOnlyDictionary<IAggregateManagerDefinition, IActorRef> DefinitionToAggregateManager { get; }
@@ -115,7 +122,7 @@ namespace EventFly.Definitions
             return dictionaryReadModel;
         }
 
-        public DefinitionToManagerRegistryBuilder RegisterJobManagers(IReadOnlyCollection<IJobManagerDefinition> definitions)
+        public IReadOnlyDictionary<IJobManagerDefinition, IActorRef> RegisterJobManagers(IReadOnlyCollection<IJobManagerDefinition> definitions)
         {
             var dictionaryJob = new Dictionary<IJobManagerDefinition, IActorRef>();
             foreach (var managerDef in definitions)
@@ -130,21 +137,17 @@ namespace EventFly.Definitions
                 dictionaryJob.Add(managerDef, manager);
             }
 
-            DefinitionToJobManager = dictionaryJob;
-
-            return this;
+            return dictionaryJob;
         }
 
-        public DefinitionToManagerRegistryBuilder RegisterCommandsScheduler()
+        public void RegisterCommandsScheduler()
         {
             System.ActorOf(Props.Create(typeof(JobManager<PublishCommandJobScheduler, PublishCommandJobRunner, PublishCommandJob, PublishCommandJobId>)), $"job-commands-publisher-manager");
-            return this;
         }
 
-        public DefinitionToManagerRegistryBuilder RegisterEventsScheduler()
+        public void RegisterEventsScheduler()
         {
             System.ActorOf(Props.Create(typeof(JobManager<PublishEventJobScheduler, PublishEventJobRunner, PublishEventJob, PublishEventJobId>)), $"job-events-publisher-manager");
-            return this;
         }
     }
 }
