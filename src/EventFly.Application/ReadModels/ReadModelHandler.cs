@@ -1,7 +1,6 @@
 ﻿using System.Reflection;
 using Akka.Actor;
 using EventFly.Aggregates;
-using EventFly.Application.Extensions;
 using EventFly.Core;
 using EventFly.Extensions;
 

@@ -28,7 +28,6 @@ using Akka.Event;
 using Akka.Pattern;
 using EventFly.Exceptions;
 using EventFly.Extensions;
-using EventFly.Infrastructure.Extensions;
 
 namespace EventFly.Jobs
 {

@@ -7,7 +7,7 @@
 using System;
 using System.Linq;
 
-namespace EventFly.Web.Swagger
+namespace EventFly.Swagger
 {
   public static class ReflectionExtensions
   {

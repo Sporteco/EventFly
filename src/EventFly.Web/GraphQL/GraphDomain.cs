@@ -10,7 +10,7 @@ using GraphQL.Language.AST;
 using GraphQL.Resolvers;
 using GraphQL.Types;
 
-namespace EventFly.Web.GraphQL
+namespace EventFly.GraphQL
 {
     public sealed class GraphDomain 
     {

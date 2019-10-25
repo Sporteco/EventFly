@@ -24,8 +24,11 @@ namespace EventFly.Core.VersionedTypes
     {
       Version = version;
       Type = type;
-      Name = name;
+      Name = GetName(name);
     }
+    private string GetName(string name) 
+        => name.EndsWith("command", StringComparison.InvariantCultureIgnoreCase) ? name.Substring(0, name.Length - "command".Length) : name;
+
 
     public override string ToString()
     {

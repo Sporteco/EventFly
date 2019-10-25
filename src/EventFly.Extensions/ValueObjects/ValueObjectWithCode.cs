@@ -1,6 +1,4 @@
-﻿using EventFly.ValueObjects;
-
-namespace EventFly.Extensions.ValueObjects
+﻿namespace EventFly.ValueObjects
 {
     public class ValueObjectWithCode<TCode> : ValueObject
     where TCode : SingleValueObject<string>

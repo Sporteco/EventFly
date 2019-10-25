@@ -7,7 +7,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace EventFly.Web.Swagger
+namespace EventFly.Swagger
 {
     public class QueriesList : List<Type>
     {

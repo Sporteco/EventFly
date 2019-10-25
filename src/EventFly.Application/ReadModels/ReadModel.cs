@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using EventFly.Aggregates;
-using EventFly.Application.Extensions;
 using EventFly.Exceptions;
 using EventFly.Extensions;
 

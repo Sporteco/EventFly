@@ -35,7 +35,6 @@ using Akka.Persistence;
 using EventFly.Aggregates;
 using EventFly.Aggregates.Snapshot;
 using EventFly.Aggregates.Snapshot.Strategies;
-using EventFly.Application.Extensions;
 using EventFly.Commands;
 using EventFly.Commands.ExecutionResults;
 using EventFly.Core;

@@ -27,7 +27,6 @@ using Akka.Actor;
 using Akka.DI.Core;
 using Akka.Event;
 using EventFly.Aggregates;
-using EventFly.Application.Extensions;
 using EventFly.Core;
 using EventFly.Exceptions;
 using EventFly.Extensions;

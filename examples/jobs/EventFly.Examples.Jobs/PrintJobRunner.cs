@@ -23,7 +23,6 @@
 
 using Akka.Event;
 using EventFly.Jobs;
-using System;
 
 namespace EventFly.Examples.Jobs
 {

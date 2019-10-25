@@ -5,7 +5,7 @@ using EventFly.Definitions;
 using GraphQL.Types;
 using Type = System.Type;
 
-namespace EventFly.Web.GraphQL
+namespace EventFly.GraphQL
 {
     internal sealed class ObjectGraphTypeFromModel : ObjectGraphType<object>
     {

@@ -22,7 +22,6 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System.Collections.Generic;
-using Akka.Actor;
 using EventFly.Commands;
 using EventFly.Commands.ExecutionResults;
 using EventFly.Examples.Api.Domain.Aggregates.Resource.Events;

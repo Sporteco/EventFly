@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using EventFly.Queries;
 using GraphQL.Types;
 
-namespace EventFly.Web.GraphQL
+namespace EventFly.GraphQL
 {
 
     public interface IGraphQueryHandler

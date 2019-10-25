@@ -2,10 +2,9 @@
 using Akka.DI.Core;
 using Akka.Event;
 using EventFly.Aggregates;
-using EventFly.Application.Extensions;
 using EventFly.Exceptions;
-using EventFly.Extensions;
 using System;
+using EventFly.Extensions;
 
 namespace EventFly.ReadModels
 {

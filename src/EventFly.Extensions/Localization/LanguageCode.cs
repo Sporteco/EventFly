@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Linq;
 using EventFly.ValueObjects;
 
-namespace EventFly.Extensions.Localization
+namespace EventFly.Localization
 {
     [Serializable]
     public class LanguageCode : SingleValueObject<string>

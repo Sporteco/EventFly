@@ -4,7 +4,7 @@
 // MVID: 043A546D-C869-4CCE-8BB0-8D9655232ADF
 // Assembly location: C:\Users\naych\source\repos\!!!!!\netcoreapp2.2\EventFly.Web.dll
 
-namespace EventFly.Web.Swagger
+namespace EventFly.Swagger
 {
   public static class HttpRouting
   {

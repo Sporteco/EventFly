@@ -9,7 +9,7 @@ using GraphQL.Types;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace EventFly.Web.GraphQL
+namespace EventFly.GraphQL
 {
     public static class BuilderExtensions
     {

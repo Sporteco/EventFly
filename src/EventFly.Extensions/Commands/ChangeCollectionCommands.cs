@@ -1,11 +1,9 @@
 ﻿using System.Collections.Generic;
-using EventFly.Commands;
 using EventFly.Core;
 using EventFly.Entities;
-using EventFly.Extensions.ValueObjects;
 using EventFly.ValueObjects;
 
-namespace EventFly.Extensions.Commands
+namespace EventFly.Commands
 {
     public abstract class ChangeValueObjectCollectionCommand<TIdentity, TCollectionItem> : Command<TIdentity>
         where TIdentity : IIdentity

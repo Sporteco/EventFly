@@ -6,7 +6,7 @@ using EventFly.Aggregates.Snapshot;
 using EventFly.Commands;
 using EventFly.Core;
 using EventFly.DomainService;
-using EventFly.Infrastructure.Extensions;
+using EventFly.Extensions;
 using EventFly.Jobs;
 using EventFly.Queries;
 using EventFly.ReadModels;

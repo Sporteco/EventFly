@@ -38,7 +38,7 @@ namespace EventFly.DependencyInjection
             services.AddTransient<ICommandsScheduler, JobCommandsScheduler>();
             services.AddTransient<IEventsScheduler, JobEventsScheduler>();
 
-            return new EventFlyBuilder(actorSystem, services);
+            return new EventFlyBuilder(services);
         }
     }
 }

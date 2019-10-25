@@ -8,7 +8,7 @@ using System;
 using System.Globalization;
 using System.Reflection;
 
-namespace EventFly.Web.Swagger
+namespace EventFly.Swagger
 {
   public class CustomMethodInfo : MethodInfo
   {

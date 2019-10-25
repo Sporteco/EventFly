@@ -1,16 +1,15 @@
-﻿using EventFly.Aggregates;
-using EventFly.Core;
-using EventFly.Exceptions;
-using EventFly.ReadModels;
-using EventFly.Sagas;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
+using EventFly.Aggregates;
+using EventFly.Core;
+using EventFly.Exceptions;
+using EventFly.ReadModels;
+using EventFly.Sagas;
 
-namespace EventFly.Application.Extensions
+namespace EventFly.Extensions
 {
     public static class TypeExtensions
     {

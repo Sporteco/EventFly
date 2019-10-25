@@ -25,7 +25,6 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using Akka.Actor;
 using EventFly.Aggregates;
 using EventFly.Commands.ExecutionResults;
 using EventFly.Core;

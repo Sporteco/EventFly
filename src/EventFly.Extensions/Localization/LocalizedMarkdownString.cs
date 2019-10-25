@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace EventFly.Extensions.Localization
+namespace EventFly.Localization
 {
     [Serializable]
     public class LocalizedMarkdownString : LocalizedValueObject<StringLocalization>

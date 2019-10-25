@@ -7,7 +7,7 @@
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace EventFly.Web.Swagger
+namespace EventFly.Swagger
 {
   public static class NamingUtils
   {

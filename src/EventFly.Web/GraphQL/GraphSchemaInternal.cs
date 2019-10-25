@@ -1,7 +1,7 @@
 ﻿using System;
 using GraphQL.Types;
 
-namespace EventFly.Web.GraphQL
+namespace EventFly.GraphQL
 {
     internal class GraphSchemaInternal : Schema
     {

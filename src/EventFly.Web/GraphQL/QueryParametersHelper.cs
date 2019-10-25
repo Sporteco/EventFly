@@ -7,7 +7,7 @@ using System.Reflection;
 using EventFly.Queries;
 using GraphQL.Types;
 
-namespace EventFly.Web.GraphQL
+namespace EventFly.GraphQL
 {
     internal static class QueryParametersHelper
     {

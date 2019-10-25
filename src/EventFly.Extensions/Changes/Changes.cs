@@ -1,6 +1,6 @@
 ﻿using EventFly.ValueObjects;
 
-namespace EventFly.Extensions.Changes
+namespace EventFly.Changes
 {
     public sealed class Changes<T> where T : ValueObject
     {

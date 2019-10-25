@@ -1,9 +1,9 @@
 ﻿using Akka.Actor;
 using Demo.Infrastructure;
+using EventFly;
 using EventFly.DependencyInjection;
-using EventFly.Web;
-using EventFly.Web.GraphQL;
-using EventFly.Web.Swagger;
+using EventFly.GraphQL;
+using EventFly.Swagger;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;

@@ -1,4 +1,4 @@
-﻿namespace EventFly.Extensions.Localization
+﻿namespace EventFly.Localization
 {
     public interface ILocalizedValue
     {

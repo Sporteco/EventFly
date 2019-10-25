@@ -7,7 +7,7 @@
 using System;
 using System.Reflection;
 
-namespace EventFly.Web.Swagger
+namespace EventFly.Swagger
 {
   public class CustomParameterInfo : ParameterInfo
   {

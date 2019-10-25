@@ -5,7 +5,6 @@
 // Assembly location: C:\Users\naych\source\repos\!!!!!\netcoreapp2.2\EventFly.dll
 
 using System;
-using EventFly.Extensions;
 using EventFly.Jobs;
 
 namespace EventFly.Definitions

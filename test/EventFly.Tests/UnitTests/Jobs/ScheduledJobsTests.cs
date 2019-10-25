@@ -22,7 +22,6 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
-using System.ComponentModel;
 using Akka.TestKit;
 using Akka.TestKit.Xunit2;
 using EventFly.TestHelpers.Aggregates.Sagas.TestAsync;

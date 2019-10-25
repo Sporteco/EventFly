@@ -1,5 +1,4 @@
-﻿using Akka.Actor;
-using EventFly.Definitions;
+﻿using EventFly.Definitions;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace EventFly.DependencyInjection
@@ -7,13 +6,11 @@ namespace EventFly.DependencyInjection
     public sealed class EventFlyBuilder
     {
         public IServiceCollection Services { get; }
-        private readonly ActorSystem _actorSystem;
         private readonly ApplicationDefinition _applicationDefinition;
         public IApplicationDefinition ApplicationDefinition => _applicationDefinition;
 
-        public EventFlyBuilder(ActorSystem actorSystem, IServiceCollection services)
+        public EventFlyBuilder(IServiceCollection services)
         {
-            _actorSystem = actorSystem;
             Services = services;
             _applicationDefinition = new ApplicationDefinition();
             Services

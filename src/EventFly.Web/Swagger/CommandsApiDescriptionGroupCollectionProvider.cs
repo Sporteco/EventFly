@@ -17,7 +17,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Internal;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
-namespace EventFly.Web.Swagger
+namespace EventFly.Swagger
 {
     public class CommandsApiDescriptionGroupCollectionProvider : IApiDescriptionGroupCollectionProvider
     {
@@ -53,7 +53,7 @@ namespace EventFly.Web.Swagger
                 foreach (var query in domain.Queries)
                 {
                     var type = query.Type;
-                    var name = type.Name.ToLowerInvariant().Replace("query", "");
+                    var name = query.Name;
                     var str = "api/" + query.Name;
                     var genericInterface = ReflectionExtensions.GetSubclassOfRawGenericInterface(typeof(IQuery<>), type);
                     if (!(genericInterface == null))
@@ -121,7 +121,7 @@ namespace EventFly.Web.Swagger
                 foreach (var allDefinition in domain.Commands.GetAllDefinitions())
                 {
                     var type = allDefinition.Type;
-                    var name = type.Name.ToLowerInvariant().Replace("command", "");
+                    var name = allDefinition.Name;
                     var str = "api/" + allDefinition.Name + "/" + allDefinition.Version;
                     var subclassOfRawGeneric = ReflectionExtensions.GetSubclassOfRawGeneric(typeof(Command<,>), type);
                     if (!(subclassOfRawGeneric == null))

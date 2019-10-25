@@ -1,7 +1,7 @@
 ﻿using System;
 using EventFly.ValueObjects;
 
-namespace EventFly.Extensions.Localization
+namespace EventFly.Localization
 {
     [Serializable]
     public class LocalizedLink : LocalizedValueObject<LinkLocalization>

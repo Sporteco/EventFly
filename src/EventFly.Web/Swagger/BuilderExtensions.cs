@@ -14,7 +14,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace EventFly.Web.Swagger
+namespace EventFly.Swagger
 {
     public static class BuilderExtensions
     {

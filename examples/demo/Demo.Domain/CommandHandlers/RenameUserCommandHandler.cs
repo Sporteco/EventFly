@@ -1,5 +1,4 @@
-﻿using Akka.Actor;
-using EventFly.Commands;
+﻿using EventFly.Commands;
 using EventFly.Commands.ExecutionResults;
 using Demo.Commands;
 using Demo.Domain.Aggregates;

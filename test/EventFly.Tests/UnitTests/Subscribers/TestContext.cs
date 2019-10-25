@@ -9,7 +9,6 @@ using EventFly.TestHelpers.Aggregates.Sagas.Test.Events;
 using EventFly.TestHelpers.Aggregates.Sagas.TestAsync;
 using EventFly.TestHelpers.Aggregates.Sagas.TestAsync.Events;
 using EventFly.TestHelpers.Aggregates.Snapshots;
-using EventFly.TestHelpers.Jobs;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace EventFly.Tests.UnitTests.Subscribers
@@ -29,8 +28,8 @@ namespace EventFly.Tests.UnitTests.Subscribers
                 typeof(TestSentEvent), typeof(TestSagaCompletedEvent), typeof(TestSagaStartedEvent), typeof(TestSagaTransactionCompletedEvent),
                 typeof(TestAsyncSagaCompletedEvent), typeof(TestAsyncSagaStartedEvent), typeof(TestAsyncSagaTransactionCompletedEvent));
             RegisterSnapshots(typeof(TestAggregateSnapshot));
-            RegisterJob<TestJob, TestJobId, TestJobRunner, TestJobScheduler>();
-            RegisterJob<AsyncTestJob, AsyncTestJobId, AsyncTestJobRunner, AsyncTestJobScheduler>();
+            //RegisterJob<TestJob, TestJobId, TestJobRunner, TestJobScheduler>();
+            //RegisterJob<AsyncTestJob, AsyncTestJobId, AsyncTestJobRunner, AsyncTestJobScheduler>();
             RegisterSaga<TestSaga, TestSagaId>();
             RegisterSaga<TestAsyncSaga, TestAsyncSagaId>();
         }

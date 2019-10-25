@@ -29,7 +29,7 @@ namespace EventFly.Configuration
     {
         public static Config DefaultConfig()
         {
-            return ConfigurationFactory.FromResource<EventFlyDefaultSettings>("EventFly.Domain.Configuration.reference.conf");
+            return ConfigurationFactory.FromResource<EventFlyDefaultSettings>("EventFly.Configuration.reference.conf");
         }
 
     }

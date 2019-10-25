@@ -30,7 +30,6 @@ using Akka.Actor;
 using Akka.Persistence;
 using EventFly.Exceptions;
 using EventFly.Extensions;
-using EventFly.Infrastructure.Extensions;
 using EventFly.Jobs.Commands;
 using EventFly.Jobs.Events;
 

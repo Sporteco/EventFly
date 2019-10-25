@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using EventFly.Aggregates;
+using EventFly.Commands;
 using EventFly.Core;
 using EventFly.Entities;
-using EventFly.Extensions.Commands;
-using EventFly.Extensions.ValueObjects;
 using EventFly.ValueObjects;
 
-namespace EventFly.Extensions.Events
+namespace EventFly.Events
 {
     public abstract class ValueObjectCollectionChangedEvent<TIdentity, TCollectionItem> : AggregateEvent<TIdentity>
         where TIdentity : IIdentity

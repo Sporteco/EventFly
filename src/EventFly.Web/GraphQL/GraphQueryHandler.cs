@@ -8,7 +8,7 @@ using GraphQL.Resolvers;
 using GraphQL.Types;
 using Newtonsoft.Json;
 
-namespace EventFly.Web.GraphQL
+namespace EventFly.GraphQL
 {
     public sealed class GraphQueryHandler<TQuery, TResult> : IGraphQueryHandler<TQuery,TResult> where TQuery : IQuery<TResult> 
     {

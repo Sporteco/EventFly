@@ -21,9 +21,11 @@ namespace EventFly.Definitions
         {
             Type = queryType;
             QueryResultType = modelType;
-            Name = queryType.Name;
+            Name = GetQueryName(queryType.Name);
             ManagerDefinition = managerDefinition;
         }
+        private string GetQueryName(string name) 
+            => name.EndsWith("query", StringComparison.InvariantCultureIgnoreCase) ? name.Substring(0, name.Length - "query".Length) : name;
 
         public override string ToString()
         {

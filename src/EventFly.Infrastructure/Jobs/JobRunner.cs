@@ -27,7 +27,6 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Akka.Actor;
 using EventFly.Extensions;
-using EventFly.Infrastructure.Extensions;
 
 namespace EventFly.Jobs
 {
@@ -135,7 +134,7 @@ namespace EventFly.Jobs
                 var subscriptionFunction = Delegate.CreateDelegate(funcType, this, methods[subscriptionType]);
                 var actorReceiveMethod = method.MakeGenericMethod(subscriptionType);
 
-                actorReceiveMethod.Invoke(this, new[] { subscriptionFunction, null });
+                actorReceiveMethod.Invoke(this, new[] { subscriptionFunction, (object) null });
             }
         }
     }

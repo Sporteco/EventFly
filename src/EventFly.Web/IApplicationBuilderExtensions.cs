@@ -1,8 +1,7 @@
-﻿using Akka.Actor;
-using EventFly.DependencyInjection;
+﻿using EventFly.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 
-namespace EventFly.Web
+namespace EventFly
 {
     public static class IApplicationBuilderExtensions
     {

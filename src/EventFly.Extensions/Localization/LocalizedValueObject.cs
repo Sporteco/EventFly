@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using EventFly.ValueObjects;
 
-namespace EventFly.Extensions.Localization
+namespace EventFly.Localization
 {
     [Serializable]
     public class LocalizedValueObject<T> : ValueObject

@@ -3,7 +3,7 @@ using System.Linq;
 using EventFly.Definitions;
 using GraphQL.Types;
 
-namespace EventFly.Web.GraphQL
+namespace EventFly.GraphQL
 {
     internal sealed class GraphQueryInternal: ObjectGraphType<object>
     {
