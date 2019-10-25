@@ -4,7 +4,7 @@ jobs:
     vmImage: $(vmImage)
 
   variables:
-    pakagesVersion: '0.5.2'
+    pakagesVersion: '0.5.3'
 
   workspace:
     clean: all
@@ -38,7 +38,7 @@ jobs:
       versioningScheme: byEnvVar
       versionEnvVar: pakagesVersion
       nobuild: true
-      packagesToPack: '**/EventFly.Infrastructure.csproj;**/EventFly.Application.csproj;**/EventFly.Domain.csproj;**/EventFly.Abstractions.csproj;**/EventFly.Web.csproj;**/EventFly.Storages.EntityFramework.csproj;**/EventFly.TestFixture.csproj'
+      packagesToPack: '**/EventFly.Infrastructure.csproj;**/EventFly.Application.csproj;**/EventFly.Domain.csproj;**/EventFly.Abstractions.csproj;**/EventFly.Web.csproj;**/EventFly.Storages.EntityFramework.csproj;**/EventFly.TestFixture.csproj;**/EventFly.Extensions.csproj'
 
   - publish: '$(Build.ArtifactStagingDirectory)/packages'
     artifact: 'packages'
