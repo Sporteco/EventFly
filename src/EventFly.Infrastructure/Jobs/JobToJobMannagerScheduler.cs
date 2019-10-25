@@ -31,25 +31,6 @@ using System.Threading.Tasks;
 
 namespace EventFly.Jobs
 {
-    public interface IScheduler
-    {
-        Task<bool> Schedule<TJob, TJobId>(TJob job, DateTime triggerDate)
-            where TJob : IJob<TJobId>
-            where TJobId : IJobId;
-
-        Task<bool> Schedule<TJob, TJobId>(TJob job, TimeSpan interval, DateTime triggerDate)
-            where TJob : IJob<TJobId>
-            where TJobId : IJobId;
-
-        Task<bool> Schedule<TJob, TJobId>(TJob job, string cronExpression, DateTime triggerDate)
-            where TJob : IJob<TJobId>
-            where TJobId : IJobId;
-
-        Task<bool> Cancel<TJob, TJobId>(TJobId jobId)
-            where TJob : IJob<TJobId>
-            where TJobId : IJobId;
-    }
-
     internal sealed class JobToJobMannagerScheduler : IScheduler
     {
         private readonly IDefinitionToManagerRegistry _definitionToManagerRegistry;
