@@ -4,7 +4,7 @@ jobs:
     vmImage: $(vmImage)
 
   variables:
-    pakagesVersion: '0.5.0'
+    pakagesVersion: '0.5.1'
 
   workspace:
     clean: all

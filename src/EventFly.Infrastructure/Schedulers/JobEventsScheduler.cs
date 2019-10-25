@@ -6,17 +6,6 @@ using System.Threading.Tasks;
 
 namespace EventFly.Schedulers
 {
-    public interface IEventsScheduler
-    {
-        Task<bool> Schedule(PublishEventJobId id, IDomainEvent @event, DateTime triggerDate);
-
-        Task<bool> Schedule(PublishEventJobId id, IDomainEvent @event, TimeSpan interval, DateTime triggerDate);
-
-        Task<bool> Schedule(PublishEventJobId id, IDomainEvent @event, string cronExpression, DateTime triggerDate);
-
-        Task<bool> Cancel(PublishEventJobId jobId);
-    }
-
     internal sealed class JobEventsScheduler : IEventsScheduler
     {
         private readonly IScheduler _scheduler;
