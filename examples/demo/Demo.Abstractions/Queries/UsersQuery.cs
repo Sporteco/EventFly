@@ -39,7 +39,7 @@ namespace Demo.Queries
         [Description("Искомое слово в имени пользователя")]
         public string NameFilter { get; set; }
 
-        public IEnumerable<SlotCost> Slots { get; set; }
+        public IEnumerable<UserInfo> Slots { get; set; }
 
     }
 

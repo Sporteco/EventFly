@@ -13,15 +13,29 @@ namespace EventFly.GraphQL
     {
         public static IGraphType GetQueryItemType(IGraphQueryHandler handler, Type modelType, bool isInput)
         {
-            lock (DeclaredTypes)
+            if (!isInput)
             {
-                if (DeclaredTypes.ContainsKey(modelType)) return DeclaredTypes[modelType];
-                var result = GetGraphTypeEx(modelType, handler,isInput);
-                DeclaredTypes.Add(modelType, result);
-                return result;
+                lock (OutputDeclaredTypes)
+                {
+                    if (OutputDeclaredTypes.ContainsKey(modelType)) return OutputDeclaredTypes[modelType];
+                    var result = GetGraphTypeEx(modelType, handler,isInput);
+                    OutputDeclaredTypes.Add(modelType, result);
+                    return result;
+                }
+            }
+            else
+            {
+                lock (InputDeclaredTypes)
+                {
+                    if (InputDeclaredTypes.ContainsKey(modelType)) return InputDeclaredTypes[modelType];
+                    var result = GetGraphTypeEx(modelType, handler,isInput);
+                    InputDeclaredTypes.Add(modelType, result);
+                    return result;
+                }
             }
         }
-        internal static readonly Dictionary<Type,IGraphType> DeclaredTypes = new Dictionary<Type, IGraphType>();
+        internal static readonly Dictionary<Type,IGraphType> InputDeclaredTypes = new Dictionary<Type, IGraphType>();
+        internal static readonly Dictionary<Type,IGraphType> OutputDeclaredTypes = new Dictionary<Type, IGraphType>();
 
 
         public static QueryArguments GetArguments(Type parametersType, IGraphQueryHandler graphQuery, bool isInput)
