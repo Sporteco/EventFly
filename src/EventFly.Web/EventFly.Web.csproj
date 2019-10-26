@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>0.5.3</Version>
+    <Version>0.5.4</Version>
     <Authors>Sporteco</Authors>
     <Company>Sporteco</Company>
     <Copyright>Copyright (c) Sporteco 2018 - 2019</Copyright>
@@ -11,8 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="GraphQL.Server.Core" Version="3.4.0" />
-    <PackageReference Include="GraphQL.Server.Transports.AspNetCore" Version="3.4.0" />
+    <PackageReference Include="GraphQL" Version="2.4.0" />
     <PackageReference Include="GraphQL.Server.Ui.Playground" Version="3.4.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.ApiExplorer" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
@@ -21,6 +20,27 @@
 
   <ItemGroup>
     <ProjectReference Include="..\EventFly.Infrastructure\EventFly.Infrastructure.csproj" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Reference Include="GraphQL.Server.Core">
+      <HintPath>libs\GraphQL.Server.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="GraphQL.Server.Transports.AspNetCore">
+      <HintPath>libs\GraphQL.Server.Transports.AspNetCore.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="$(OutputPath)\GraphQL.Server.Core.*;$(OutputPath)\GraphQL.Server.Transports.AspNetCore.*">
+      <Pack>true</Pack>
+      <PackagePath>lib\$(TargetFramework)</PackagePath>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="libs\GraphQL.Server.Transports.AspNetCore.deps.json" />
   </ItemGroup>
 
 </Project>

@@ -286,3 +286,6 @@ __pycache__/
 *Run-MultiNodeTests.ps1
 
 artefacts/*
+
+# libs bug fix Graphql
+!src/EventFly.Web/libs/*.*
