@@ -146,12 +146,15 @@ namespace EventFly.GraphQL
             {
                 var innerType = propType.GetGenericArguments().First();
                 if (innerType != null)
+                {
                     return new ListGraphType(graphQuery.GetQueryItemType(innerType, isInput));
+                }
+
                 return null;
             }
 
             return  isInput ? new InputObjectGraphTypeFromModel(propType, graphQuery) : 
-                (IGraphType)new ObjectGraphTypeFromModel(propType, graphQuery);
+                (IGraphType)new ObjectGraphTypeFromModel(propType, graphQuery, isInput);
         }
     }
 }

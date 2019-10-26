@@ -10,6 +10,7 @@ namespace Demo.Queries
         [Description("ID")]
         public string Id { get; set; }
 
+
         [Description("Имя пользователя")]
         public string Name { get; set; }
     }
@@ -37,6 +38,9 @@ namespace Demo.Queries
     {
         [Description("Искомое слово в имени пользователя")]
         public string NameFilter { get; set; }
+
+        public IEnumerable<SlotCost> Slots { get; set; }
+
     }
 
     public class User1Query : IQuery<UsersResult>

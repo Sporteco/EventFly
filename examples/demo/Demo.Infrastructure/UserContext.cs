@@ -22,9 +22,9 @@ namespace Demo.Infrastructure
             RegisterCommand<CreateUserCommand>();
             RegisterCommand<RenameUserCommand>();
             RegisterQuery<UsersQuery, UsersResult>();
-            RegisterQuery<User1Query, UsersResult>();
-            RegisterQuery<User2Query, UsersResult>();
-            RegisterQuery<EventPostersQuery, EventPosters>();
+            //RegisterQuery<User1Query, UsersResult>();
+            //RegisterQuery<User2Query, UsersResult>();
+            //RegisterQuery<EventPostersQuery, EventPosters>();
             RegisterAggregateReadModel<UsersInfoReadModel, UserId>();
             RegisterReadModel<TotalUsersReadModel, TotalUsersReadModelManager>();
             RegisterSaga<TestSaga, TestSagaId>();

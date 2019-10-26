@@ -44,7 +44,7 @@ namespace EventFly.GraphQL
 
         public IGraphType GetQueryItemType(Type modelType, bool isInput)
         {
-            return QueryParametersHelper.GetQueryItemType(this, modelType, false);
+            return QueryParametersHelper.GetQueryItemType(this, modelType, isInput);
         }
 
         private Task<TResult> ReadAsync(TQuery query)
