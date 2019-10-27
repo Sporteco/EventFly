@@ -36,11 +36,6 @@ namespace Demo.Queries
 
     public class UsersQuery : IQuery<UsersResult>
     {
-        [Description("Искомое слово в имени пользователя")]
-        public string NameFilter { get; set; }
-
-        public IEnumerable<UserInfo> Slots { get; set; }
-
     }
 
     public class User1Query : IQuery<UsersResult>

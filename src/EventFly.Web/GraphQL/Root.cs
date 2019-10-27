@@ -5,9 +5,9 @@ using GraphQL.Types;
 
 namespace EventFly.GraphQL
 {
-    internal sealed class GraphQueryInternal: ObjectGraphType<object>
+    internal sealed class Root: ObjectGraphType<object>
     {
-        public GraphQueryInternal(IApplicationDefinition app, IServiceProvider provider)
+        public Root(IApplicationDefinition app, IServiceProvider provider)
         {
             foreach (var domain in app.Contexts.Where(i=>i.Queries.Any()))
             {

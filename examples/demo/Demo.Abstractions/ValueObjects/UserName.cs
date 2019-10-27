@@ -1,9 +1,11 @@
 ﻿using System.Linq;
+using EventFly.Validation;
 using EventFly.ValueObjects;
 using FluentValidation;
 
 namespace Demo.ValueObjects
 {
+    [Validator(typeof(UserNameValidator))]
     public class UserName : SingleValueObject<string>
     {
         public UserName(string value) : base(value){}

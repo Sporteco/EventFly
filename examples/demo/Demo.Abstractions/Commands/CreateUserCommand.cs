@@ -1,11 +1,14 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using EventFly.Commands;
 using Demo.ValueObjects;
+using EventFly.Validation;
 using FluentValidation;
 
 namespace Demo.Commands
 {
     [Description("Создание нового пользователя")]
+    [Validator(typeof(CreateUserCommandValidator))]
     public class CreateUserCommand : Command<UserId>
     {
         public UserName UserName { get; }
@@ -20,11 +23,11 @@ namespace Demo.Commands
 
     public class CreateUserCommandValidator : AbstractValidator<CreateUserCommand>
     {
-        public CreateUserCommandValidator()
+        public CreateUserCommandValidator(IServiceProvider sp)
         {
             RuleFor(p => p.AggregateId).NotNull();
             RuleFor(p => p.UserName).SetValidator(new UserNameValidator());
-            RuleFor(p => p.Birth).SetValidator(new BirthValidator());
+            RuleFor(p => p.Birth).ApplyRegisteredValidators(sp);
           
         }
     }

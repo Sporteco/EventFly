@@ -28,7 +28,8 @@ namespace Demo.Host
                      .AddSingleton("aa")
 
                      .AddEventFly(system)
-                         .WithContext<UserContext>()
+                        .WithContext<UserContext>()
+                        .WithContext<User2Context>()
                      .Services
                     .BuildServiceProvider();
 

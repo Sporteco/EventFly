@@ -19,7 +19,7 @@ namespace EventFly.GraphQL
             return null;
         })
         {
-            Query = (GraphQueryInternal)provider.GetService(typeof(GraphQueryInternal));
+            Query = (Root)provider.GetService(typeof(Root));
         }
     }
 }

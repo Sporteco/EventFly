@@ -60,7 +60,7 @@ namespace EventFly.GraphQL
         private Task<TResult> ExecuteQuery(ResolveFieldContext context) => ReadAsync(ParseModel<TQuery>(context.Arguments));
 
         private T ParseModel<T>(Dictionary<string, object> arguments) where T : IQuery<TResult>
-            => JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(arguments));
+            => JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(arguments ?? new Dictionary<string, object>()));
        
         public static Func<object,object> ConvertFunc<TParent, TRes>(Func<TParent, TRes> func) => arg => func((TParent)arg);
     }

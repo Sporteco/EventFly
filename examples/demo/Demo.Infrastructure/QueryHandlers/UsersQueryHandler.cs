@@ -20,7 +20,7 @@ namespace Demo.Infrastructure.QueryHandlers
         public override Task<UsersResult> ExecuteQuery(UsersQuery query)
         {
             var items = _storage?.Items
-                .Where(i => query.NameFilter == null || i.UserName.StartsWith(query.NameFilter, StringComparison.InvariantCultureIgnoreCase))
+                //.Where(i => query.NameFilter == null || i.UserName.StartsWith(query.NameFilter, StringComparison.InvariantCultureIgnoreCase))
                 .Select(i => new UserInfo {Id = i.Id, Name = i.UserName}).ToList();
 
             return Task.FromResult(new UsersResult(items, 100));

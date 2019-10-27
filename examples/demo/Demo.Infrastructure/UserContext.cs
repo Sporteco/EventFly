@@ -11,8 +11,6 @@ using Demo.Domain.Services;
 using Demo.Infrastructure.ReadModels;
 using Demo.Application;
 using Demo.Infrastructure.QueryHandlers;
-using Demo.ValueObjects;
-using FluentValidation;
 
 namespace Demo.Infrastructure
 {
@@ -36,10 +34,6 @@ namespace Demo.Infrastructure
             .AddScoped<TestSaga>()
             .AddScoped<IAggregateStorage<UserAggregate>, InMemoryAggregateStorage<UserAggregate>>()
 
-            .AddScoped<IValidator<UserName>,UserNameValidator>()
-            .AddScoped<IValidator<Birth>, BirthValidator>()
-            .AddScoped<IValidator<CreateUserCommand>, CreateUserCommandValidator>()
-
             .AddScoped<QueryHandler<UsersQuery, UsersResult>, UsersQueryHandler>()
             .AddScoped<QueryHandler<EventPostersQuery, EventPosters>, EventPostersQueryHandler>()
 
@@ -58,6 +52,7 @@ namespace Demo.Infrastructure
         }
 
         public override IServiceCollection DI(IServiceCollection services) => services
+            .AddScoped<TestSaga>()
             .AddScoped<QueryHandler<User1Query, UsersResult>, UsersQuery1Handler>()
             .AddScoped<QueryHandler<User2Query, UsersResult>, UsersQuery2Handler>();
     }

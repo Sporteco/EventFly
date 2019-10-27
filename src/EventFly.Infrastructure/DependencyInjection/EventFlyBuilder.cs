@@ -1,4 +1,8 @@
-﻿using EventFly.Definitions;
+﻿using System.Linq;
+using System.Reflection;
+using EventFly.Definitions;
+using EventFly.Validation;
+using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace EventFly.DependencyInjection
@@ -22,11 +26,33 @@ namespace EventFly.DependencyInjection
             where TContext : ContextDefinition, new()
         {
             var context = new TContext();
-
             context.DI(Services);
 
+
             _applicationDefinition.RegisterContext(context);
+
+            RegisterValidators(Services, _applicationDefinition.Commands);
             return this;
+        }
+
+        private void RegisterValidators(IServiceCollection services, ICommandDefinitions commands)
+        {
+            var assemblies = commands.GetAllDefinitions().Select(i => i.Type.Assembly).Distinct();
+            foreach (var assembly in assemblies)
+            {
+                RegisterValidatorsInAssembly(assembly, services);
+            }
+        }
+
+        private void RegisterValidatorsInAssembly(Assembly assembly, IServiceCollection services)
+        {
+            var validatorTypes = assembly.GetTypes().SelectMany(i => i.GetCustomAttributes<ValidatorAttribute>()
+                .Select(j => new {Type=i, j.ValidatorType})).Distinct();
+            foreach (var item in validatorTypes)
+            {
+                services.AddSingleton(typeof(IValidator<>).MakeGenericType(item.Type), item.ValidatorType);
+            }
+
         }
     }
 }

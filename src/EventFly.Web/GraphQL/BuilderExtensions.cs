@@ -29,7 +29,7 @@ namespace EventFly.GraphQL
             services.AddSingleton<IDocumentExecuter, DocumentExecuter>();
             services.AddSingleton<IDocumentWriter, DocumentWriter>();
 
-            services.AddSingleton<GraphQueryInternal>();
+            services.AddSingleton<Root>();
             services.AddSingleton<ISchema, GraphSchemaInternal>();
             services.AddGraphQL(_ =>
             {
