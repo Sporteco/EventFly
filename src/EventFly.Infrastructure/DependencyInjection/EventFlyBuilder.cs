@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Reflection;
 using EventFly.Definitions;
 using EventFly.Validation;
@@ -31,14 +32,13 @@ namespace EventFly.DependencyInjection
 
             _applicationDefinition.RegisterContext(context);
 
-            RegisterValidators(Services, _applicationDefinition.Commands);
+            RegisterValidators(Services);
             return this;
         }
 
-        private void RegisterValidators(IServiceCollection services, ICommandDefinitions commands)
+        private void RegisterValidators(IServiceCollection services)
         {
-            var assemblies = commands.GetAllDefinitions().Select(i => i.Type.Assembly).Distinct();
-            foreach (var assembly in assemblies)
+            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
                 RegisterValidatorsInAssembly(assembly, services);
             }
