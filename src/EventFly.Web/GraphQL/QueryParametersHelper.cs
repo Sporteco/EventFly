@@ -18,24 +18,23 @@ namespace EventFly.GraphQL
                 lock (OutputDeclaredTypes)
                 {
                     if (OutputDeclaredTypes.ContainsKey(modelType)) return OutputDeclaredTypes[modelType];
-                    var result = GetGraphTypeEx(modelType, handler,isInput);
+                    var result = GetGraphTypeEx(modelType, handler,false);
                     OutputDeclaredTypes.Add(modelType, result);
                     return result;
                 }
             }
-            else
+
+            lock (InputDeclaredTypes)
             {
-                lock (InputDeclaredTypes)
-                {
-                    if (InputDeclaredTypes.ContainsKey(modelType)) return InputDeclaredTypes[modelType];
-                    var result = GetGraphTypeEx(modelType, handler,isInput);
-                    InputDeclaredTypes.Add(modelType, result);
-                    return result;
-                }
+                if (InputDeclaredTypes.ContainsKey(modelType)) return InputDeclaredTypes[modelType];
+                var result = GetGraphTypeEx(modelType, handler,true);
+                InputDeclaredTypes.Add(modelType, result);
+                return result;
             }
         }
-        internal static readonly Dictionary<Type,IGraphType> InputDeclaredTypes = new Dictionary<Type, IGraphType>();
-        internal static readonly Dictionary<Type,IGraphType> OutputDeclaredTypes = new Dictionary<Type, IGraphType>();
+
+        private static readonly Dictionary<Type,IGraphType> InputDeclaredTypes = new Dictionary<Type, IGraphType>();
+        private static readonly Dictionary<Type,IGraphType> OutputDeclaredTypes = new Dictionary<Type, IGraphType>();
 
 
         public static QueryArguments GetArguments(Type parametersType, IGraphQueryHandler graphQuery, bool isInput)
@@ -168,7 +167,7 @@ namespace EventFly.GraphQL
             }
 
             return  isInput ? new InputObjectGraphTypeFromModel(propType, graphQuery) : 
-                (IGraphType)new ObjectGraphTypeFromModel(propType, graphQuery, isInput);
+                (IGraphType)new ObjectGraphTypeFromModel(propType, graphQuery, false);
         }
     }
 }

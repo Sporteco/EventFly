@@ -94,7 +94,7 @@ namespace EventFly.Tests.UnitTests.Aggregates
             var aggregateId = TestAggregateId.New;
             var commandId = CommandId.New;
             var command = new CreateTestCommand(aggregateId, commandId);
-            var result = await bus.Publish(command);
+            var result = (ITestExecutionResult)await bus.Publish(command);
 
             result.IsSuccess.Should().BeTrue();
             result.SourceId.Should().Be(command.Metadata.SourceId);

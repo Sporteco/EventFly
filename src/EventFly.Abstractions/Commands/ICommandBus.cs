@@ -6,7 +6,7 @@ namespace EventFly.Commands
 {
     public interface ICommandBus
     {
-        Task<TExecutionResult> Publish<TExecutionResult, TIdentity>(
+        Task<ExecutionResult> Publish<TExecutionResult, TIdentity>(
           ICommand<TIdentity, TExecutionResult> command)
           where TExecutionResult : IExecutionResult
           where TIdentity : IIdentity;

@@ -6,28 +6,40 @@ using EventFly.Exceptions;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using EventFly.Extensions;
 
 namespace EventFly.Commands
 {
     public sealed class CommandToAggregateManagerBus : ICommandBus
     {
         private readonly IDefinitionToManagerRegistry _definitionToManagerRegistry;
+        private readonly IServiceProvider _serviceProvider;
 
-        public CommandToAggregateManagerBus(IDefinitionToManagerRegistry definitionToManagerRegistry)
+        public CommandToAggregateManagerBus(IDefinitionToManagerRegistry definitionToManagerRegistry, IServiceProvider serviceProvider)
         {
             _definitionToManagerRegistry = definitionToManagerRegistry;
+            _serviceProvider = serviceProvider;
         }
 
-        public Task<TExecutionResult> Publish<TExecutionResult, TIdentity>(ICommand<TIdentity, TExecutionResult> command)
+        public async Task<ExecutionResult> Publish<TExecutionResult, TIdentity>(ICommand<TIdentity, TExecutionResult> command)
             where TExecutionResult : IExecutionResult
             where TIdentity : IIdentity
         {
-            return GetAggregateManager(typeof(TIdentity)).Ask<TExecutionResult>(command, new TimeSpan?());
-        }
+            var result = CommandValidationHelper.ValidateCommand(command, _serviceProvider);
+            if (!result.IsValid) return new FailedValidationExecutionResult(result);
 
-        public Task<IExecutionResult> Publish(ICommand command)
+            var commandResult = await GetAggregateManager(typeof(TIdentity)).Ask<ExecutionResult>(command, new TimeSpan?());
+            return commandResult;
+        }
+        
+
+
+        public async Task<IExecutionResult> Publish(ICommand command)
         {
-            return GetAggregateManager(command.GetAggregateId().GetType()).Ask<IExecutionResult>(command, new TimeSpan?());
+            var result = CommandValidationHelper.ValidateCommand(command, _serviceProvider);
+            if (!result.IsValid) return new FailedValidationExecutionResult(result);
+
+            return await GetAggregateManager(command.GetAggregateId().GetType()).Ask<IExecutionResult>(command, new TimeSpan?());
         }
 
         private IActorRef GetAggregateManager(Type type)

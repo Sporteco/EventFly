@@ -27,19 +27,20 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using FluentValidation.Results;
 
 namespace EventFly.Commands.ExecutionResults
 {
     public class FailedExecutionResult : ExecutionResult
     {
-        public IReadOnlyCollection<string> Errors { get; }
-        
+        public virtual IReadOnlyCollection<string> Errors { get; }
+
         public FailedExecutionResult(
             IEnumerable<string> errors)
         {
             Errors = (errors ?? Enumerable.Empty<string>()).ToList();
         }
-            
+
         public override bool IsSuccess { get; } = false;
 
         public override string ToString()
@@ -48,5 +49,20 @@ namespace EventFly.Commands.ExecutionResults
                 ? $"Failed execution due to: {string.Join(", ", Errors)}"
                 : "Failed execution";
         }
+    }
+
+    public class FailedValidationExecutionResult : FailedExecutionResult
+    {
+        public ValidationResult ValidationResult { get; }
+
+        public FailedValidationExecutionResult(ValidationResult validationResult) : base(null)
+        {
+            ValidationResult = validationResult;
+        }
+
+        public override IReadOnlyCollection<string> Errors
+            => ValidationResult.Errors.Select(i => i.ErrorMessage).ToList();
+
+        public override bool IsSuccess { get; } = false;
     }
 }

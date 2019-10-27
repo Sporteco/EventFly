@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using EventFly.Commands;
 using Demo.ValueObjects;
+using FluentValidation;
 
 namespace Demo.Commands
 {
@@ -14,6 +15,17 @@ namespace Demo.Commands
         {
             UserName = userName;
             Birth = birth;
+        }
+    }
+
+    public class CreateUserCommandValidator : AbstractValidator<CreateUserCommand>
+    {
+        public CreateUserCommandValidator()
+        {
+            RuleFor(p => p.AggregateId).NotNull();
+            RuleFor(p => p.UserName).SetValidator(new UserNameValidator());
+            RuleFor(p => p.Birth).SetValidator(new BirthValidator());
+          
         }
     }
 }

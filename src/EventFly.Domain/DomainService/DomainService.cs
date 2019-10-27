@@ -35,8 +35,12 @@ namespace EventFly.DomainService
             _scope.Dispose();
         }
 
-        public async Task<TExecutionResult> PublishCommandAsync<TCommandIdentity, TExecutionResult>(ICommand<TCommandIdentity, TExecutionResult> command) where TCommandIdentity : IIdentity where TExecutionResult : IExecutionResult
+        public async Task<ExecutionResult> PublishCommandAsync<TCommandIdentity, TExecutionResult>(ICommand<TCommandIdentity, TExecutionResult> command) where TCommandIdentity : IIdentity where TExecutionResult : IExecutionResult
         {
+            var result = CommandValidationHelper.ValidateCommand(command, _serviceProvider);
+            if (!result.IsValid) return new FailedValidationExecutionResult(result);
+
+
             if (_pinnedEvent != null)
             {
                 command.Metadata.Merge(_pinnedEvent.Metadata);

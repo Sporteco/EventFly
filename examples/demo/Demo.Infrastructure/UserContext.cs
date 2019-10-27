@@ -11,6 +11,8 @@ using Demo.Domain.Services;
 using Demo.Infrastructure.ReadModels;
 using Demo.Application;
 using Demo.Infrastructure.QueryHandlers;
+using Demo.ValueObjects;
+using FluentValidation;
 
 namespace Demo.Infrastructure
 {
@@ -22,9 +24,9 @@ namespace Demo.Infrastructure
             RegisterCommand<CreateUserCommand>();
             RegisterCommand<RenameUserCommand>();
             RegisterQuery<UsersQuery, UsersResult>();
-            //RegisterQuery<User1Query, UsersResult>();
-            //RegisterQuery<User2Query, UsersResult>();
-            //RegisterQuery<EventPostersQuery, EventPosters>();
+            RegisterQuery<User1Query, UsersResult>();
+            RegisterQuery<User2Query, UsersResult>();
+            RegisterQuery<EventPostersQuery, EventPosters>();
             RegisterAggregateReadModel<UsersInfoReadModel, UserId>();
             RegisterReadModel<TotalUsersReadModel, TotalUsersReadModelManager>();
             RegisterSaga<TestSaga, TestSagaId>();
@@ -35,6 +37,10 @@ namespace Demo.Infrastructure
         public override IServiceCollection DI(IServiceCollection services) => services
             .AddScoped<TestSaga>()
             .AddScoped<IAggregateStorage<UserAggregate>, InMemoryAggregateStorage<UserAggregate>>()
+
+            .AddScoped<IValidator<UserName>,UserNameValidator>()
+            .AddScoped<IValidator<Birth>, BirthValidator>()
+            .AddScoped<IValidator<CreateUserCommand>, CreateUserCommandValidator>()
 
             .AddScoped<QueryHandler<UsersQuery, UsersResult>, UsersQueryHandler>()
             .AddScoped<QueryHandler<User1Query, UsersResult>, UsersQuery1Handler>()
