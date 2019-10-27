@@ -24,8 +24,6 @@ namespace Demo.Infrastructure
             RegisterCommand<CreateUserCommand>();
             RegisterCommand<RenameUserCommand>();
             RegisterQuery<UsersQuery, UsersResult>();
-            RegisterQuery<User1Query, UsersResult>();
-            RegisterQuery<User2Query, UsersResult>();
             RegisterQuery<EventPostersQuery, EventPosters>();
             RegisterAggregateReadModel<UsersInfoReadModel, UserId>();
             RegisterReadModel<TotalUsersReadModel, TotalUsersReadModelManager>();
@@ -43,8 +41,6 @@ namespace Demo.Infrastructure
             .AddScoped<IValidator<CreateUserCommand>, CreateUserCommandValidator>()
 
             .AddScoped<QueryHandler<UsersQuery, UsersResult>, UsersQueryHandler>()
-            .AddScoped<QueryHandler<User1Query, UsersResult>, UsersQuery1Handler>()
-            .AddScoped<QueryHandler<User2Query, UsersResult>, UsersQuery2Handler>()
             .AddScoped<QueryHandler<EventPostersQuery, EventPosters>, EventPostersQueryHandler>()
 
             .AddScoped<ReadModelHandler<TotalUsersReadModel>>()
@@ -53,4 +49,17 @@ namespace Demo.Infrastructure
             .AddSingleton<IReadModelStorage<UsersInfoReadModel>, InMemoryReadModelStorage<UsersInfoReadModel>>()
             .AddSingleton<IReadModelStorage<TotalUsersReadModel>, InMemoryReadModelStorage<TotalUsersReadModel>>();
     }
+    public class User2Context : ContextDefinition
+    {
+        public User2Context()
+        {
+            RegisterQuery<User1Query, UsersResult>();
+            RegisterQuery<User2Query, UsersResult>();
+        }
+
+        public override IServiceCollection DI(IServiceCollection services) => services
+            .AddScoped<QueryHandler<User1Query, UsersResult>, UsersQuery1Handler>()
+            .AddScoped<QueryHandler<User2Query, UsersResult>, UsersQuery2Handler>();
+    }
+
 }

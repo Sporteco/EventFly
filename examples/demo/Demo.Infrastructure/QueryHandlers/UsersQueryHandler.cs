@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using EventFly.Queries;
 using Demo.Queries;
@@ -30,7 +31,20 @@ namespace Demo.Infrastructure.QueryHandlers
     {
         public override Task<UsersResult> ExecuteQuery(User1Query query)
         {
-            throw new NotImplementedException();
+            var res =  new UsersResult(new List<UserInfo>
+            {
+                new UserInfo
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Name = "Name"
+                },
+                new UserInfo
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Name = "Name2"
+                }
+            },100);
+            return Task.FromResult(res);
         }
     }
 

@@ -40,6 +40,7 @@ namespace EventFly.Extensions
 
     public static class CommandValidationHelper
     {
+        //TODO: Async
         public static ValidationResult ValidateCommand(ICommand command, IServiceProvider serviceProvider)
         {
             //TODO: Reflection
@@ -48,6 +49,7 @@ namespace EventFly.Extensions
 
             if (validators.Any())
             {
+                //TODO: Parallel
                 foreach (var validator in validators)
                 {
                     var result = validator.Validate(command);

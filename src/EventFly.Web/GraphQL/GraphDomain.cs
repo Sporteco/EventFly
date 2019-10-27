@@ -16,7 +16,7 @@ namespace EventFly.GraphQL
     {
         private readonly IContextDefinition _domainDefinition;
         private readonly IServiceProvider _provider;
-        public Dictionary<string,Type> _handlers = new Dictionary<string, Type>();
+        private readonly Dictionary<string,Type> _handlers = new Dictionary<string, Type>();
 
         public GraphDomain(IContextDefinition domainDefinition, IServiceProvider provider)
         {
@@ -35,28 +35,30 @@ namespace EventFly.GraphQL
             return  new FieldType
             {
                 ResolvedType = new ObjectGraphTypeFromDomain(_domainDefinition, _provider),
-                Name = !_domainDefinition.Name.EndsWith("Context") ? _domainDefinition.Name : _domainDefinition.Name.Substring(0, _domainDefinition.Name.Length - "Context".Length),
+                Name = GetDomainName(_domainDefinition.Name),
                 Description = _domainDefinition.GetType().GetCustomAttribute<DescriptionAttribute>()?.Description,
                 Arguments = new QueryArguments(),
                 Resolver = new FuncFieldResolver<object>(Execute),
             };
         }
 
+        private string GetDomainName(string name)
+        {
+            return !name.EndsWith("Context") ? name : name.Substring(0, name.Length - "Context".Length);
+        }
+
 
         private Task<object> Execute(ResolveFieldContext context)
         {
-            foreach (var field in context.Operation.SelectionSet.Children.Cast<Field>())
+            foreach (var field in context.FieldAst.SelectionSet.Children.Cast<Field>())
             {
-                foreach (var child in field.SelectionSet.Children.Cast<Field>())
-                {
-                    var queryName = child.Name;
-                    
-                    var handler = GetQueryHandler(queryName);
-                    var f = handler.GetFieldType(true);
-                    
-                    var args = ExecutionHelper.GetArgumentValues(context.Schema,f.Arguments, child.Arguments, new Variables());
-                    return handler.ExecuteQuery(args);
-                }
+                var queryName = field.Name;
+
+                var handler = GetQueryHandler(queryName);
+                var f = handler.GetFieldType(true);
+                
+                var args = ExecutionHelper.GetArgumentValues(context.Schema,f.Arguments, field.Arguments, new Variables());
+                return handler.ExecuteQuery(args);
             }
 
             return null;
