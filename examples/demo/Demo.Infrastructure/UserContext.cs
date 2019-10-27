@@ -11,6 +11,7 @@ using Demo.Domain.Services;
 using Demo.Infrastructure.ReadModels;
 using Demo.Application;
 using Demo.Infrastructure.QueryHandlers;
+using FluentValidation;
 
 namespace Demo.Infrastructure
 {
@@ -52,7 +53,6 @@ namespace Demo.Infrastructure
         }
 
         public override IServiceCollection DI(IServiceCollection services) => services
-            .AddScoped<TestSaga>()
             .AddScoped<QueryHandler<User1Query, UsersResult>, UsersQuery1Handler>()
             .AddScoped<QueryHandler<User2Query, UsersResult>, UsersQuery2Handler>();
     }

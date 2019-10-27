@@ -5,6 +5,7 @@ using EventFly.Definitions;
 using EventFly.Validation;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace EventFly.DependencyInjection
 {
@@ -50,9 +51,8 @@ namespace EventFly.DependencyInjection
                 .Select(j => new {Type=i, j.ValidatorType})).Distinct();
             foreach (var item in validatorTypes)
             {
-                services.AddSingleton(typeof(IValidator<>).MakeGenericType(item.Type), item.ValidatorType);
+                services.TryAddSingleton(typeof(IValidator<>).MakeGenericType(item.Type), item.ValidatorType);
             }
-
         }
     }
 }
