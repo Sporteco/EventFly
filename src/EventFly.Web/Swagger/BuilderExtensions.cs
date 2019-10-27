@@ -42,6 +42,7 @@ namespace EventFly.Swagger
                 //c.OperationFilter<OperationFilter>();
                 c.OperationFilter<DescriptionFilter>();
                 c.SchemaFilter<ReadOnlyFilter>();
+                c.CustomSchemaIds(i => i.FullName);
                 var basePath = AppDomain.CurrentDomain.BaseDirectory;
                 var files = Directory.GetFiles(basePath, "*.xml");
                 foreach (var file in files)
