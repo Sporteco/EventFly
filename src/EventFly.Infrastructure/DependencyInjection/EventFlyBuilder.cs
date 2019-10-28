@@ -47,11 +47,18 @@ namespace EventFly.DependencyInjection
 
         private void RegisterValidatorsInAssembly(Assembly assembly, IServiceCollection services)
         {
-            var validatorTypes = assembly.GetTypes().SelectMany(i => i.GetCustomAttributes<ValidatorAttribute>()
-                .Select(j => new {Type=i, j.ValidatorType})).Distinct();
-            foreach (var item in validatorTypes)
+            try
             {
-                services.TryAddSingleton(typeof(IValidator<>).MakeGenericType(item.Type), item.ValidatorType);
+                var validatorTypes = assembly.GetTypes().SelectMany(i => i.GetCustomAttributes<ValidatorAttribute>()
+                    .Select(j => new { Type = i, j.ValidatorType })).Distinct();
+                foreach (var item in validatorTypes)
+                {
+                    services.TryAddSingleton(typeof(IValidator<>).MakeGenericType(item.Type), item.ValidatorType);
+                }
+            }
+            catch
+            {
+                //ignore
             }
         }
     }
