@@ -115,8 +115,8 @@ namespace EventFly.TestFixture.Aggregates
             {
                 if(command == null)
                     throw new NullReferenceException(nameof(command));
-                
-                CommandBus.Publish(command).GetAwaiter().GetResult();
+
+                CommandBus.Publish(command);
             }
 
             
@@ -133,8 +133,8 @@ namespace EventFly.TestFixture.Aggregates
             {
                 if(command == null)
                     throw new NullReferenceException(nameof(command));
-                
-                CommandBus.Publish(command).GetAwaiter().GetResult();
+
+                CommandBus.Publish(command);
             }
             
             return this;
