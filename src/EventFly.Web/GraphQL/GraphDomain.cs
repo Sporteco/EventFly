@@ -54,6 +54,8 @@ namespace EventFly.GraphQL
             {
                 var queryName = field.Name;
 
+                if (queryName.StartsWith("__")) continue;
+
                 var handler = GetQueryHandler(queryName);
                 var f = handler.GetFieldType(true);
                 

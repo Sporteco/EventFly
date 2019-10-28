@@ -116,9 +116,9 @@ namespace EventFly.TestFixture.Aggregates
                 if(command == null)
                     throw new NullReferenceException(nameof(command));
 
+  
                 CommandBus.Publish(command);
             }
-
             
             return this;
         }
