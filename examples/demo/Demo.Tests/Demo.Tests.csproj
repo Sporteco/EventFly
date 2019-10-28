@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\src\EventFly.TestFixture\EventFly.TestFixture.csproj" />
     <ProjectReference Include="..\Demo.Abstractions\Demo.Abstractions.csproj" />
     <ProjectReference Include="..\Demo.Application\Demo.Application.csproj" />
     <ProjectReference Include="..\Demo.Domain\Demo.Domain.csproj" />

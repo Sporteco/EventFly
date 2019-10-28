@@ -57,7 +57,7 @@ namespace EventFly.Tests.UnitTests.Aggregates
         {
             Sys.RegisterDependencyResolver(
                 new ServiceCollection()
-                .AddEventFly(Sys)
+                .AddTestEventFly(Sys)
                     .WithContext<TestContext>()
                     .Services
                 .AddScoped<TestSaga>()

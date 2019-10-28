@@ -7,6 +7,7 @@ using Demo.Infrastructure;
 using Demo.ValueObjects;
 using EventFly.Commands.ExecutionResults;
 using EventFly.DependencyInjection;
+using EventFly.TestFixture.Aggregates;
 using EventFly.TestFixture.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
@@ -21,7 +22,7 @@ namespace Demo.Tests
             : base(Configuration.Config, "dem-aggregate-tests", testOutputHelper)
         {
             new ServiceCollection()
-                .AddEventFly(Sys)
+                .AddTestEventFly(Sys)
                 .WithContext<UserContext>()
                 .Services
                 .BuildServiceProvider()

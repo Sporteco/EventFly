@@ -56,7 +56,7 @@ namespace EventFly.Tests.UnitTests.Fixtures
                 testKit
                     .Sys.RegisterDependencyResolver(
                         new ServiceCollection()
-                        .AddEventFly(testKit.Sys)
+                        .AddTestEventFly(testKit.Sys)
                             .WithContext<TestContext>()
                             .Services
                         .AddScoped<TestSaga>()
