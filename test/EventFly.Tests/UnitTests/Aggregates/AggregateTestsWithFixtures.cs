@@ -27,7 +27,6 @@ using System.ComponentModel;
 using System.Linq;
 using Akka.TestKit.Xunit2;
 using EventFly.Commands;
-using EventFly.Commands.ExecutionResults;
 using EventFly.TestFixture.Aggregates;
 using EventFly.TestFixture.Extensions;
 using EventFly.TestHelpers.Aggregates;

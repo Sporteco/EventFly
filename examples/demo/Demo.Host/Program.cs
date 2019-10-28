@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Akka.Actor;
 using EventFly.DependencyInjection;
 using Demo.Commands;
 using Demo.Queries;
