@@ -24,12 +24,9 @@ namespace Demo.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //Create actor system
-            var system = ActorSystem.Create("user-example");
-
             services
                 .AddSingleton("AAAA")
-                .AddEventFly(system)
+                .AddEventFly("user-example")
                     .WithContext<UserContext>()
                     .AddGraphQl()
                     .AddSwagger();

@@ -22,6 +22,15 @@ namespace EventFly.DependencyInjection
             return serviceProvider;
         }
 
+
+        public static EventFlyBuilder AddEventFly(
+            this IServiceCollection services, string systemName)
+        {
+            var actorSystem = ActorSystem.Create(systemName);
+
+            return services.AddEventFly(actorSystem);
+        }
+
         public static EventFlyBuilder AddEventFly(
             this IServiceCollection services,
             ActorSystem actorSystem)

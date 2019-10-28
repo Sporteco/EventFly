@@ -20,14 +20,12 @@ namespace Demo.Tests
         public DemoAggregateTests(ITestOutputHelper testOutputHelper)
             : base(Configuration.Config, "dem-aggregate-tests", testOutputHelper)
         {
-            Sys.RegisterDependencyResolver(
-                new ServiceCollection()
-                    .AddEventFly(Sys)
-                    .WithContext<UserContext>()
-                    .Services
-                    .BuildServiceProvider()
-                    .UseEventFly()
-            );
+            new ServiceCollection()
+                .AddEventFly(Sys)
+                .WithContext<UserContext>()
+                .Services
+                .BuildServiceProvider()
+                .UseEventFly();
         }
         [Fact]
         public void CreateEventCommandTest()
