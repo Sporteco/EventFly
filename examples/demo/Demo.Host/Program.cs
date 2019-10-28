@@ -20,14 +20,11 @@ namespace Demo.Host
             var aggregateId = UserId.New;
             var createUserAccountCommand = new CreateUserCommand(aggregateId, new UserName("userName"), new Birth(DateTime.Now));
 
-            //Create actor system
-            var system = ActorSystem.Create("user-example");
-
             var serviceProvider =
                  new ServiceCollection()
                      .AddSingleton("aa")
 
-                     .AddEventFly(system)
+                     .AddEventFly("user-example")
                         .WithContext<UserContext>()
                      .Services
                     .BuildServiceProvider();
@@ -36,10 +33,9 @@ namespace Demo.Host
                 .UseEventFly();
 
 
-            var holder = system.GetExtension<ServiceProviderHolder>();
 
-            var bus = holder.ServiceProvider.GetRequiredService<ICommandBus>();
-            var queryProcessor = holder.ServiceProvider.GetRequiredService<IQueryProcessor>();
+            var bus = serviceProvider.GetRequiredService<ICommandBus>();
+            var queryProcessor = serviceProvider.GetRequiredService<IQueryProcessor>();
 
             await bus.Publish(createUserAccountCommand);
 
@@ -51,8 +47,6 @@ namespace Demo.Host
 
             //block end of program
             Console.ReadLine();
-
-            system.Dispose();
 
             Console.ReadLine();
         }
