@@ -17,7 +17,8 @@ namespace EventFly.Localization
         [JsonConstructor]
         public LocalizedValueObject(params T[] locs)
         {
-            _locs.AddRange(locs);
+            if (locs != null)
+                _locs.AddRange(locs);
         }
 
         protected override IEnumerable<object> GetEqualityComponents()
