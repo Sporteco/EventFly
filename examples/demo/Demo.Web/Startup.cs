@@ -31,7 +31,6 @@ namespace Demo.Web
                 .AddSingleton("AAAA")
                 .AddEventFly(system)
                     .WithContext<UserContext>()
-                    .WithContext<User2Context>()
                     .AddGraphQl()
                     .AddSwagger();
 

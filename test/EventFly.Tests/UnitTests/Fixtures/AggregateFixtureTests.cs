@@ -43,7 +43,6 @@ namespace EventFly.Tests.UnitTests.Fixtures
                     .For(aggregateIdentity)
                     .GivenNothing();
 
-                fixture.AggregateRef.Path.Name.Should().Be(aggregateIdentity.Value);
                 fixture.AggregateId.Should().Be(aggregateIdentity);
             }
         }
@@ -72,7 +71,6 @@ namespace EventFly.Tests.UnitTests.Fixtures
 
                 fixture.Using(aggregateIdentity);
 
-                fixture.AggregateRef.Path.Name.Should().Be("aggregate-Test-manager");
                 fixture.AggregateId.Should().Be(aggregateIdentity);
             }
         }

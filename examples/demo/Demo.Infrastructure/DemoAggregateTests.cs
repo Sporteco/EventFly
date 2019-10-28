@@ -11,7 +11,6 @@ using Demo.Domain.Services;
 using Demo.Infrastructure.ReadModels;
 using Demo.Application;
 using Demo.Infrastructure.QueryHandlers;
-using FluentValidation;
 
 namespace Demo.Infrastructure
 {
@@ -19,6 +18,9 @@ namespace Demo.Infrastructure
     {
         public UserContext()
         {
+            RegisterQuery<User1Query, UsersResult>();
+            RegisterQuery<User2Query, UsersResult>();
+
             RegisterAggregate<UserAggregate, UserId>();
             RegisterCommand<CreateUserCommand>();
             RegisterCommand<RenameUserCommand>();
@@ -42,17 +44,7 @@ namespace Demo.Infrastructure
             .AddScoped<ReadModelHandler<UsersInfoReadModel>>()
 
             .AddSingleton<IReadModelStorage<UsersInfoReadModel>, InMemoryReadModelStorage<UsersInfoReadModel>>()
-            .AddSingleton<IReadModelStorage<TotalUsersReadModel>, InMemoryReadModelStorage<TotalUsersReadModel>>();
-    }
-    public class User2Context : ContextDefinition
-    {
-        public User2Context()
-        {
-            RegisterQuery<User1Query, UsersResult>();
-            RegisterQuery<User2Query, UsersResult>();
-        }
-
-        public override IServiceCollection DI(IServiceCollection services) => services
+            .AddSingleton<IReadModelStorage<TotalUsersReadModel>, InMemoryReadModelStorage<TotalUsersReadModel>>()
             .AddScoped<QueryHandler<User1Query, UsersResult>, UsersQuery1Handler>()
             .AddScoped<QueryHandler<User2Query, UsersResult>, UsersQuery2Handler>();
     }

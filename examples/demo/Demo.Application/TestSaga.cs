@@ -19,13 +19,6 @@ namespace Demo.Application
         ISagaIsStartedByAsync<UserId, UserCreatedEvent>,
         ISagaHandles<UserId,UserRenamedEvent>
     {
-        // ReSharper disable once NotAccessedField.Local
-        private readonly string _s;
-
-        public TestSaga(string s)
-        {
-            _s = s;
-        }
 
         public async Task HandleAsync(IDomainEvent<UserId, UserCreatedEvent> domainEvent)
         {

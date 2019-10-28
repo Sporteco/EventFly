@@ -22,7 +22,6 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
-using System.Linq;
 using Akka.Actor;
 using Akka.Persistence;
 using Akka.TestKit;
@@ -30,7 +29,6 @@ using EventFly.Aggregates;
 using EventFly.Aggregates.Snapshot;
 using EventFly.Commands;
 using EventFly.Core;
-using EventFly.Definitions;
 using EventFly.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using AkkaSnapshotMetadata = Akka.Persistence.SnapshotMetadata;
@@ -45,16 +43,17 @@ namespace EventFly.TestFixture.Aggregates
     {
         private readonly TestKitBase _testKit;
         public TIdentity AggregateId { get; private set; }
-        public IActorRef AggregateRef { get; private set; }
         public TestProbe AggregateEventTestProbe { get; private set; }
         public TestProbe AggregateReplyTestProbe { get; private set; }
-        public Props AggregateProps { get; private set; }
-        public bool UsesAggregateManager { get; private set; }
         public AggregateFixture(
             TestKitBase testKit)
         {
             _testKit = testKit;
         }
+        
+        private ICommandBus _commandBus;
+        public ICommandBus CommandBus => _commandBus ??= _testKit.Sys.GetExtension<ServiceProviderHolder>()
+            ?.ServiceProvider?.GetService<ICommandBus>();
 
 
         public IFixtureArranger<TAggregate, TIdentity> For(TIdentity aggregateId)
@@ -68,9 +67,6 @@ namespace EventFly.TestFixture.Aggregates
             AggregateId = aggregateId;
             AggregateEventTestProbe = _testKit.CreateTestProbe("aggregate-event-test-probe");
             AggregateReplyTestProbe = _testKit.CreateTestProbe("aggregate-reply-test-probe");
-            AggregateProps = Props.Create<TAggregate>(args: aggregateId);
-            AggregateRef = ActorRefs.Nobody;
-            UsesAggregateManager = false;
             
             return this;
         }
@@ -87,20 +83,12 @@ namespace EventFly.TestFixture.Aggregates
             AggregateId = aggregateId;
             AggregateEventTestProbe = _testKit.CreateTestProbe("aggregate-event-test-probe");
             AggregateReplyTestProbe = _testKit.CreateTestProbe("aggregate-reply-test-probe");
-            AggregateRef = _testKit.Sys.GetExtension<ServiceProviderHolder>()
-                .ServiceProvider.GetRequiredService<IDefinitionToManagerRegistry>()
-                .DefinitionToAggregateManager.FirstOrDefault(a => a.Key.IdentityType == (typeof(TIdentity))).Value;
-            UsesAggregateManager = false;
-            AggregateProps = Props.Empty;
             
             return this;
         }
 
         public IFixtureExecutor<TAggregate, TIdentity> GivenNothing()
         {
-            if (!UsesAggregateManager && AggregateRef.IsNobody())
-                AggregateRef = _testKit.Sys.ActorOf(AggregateProps, AggregateId.Value);
-
             return this;
         }
 
@@ -123,35 +111,30 @@ namespace EventFly.TestFixture.Aggregates
             if(commands == null)
                 throw new ArgumentNullException(nameof(commands));
 
-            if (!UsesAggregateManager && AggregateRef.IsNobody())
-                AggregateRef = _testKit.Sys.ActorOf(AggregateProps, AggregateId.Value);
-
             foreach (var command in commands)
             {
                 if(command == null)
                     throw new NullReferenceException(nameof(command));
                 
-                AggregateRef.Tell(command, AggregateReplyTestProbe);
+                CommandBus.Publish(command).GetAwaiter().GetResult();
             }
+
             
             return this;
         }
-
+        
         public IFixtureAsserter<TAggregate, TIdentity> When(params ICommand[] commands)
         {
 
             if(commands == null)
                 throw new ArgumentNullException(nameof(commands));
 
-            if(!UsesAggregateManager && AggregateRef.IsNobody())
-                AggregateRef = _testKit.Sys.ActorOf(AggregateProps, AggregateId.Value);
-
             foreach (var command in commands)
             {
                 if(command == null)
                     throw new NullReferenceException(nameof(command));
                 
-                AggregateRef.Tell(command, AggregateReplyTestProbe);
+                CommandBus.Publish(command).GetAwaiter().GetResult();
             }
             
             return this;

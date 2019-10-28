@@ -29,7 +29,6 @@ namespace Demo.Host
 
                      .AddEventFly(system)
                         .WithContext<UserContext>()
-                        .WithContext<User2Context>()
                      .Services
                     .BuildServiceProvider();
 
