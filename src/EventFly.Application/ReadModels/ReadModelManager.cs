@@ -41,7 +41,7 @@ namespace EventFly.ReadModels
 
         protected virtual bool Dispatch(IDomainEvent domainEvent)
         {
-            Logger.Info("QueryManager of Type={0}; has received a domain event of Type={1}", Name, typeof(TReadModel).PrettyPrint());
+            Logger.Info("ReadModelManager of Type={0}; has received a domain event of Type={1}", Name, typeof(TReadModel).PrettyPrint());
 
             var readModelId = GetReadModelId(domainEvent);
             var aggregateRef = FindOrCreate(readModelId);
@@ -56,7 +56,7 @@ namespace EventFly.ReadModels
 
         protected virtual bool ReDispatch(IDomainEvent domainEvent)
         {
-            Logger.Info("QueryManager of Type={0}; is ReDispatching deadletter of Type={1}", Name, typeof(TReadModel).PrettyPrint());
+            Logger.Info("ReadModelManager of Type={0}; is ReDispatching deadletter of Type={1}", Name, typeof(TReadModel).PrettyPrint());
 
             var readModelId = GetReadModelId(domainEvent);
             var aggregateRef = FindOrCreate(readModelId);
@@ -112,7 +112,7 @@ namespace EventFly.ReadModels
                 localOnlyDecider: x =>
                 {
 
-                    logger.Warning("QueryManager of Type={0}; will supervise Exception={1} to be decided as {2}.",Name, x.ToString(), Directive.Restart);
+                    logger.Warning("ReadModelManager of Type={0}; will supervise Exception={1} to be decided as {2}.",Name, x.ToString(), Directive.Restart);
                     return Directive.Restart;
                 });
         }
