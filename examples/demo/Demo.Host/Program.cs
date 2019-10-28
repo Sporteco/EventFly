@@ -17,7 +17,7 @@ namespace Demo.Host
         public static async Task Main()
         {
             var aggregateId = UserId.New;
-            var createUserAccountCommand = new CreateUserCommand(aggregateId, new UserName("userName"), new Birth(DateTime.Now));
+            var createUserAccountCommand = new CreateUserCommand(aggregateId, new UserName(("userName","ru")), new Birth(DateTime.Now));
 
             var serviceProvider =
                  new ServiceCollection()
@@ -38,8 +38,8 @@ namespace Demo.Host
 
             await bus.Publish(createUserAccountCommand);
 
-            await bus.Publish(new RenameUserCommand(aggregateId, new UserName("TEST")));
-            await bus.Publish(new CreateUserCommand(UserId.New, new UserName("userName2"), new Birth(DateTime.Today)));
+            await bus.Publish(new RenameUserCommand(aggregateId, new UserName(("TEST","en"))));
+            await bus.Publish(new CreateUserCommand(UserId.New, new UserName(("userName2","ru")), new Birth(DateTime.Today)));
 
             var res = await queryProcessor.Process(new UsersQuery());
             Console.WriteLine(res?.Items.First().Name);

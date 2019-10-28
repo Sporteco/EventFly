@@ -23,7 +23,7 @@ namespace Demo.Domain.Services
     {
         public Task HandleAsync(IDomainEvent<UserId, UserCreatedEvent> domainEvent)
         {
-            return PublishCommandAsync(new RenameUserCommand(domainEvent.AggregateIdentity, new UserName("test")));
+            return PublishCommandAsync(new RenameUserCommand(domainEvent.AggregateIdentity, new UserName(("test", "ru"))));
         }
 
         public bool Handle(IDomainEvent<UserId, UserRenamedEvent> domainEvent)

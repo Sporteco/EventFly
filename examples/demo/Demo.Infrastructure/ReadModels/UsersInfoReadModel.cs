@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using EventFly.Aggregates;
 using EventFly.ReadModels;
 using Demo.Events;
@@ -16,14 +17,14 @@ namespace Demo.Infrastructure.ReadModels
         public void Apply(IDomainEvent<UserId, UserCreatedEvent> domainEvent)
         {
             Version = domainEvent.Metadata.EventVersion;
-            UserName = domainEvent.AggregateEvent.Name.Value;
+            UserName = domainEvent.AggregateEvent.Name.Locs.FirstOrDefault()?.Value;
             Birth = domainEvent.AggregateEvent.Birth.Value;
         }
 
         public void Apply(IDomainEvent<UserId, UserRenamedEvent> domainEvent)
         {
             Version = domainEvent.Metadata.EventVersion;
-            UserName = domainEvent.AggregateEvent.NewName.Value;
+            UserName = domainEvent.AggregateEvent.NewName.Locs.FirstOrDefault()?.Value;
         }
     }
 }

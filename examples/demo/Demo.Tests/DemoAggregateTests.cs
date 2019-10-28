@@ -33,7 +33,7 @@ namespace Demo.Tests
         {
 
             var aggregateId = UserId.New;
-            var cmd = new CreateUserCommand(aggregateId, new UserName("Test"), new Birth(DateTime.Today));
+            var cmd = new CreateUserCommand(aggregateId, new UserName(("Test", "ru")), new Birth(DateTime.Today));
             
 
             this.FixtureFor<UserAggregate, UserId>(aggregateId)
