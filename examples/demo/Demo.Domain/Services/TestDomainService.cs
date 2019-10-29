@@ -1,22 +1,15 @@
-﻿using System;
-using System.Threading.Tasks;
 using Demo.Commands;
 using Demo.Events;
 using Demo.ValueObjects;
 using EventFly.Aggregates;
 using EventFly.Core;
 using EventFly.DomainService;
-
+using System;
+using System.Threading.Tasks;
 
 namespace Demo.Domain.Services
 {
-    public class TestDomainServiceId : Identity<TestDomainServiceId>
-    {
-        public TestDomainServiceId(string value) : base(value)
-        {
-        }
-    }
-    public class TestDomainService : DomainService<TestDomainService,TestDomainServiceId>,
+    public class TestDomainService : DomainService<TestDomainService, TestDomainServiceId>,
         IDomainServiceIsStartedByAsync<UserId, UserCreatedEvent>,
         IDomainServiceHandles<UserId, UserRenamedEvent>
 
@@ -26,10 +19,12 @@ namespace Demo.Domain.Services
             return PublishCommandAsync(new RenameUserCommand(domainEvent.AggregateIdentity, new UserName("test")));
         }
 
-        public bool Handle(IDomainEvent<UserId, UserRenamedEvent> domainEvent)
+        public Boolean Handle(IDomainEvent<UserId, UserRenamedEvent> domainEvent)
         {
             Console.Write("OK");
             return true;
         }
     }
+
+    public class TestDomainServiceId : Identity<TestDomainServiceId> { public TestDomainServiceId(String value) : base(value) { } }
 }
