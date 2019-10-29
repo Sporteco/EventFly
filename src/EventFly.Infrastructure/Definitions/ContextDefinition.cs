@@ -135,7 +135,7 @@ namespace EventFly.Definitions
 
             _services.Add(
                 new DomainServiceDefinition(typeof(TService), typeof(TService),
-                    new DomainServiceManagerDefinition(typeof(TService), typeof(TServiceId), typeof(DomainServiceLocatorByIdentity<TServiceId>))
+                    new DomainServiceManagerDefinition(typeof(TService), typeof(TServiceId), typeof(DomainServiceLocator<TServiceId>))
                 )
             );
             return this;

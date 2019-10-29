@@ -7,7 +7,7 @@ using System.Reflection;
 
 namespace EventFly.Domain
 {
-    public class DomainServiceLocatorByIdentity<TIdentity> : IDomainServiceLocator<TIdentity>
+    public class DomainServiceLocator<TIdentity> : IDomainServiceLocator<TIdentity>
         where TIdentity : IIdentity
     {
         public TIdentity LocateDomainService(IDomainEvent domainEvent)
