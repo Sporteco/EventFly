@@ -28,6 +28,10 @@ namespace Demo.Domain.Aggregates
         }
         public IExecutionResult Execute(CreateUserCommand cmd)
         {
+            SecurityContext.Authorized();
+
+            SecurityContext.HasPermissions(cmd.AggregateId, DemoContext.TestUserPermission);
+
             Emit(new UserCreatedEvent(cmd.UserName, cmd.Birth));
             return ExecutionResult.Success();
         }

@@ -22,6 +22,7 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
+using System.Threading.Tasks;
 using Akka.Actor;
 using Akka.Persistence;
 using Akka.TestKit;
@@ -130,8 +131,9 @@ namespace EventFly.TestFixture.Aggregates
                 if(command == null)
                     throw new NullReferenceException(nameof(command));
 
-  
-                CommandBus.Publish(command).GetAwaiter().GetResult();
+                var result = CommandBus.Publish(command).GetAwaiter().GetResult();
+                AggregateReplyTestProbe.Tell(result);
+
             }
             
             return this;
@@ -148,7 +150,8 @@ namespace EventFly.TestFixture.Aggregates
                 if(command == null)
                     throw new NullReferenceException(nameof(command));
 
-                CommandBus.Publish(command).GetAwaiter().GetResult();
+                var result = CommandBus.Publish(command).GetAwaiter().GetResult();
+                AggregateReplyTestProbe.Tell(result);
             }
             
             return this;

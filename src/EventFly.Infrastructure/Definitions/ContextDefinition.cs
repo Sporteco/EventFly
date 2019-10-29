@@ -7,6 +7,7 @@ using EventFly.Commands;
 using EventFly.Core;
 using EventFly.DomainService;
 using EventFly.Jobs;
+using EventFly.Permissions;
 using EventFly.Queries;
 using EventFly.ReadModels;
 using EventFly.Sagas;

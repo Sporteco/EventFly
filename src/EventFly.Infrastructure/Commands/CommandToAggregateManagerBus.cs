@@ -27,20 +27,22 @@ namespace EventFly.Commands
 
         public Task<IExecutionResult> Publish(ICommand command) => PublishInternal(command);
 
-        private Task<IExecutionResult> PublishInternal(ICommand command)
+        protected virtual Task<IExecutionResult> PublishInternal(ICommand command)
         {
-            var validators = _serviceProvider.GetServices<ICommandValidator>();
-            foreach (var validator in validators.OrderBy(i=>i.Priority))
+            try
             {
-                var result = validator.Validate(command);
-                if (!result.IsValid) return Task.FromResult((IExecutionResult)new FailedValidationExecutionResult(result));
+                var validators = _serviceProvider.GetServices<ICommandValidator>();
+                foreach (var validator in validators.OrderBy(i => i.Priority))
+                {
+                    var result = validator.Validate(command);
+                    if (!result.IsValid) return Task.FromResult((IExecutionResult) new FailedValidationExecutionResult(result));
+                }
             }
-            return DoPublish(command);
-        }
+            catch (UnauthorizedAccessException)
+            {
+                return Task.FromResult((IExecutionResult) new UnauthorizedAccessResult());
+            }
 
-
-        protected virtual Task<IExecutionResult> DoPublish(ICommand command)
-        {
             return GetAggregateManager(command.GetAggregateId().GetType()).Ask<IExecutionResult>(command, new TimeSpan?());
         }
 

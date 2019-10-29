@@ -35,12 +35,14 @@ using Akka.Persistence;
 using EventFly.Aggregates.Snapshot;
 using EventFly.Aggregates.Snapshot.Strategies;
 using EventFly.Commands;
+using EventFly.Commands.ExecutionResults;
 using EventFly.Core;
 using EventFly.Definitions;
 using EventFly.DependencyInjection;
 using EventFly.Exceptions;
 using EventFly.Extensions;
 using EventFly.Metadata;
+using EventFly.Permissions;
 using Microsoft.Extensions.DependencyInjection;
 using SnapshotMetadata = EventFly.Aggregates.Snapshot.SnapshotMetadata;
 
@@ -71,6 +73,8 @@ namespace EventFly.Aggregates
 
         protected readonly IServiceProvider _serviceProvider;
         protected IServiceScope _scope;
+
+        public ISecurityContext SecurityContext { get; private set; }
 
 
         protected EventSourcedAggregateRoot(TIdentity id)
@@ -518,8 +522,15 @@ namespace EventFly.Aggregates
                 Command(x =>
                 {
                     var handler = _scope.ServiceProvider.GetService<TCommandHandler>() ?? (TCommandHandler)Activator.CreateInstance(typeof(TCommandHandler));
-                    var result = handler.Handle(this as TAggregate, x);
-                    Context.Sender.Tell(result);
+                    try
+                    {
+                        var result = handler.Handle(this as TAggregate, x);
+                        Context.Sender.Tell(result);
+                    }
+                    catch (UnauthorizedAccessException)
+                    {
+                        Context.Sender.Tell(new UnauthorizedAccessResult());
+                    }
                 },shouldHandle);
             }
             catch (Exception exception)
@@ -533,11 +544,17 @@ namespace EventFly.Aggregates
             where TCommand : ICommand<TIdentity>
         {
             Command(x =>
-            {
-                var result = handler(x);
-                Context.Sender.Tell(result);
+                {
+                    var result = handler(x);
+                    Context.Sender.Tell(result);
 
-            }, (Predicate<TCommand>)null);
+                },
+                (Predicate<TCommand>) (command =>
+                {
+                    string userId = command.Metadata.ContainsKey(MetadataKeys.UserId) ? command.Metadata?.UserId : null;
+                    SecurityContext = new SecurityContext(userId, _serviceProvider.GetService<ISecurityService>());
+                    return true;
+                }));
         }
         
     }

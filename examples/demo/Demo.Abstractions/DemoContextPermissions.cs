@@ -9,5 +9,9 @@ namespace Demo
 
         [Description("Изменение пользователя")]
         public const string ChangeUser = "Demo:ChangeUser";
+
+        public const string TestPermission = "Demo:TestPermission";
+        public const string TestUserPermission = "Demo:TestUserPermission";
+
     }
 }

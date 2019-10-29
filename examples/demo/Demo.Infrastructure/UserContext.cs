@@ -11,6 +11,7 @@ using Demo.Domain.Services;
 using Demo.Infrastructure.ReadModels;
 using Demo.Application;
 using Demo.Infrastructure.QueryHandlers;
+using EventFly.Permissions;
 
 namespace Demo.Infrastructure
 {
@@ -20,6 +21,8 @@ namespace Demo.Infrastructure
         {
             RegisterPermission(DemoContext.CreateUser);
             RegisterPermission<UserId>(DemoContext.ChangeUser);
+            RegisterPermission(DemoContext.TestPermission);
+            RegisterPermission<UserId>(DemoContext.TestUserPermission);
 
             RegisterQuery<User1Query, UsersResult>();
             RegisterQuery<User2Query, UsersResult>();
@@ -49,7 +52,8 @@ namespace Demo.Infrastructure
             .AddSingleton<IReadModelStorage<UsersInfoReadModel>, InMemoryReadModelStorage<UsersInfoReadModel>>()
             .AddSingleton<IReadModelStorage<TotalUsersReadModel>, InMemoryReadModelStorage<TotalUsersReadModel>>()
             .AddScoped<QueryHandler<User1Query, UsersResult>, UsersQuery1Handler>()
-            .AddScoped<QueryHandler<User2Query, UsersResult>, UsersQuery2Handler>();
-    }
+            .AddScoped<QueryHandler<User2Query, UsersResult>, UsersQuery2Handler>()
 
+            .AddSingleton<IPermissionProvider,PermissionProvider>();
+    }
 }

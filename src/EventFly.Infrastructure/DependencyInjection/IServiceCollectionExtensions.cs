@@ -6,6 +6,7 @@ using EventFly.Queries;
 using EventFly.Schedulers;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using EventFly.Permissions;
 
 namespace EventFly.DependencyInjection
 {
@@ -48,6 +49,8 @@ namespace EventFly.DependencyInjection
             services.AddTransient<IEventsScheduler, JobEventsScheduler>();
 
             services.AddSingleton<ICommandValidator, DefaultCommandValidator>();
+            services.AddSingleton<ICommandValidator, PermissionCommandValidator>();
+            services.AddSingleton<ISecurityService, SecurityService>();
 
             return new EventFlyBuilder(services);
         }

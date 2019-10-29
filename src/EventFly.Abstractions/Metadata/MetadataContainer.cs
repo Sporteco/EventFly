@@ -110,7 +110,7 @@ namespace EventFly.Metadata
         }
         public string UserId
         {
-            get => GetMetadataValue(MetadataKeys.UserId);
+            get => ContainsKey(MetadataKeys.UserId) ? GetMetadataValue(MetadataKeys.UserId) : null;
             set => AddOrUpdateValue(MetadataKeys.UserId, value);
         }
 

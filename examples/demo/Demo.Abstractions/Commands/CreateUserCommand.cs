@@ -10,7 +10,7 @@ using FluentValidation;
 namespace Demo.Commands
 {
     [Description("Создание нового пользователя")]
-    [HasPermissions(DemoContext.CreateUser, DemoContext.ChangeUser)]
+    [HasPermissions(DemoContext.CreateUser,DemoContext.ChangeUser)]
     [Validator(typeof(CreateUserCommandValidator))]
     public class CreateUserCommand : Command<UserId>
     {

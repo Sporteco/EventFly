@@ -1,9 +1,10 @@
 ﻿
 using System;
+using EventFly.ValueObjects;
 
-namespace EventFly.Definitions
+namespace EventFly.Permissions
 {
-    internal class PermissionDefinition : IPermissionDefinition
+    public class PermissionDefinition : ValueObject, IPermissionDefinition
     {
         public PermissionDefinition(string permissionCode)
         {
@@ -19,6 +20,5 @@ namespace EventFly.Definitions
 
         public string PermissionCode { get; }
 
-        public override int GetHashCode() => PermissionCode.GetHashCode() + (TargetAggregateType == null ? 0 : TargetAggregateType.GetHashCode());
     }
 }

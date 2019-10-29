@@ -2,12 +2,10 @@ using System;
 using Akka.TestKit.Xunit2;
 using Demo.Commands;
 using Demo.Domain.Aggregates;
-using Demo.Events;
 using Demo.Infrastructure;
 using Demo.ValueObjects;
 using EventFly.Commands.ExecutionResults;
 using EventFly.DependencyInjection;
-using EventFly.TestFixture.Aggregates;
 using EventFly.TestFixture.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
@@ -22,7 +20,7 @@ namespace Demo.Tests
             : base(Configuration.Config, "dem-aggregate-tests", testOutputHelper)
         {
             new ServiceCollection()
-                .AddTestEventFly(Sys)
+                .AddEventFly(Sys)
                 .WithContext<UserContext>()
                 .Services
                 .BuildServiceProvider()
@@ -40,8 +38,8 @@ namespace Demo.Tests
             this.FixtureFor<UserAggregate, UserId>(aggregateId)
                 .Given(cmd)
                 .When(cmd)
-                .ThenExpect<UserCreatedEvent>(e => e.Name != null && e.Name == cmd.UserName)
-                .ThenExpectReply<ExecutionResult>(x => x.IsSuccess);
+                //.ThenExpect<UserCreatedEvent>(e => e.Name != null && e.Name == cmd.UserName)
+                .ThenExpectReply<UnauthorizedAccessResult>(x => !x.IsSuccess);
 
         }
     }
