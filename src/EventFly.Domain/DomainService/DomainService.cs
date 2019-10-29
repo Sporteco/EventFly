@@ -24,7 +24,13 @@ namespace EventFly.DomainService
         {
             Logger = Context.GetLogger();
 
-            _serviceProvider = Context.System.GetExtension<ServiceProviderHolder>().ServiceProvider;
+            var serviceProviderHolder = Context.System.GetExtension<ServiceProviderHolder>();
+            if (serviceProviderHolder == null)
+            {
+                //todo Get rid of ServiceLocator anti-pattern?
+                throw new ArgumentNullException("ServiceProviderHolder", "Implicit argument wasn't found in ActorContext.");
+            }
+            _serviceProvider = serviceProviderHolder.ServiceProvider;
 
             _settings = new DomainServiceSettings(Context.System.Settings.Config);
             var idValue = Context.Self.Path.Name;
