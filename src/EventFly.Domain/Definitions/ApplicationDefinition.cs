@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using EventFly.Domain;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace EventFly.Definitions

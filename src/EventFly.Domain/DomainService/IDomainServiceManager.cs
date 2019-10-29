@@ -1,11 +1,10 @@
 ﻿using EventFly.Core;
 
-namespace EventFly.DomainService
+namespace EventFly.Domain
 {
-    public interface IDomainServiceManager<TDomainService, TIdentity, TDomainServiceLocator> 
+    public interface IDomainServiceManager<TDomainService, TIdentity, TDomainServiceLocator>
         where TDomainService : IDomainService<TIdentity>
         where TIdentity : IIdentity
         where TDomainServiceLocator : class, IDomainServiceLocator<TIdentity>, new()
-    {
-    }
+    { }
 }

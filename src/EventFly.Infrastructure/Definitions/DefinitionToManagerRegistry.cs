@@ -2,7 +2,7 @@
 using System.Linq;
 using Akka.Actor;
 using EventFly.Aggregates;
-using EventFly.DomainService;
+using EventFly.Domain;
 using EventFly.Extensions;
 using EventFly.Jobs;
 using EventFly.Queries;

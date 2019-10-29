@@ -5,7 +5,7 @@ using EventFly.Aggregates;
 using EventFly.Aggregates.Snapshot;
 using EventFly.Commands;
 using EventFly.Core;
-using EventFly.DomainService;
+using EventFly.Domain;
 using EventFly.Extensions;
 using EventFly.Jobs;
 using EventFly.Queries;

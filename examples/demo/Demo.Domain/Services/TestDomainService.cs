@@ -3,7 +3,7 @@ using Demo.Events;
 using Demo.ValueObjects;
 using EventFly.Aggregates;
 using EventFly.Core;
-using EventFly.DomainService;
+using EventFly.Domain;
 using System;
 using System.Threading.Tasks;
 

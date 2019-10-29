@@ -1,50 +1,53 @@
-﻿using System;
+﻿using EventFly.Aggregates;
+using EventFly.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using EventFly.Aggregates;
-using EventFly.Core;
 
-namespace EventFly.DomainService
+namespace EventFly.Domain
 {
-    public class DomainServiceLocatorByIdentity<TIdentity> : IDomainServiceLocator<TIdentity> where TIdentity : IIdentity
+    public class DomainServiceLocatorByIdentity<TIdentity> : IDomainServiceLocator<TIdentity>
+        where TIdentity : IIdentity
     {
-        public TIdentity LocateService(IDomainEvent domainEvent)
+        public TIdentity LocateDomainService(IDomainEvent domainEvent)
         {
-            return FindSagaIdInMetadata(domainEvent.Metadata.CorrellationIds, domainEvent.GetIdentity());
+            return FindDomainServiceIdInMetadata(domainEvent.Metadata.CorrellationIds, domainEvent.GetIdentity());
         }
 
-        private TIdentity FindSagaIdInMetadata(IReadOnlyCollection<string> metadataSagaIds, IIdentity getIdentity)
+        private TIdentity FindDomainServiceIdInMetadata(IReadOnlyCollection<String> metadataDomainServiceIds, IIdentity id)
         {
-            var sagaPrefix = GetSagaPrefix<TIdentity>();
-            var sagaId = metadataSagaIds.FirstOrDefault(i => i.StartsWith(sagaPrefix + "-"));
+            var domainServicePrefix = GetDomainServicePrefix<TIdentity>();
+            var domainServiceId = metadataDomainServiceIds.FirstOrDefault(i => i.StartsWith(domainServicePrefix + "-"));
 
-            return sagaId == null ? CreateNewIdentity<TIdentity>(getIdentity) : CreateIdentity<TIdentity>(sagaId);
-        }
-
-        //TODO: remove reflection
-        private string GetSagaPrefix<T>() where T : TIdentity
-        {
-            return (string)typeof(TIdentity)
-                .GetProperty(nameof(EmptyIdentity.IdentityPrefix), BindingFlags.Public | BindingFlags.Static |  BindingFlags.FlattenHierarchy)?.GetValue(null,new object[]{});
+            return domainServiceId == null ? CreateNewIdentity<TIdentity>(id) : CreateIdentity<TIdentity>(domainServiceId);
         }
 
         //TODO: remove reflection
-        private TIdentity CreateIdentity<T>(string id) where T : TIdentity
+        private String GetDomainServicePrefix<T>() where T : TIdentity
+        {
+            return (String)typeof(TIdentity)
+                .GetProperty(nameof(EmptyIdentity.IdentityPrefix), BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)?
+                .GetValue(null, Array.Empty<Object>());
+        }
+
+        //TODO: remove reflection
+        private TIdentity CreateIdentity<T>(String id) where T : TIdentity
         {
             return (TIdentity)typeof(TIdentity)
-                .GetMethods(BindingFlags.Public | BindingFlags.Static |  BindingFlags.FlattenHierarchy)
+                .GetMethods(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)
                 .FirstOrDefault(i => i.Name == nameof(EmptyIdentity.With) && i.GetParameters().Any(p => p.ParameterType.Name.Contains("String")))
-                ?.Invoke(null,new object[]{id});
+                ?.Invoke(null, new Object[] { id });
         }
+
         //TODO: remove reflection
-        private TIdentity CreateNewIdentity<T>(IIdentity getIdentity) where T : TIdentity
+        private TIdentity CreateNewIdentity<T>(IIdentity id) where T : TIdentity
         {
-            var guid = Guid.Parse(getIdentity.Value.Substring(getIdentity.Value.IndexOf('-')+1));
+            var guid = Guid.Parse(id.Value.Substring(id.Value.IndexOf('-') + 1));
             return (TIdentity)typeof(TIdentity)
-                .GetMethods(BindingFlags.Public | BindingFlags.Static |  BindingFlags.FlattenHierarchy)
+                .GetMethods(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)
                 .FirstOrDefault(i => i.Name == nameof(EmptyIdentity.With) && i.GetParameters().Any(p => p.ParameterType.Name.Contains("Guid")))
-                ?.Invoke(null,new object[]{guid});
+                ?.Invoke(null, new Object[] { guid });
         }
     }
 }

@@ -33,7 +33,7 @@ using System.Reflection;
 using EventFly.Aggregates;
 using EventFly.Aggregates.Snapshot;
 using EventFly.Core;
-using EventFly.DomainService;
+using EventFly.Domain;
 using EventFly.Events;
 using EventFly.Exceptions;
 using EventFly.Subscribers;

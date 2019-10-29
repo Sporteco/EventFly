@@ -1,23 +1,17 @@
 ﻿using System;
 
-namespace EventFly.Definitions
+namespace EventFly.Domain
 {
     public class DomainServiceDefinition : IDomainServiceDefinition
     {
-
         public Type Type { get; }
-
         public Type IdentityType { get; }
-
         public IDomainServiceManagerDefinition ManagerDefinition { get; }
 
-        public DomainServiceDefinition(
-            Type aggregateType,
-            Type queryIdentity,
-            IDomainServiceManagerDefinition managerDefinition)
+        public DomainServiceDefinition(Type type, Type identityType, IDomainServiceManagerDefinition managerDefinition)
         {
-            Type = aggregateType;
-            IdentityType = queryIdentity;
+            Type = type;
+            IdentityType = identityType;
             ManagerDefinition = managerDefinition;
         }
     }

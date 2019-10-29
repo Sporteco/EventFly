@@ -14,12 +14,14 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace EventFly.DomainService
+namespace EventFly.Domain
 {
     public abstract class DomainService<TDomainService, TIdentity> : ReceiveActor, IDomainService<TIdentity>
         where TDomainService : DomainService<TDomainService, TIdentity>
         where TIdentity : IIdentity
     {
+        public TIdentity Id { get; }
+
         protected DomainService()
         {
             Logger = Context.GetLogger();
@@ -69,34 +71,22 @@ namespace EventFly.DomainService
             return await bus.Publish(command);
         }
 
-        public TIdentity Id { get; }
-
         public void InitReceives()
         {
             var type = GetType();
 
-            var subscriptionTypes =
-                type
-                    .GetDomainServiceEventSubscriptionTypes();
-
+            var subscriptionTypes = type.GetDomainServiceEventSubscriptionTypes();
 
             var methods = type
                 .GetTypeInfo()
                 .GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
                 .Where(mi =>
                 {
-                    if (mi.Name != "Handle")
-                        return false;
-
+                    if (mi.Name != "Handle") return false;
                     var parameters = mi.GetParameters();
-
-                    return
-                        parameters.Length == 1;
+                    return parameters.Length == 1;
                 })
-                .ToDictionary(
-                    mi => mi.GetParameters()[0].ParameterType,
-                    mi => mi);
-
+                .ToDictionary(mi => mi.GetParameters()[0].ParameterType, mi => mi);
 
             var method = type
                 .GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
@@ -125,27 +115,18 @@ namespace EventFly.DomainService
         {
             var type = GetType();
 
-            var subscriptionTypes =
-                type
-                    .GetAsyncDomainEventSubscriberSubscriptionTypes();
+            var subscriptionTypes = type.GetAsyncDomainEventSubscriberSubscriptionTypes();
 
             var methods = type
                 .GetTypeInfo()
                 .GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
                 .Where(mi =>
                 {
-                    if (mi.Name != "HandleAsync")
-                        return false;
-
+                    if (mi.Name != "HandleAsync") return false;
                     var parameters = mi.GetParameters();
-
-                    return
-                        parameters.Length == 1;
+                    return parameters.Length == 1;
                 })
-                .ToDictionary(
-                    mi => mi.GetParameters()[0].ParameterType,
-                    mi => mi);
-
+                .ToDictionary(mi => mi.GetParameters()[0].ParameterType, mi => mi);
 
             var method = type
                 .GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)

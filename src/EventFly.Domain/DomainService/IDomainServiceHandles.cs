@@ -1,13 +1,15 @@
-﻿using System.Threading.Tasks;
-using EventFly.Aggregates;
+﻿using EventFly.Aggregates;
 using EventFly.Core;
-namespace EventFly.DomainService
+using System;
+using System.Threading.Tasks;
+
+namespace EventFly.Domain
 {
-    public interface IDomainServiceHandles<in TIdentity, in TAggregateEvent> 
+    public interface IDomainServiceHandles<in TIdentity, in TAggregateEvent>
         where TAggregateEvent : class, IAggregateEvent<TIdentity>
         where TIdentity : IIdentity
     {
-        bool Handle(IDomainEvent<TIdentity, TAggregateEvent> domainEvent);
+        Boolean Handle(IDomainEvent<TIdentity, TAggregateEvent> domainEvent);
     }
 
     public interface IDomainServiceHandlesAsync<in TIdentity, in TAggregateEvent>
