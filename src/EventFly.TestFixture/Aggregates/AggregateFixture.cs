@@ -124,7 +124,7 @@ namespace EventFly.TestFixture.Aggregates
                 tasks.Add(CommandBus.Publish(command));
             }
 
-            Task.WaitAll(tasks.ToArray());
+            Task.WaitAll(tasks.ToArray(), TimeSpan.FromSeconds(3));
 
             var failedExecutionsResults = tasks.Where(t => t.Result is FailedExecutionResult)
                 .Select(t => (FailedExecutionResult)t.Result);
