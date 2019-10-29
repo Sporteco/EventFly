@@ -80,8 +80,6 @@ namespace EventFly.Tests.UnitTests.Aggregates
                 .When(new AddTestCommand(aggregateId, commandId, new Test(testId)))
                 .ThenExpect<TestAddedEvent>(x => x.Test.Id == testId)
                 .ThenExpectReply<IExecutionResult>(x => x.IsSuccess);
-
-
         }
 
         [Fact]
@@ -149,6 +147,19 @@ namespace EventFly.Tests.UnitTests.Aggregates
                     this.FixtureFor<TestAggregate, TestAggregateId>(aggregateId)
                         .Given(commands.ToArray()))
                 .Should().Throw<NullReferenceException>();
+        }
+
+        [Fact]
+        [Category(Category)]
+        public void BadGivenCommands_AfterAggregateCreation_ExceptionThrown()
+        {
+            var aggregateId = TestAggregateId.New;
+            var commandId = CommandId.New;
+
+            this.Invoking(test =>
+                    this.FixtureFor<TestAggregate, TestAggregateId>(aggregateId)
+                        .Given(new BadCommand(aggregateId, commandId)))
+                .Should().Throw<InvalidOperationException>();
         }
 
         [Fact]

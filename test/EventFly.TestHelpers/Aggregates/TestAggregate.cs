@@ -22,6 +22,7 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Akka.Persistence;
 using EventFly.Aggregates;
@@ -51,7 +52,8 @@ namespace EventFly.TestHelpers.Aggregates
         IExecute<PublishTestStateCommand,TestAggregateId>,
         IExecute<TestDomainErrorCommand,TestAggregateId>,
         IExecute<TestFailedExecutionResultCommand,TestAggregateId>,
-        IExecute<TestSuccessExecutionResultCommand,TestAggregateId>
+        IExecute<TestSuccessExecutionResultCommand,TestAggregateId>,
+        IExecute<BadCommand, ITestExecutionResult, TestAggregateId>
     {
         public int TestErrors { get; private set; }
         public TestAggregate(TestAggregateId aggregateId)
@@ -273,6 +275,11 @@ namespace EventFly.TestHelpers.Aggregates
             where TAggregateEvent : class, IAggregateEvent<TestAggregateId>
         {
             Signal(aggregateEvent, metadata);
+        }
+
+        public ITestExecutionResult Execute(BadCommand command)
+        {
+            return new FailedTestExecutionResult(command.Metadata.SourceId, new List<string> { "Test cause"});
         }
     }
 }
