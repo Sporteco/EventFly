@@ -85,7 +85,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventFly.Infrastructure", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventFly.Extensions", "src\EventFly.Extensions\EventFly.Extensions.csproj", "{D30C1043-A11C-49B5-83FA-160C9163B6F1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo.Tests", "examples\demo\Demo.Tests\Demo.Tests.csproj", "{2856E2EC-B58B-4F51-8100-80CA52B52DEB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demo.Tests", "examples\demo\Demo.Tests\Demo.Tests.csproj", "{2856E2EC-B58B-4F51-8100-80CA52B52DEB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

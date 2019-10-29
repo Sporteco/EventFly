@@ -22,18 +22,15 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Akka.Actor;
 using Akka.Persistence;
 using Akka.TestKit;
 using EventFly.Aggregates;
 using EventFly.Aggregates.Snapshot;
 using EventFly.Commands;
-using EventFly.Commands.ExecutionResults;
 using EventFly.Core;
 using EventFly.DependencyInjection;
+using EventFly.Exceptions;
 using Microsoft.Extensions.DependencyInjection;
 using AkkaSnapshotMetadata = Akka.Persistence.SnapshotMetadata;
 using SnapshotMetadata = EventFly.Aggregates.Snapshot.SnapshotMetadata;
@@ -53,10 +50,24 @@ namespace EventFly.TestFixture.Aggregates
         {
             _testKit = testKit;
         }
+        
+        private ICommandBus _commandBus;
+        public ICommandBus CommandBus
+        {
+            get
+            {
+                if (_commandBus == null)
+                {
+                    _commandBus =  _testKit.Sys.GetExtension<ServiceProviderHolder>()?.ServiceProvider?.GetService<ICommandBus>();
+                    if (_commandBus != null && _commandBus is TestCommandBus tcb)
+                    {
+                        tcb.SetSender(AggregateReplyTestProbe);
+                    }
+                }
 
-        private ITestCommandBus _commandBus;
-        public ITestCommandBus CommandBus => _commandBus ??= _testKit.Sys.GetExtension<ServiceProviderHolder>()
-            ?.ServiceProvider?.GetService<ITestCommandBus>();
+                return _commandBus;
+            }
+        }
 
 
         public IFixtureArranger<TAggregate, TIdentity> For(TIdentity aggregateId)
@@ -113,24 +124,26 @@ namespace EventFly.TestFixture.Aggregates
         {
             if (commands == null)
                 throw new ArgumentNullException(nameof(commands));
-
-            var tasks = new List<Task<IExecutionResult>>();
+            if (CommandBus is TestCommandBus tcb)
+            {
+                tcb.SetSender(null);
+            }
 
             foreach (var command in commands)
             {
                 if (command == null)
                     throw new NullReferenceException(nameof(command));
 
-                tasks.Add(CommandBus.Publish(command));
+                var result = CommandBus.Publish(command).GetAwaiter().GetResult();
+                if (!result.IsSuccess)
+                    throw new InvalidOperationException($"Given Command {command.GetType().PrettyPrint()} failed.");
+
             }
-
-            Task.WaitAll(tasks.ToArray(), TimeSpan.FromSeconds(3));
-
-            var failedExecutionsResults = tasks.Where(t => t.Result is FailedExecutionResult)
-                .Select(t => (FailedExecutionResult)t.Result);
-
-            if (failedExecutionsResults.Any())
-                throw new InvalidOperationException($"Can't initialize Given conditions\nErrors:\n{string.Join("\n", failedExecutionsResults.SelectMany(e => e.Errors))}");
+            
+            if (CommandBus is TestCommandBus tcb2)
+            {
+                tcb2.SetSender(AggregateReplyTestProbe);
+            }
 
             return this;
         }
@@ -146,7 +159,8 @@ namespace EventFly.TestFixture.Aggregates
                 if (command == null)
                     throw new NullReferenceException(nameof(command));
 
-                CommandBus.Publish(command, AggregateReplyTestProbe);
+                var result = CommandBus.Publish(command).GetAwaiter().GetResult();
+                AggregateReplyTestProbe.Tell(result);
             }
 
             return this;

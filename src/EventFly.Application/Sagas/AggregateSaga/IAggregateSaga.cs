@@ -37,8 +37,8 @@ namespace EventFly.Sagas.AggregateSaga
     public interface IAggregateSaga<out TIdentity> : IAggregateRoot<TIdentity>, ISaga
         where TIdentity : IIdentity
     {
-        Task<ExecutionResult> PublishCommandAsync<TCommandIdentity, TExecutionResult>(ICommand<TCommandIdentity, TExecutionResult> command)
-            where TCommandIdentity : IIdentity where TExecutionResult : IExecutionResult;
+        Task<IExecutionResult> PublishCommandAsync<TCommandIdentity>(ICommand<TCommandIdentity> command)
+            where TCommandIdentity : IIdentity;
 
     }
 }

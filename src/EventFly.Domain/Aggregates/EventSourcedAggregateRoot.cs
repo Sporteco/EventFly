@@ -42,6 +42,7 @@ using EventFly.DependencyInjection;
 using EventFly.Exceptions;
 using EventFly.Extensions;
 using EventFly.Metadata;
+using EventFly.Permissions;
 using Microsoft.Extensions.DependencyInjection;
 using SnapshotMetadata = EventFly.Aggregates.Snapshot.SnapshotMetadata;
 
@@ -72,6 +73,8 @@ namespace EventFly.Aggregates
 
         protected readonly IServiceProvider _serviceProvider;
         protected IServiceScope _scope;
+
+        public ISecurityContext SecurityContext { get; private set; }
 
 
         protected EventSourcedAggregateRoot(TIdentity id)
@@ -205,7 +208,7 @@ namespace EventFly.Aggregates
                     EventVersion = eventDefinition.Version
                 };
 
-                eventMetadata.AddValue(MetadataKeys.TimestampEpoch, now.ToUnixTime().ToString());
+                eventMetadata.AddOrUpdateValue(MetadataKeys.TimestampEpoch, now.ToUnixTime().ToString());
                 if (metadata != null)
                 {
                     eventMetadata.AddRange(metadata);
@@ -254,7 +257,7 @@ namespace EventFly.Aggregates
                 EventVersion = eventDefinition.Version
             };
 
-            eventMetadata.AddValue(MetadataKeys.TimestampEpoch, now.ToUnixTime().ToString());
+            eventMetadata.AddOrUpdateValue(MetadataKeys.TimestampEpoch, now.ToUnixTime().ToString());
             if (metadata != null)
             {
                 eventMetadata.AddRange(metadata);
@@ -511,24 +514,23 @@ namespace EventFly.Aggregates
         }
         
         protected void Command<TCommand, TCommandHandler>(Predicate<TCommand> shouldHandle = null)
-            where TCommand : ICommand<TIdentity, IExecutionResult>
-            where TCommandHandler : CommandHandler<TAggregate, TIdentity, IExecutionResult, TCommand>
-        {
-            Command<TCommand, IExecutionResult, TCommandHandler>(shouldHandle);
-        }
-
-        protected void Command<TCommand, TResult, TCommandHandler>(Predicate<TCommand> shouldHandle = null)
-            where TCommand : ICommand<TIdentity, TResult>
-            where TCommandHandler : CommandHandler<TAggregate, TIdentity,TResult, TCommand>
-            where TResult : IExecutionResult
+            where TCommand : ICommand<TIdentity>
+            where TCommandHandler : CommandHandler<TAggregate, TIdentity, TCommand>
         {
             try
             {
                 Command(x =>
                 {
                     var handler = _scope.ServiceProvider.GetService<TCommandHandler>() ?? (TCommandHandler)Activator.CreateInstance(typeof(TCommandHandler));
-                    var result = handler.Handle(this as TAggregate, x);
-                    Context.Sender.Tell(result);
+                    try
+                    {
+                        var result = handler.Handle(this as TAggregate, x);
+                        Context.Sender.Tell(result);
+                    }
+                    catch (UnauthorizedAccessException)
+                    {
+                        Context.Sender.Tell(new UnauthorizedAccessResult());
+                    }
                 },shouldHandle);
             }
             catch (Exception exception)
@@ -539,15 +541,20 @@ namespace EventFly.Aggregates
         }
         
         protected void Command<TCommand, TResult>(Func<TCommand,TResult> handler)
-            where TCommand : ICommand<TIdentity, TResult>
-            where TResult : IExecutionResult
+            where TCommand : ICommand<TIdentity>
         {
             Command(x =>
-            {
-                var result = handler(x);
-                Context.Sender.Tell(result);
+                {
+                    var result = handler(x);
+                    Context.Sender.Tell(result);
 
-            }, (Predicate<TCommand>)null);
+                },
+                (Predicate<TCommand>) (command =>
+                {
+                    string userId = command.Metadata.ContainsKey(MetadataKeys.UserId) ? command.Metadata?.UserId : null;
+                    SecurityContext = new SecurityContext(userId, _serviceProvider.GetService<ISecurityService>());
+                    return true;
+                }));
         }
         
     }

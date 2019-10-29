@@ -7,6 +7,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 using EventFly.Commands;
+using EventFly.Commands.ExecutionResults;
 using EventFly.Definitions;
 using EventFly.Queries;
 using Microsoft.AspNetCore.Mvc.Abstractions;
@@ -123,40 +124,39 @@ namespace EventFly.Swagger
                     var type = allDefinition.Type;
                     var name = allDefinition.Name;
                     var str = "api/" + allDefinition.Name + "/" + allDefinition.Version;
-                    var subclassOfRawGeneric = ReflectionExtensions.GetSubclassOfRawGeneric(typeof(Command<,>), type);
+                    var subclassOfRawGeneric = ReflectionExtensions.GetSubclassOfRawGeneric(typeof(Command<>), type);
                     if (!(subclassOfRawGeneric == null))
                     {
-                        var genericArgument = subclassOfRawGeneric.GetGenericArguments()[1];
                         var apiDescription1 = new ApiDescription();
                         var apiDescription2 = apiDescription1;
                         var actionDescriptor1 = new ControllerActionDescriptor();
                         actionDescriptor1.ActionConstraints = new List<IActionConstraintMetadata>
-            {
-                new HttpMethodActionConstraint(new[]
-                {
-                    "POST"
-                })
-            };
+                        {
+                            new HttpMethodActionConstraint(new[]
+                            {
+                                "POST"
+                            })
+                        };
                         actionDescriptor1.ActionName = name;
                         actionDescriptor1.ControllerName = domain.Name;
                         actionDescriptor1.DisplayName = allDefinition.Name;
                         actionDescriptor1.Parameters = new List<ParameterDescriptor>
-            {
-                new ParameterDescriptor
-                {
-                    Name = "request",
-                    ParameterType = type
-                }
-            };
+                        {
+                            new ParameterDescriptor
+                            {
+                                Name = "request",
+                                ParameterType = type
+                            }
+                        };
                         actionDescriptor1.MethodInfo = new CustomMethodInfo(name, type);
                         actionDescriptor1.ControllerTypeInfo = type.GetTypeInfo();
                         actionDescriptor1.RouteValues = new Dictionary<string, string>
-            {
-                {
-                    "controller",
-                    domain.Name
-                }
-            };
+                        {
+                            {
+                                "controller",
+                                domain.Name
+                            }
+                        };
                         var actionDescriptor2 = actionDescriptor1;
                         apiDescription2.ActionDescriptor = actionDescriptor2;
                         apiDescription1.HttpMethod = "PUT";
@@ -164,10 +164,10 @@ namespace EventFly.Swagger
                         apiDescription1.SupportedResponseTypes.Add(new ApiResponseType
                         {
                             StatusCode = 200,
-                            Type = genericArgument
+                            Type = typeof(IExecutionResult)
                         });
                         var apiDescription3 = apiDescription1;
-                        ((List<ApiParameterDescription>)apiDescription3.ParameterDescriptions).Add(new ApiParameterDescription
+                        ((List<ApiParameterDescription>) apiDescription3.ParameterDescriptions).Add(new ApiParameterDescription
                         {
                             Name = "request",
                             Type = type,

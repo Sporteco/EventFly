@@ -35,20 +35,16 @@ namespace EventFly.DomainService
             _scope.Dispose();
         }
 
-        public async Task<ExecutionResult> PublishCommandAsync<TCommandIdentity, TExecutionResult>(ICommand<TCommandIdentity, TExecutionResult> command) where TCommandIdentity : IIdentity where TExecutionResult : IExecutionResult
+        public async Task<IExecutionResult> PublishCommandAsync<TCommandIdentity>(ICommand<TCommandIdentity> command) where TCommandIdentity : IIdentity 
         {
-            var result = CommandValidationHelper.ValidateCommand(command, _serviceProvider);
-            if (!result.IsValid) return new FailedValidationExecutionResult(result);
-
-
             if (_pinnedEvent != null)
             {
                 command.Metadata.Merge(_pinnedEvent.Metadata);
             }
 
-            if (!command.Metadata.CorrellationIds.Contains(Id.Value))
+            if (!command.Metadata.CorrelationIds.Contains(Id.Value))
             {
-                command.Metadata.CorrellationIds = new List<string>(command.Metadata.CorrellationIds) { Id.Value };
+                command.Metadata.CorrelationIds = new List<string>(command.Metadata.CorrelationIds) { Id.Value };
             }
 
             var bus = _scope.ServiceProvider.GetRequiredService<ICommandBus>();

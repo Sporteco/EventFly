@@ -32,20 +32,12 @@ using EventFly.Core;
 
 namespace EventFly.Commands
 {
-    public abstract class CommandHandler<TAggregate, TIdentity,TResult,TCommand> :
-        ICommandHandler<TAggregate, TIdentity,TResult, TCommand>
+    public abstract class CommandHandler<TAggregate, TIdentity,TCommand> :
+        ICommandHandler<TAggregate, TIdentity, TCommand>
         where TAggregate : ActorBase, IAggregateRoot<TIdentity>
         where TIdentity : IIdentity
-        where TCommand : ICommand<TIdentity,TResult>
-        where TResult : IExecutionResult
+        where TCommand : ICommand<TIdentity>
     {
-        public abstract TResult Handle(TAggregate aggregate, TCommand command);
+        public abstract IExecutionResult Handle(TAggregate aggregate, TCommand command);
     }
-
-    public abstract class CommandHandler<TAggregate, TIdentity,TCommand> : CommandHandler<TAggregate, TIdentity,IExecutionResult,TCommand>
-        where TAggregate : ActorBase, IAggregateRoot<TIdentity>
-        where TIdentity : IIdentity
-        where TCommand : ICommand<TIdentity,IExecutionResult>
-    {}
-
 }

@@ -25,7 +25,7 @@ using EventFly.Commands;
 
 namespace EventFly.TestHelpers.Aggregates.Commands
 {
-    public sealed class BadCommand : Command<TestAggregateId, ITestExecutionResult>
+    public sealed class BadCommand : Command<TestAggregateId>
     {
         public BadCommand(TestAggregateId aggregateId, CommandId sourceId) : base(aggregateId, new CommandMetadata(sourceId))
         {

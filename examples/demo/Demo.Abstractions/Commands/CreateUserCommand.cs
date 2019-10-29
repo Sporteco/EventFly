@@ -3,12 +3,14 @@ using System.ComponentModel;
 using EventFly.Commands;
 using Demo.ValueObjects;
 using EventFly.Localization;
+using EventFly.Security;
 using EventFly.Validation;
 using FluentValidation;
 
 namespace Demo.Commands
 {
     [Description("Создание нового пользователя")]
+    [HasPermissions(DemoContext.CreateUser,DemoContext.ChangeUser)]
     [Validator(typeof(CreateUserCommandValidator))]
     public class CreateUserCommand : Command<UserId>
     {

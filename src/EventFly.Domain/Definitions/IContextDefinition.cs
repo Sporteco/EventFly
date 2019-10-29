@@ -5,6 +5,7 @@
 // Assembly location: C:\Users\naych\source\repos\!!!!!\netcoreapp2.2\EventFly.dll
 
 using System.Collections.Generic;
+using EventFly.Permissions;
 
 namespace EventFly.Definitions
 {
@@ -19,6 +20,7 @@ namespace EventFly.Definitions
         IReadOnlyCollection<ISagaDefinition> Sagas { get; }
         IReadOnlyCollection<IJobDefinition> Jobs { get; }
         IReadOnlyCollection<IDomainServiceDefinition> DomainServices { get; }
+        IReadOnlyCollection<IPermissionDefinition> Permissions { get; }
 
         EventDefinitions Events { get; }
 

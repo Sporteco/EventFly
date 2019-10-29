@@ -50,6 +50,11 @@ namespace EventFly.Commands.ExecutionResults
                 : "Failed execution";
         }
     }
+    public class UnauthorizedAccessResult : ExecutionResult
+    {
+        public override bool IsSuccess { get; } = false;
+
+    }
 
     public class FailedValidationExecutionResult : FailedExecutionResult
     {
