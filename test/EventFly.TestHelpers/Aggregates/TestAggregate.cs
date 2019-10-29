@@ -53,7 +53,7 @@ namespace EventFly.TestHelpers.Aggregates
         IExecute<TestDomainErrorCommand,TestAggregateId>,
         IExecute<TestFailedExecutionResultCommand,TestAggregateId>,
         IExecute<TestSuccessExecutionResultCommand,TestAggregateId>,
-        IExecute<BadCommand, ITestExecutionResult, TestAggregateId>
+        IExecute<BadCommand, TestAggregateId>
     {
         public int TestErrors { get; private set; }
         public TestAggregate(TestAggregateId aggregateId)
@@ -277,7 +277,7 @@ namespace EventFly.TestHelpers.Aggregates
             Signal(aggregateEvent, metadata);
         }
 
-        public ITestExecutionResult Execute(BadCommand command)
+        public IExecutionResult Execute(BadCommand command)
         {
             return new FailedTestExecutionResult(command.Metadata.SourceId, new List<string> { "Test cause"});
         }

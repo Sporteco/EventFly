@@ -22,16 +22,15 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
-using System.Threading.Tasks;
 using Akka.Actor;
 using Akka.Persistence;
 using Akka.TestKit;
 using EventFly.Aggregates;
 using EventFly.Aggregates.Snapshot;
 using EventFly.Commands;
-using EventFly.Commands.ExecutionResults;
 using EventFly.Core;
 using EventFly.DependencyInjection;
+using EventFly.Exceptions;
 using Microsoft.Extensions.DependencyInjection;
 using AkkaSnapshotMetadata = Akka.Persistence.SnapshotMetadata;
 using SnapshotMetadata = EventFly.Aggregates.Snapshot.SnapshotMetadata;
@@ -125,8 +124,10 @@ namespace EventFly.TestFixture.Aggregates
         {
             if (commands == null)
                 throw new ArgumentNullException(nameof(commands));
-
-            var tasks = new List<Task<IExecutionResult>>();
+            if (CommandBus is TestCommandBus tcb)
+            {
+                tcb.SetSender(null);
+            }
 
             foreach (var command in commands)
             {
@@ -134,10 +135,16 @@ namespace EventFly.TestFixture.Aggregates
                     throw new NullReferenceException(nameof(command));
 
                 var result = CommandBus.Publish(command).GetAwaiter().GetResult();
-                AggregateReplyTestProbe.Tell(result);
+                if (!result.IsSuccess)
+                    throw new InvalidOperationException($"Given Command {command.GetType().PrettyPrint()} failed.");
 
             }
             
+            if (CommandBus is TestCommandBus tcb2)
+            {
+                tcb2.SetSender(AggregateReplyTestProbe);
+            }
+
             return this;
         }
 
