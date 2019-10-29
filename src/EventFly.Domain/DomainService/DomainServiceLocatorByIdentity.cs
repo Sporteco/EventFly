@@ -11,7 +11,7 @@ namespace EventFly.DomainService
     {
         public TIdentity LocateService(IDomainEvent domainEvent)
         {
-            return FindSagaIdInMetadata(domainEvent.Metadata.CorrellationIds, domainEvent.GetIdentity());
+            return FindSagaIdInMetadata(domainEvent.Metadata.CorrelationIds, domainEvent.GetIdentity());
         }
 
         private TIdentity FindSagaIdInMetadata(IReadOnlyCollection<string> metadataSagaIds, IIdentity getIdentity)

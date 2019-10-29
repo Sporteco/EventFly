@@ -34,23 +34,23 @@ namespace EventFly.Commands
         public ISourceId SourceId
         {
             get { return GetMetadataValue(MetadataKeys.SourceId, v => new SourceId(v)); }
-            set => AddValue(MetadataKeys.SourceId, value.Value);
+            private set => AddOrUpdateValue(MetadataKeys.SourceId, value.Value);
         }
 
         [JsonIgnore]
         public string CorrelationId
         {
             get => GetMetadataValue(MetadataKeys.CorrelationId);
-            set => AddValue(MetadataKeys.CorrelationId, value);
+            set => AddOrUpdateValue(MetadataKeys.CorrelationId, value);
         }
 
         [JsonIgnore]
-        public IReadOnlyCollection<string> CorrellationIds
+        public IReadOnlyCollection<string> CorrelationIds
         {
-            get => ContainsKey(MetadataKeys.SagaIds) ? 
-                (IReadOnlyCollection<string>) GetMetadataValue(MetadataKeys.SagaIds)?.Split(',') : 
+            get => ContainsKey(MetadataKeys.CorrelationIds) ? 
+                (IReadOnlyCollection<string>) GetMetadataValue(MetadataKeys.CorrelationIds)?.Split(',') : 
                 new List<string>().AsReadOnly();
-            set => AddValue(MetadataKeys.SagaIds, value == null ? "" : string.Join(",",value));
+            set => AddOrUpdateValue(MetadataKeys.CorrelationIds, value == null ? "" : string.Join(",",value));
         }
     }
 }

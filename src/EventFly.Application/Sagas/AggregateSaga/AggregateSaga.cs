@@ -76,19 +76,16 @@ namespace EventFly.Sagas.AggregateSaga
             _scope.Dispose();
         }
 
-        public async Task<ExecutionResult> PublishCommandAsync<TCommandIdentity, TExecutionResult>(ICommand<TCommandIdentity, TExecutionResult> command) where TCommandIdentity : IIdentity where TExecutionResult : IExecutionResult
+        public async Task<IExecutionResult> PublishCommandAsync<TCommandIdentity>(ICommand<TCommandIdentity> command) where TCommandIdentity : IIdentity  
         {
-            var result = CommandValidationHelper.ValidateCommand(command, _serviceProvider);
-            if (!result.IsValid) return new FailedValidationExecutionResult(result);
-
             if (PinnedEvent != null)
             {
                 command.Metadata.Merge(PinnedEvent.Metadata);
             }
 
-            if (!command.Metadata.CorrellationIds.Contains(Id.Value))
+            if (!command.Metadata.CorrelationIds.Contains(Id.Value))
             {
-                command.Metadata.CorrellationIds = new List<string>(command.Metadata.CorrellationIds) { Id.Value };
+                command.Metadata.CorrelationIds = new List<string>(command.Metadata.CorrelationIds) { Id.Value };
             }
 
             var bus = _scope.ServiceProvider.GetRequiredService<ICommandBus>();
@@ -336,7 +333,7 @@ namespace EventFly.Sagas.AggregateSaga
                     EventVersion = eventDefinition.Version
                 };
 
-                eventMetadata.AddValue(MetadataKeys.TimestampEpoch, now.ToUnixTime().ToString());
+                eventMetadata.AddOrUpdateValue(MetadataKeys.TimestampEpoch, now.ToUnixTime().ToString());
                 if (metadata != null)
                 {
                     eventMetadata.AddRange(metadata);
@@ -403,7 +400,7 @@ namespace EventFly.Sagas.AggregateSaga
                 EventName = eventDefinition.Name,
                 EventVersion = eventDefinition.Version
             };
-            eventMetadata.AddValue(MetadataKeys.TimestampEpoch, now.ToUnixTime().ToString());
+            eventMetadata.AddOrUpdateValue(MetadataKeys.TimestampEpoch, now.ToUnixTime().ToString());
             if (metadata != null)
             {
                 eventMetadata.AddRange(metadata);

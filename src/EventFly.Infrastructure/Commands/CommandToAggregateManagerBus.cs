@@ -6,14 +6,14 @@ using EventFly.Exceptions;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using EventFly.Extensions;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace EventFly.Commands
 {
-    public sealed class CommandToAggregateManagerBus : ICommandBus
+    public class CommandToAggregateManagerBus : ICommandBus
     {
         private readonly IDefinitionToManagerRegistry _definitionToManagerRegistry;
-        private readonly IServiceProvider _serviceProvider;
+        protected readonly IServiceProvider _serviceProvider;
 
         public CommandToAggregateManagerBus(IDefinitionToManagerRegistry definitionToManagerRegistry, IServiceProvider serviceProvider)
         {
@@ -21,28 +21,30 @@ namespace EventFly.Commands
             _serviceProvider = serviceProvider;
         }
 
-        public async Task<ExecutionResult> Publish<TExecutionResult, TIdentity>(ICommand<TIdentity, TExecutionResult> command)
-            where TExecutionResult : IExecutionResult
+        public Task<IExecutionResult> Publish<TIdentity>(ICommand<TIdentity> command)
             where TIdentity : IIdentity
+            => PublishInternal(command);
+
+        public Task<IExecutionResult> Publish(ICommand command) => PublishInternal(command);
+
+        private Task<IExecutionResult> PublishInternal(ICommand command)
         {
-            var result = CommandValidationHelper.ValidateCommand(command, _serviceProvider);
-            if (!result.IsValid) return new FailedValidationExecutionResult(result);
-
-            var commandResult = await GetAggregateManager(typeof(TIdentity)).Ask<ExecutionResult>(command, new TimeSpan?());
-            return commandResult;
-        }
-        
-
-
-        public async Task<IExecutionResult> Publish(ICommand command)
-        {
-            var result = CommandValidationHelper.ValidateCommand(command, _serviceProvider);
-            if (!result.IsValid) return new FailedValidationExecutionResult(result);
-
-            return await GetAggregateManager(command.GetAggregateId().GetType()).Ask<IExecutionResult>(command, new TimeSpan?());
+            var validators = _serviceProvider.GetServices<ICommandValidator>();
+            foreach (var validator in validators.OrderBy(i=>i.Priority))
+            {
+                var result = validator.Validate(command);
+                if (!result.IsValid) return Task.FromResult((IExecutionResult)new FailedValidationExecutionResult(result));
+            }
+            return DoPublish(command);
         }
 
-        private IActorRef GetAggregateManager(Type type)
+
+        protected virtual Task<IExecutionResult> DoPublish(ICommand command)
+        {
+            return GetAggregateManager(command.GetAggregateId().GetType()).Ask<IExecutionResult>(command, new TimeSpan?());
+        }
+
+        protected IActorRef GetAggregateManager(Type type)
         {
             var manager = _definitionToManagerRegistry.DefinitionToAggregateManager.FirstOrDefault(i =>
             {
@@ -57,4 +59,5 @@ namespace EventFly.Commands
         }
 
     }
+
 }

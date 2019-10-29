@@ -57,28 +57,28 @@ namespace EventFly.Aggregates
         public ISourceId SourceId
         {
             get { return GetMetadataValue(MetadataKeys.SourceId, v => new SourceId(v)); }
-            set => AddValue(MetadataKeys.SourceId, value.Value);
+            set => AddOrUpdateValue(MetadataKeys.SourceId, value.Value);
         }
 
         [JsonIgnore]
         public string EventName
         {
             get => GetMetadataValue(MetadataKeys.EventName);
-            set => AddValue(MetadataKeys.EventName, value);
+            set => AddOrUpdateValue(MetadataKeys.EventName, value);
         }
 
         [JsonIgnore]
         public int EventVersion
         {
             get => GetMetadataValue(MetadataKeys.EventVersion, int.Parse);
-            set => AddValue(MetadataKeys.EventVersion, value.ToString());
+            set => AddOrUpdateValue(MetadataKeys.EventVersion, value.ToString());
         }
 
         [JsonIgnore]
         public DateTimeOffset Timestamp
         {
             get => GetMetadataValue(MetadataKeys.Timestamp, DateTimeOffset.Parse);
-            set => AddValue(MetadataKeys.Timestamp, value.ToString("O"));
+            set => AddOrUpdateValue(MetadataKeys.Timestamp, value.ToString("O"));
         }
 
         [JsonIgnore]
@@ -99,30 +99,30 @@ namespace EventFly.Aggregates
         public long AggregateSequenceNumber
         {
             get => GetMetadataValue(MetadataKeys.AggregateSequenceNumber, int.Parse);
-            set => AddValue(MetadataKeys.AggregateSequenceNumber, value.ToString());
+            set => AddOrUpdateValue(MetadataKeys.AggregateSequenceNumber, value.ToString());
         }
 
         [JsonIgnore]
         public string AggregateId
         {
             get => GetMetadataValue(MetadataKeys.AggregateId);
-            set => AddValue(MetadataKeys.AggregateId, value);
+            set => AddOrUpdateValue(MetadataKeys.AggregateId, value);
         }
         
         [JsonIgnore]
         public string CorrelationId
         {
             get => GetMetadataValue(MetadataKeys.CorrelationId);
-            set => AddValue(MetadataKeys.CorrelationId, value);
+            set => AddOrUpdateValue(MetadataKeys.CorrelationId, value);
         }
 
         [JsonIgnore]
-        public IReadOnlyCollection<string> CorrellationIds
+        public IReadOnlyCollection<string> CorrelationIds
         {
-            get => ContainsKey(MetadataKeys.SagaIds) ? 
-                (IReadOnlyCollection<string>) GetMetadataValue(MetadataKeys.SagaIds)?.Split(',') : 
+            get => ContainsKey(MetadataKeys.CorrelationIds) ? 
+                (IReadOnlyCollection<string>) GetMetadataValue(MetadataKeys.CorrelationIds)?.Split(',') : 
                 new List<string>().AsReadOnly();
-            set => AddValue(MetadataKeys.SagaIds, value == null ? "" : string.Join(",",value));
+            set => AddOrUpdateValue(MetadataKeys.CorrelationIds, value == null ? "" : string.Join(",",value));
         }
 
 
@@ -130,21 +130,21 @@ namespace EventFly.Aggregates
         public string CausationId
         {
             get => GetMetadataValue(MetadataKeys.CausationId);
-            set => AddValue(MetadataKeys.CausationId, value);
+            set => AddOrUpdateValue(MetadataKeys.CausationId, value);
         }
 
         [JsonIgnore]
         public IEventId EventId
         {
             get => GetMetadataValue(MetadataKeys.EventId, Aggregates.EventId.With);
-            set => AddValue(MetadataKeys.EventId, value.Value);
+            set => AddOrUpdateValue(MetadataKeys.EventId, value.Value);
         }
 
         [JsonIgnore]
         public string AggregateName
         {
             get => GetMetadataValue(MetadataKeys.AggregateName);
-            set => AddValue(MetadataKeys.AggregateName, value);
+            set => AddOrUpdateValue(MetadataKeys.AggregateName, value);
         }
 
         public EventMetadata()

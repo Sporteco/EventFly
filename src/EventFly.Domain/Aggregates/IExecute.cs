@@ -32,15 +32,10 @@ namespace EventFly.Aggregates
         
     }
     
-    public interface IExecute<in TCommand, out TResult,TIdentity> : IExecute
-        where TCommand : ICommand<TIdentity, TResult>
+    public interface IExecute<in TCommand, TIdentity> : IExecute
+        where TCommand : ICommand<TIdentity>
         where TIdentity : IIdentity
-        where TResult : IExecutionResult
     {
-        TResult Execute(TCommand command);
+        IExecutionResult Execute(TCommand command);
     }
-    public interface IExecute<in TCommand,TIdentity> : IExecute<TCommand,IExecutionResult,TIdentity>
-        where TCommand : ICommand<TIdentity, IExecutionResult>
-        where TIdentity : IIdentity
-    {}
 }

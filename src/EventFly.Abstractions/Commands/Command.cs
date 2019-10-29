@@ -26,15 +26,13 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
-using EventFly.Commands.ExecutionResults;
 using EventFly.Core;
 using EventFly.ValueObjects;
 
 namespace EventFly.Commands
 {
-    public abstract class Command<TIdentity, TExecutionResult> : ValueObject, ICommand<TIdentity, TExecutionResult>
+    public abstract class Command<TIdentity> : ValueObject, ICommand<TIdentity>
         where TIdentity : IIdentity
-        where TExecutionResult : IExecutionResult
     {
         protected Command(TIdentity aggregateId, CommandMetadata metadata = null)
         {
@@ -52,9 +50,4 @@ namespace EventFly.Commands
         public CommandMetadata Metadata { get; }
     }
 
-    public abstract class Command<TIdentity> : Command<TIdentity, IExecutionResult> 
-        where TIdentity : IIdentity
-    {
-        protected Command(TIdentity aggregateId, CommandMetadata metadata = null) : base(aggregateId, metadata) {}
-    }
 }

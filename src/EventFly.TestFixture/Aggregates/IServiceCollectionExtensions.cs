@@ -1,4 +1,5 @@
 ﻿using Akka.Actor;
+using EventFly.Commands;
 using EventFly.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -11,7 +12,7 @@ namespace EventFly.TestFixture.Aggregates
             ActorSystem actorSystem)
         {
             services.AddEventFly(actorSystem);
-            services.AddTransient<ITestCommandBus, TestCommandBus>();
+            services.AddSingleton<ICommandBus, TestCommandBus>();
 
             return new EventFlyBuilder(services);
         }

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using EventFly.Queries;
+using EventFly.Security;
 
 namespace Demo.Queries
 {
@@ -32,8 +33,9 @@ namespace Demo.Queries
 
         public int Total { get; private set; }
     }
+    
     [Description("Запрос мнформации о пользователях")]
-
+    [Authorized]
     public class UsersQuery : IQuery<UsersResult>
     {
     }

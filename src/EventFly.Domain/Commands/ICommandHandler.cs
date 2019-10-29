@@ -35,12 +35,11 @@ namespace EventFly.Commands
     {
     }
 
-    public interface ICommandHandler<in TAggregate, TIdentity, out TResult, in TCommand> : ICommandHandler
+    public interface ICommandHandler<in TAggregate, TIdentity, in TCommand> : ICommandHandler
         where TAggregate : IAggregateRoot<TIdentity>
         where TIdentity : IIdentity
-        where TCommand : ICommand<TIdentity,TResult>
-        where TResult : IExecutionResult
+        where TCommand : ICommand<TIdentity>
     {
-        TResult Handle(TAggregate aggregate, TCommand command);
+        IExecutionResult Handle(TAggregate aggregate, TCommand command);
     }
 }

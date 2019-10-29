@@ -1,76 +1,35 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Akka.Actor;
 using EventFly.Commands;
 using EventFly.Commands.ExecutionResults;
-using EventFly.Core;
 using EventFly.Definitions;
-using EventFly.Exceptions;
-using EventFly.Extensions;
 
 namespace EventFly.TestFixture.Aggregates
 {
-    public interface ITestCommandBus
+    public sealed class TestCommandBus : CommandToAggregateManagerBus
     {
-        void Publish(ICommand command, IActorRef sender);
-    }
-    public sealed class TestCommandBus : ICommandBus, ITestCommandBus
-    {
-        private readonly IDefinitionToManagerRegistry _definitionToManagerRegistry;
-        private readonly IServiceProvider _serviceProvider;
-
-        public TestCommandBus(IDefinitionToManagerRegistry definitionToManagerRegistry, IServiceProvider serviceProvider)
+        private IActorRef _senRef;
+        public void SetSender(IActorRef senRef)
         {
-            _definitionToManagerRegistry = definitionToManagerRegistry;
-            _serviceProvider = serviceProvider;
+            _senRef = senRef;
         }
 
-        public async Task<ExecutionResult> Publish<TExecutionResult, TIdentity>(ICommand<TIdentity, TExecutionResult> command)
-            where TExecutionResult : IExecutionResult
-            where TIdentity : IIdentity
+        //var result = CommandValidationHelper.ValidateCommand(command, _serviceProvider);
+
+        protected override Task<IExecutionResult> DoPublish(ICommand command)
         {
-            var result = CommandValidationHelper.ValidateCommand(command, _serviceProvider);
-            if (!result.IsValid) return new FailedValidationExecutionResult(result);
-
-            var commandResult = await GetAggregateManager(typeof(TIdentity)).Ask<ExecutionResult>(command, new TimeSpan?());
-            return commandResult;
-        }
-        
-
-
-        public async Task<IExecutionResult> Publish(ICommand command)
-        {
-            var result = CommandValidationHelper.ValidateCommand(command, _serviceProvider);
-            if (!result.IsValid) return new FailedValidationExecutionResult(result);
-
-            return await GetAggregateManager(command.GetAggregateId().GetType()).Ask<IExecutionResult>(command, new TimeSpan?());
-        }
-
-        private IActorRef GetAggregateManager(Type type)
-        {
-            var manager = _definitionToManagerRegistry.DefinitionToAggregateManager.FirstOrDefault(i =>
+            if (_senRef != null)
             {
-                var (k, _) = (i.Key, i.Value);
-                if (!(k.AggregateType == type))
-                    return k.IdentityType == type;
-                return true;
-            }).Value;
-            if (manager == null)
-                throw new InvalidOperationException("Aggregate " + type.PrettyPrint() + " not registered");
-            return manager;
-        }
+                GetAggregateManager(command.GetAggregateId().GetType()).Tell(command, _senRef);
 
-        public void Publish(ICommand command, IActorRef sender)
-        {
-            var result = CommandValidationHelper.ValidateCommand(command, _serviceProvider);
-            if (!result.IsValid)
-            {
-                sender.Tell(new FailedValidationExecutionResult(result));
-                return;
+                return Task.FromResult(ExecutionResult.Success());
             }
 
-            GetAggregateManager(command.GetAggregateId().GetType()).Tell(command, sender);
+            return base.DoPublish(command);
         }
+
+        public TestCommandBus(IDefinitionToManagerRegistry definitionToManagerRegistry, IServiceProvider serviceProvider) : 
+            base(definitionToManagerRegistry, serviceProvider){}
     }
 }

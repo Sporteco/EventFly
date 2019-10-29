@@ -51,9 +51,23 @@ namespace EventFly.TestFixture.Aggregates
             _testKit = testKit;
         }
         
-        private ITestCommandBus _commandBus;
-        public ITestCommandBus CommandBus => _commandBus ??= _testKit.Sys.GetExtension<ServiceProviderHolder>()
-            ?.ServiceProvider?.GetService<ITestCommandBus>();
+        private ICommandBus _commandBus;
+        public ICommandBus CommandBus
+        {
+            get
+            {
+                if (_commandBus == null)
+                {
+                    _commandBus =  _testKit.Sys.GetExtension<ServiceProviderHolder>()?.ServiceProvider?.GetService<ICommandBus>();
+                    if (_commandBus != null && _commandBus is TestCommandBus tcb)
+                    {
+                        tcb.SetSender(AggregateReplyTestProbe);
+                    }
+                }
+
+                return _commandBus;
+            }
+        }
 
 
         public IFixtureArranger<TAggregate, TIdentity> For(TIdentity aggregateId)
@@ -117,7 +131,7 @@ namespace EventFly.TestFixture.Aggregates
                     throw new NullReferenceException(nameof(command));
 
   
-                CommandBus.Publish(command,AggregateReplyTestProbe);
+                CommandBus.Publish(command).GetAwaiter().GetResult();
             }
             
             return this;
@@ -134,7 +148,7 @@ namespace EventFly.TestFixture.Aggregates
                 if(command == null)
                     throw new NullReferenceException(nameof(command));
 
-                CommandBus.Publish(command,AggregateReplyTestProbe);
+                CommandBus.Publish(command).GetAwaiter().GetResult();
             }
             
             return this;

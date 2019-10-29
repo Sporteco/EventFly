@@ -32,6 +32,7 @@ namespace EventFly.Metadata
 {
     public interface IMetadataContainer : IReadOnlyDictionary<string, string>
     {
+        string UserId { get; }
         string GetMetadataValue(string key);
         T GetMetadataValue<T>(string key, Func<string, T> converter);
     }

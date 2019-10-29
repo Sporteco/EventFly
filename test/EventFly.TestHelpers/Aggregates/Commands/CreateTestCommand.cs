@@ -25,7 +25,7 @@ using EventFly.Commands;
 
 namespace EventFly.TestHelpers.Aggregates.Commands
 {
-    public class CreateTestCommand : Command<TestAggregateId,ITestExecutionResult>
+    public class CreateTestCommand : Command<TestAggregateId>
     {
         public CreateTestCommand(
             TestAggregateId aggregateId,

@@ -35,7 +35,6 @@ using Akka.Persistence;
 using EventFly.Aggregates.Snapshot;
 using EventFly.Aggregates.Snapshot.Strategies;
 using EventFly.Commands;
-using EventFly.Commands.ExecutionResults;
 using EventFly.Core;
 using EventFly.Definitions;
 using EventFly.DependencyInjection;
@@ -205,7 +204,7 @@ namespace EventFly.Aggregates
                     EventVersion = eventDefinition.Version
                 };
 
-                eventMetadata.AddValue(MetadataKeys.TimestampEpoch, now.ToUnixTime().ToString());
+                eventMetadata.AddOrUpdateValue(MetadataKeys.TimestampEpoch, now.ToUnixTime().ToString());
                 if (metadata != null)
                 {
                     eventMetadata.AddRange(metadata);
@@ -254,7 +253,7 @@ namespace EventFly.Aggregates
                 EventVersion = eventDefinition.Version
             };
 
-            eventMetadata.AddValue(MetadataKeys.TimestampEpoch, now.ToUnixTime().ToString());
+            eventMetadata.AddOrUpdateValue(MetadataKeys.TimestampEpoch, now.ToUnixTime().ToString());
             if (metadata != null)
             {
                 eventMetadata.AddRange(metadata);
@@ -511,16 +510,8 @@ namespace EventFly.Aggregates
         }
         
         protected void Command<TCommand, TCommandHandler>(Predicate<TCommand> shouldHandle = null)
-            where TCommand : ICommand<TIdentity, IExecutionResult>
-            where TCommandHandler : CommandHandler<TAggregate, TIdentity, IExecutionResult, TCommand>
-        {
-            Command<TCommand, IExecutionResult, TCommandHandler>(shouldHandle);
-        }
-
-        protected void Command<TCommand, TResult, TCommandHandler>(Predicate<TCommand> shouldHandle = null)
-            where TCommand : ICommand<TIdentity, TResult>
-            where TCommandHandler : CommandHandler<TAggregate, TIdentity,TResult, TCommand>
-            where TResult : IExecutionResult
+            where TCommand : ICommand<TIdentity>
+            where TCommandHandler : CommandHandler<TAggregate, TIdentity, TCommand>
         {
             try
             {
@@ -539,8 +530,7 @@ namespace EventFly.Aggregates
         }
         
         protected void Command<TCommand, TResult>(Func<TCommand,TResult> handler)
-            where TCommand : ICommand<TIdentity, TResult>
-            where TResult : IExecutionResult
+            where TCommand : ICommand<TIdentity>
         {
             Command(x =>
             {

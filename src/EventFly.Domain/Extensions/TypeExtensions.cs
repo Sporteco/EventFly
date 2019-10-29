@@ -154,7 +154,7 @@ namespace EventFly.Extensions
                 .Select(i => i.GetTypeInfo())
                 .ToList();
             var domainEventTypes = interfaces
-                .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IExecute<,,>))
+                .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IExecute<,>))
                 .Select(i => new Tuple<Type, Type>(i.GetGenericArguments()[0], i.GetGenericArguments()[1]))
                 .ToList();
 

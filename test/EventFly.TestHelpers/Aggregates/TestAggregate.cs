@@ -41,9 +41,9 @@ namespace EventFly.TestHelpers.Aggregates
 {
     [AggregateName("Test")]
     public sealed class TestAggregate : EventSourcedAggregateRoot<TestAggregate, TestAggregateId, TestAggregateState>, 
-        IExecute<CreateTestCommand,ITestExecutionResult,TestAggregateId>,
+        IExecute<CreateTestCommand,TestAggregateId>,
         IExecute<CreateAndAddTwoTestsCommand,TestAggregateId>,
-        IExecute<AddTestCommand,ITestExecutionResult,TestAggregateId>,
+        IExecute<AddTestCommand,TestAggregateId>,
         IExecute<AddFourTestsCommand,TestAggregateId>,
         IExecute<GiveTestCommand,TestAggregateId>,
         IExecute<ReceiveTestCommand,TestAggregateId>,
@@ -64,7 +64,7 @@ namespace EventFly.TestHelpers.Aggregates
             SetSnapshotStrategy(new SnapshotEveryFewVersionsStrategy(10));
         }
 
-        public ITestExecutionResult Execute(CreateTestCommand command)
+        public IExecutionResult Execute(CreateTestCommand command)
         {
             if (IsNew)
             {
@@ -102,7 +102,7 @@ namespace EventFly.TestHelpers.Aggregates
             return ExecutionResult.Success();
         }
 
-        public ITestExecutionResult Execute(AddTestCommand command)
+        public IExecutionResult Execute(AddTestCommand command)
         {
             if (!IsNew)
             {

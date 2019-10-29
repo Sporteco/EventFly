@@ -85,7 +85,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventFly.Infrastructure", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventFly.Extensions", "src\EventFly.Extensions\EventFly.Extensions.csproj", "{D30C1043-A11C-49B5-83FA-160C9163B6F1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo.Tests", "examples\demo\Demo.Tests\Demo.Tests.csproj", "{2856E2EC-B58B-4F51-8100-80CA52B52DEB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demo.Tests", "examples\demo\Demo.Tests\Demo.Tests.csproj", "{2856E2EC-B58B-4F51-8100-80CA52B52DEB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventFly.Permissions", "src\EventFly.Permissions\EventFly.Permissions.csproj", "{60165F7A-940D-407C-B58C-216A1CD09A9F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -173,6 +175,10 @@ Global
 		{2856E2EC-B58B-4F51-8100-80CA52B52DEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2856E2EC-B58B-4F51-8100-80CA52B52DEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2856E2EC-B58B-4F51-8100-80CA52B52DEB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{60165F7A-940D-407C-B58C-216A1CD09A9F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{60165F7A-940D-407C-B58C-216A1CD09A9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{60165F7A-940D-407C-B58C-216A1CD09A9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{60165F7A-940D-407C-B58C-216A1CD09A9F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -204,6 +210,7 @@ Global
 		{73CEF47D-0FC6-4B52-8E85-BA7079B929A6} = {C7A99371-DCC0-4726-A971-E35C8CDF4768}
 		{D30C1043-A11C-49B5-83FA-160C9163B6F1} = {C7A99371-DCC0-4726-A971-E35C8CDF4768}
 		{2856E2EC-B58B-4F51-8100-80CA52B52DEB} = {F3CA8C69-92CA-4897-9CB2-4D40811BAAEE}
+		{60165F7A-940D-407C-B58C-216A1CD09A9F} = {C7A99371-DCC0-4726-A971-E35C8CDF4768}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F5A40806-ED71-4286-A37C-BE0364FA29A6}

@@ -47,6 +47,8 @@ namespace EventFly.DependencyInjection
             services.AddTransient<ICommandsScheduler, JobCommandsScheduler>();
             services.AddTransient<IEventsScheduler, JobEventsScheduler>();
 
+            services.AddSingleton<ICommandValidator, DefaultCommandValidator>();
+
             return new EventFlyBuilder(services);
         }
     }

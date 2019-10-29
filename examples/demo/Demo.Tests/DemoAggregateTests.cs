@@ -27,6 +27,7 @@ namespace Demo.Tests
                 .Services
                 .BuildServiceProvider()
                 .UseEventFly();
+
         }
         [Fact]
         public void CreateEventCommandTest()
