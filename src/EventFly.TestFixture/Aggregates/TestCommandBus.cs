@@ -14,7 +14,9 @@ namespace EventFly.TestFixture.Aggregates
     public interface ITestCommandBus
     {
         void Publish(ICommand command, IActorRef sender);
+        Task<IExecutionResult> Publish(ICommand command);
     }
+
     public sealed class TestCommandBus : ICommandBus, ITestCommandBus
     {
         private readonly IDefinitionToManagerRegistry _definitionToManagerRegistry;
@@ -36,8 +38,6 @@ namespace EventFly.TestFixture.Aggregates
             var commandResult = await GetAggregateManager(typeof(TIdentity)).Ask<ExecutionResult>(command, new TimeSpan?());
             return commandResult;
         }
-        
-
 
         public async Task<IExecutionResult> Publish(ICommand command)
         {
