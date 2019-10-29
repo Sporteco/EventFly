@@ -187,6 +187,18 @@ namespace EventFly.Domain
             });
         }
 
+        protected void CommandInternal<T>(Func<T, Task> handler, Object _)
+        {
+            ReceiveAsync<T>(e =>
+            {
+                if (e is IDomainEvent @event)
+                {
+                    _pinnedEvent = @event;
+                }
+                return handler(e);
+            });
+        }
+
         protected void SetSourceIdHistory(Int32 count)
         {
             _previousSourceIds = new CircularBuffer<ISourceId>(count);
