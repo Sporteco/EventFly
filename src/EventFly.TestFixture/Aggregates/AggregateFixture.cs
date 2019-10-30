@@ -30,14 +30,14 @@ using EventFly.Aggregates.Snapshot;
 using EventFly.Commands;
 using EventFly.Core;
 using EventFly.DependencyInjection;
+using EventFly.Exceptions;
 using Microsoft.Extensions.DependencyInjection;
 using AkkaSnapshotMetadata = Akka.Persistence.SnapshotMetadata;
 using SnapshotMetadata = EventFly.Aggregates.Snapshot.SnapshotMetadata;
 
 namespace EventFly.TestFixture.Aggregates
 {
-    
-    public class AggregateFixture<TAggregate, TIdentity> : IFixtureArranger<TAggregate, TIdentity> , IFixtureExecutor<TAggregate,TIdentity> , IFixtureAsserter<TAggregate, TIdentity>
+    public class AggregateFixture<TAggregate, TIdentity> : IFixtureArranger<TAggregate, TIdentity>, IFixtureExecutor<TAggregate, TIdentity>, IFixtureAsserter<TAggregate, TIdentity>
         where TAggregate : ActorBase, IAggregateRoot<TIdentity>
         where TIdentity : IIdentity
     {
@@ -52,38 +52,52 @@ namespace EventFly.TestFixture.Aggregates
         }
         
         private ICommandBus _commandBus;
-        public ICommandBus CommandBus => _commandBus ??= _testKit.Sys.GetExtension<ServiceProviderHolder>()
-            ?.ServiceProvider?.GetService<ICommandBus>();
+        public ICommandBus CommandBus
+        {
+            get
+            {
+                if (_commandBus == null)
+                {
+                    _commandBus =  _testKit.Sys.GetExtension<ServiceProviderHolder>()?.ServiceProvider?.GetService<ICommandBus>();
+                    if (_commandBus != null && _commandBus is TestCommandBus tcb)
+                    {
+                        tcb.SetSender(AggregateReplyTestProbe);
+                    }
+                }
+
+                return _commandBus;
+            }
+        }
 
 
         public IFixtureArranger<TAggregate, TIdentity> For(TIdentity aggregateId)
         {
-            if(aggregateId == null)
+            if (aggregateId == null)
                 throw new ArgumentNullException(nameof(aggregateId));
-            
-            if(!AggregateEventTestProbe.IsNobody())
+
+            if (!AggregateEventTestProbe.IsNobody())
                 throw new InvalidOperationException(nameof(AggregateEventTestProbe));
-            
+
             AggregateId = aggregateId;
             AggregateEventTestProbe = _testKit.CreateTestProbe("aggregate-event-test-probe");
             AggregateReplyTestProbe = _testKit.CreateTestProbe("aggregate-reply-test-probe");
-            
+
             return this;
         }
 
         public IFixtureArranger<TAggregate, TIdentity> Using(TIdentity aggregateId)
         {
-            if(aggregateId == null)
+            if (aggregateId == null)
                 throw new ArgumentNullException(nameof(aggregateId));
-            if(!AggregateEventTestProbe.IsNobody())
+            if (!AggregateEventTestProbe.IsNobody())
                 throw new InvalidOperationException(nameof(AggregateEventTestProbe));
-            if(!AggregateReplyTestProbe.IsNobody())
+            if (!AggregateReplyTestProbe.IsNobody())
                 throw new InvalidOperationException(nameof(AggregateReplyTestProbe));
-            
+
             AggregateId = aggregateId;
             AggregateEventTestProbe = _testKit.CreateTestProbe("aggregate-event-test-probe");
             AggregateReplyTestProbe = _testKit.CreateTestProbe("aggregate-reply-test-probe");
-            
+
             return this;
         }
 
@@ -95,48 +109,60 @@ namespace EventFly.TestFixture.Aggregates
         public IFixtureExecutor<TAggregate, TIdentity> Given(params IAggregateEvent<TIdentity>[] aggregateEvents)
         {
             InitializeEventJournal(AggregateId, aggregateEvents);
-            
+
             return this;
         }
-        
-        public IFixtureExecutor<TAggregate, TIdentity> Given(IAggregateSnapshot<TAggregate,TIdentity> aggregateSnapshot, long snapshotSequenceNumber)
+
+        public IFixtureExecutor<TAggregate, TIdentity> Given(IAggregateSnapshot<TAggregate, TIdentity> aggregateSnapshot, long snapshotSequenceNumber)
         {
             InitializeSnapshotStore(AggregateId, aggregateSnapshot, snapshotSequenceNumber);
-            
+
             return this;
         }
 
         public IFixtureExecutor<TAggregate, TIdentity> Given(params ICommand[] commands)
         {
-            if(commands == null)
+            if (commands == null)
                 throw new ArgumentNullException(nameof(commands));
+            if (CommandBus is TestCommandBus tcb)
+            {
+                tcb.SetSender(null);
+            }
 
             foreach (var command in commands)
             {
-                if(command == null)
+                if (command == null)
                     throw new NullReferenceException(nameof(command));
 
-                CommandBus.Publish(command);
+                var result = CommandBus.Publish(command).GetAwaiter().GetResult();
+                if (!result.IsSuccess)
+                    throw new InvalidOperationException($"Given Command {command.GetType().PrettyPrint()} failed.");
+
+            }
+            
+            if (CommandBus is TestCommandBus tcb2)
+            {
+                tcb2.SetSender(AggregateReplyTestProbe);
             }
 
-            
             return this;
         }
-        
+
         public IFixtureAsserter<TAggregate, TIdentity> When(params ICommand[] commands)
         {
 
-            if(commands == null)
+            if (commands == null)
                 throw new ArgumentNullException(nameof(commands));
 
             foreach (var command in commands)
             {
-                if(command == null)
+                if (command == null)
                     throw new NullReferenceException(nameof(command));
 
-                CommandBus.Publish(command);
+                var result = CommandBus.Publish(command).GetAwaiter().GetResult();
+                AggregateReplyTestProbe.Tell(result);
             }
-            
+
             return this;
         }
 
@@ -144,17 +170,17 @@ namespace EventFly.TestFixture.Aggregates
         {
             return When(commands);
         }
-        
+
         public IFixtureAsserter<TAggregate, TIdentity> ThenExpect<TAggregateEvent>(Predicate<TAggregateEvent> aggregateEventPredicate = null)
             where TAggregateEvent : class, IAggregateEvent<TIdentity>
         {
             _testKit.Sys.EventStream.Subscribe(AggregateEventTestProbe, typeof(IDomainEvent<TIdentity, TAggregateEvent>));
-            
-            if(aggregateEventPredicate == null)
+
+            if (aggregateEventPredicate == null)
                 AggregateEventTestProbe.ExpectMsg<DomainEvent<TAggregate, TIdentity, TAggregateEvent>>();
             else
                 AggregateEventTestProbe.ExpectMsg<DomainEvent<TAggregate, TIdentity, TAggregateEvent>>(x => aggregateEventPredicate(x.AggregateEvent));
-            
+
             return this;
         }
 
@@ -163,58 +189,56 @@ namespace EventFly.TestFixture.Aggregates
             AggregateReplyTestProbe.ExpectMsg(aggregateReplyPredicate);
             return this;
         }
-        
+
         public IFixtureAsserter<TAggregate, TIdentity> ThenExpectDomainEvent<TAggregateEvent>(Predicate<IDomainEvent<TIdentity, TAggregateEvent>> domainEventPredicate = null)
             where TAggregateEvent : class, IAggregateEvent<TIdentity>
         {
             _testKit.Sys.EventStream.Subscribe(AggregateEventTestProbe, typeof(IDomainEvent<TIdentity, TAggregateEvent>));
-            
-            if(domainEventPredicate == null)
+
+            if (domainEventPredicate == null)
                 AggregateEventTestProbe.ExpectMsg<DomainEvent<TAggregate, TIdentity, TAggregateEvent>>();
             else
                 AggregateEventTestProbe.ExpectMsg<DomainEvent<TAggregate, TIdentity, TAggregateEvent>>(domainEventPredicate);
-            
+
             return this;
         }
-        
+
         private void InitializeEventJournal(TIdentity aggregateId, params IAggregateEvent<TIdentity>[] events)
         {
             var writerGuid = Guid.NewGuid().ToString();
             var writes = new AtomicWrite[events.Length];
             for (var i = 0; i < events.Length; i++)
             {
-                var committedEvent = new CommittedEvent<TAggregate, TIdentity, IAggregateEvent<TIdentity>>(aggregateId, events[i], new EventMetadata(), DateTimeOffset.UtcNow, i+1);
-                writes[i] = new AtomicWrite(new Persistent(committedEvent, i+1, aggregateId.Value, string.Empty, false, ActorRefs.NoSender, writerGuid));
+                var committedEvent = new CommittedEvent<TAggregate, TIdentity, IAggregateEvent<TIdentity>>(aggregateId, events[i], new EventMetadata(), DateTimeOffset.UtcNow, i + 1);
+                writes[i] = new AtomicWrite(new Persistent(committedEvent, i + 1, aggregateId.Value, string.Empty, false, ActorRefs.NoSender, writerGuid));
             }
             var journal = Persistence.Instance.Apply(_testKit.Sys).JournalFor(null);
             journal.Tell(new WriteMessages(writes, AggregateEventTestProbe.Ref, 1));
 
             AggregateEventTestProbe.ExpectMsg<WriteMessagesSuccessful>();
-            
+
             for (var i = 0; i < events.Length; i++)
             {
                 var seq = i;
                 AggregateEventTestProbe.ExpectMsg<WriteMessageSuccess>(x =>
                     x.Persistent.PersistenceId == aggregateId.ToString() &&
                     x.Persistent.Payload is CommittedEvent<TAggregate, TIdentity, IAggregateEvent<TIdentity>> &&
-                    x.Persistent.SequenceNr == (long) seq+1);
+                    x.Persistent.SequenceNr == (long)seq + 1);
             }
         }
-        
+
         private void InitializeSnapshotStore<TAggregateSnapshot>(TIdentity aggregateId, TAggregateSnapshot aggregateSnapshot, long sequenceNumber)
             where TAggregateSnapshot : IAggregateSnapshot<TAggregate, TIdentity>
         {
             var snapshotStore = Persistence.Instance.Apply(_testKit.Sys).SnapshotStoreFor(null);
             var committedSnapshot = new CommittedSnapshot<TAggregate, TIdentity, TAggregateSnapshot>(aggregateId, aggregateSnapshot, new SnapshotMetadata(), DateTimeOffset.UtcNow, sequenceNumber);
-            
+
             var metadata = new AkkaSnapshotMetadata(aggregateId.ToString(), sequenceNumber);
             snapshotStore.Tell(new SaveSnapshot(metadata, committedSnapshot), AggregateEventTestProbe.Ref);
 
             AggregateEventTestProbe.ExpectMsg<SaveSnapshotSuccess>(x =>
                 x.Metadata.SequenceNr == sequenceNumber &&
                 x.Metadata.PersistenceId == aggregateId.ToString());
-            
         }
-        
     }
 }

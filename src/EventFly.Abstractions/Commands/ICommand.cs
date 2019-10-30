@@ -25,7 +25,6 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using EventFly.Commands.ExecutionResults;
 using EventFly.Core;
 using EventFly.Core.VersionedTypes;
 
@@ -37,9 +36,8 @@ namespace EventFly.Commands
         CommandMetadata Metadata { get; }
     }
 
-    public interface ICommand<out TIdentity, TResult> : ICommand
+    public interface ICommand<out TIdentity> : ICommand
         where TIdentity : IIdentity
-        where TResult : IExecutionResult
     {
         TIdentity AggregateId { get; }
     }

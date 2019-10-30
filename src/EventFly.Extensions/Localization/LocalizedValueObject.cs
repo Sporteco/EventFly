@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using EventFly.ValueObjects;
+using Newtonsoft.Json;
 
 namespace EventFly.Localization
 {
@@ -11,12 +12,13 @@ namespace EventFly.Localization
     {
         protected readonly List<T> _locs = new List<T>();
 
-        public List<T> Locs => _locs;
+        public T[] Locs => _locs.ToArray();
 
-
+        [JsonConstructor]
         public LocalizedValueObject(params T[] locs)
         {
-            _locs.AddRange(locs);
+            if (locs != null)
+                _locs.AddRange(locs);
         }
 
         protected override IEnumerable<object> GetEqualityComponents()

@@ -2,19 +2,22 @@
 using System.ComponentModel;
 using EventFly.Commands;
 using Demo.ValueObjects;
+using EventFly.Localization;
+using EventFly.Security;
 using EventFly.Validation;
 using FluentValidation;
 
 namespace Demo.Commands
 {
     [Description("Создание нового пользователя")]
+    [HasPermissions(DemoContext.CreateUser,DemoContext.ChangeUser)]
     [Validator(typeof(CreateUserCommandValidator))]
     public class CreateUserCommand : Command<UserId>
     {
-        public UserName UserName { get; }
+        public LocalizedString UserName { get; }
         public Birth Birth { get; }
 
-        public CreateUserCommand(UserId aggregateId, UserName userName, Birth birth) : base(aggregateId)
+        public CreateUserCommand(UserId aggregateId, LocalizedString userName, Birth birth) : base(aggregateId)
         {
             UserName = userName;
             Birth = birth;
@@ -26,7 +29,7 @@ namespace Demo.Commands
         public CreateUserCommandValidator(IServiceProvider sp)
         {
             RuleFor(p => p.AggregateId).NotNull();
-            RuleFor(p => p.UserName).SetValidator(new UserNameValidator());
+            //RuleFor(p => p.UserName).SetValidator(new UserNameValidator());
             RuleFor(p => p.Birth).ApplyRegisteredValidators(sp);
           
         }

@@ -1,9 +1,10 @@
-﻿using EventFly.Aggregates;
-using EventFly.Commands.ExecutionResults;
-using Demo.Commands;
+﻿using Demo.Commands;
+using Demo.Domain.CommandHandlers;
 using Demo.Events;
 using Demo.ValueObjects;
-using Demo.Domain.CommandHandlers;
+using EventFly.Aggregates;
+using EventFly.Commands.ExecutionResults;
+using EventFly.Localization;
 
 namespace Demo.Domain.Aggregates
 {
@@ -11,7 +12,7 @@ namespace Demo.Domain.Aggregates
         IApply<UserCreatedEvent>,
         IApply<UserRenamedEvent>
     {
-        public UserName Name { get; private set; }
+        public LocalizedString Name { get; private set; }
         public Birth Birth { get; private set; }
 
         public void Apply(UserCreatedEvent e) { (Name, Birth) = (e.Name, e.Birth); }
@@ -25,8 +26,13 @@ namespace Demo.Domain.Aggregates
         {
             Command<RenameUserCommand, RenameUserCommandHandler>();
         }
+
         public IExecutionResult Execute(CreateUserCommand cmd)
         {
+            SecurityContext.Authorized();
+
+            SecurityContext.HasPermissions(cmd.AggregateId, DemoContext.TestUserPermission);
+
             Emit(new UserCreatedEvent(cmd.UserName, cmd.Birth));
             return ExecutionResult.Success();
         }

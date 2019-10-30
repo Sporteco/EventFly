@@ -44,13 +44,9 @@ namespace EventFly.Domain
             }
         }
 
-        public async Task<ExecutionResult> PublishCommandAsync<TCommandIdentity, TExecutionResult>(ICommand<TCommandIdentity, TExecutionResult> command)
+        public async Task<IExecutionResult> PublishCommandAsync<TCommandIdentity>(ICommand<TCommandIdentity> command)
             where TCommandIdentity : IIdentity
-            where TExecutionResult : IExecutionResult
         {
-            var result = CommandValidationHelper.ValidateCommand(command, _serviceProvider);
-            if (!result.IsValid) return new FailedValidationExecutionResult(result);
-
             if (_pinnedEvent != null)
             {
                 command.Metadata.Merge(_pinnedEvent.Metadata);

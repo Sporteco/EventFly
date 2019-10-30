@@ -1,21 +1,25 @@
-﻿using System.Linq;
+﻿using EventFly.Localization;
 using EventFly.Validation;
-using EventFly.ValueObjects;
 using FluentValidation;
+using System.Linq;
 
 namespace Demo.ValueObjects
 {
     [Validator(typeof(UserNameValidator))]
-    public class UserName : SingleValueObject<string>
+    public class UserName : LocalizedString
     {
-        public UserName(string value) : base(value){}
+        public UserName(params StringLocalization[] locs) : base(locs) { }
+
+        public static implicit operator UserName((string value, LanguageCode lang) str)
+        {
+            return new UserName(str);
+        }
     }
     public class UserNameValidator : AbstractValidator<UserName>
     {
         public UserNameValidator()
         {
-            RuleFor(p => p.Value).NotNull();
-            RuleFor(p => p.Value).Must(s => s.All(char.IsLetter));
+            RuleFor(p => p.Locs).Must(p => p.Any());
         }
     }
 }

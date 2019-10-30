@@ -29,6 +29,7 @@ namespace EventFly.Metadata
 {
     public static class MetadataKeys
     {
+        public const string UserId = "user_id";
         public const string EventId = "event_id";
         public const string BatchId = "batch_id";
         public const string EventName = "event_name";
@@ -40,7 +41,7 @@ namespace EventFly.Metadata
         public const string AggregateId = "aggregate_id";
         public const string SourceId = "source_id";
         public const string CorrelationId = "correlation_id";
-        public const string SagaIds = "saga_ids";
+        public const string CorrelationIds = "correlation_ids";
         public const string CausationId = "causation_id";
     }
 }

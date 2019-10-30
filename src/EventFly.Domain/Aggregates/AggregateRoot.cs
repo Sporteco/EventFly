@@ -12,6 +12,7 @@ using EventFly.DependencyInjection;
 using EventFly.Exceptions;
 using EventFly.Extensions;
 using EventFly.Metadata;
+using EventFly.Permissions;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace EventFly.Aggregates
@@ -33,14 +34,17 @@ namespace EventFly.Aggregates
         public bool IsNew => false;
         public TIdentity Id { get; }
 
+        protected SecurityContext SecurityContext { get; private set; }
+
+
         private IServiceScope _scope;
         private IAggregateStorage<TAggregate> _aggregateStorage;
-        private readonly ServiceProviderHolder _serviceProvider;
+        private readonly IServiceProvider _serviceProvider;
 
         protected readonly ILoggingAdapter Log = Context.GetLogger();
         protected AggregateRoot(TIdentity id)
         {
-            _serviceProvider = Context.System.GetExtension<ServiceProviderHolder>();
+            _serviceProvider = Context.System.GetExtension<ServiceProviderHolder>().ServiceProvider;
             if (id == null)
                 throw new ArgumentNullException(nameof(id));
 
@@ -64,7 +68,7 @@ namespace EventFly.Aggregates
             }
 
             PinnedCommand = null;
-            _eventDefinitionService = _serviceProvider.ServiceProvider.GetService<IApplicationDefinition>().Events;
+            _eventDefinitionService = _serviceProvider.GetService<IApplicationDefinition>().Events;
             Id = id;
             SetSourceIdHistory(100);
             this.InitAggregateReceivers();
@@ -74,7 +78,7 @@ namespace EventFly.Aggregates
         {
             base.PreStart();
 
-            _scope ??= _serviceProvider.ServiceProvider.CreateScope();
+            _scope ??= _serviceProvider.CreateScope();
             _aggregateStorage = _scope.ServiceProvider.GetRequiredService<IAggregateStorage<TAggregate>>()
                                 ?? throw new InvalidOperationException($"Aggregate [{typeof(TAggregate).PrettyPrint()}] storage not found.");
             State = LoadState();
@@ -96,18 +100,9 @@ namespace EventFly.Aggregates
         {
             _aggregateStorage.SaveState<TAggregateState, TIdentity>(State);
         }
-
         protected void Command<TCommand, TCommandHandler>(Predicate<TCommand> shouldHandle = null)
-            where TCommand : ICommand<TIdentity, IExecutionResult>
-            where TCommandHandler : CommandHandler<TAggregate, TIdentity, IExecutionResult, TCommand>
-        {
-            Command<TCommand, IExecutionResult, TCommandHandler>(shouldHandle);
-        }
-
-        protected void Command<TCommand, TResult, TCommandHandler>(Predicate<TCommand> shouldHandle = null)
-            where TCommand : ICommand<TIdentity, TResult>
-            where TCommandHandler : CommandHandler<TAggregate, TIdentity, TResult, TCommand>
-            where TResult : IExecutionResult
+            where TCommand : ICommand<TIdentity>
+            where TCommandHandler : CommandHandler<TAggregate, TIdentity, TCommand>
         {
             try
             {
@@ -177,7 +172,7 @@ namespace EventFly.Aggregates
                 EventVersion = eventDefinition.Version
             };
 
-            eventMetadata.AddValue(MetadataKeys.TimestampEpoch, now.ToUnixTime().ToString());
+            eventMetadata.AddOrUpdateValue(MetadataKeys.TimestampEpoch, now.ToUnixTime().ToString());
             if (metadata != null)
             {
                 eventMetadata.AddRange(metadata);
@@ -275,15 +270,28 @@ namespace EventFly.Aggregates
 
 
         protected void Command<TCommand, TResult>(Func<TCommand, TResult> handler)
-            where TCommand : ICommand<TIdentity, TResult>
+            where TCommand : ICommand<TIdentity>
             where TResult : IExecutionResult
         {
             Receive(x =>
-            {
-                var result = handler(x);
-                Context.Sender.Tell(result);
+                {
+                    try
+                    {
+                        var result = handler(x);
+                        Context.Sender.Tell(result);
+                    }
+                    catch (UnauthorizedAccessException)
+                    {
+                        Context.Sender.Tell(new UnauthorizedAccessResult());
+                    }
 
-            }, (Predicate<TCommand>)null);
+                },
+                (Predicate<TCommand>) (command =>
+                {
+                    string userId = command.Metadata.ContainsKey(MetadataKeys.UserId) ? command.Metadata?.UserId : null;
+                    SecurityContext = new SecurityContext(userId, _serviceProvider.GetService<ISecurityService>());
+                    return true;
+                }));
         }
     }
 }

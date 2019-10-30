@@ -26,7 +26,7 @@ using Akka.TestKit.Xunit2;
 using EventFly.Aggregates;
 using EventFly.Commands;
 using EventFly.DependencyInjection;
-
+using EventFly.TestFixture.Aggregates;
 using EventFly.TestHelpers.Aggregates;
 using EventFly.TestHelpers.Aggregates.Commands;
 using EventFly.TestHelpers.Aggregates.Entities;
@@ -50,7 +50,7 @@ namespace EventFly.Tests.IntegrationTests.Aggregates.Sagas
         {
             Sys.RegisterDependencyResolver(
                 new ServiceCollection()
-                .AddEventFly(Sys)
+                .AddTestEventFly(Sys)
                     .WithContext<TestContext>()
                     .Services
                 .AddScoped<TestSaga>()

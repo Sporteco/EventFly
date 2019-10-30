@@ -22,11 +22,6 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
-using System.Linq;
-using EventFly.Commands;
-using FluentValidation;
-using FluentValidation.Results;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace EventFly.Extensions
 {
@@ -37,29 +32,5 @@ namespace EventFly.Extensions
             return openArg => action(value, openArg);
         }
     }
-
-    public static class CommandValidationHelper
-    {
-        //TODO: Async
-        public static ValidationResult ValidateCommand(ICommand command, IServiceProvider serviceProvider)
-        {
-            //TODO: Reflection
-            var validatorType = typeof(IValidator<>).MakeGenericType(command.GetType());
-            var validators = serviceProvider.GetServices(validatorType).Cast<IValidator>().ToList();
-
-            if (validators.Any())
-            {
-                //TODO: Parallel
-                foreach (var validator in validators)
-                {
-                    var result = validator.Validate(command);
-                    if (!result.IsValid)
-                        return result;
-                }
-            }
-            return new ValidationResult();
-        }
-
-    }
-    
+   
 }

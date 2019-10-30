@@ -7,6 +7,6 @@ namespace EventFly.Metadata
     {
         ISourceId SourceId { get; }
         string CorrelationId { get; }
-        IReadOnlyCollection<string> CorrellationIds { get; }
+        IReadOnlyCollection<string> CorrelationIds { get; }
     }
 }

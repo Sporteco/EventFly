@@ -7,6 +7,7 @@ using Demo.ValueObjects;
 using EventFly.Aggregates;
 using EventFly.Commands;
 using EventFly.DependencyInjection;
+using EventFly.Localization;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using Xunit;
@@ -35,7 +36,9 @@ namespace Demo.Tests
             Sys.EventStream.Subscribe(events, typeof(DomainEvent<UserAggregate, UserId, UserRenamedEvent>));
             var bus = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<ICommandBus>();
 
-            var createUser = new CreateUserCommand(UserId.New, new UserName("name"), new Birth(DateTime.MinValue));
+            var name = new StringLocalization("name", new LanguageCode("ru-RU"));
+            var birth = new Birth(DateTime.MinValue);
+            var createUser = new CreateUserCommand(UserId.New, new UserName(name), birth);
             bus.Publish(createUser).GetAwaiter().GetResult();
 
             events.ExpectMsg<DomainEvent<UserAggregate, UserId, UserRenamedEvent>>();

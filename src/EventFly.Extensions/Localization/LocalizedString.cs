@@ -11,6 +11,7 @@ namespace EventFly.Localization
         public LocalizedString() : this(null){}
 
         public LocalizedString(params StringLocalization[] locs) : base(locs){}
+        
 
         public static implicit operator LocalizedString((string value, LanguageCode lang) str)
         {

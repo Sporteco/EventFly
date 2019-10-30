@@ -35,7 +35,7 @@ using EventFly.TestHelpers.Aggregates.Sagas.TestAsync;
 using EventFly.Tests.UnitTests.Subscribers;
 using FluentAssertions;
 using EventFly.DependencyInjection;
-
+using EventFly.TestFixture.Aggregates;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 using Xunit.Abstractions;
@@ -53,7 +53,7 @@ namespace EventFly.Tests.UnitTests.Aggregates
         {
             Sys.RegisterDependencyResolver(
                 new ServiceCollection()
-                .AddEventFly(Sys)
+                .AddTestEventFly(Sys)
                     .WithContext<TestContext>()
                     .Services
                 .AddScoped<TestSaga>()

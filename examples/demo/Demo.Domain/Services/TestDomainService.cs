@@ -11,11 +11,10 @@ namespace Demo.Domain.Services
     public class TestDomainService : DomainService<TestDomainService>,
         IDomainServiceIsStartedByAsync<UserId, UserCreatedEvent>,
         IDomainServiceHandles<UserId, UserRenamedEvent>
-
     {
         public Task HandleAsync(IDomainEvent<UserId, UserCreatedEvent> domainEvent)
         {
-            return PublishCommandAsync(new RenameUserCommand(domainEvent.AggregateIdentity, new UserName("test")));
+            return PublishCommandAsync(new RenameUserCommand(domainEvent.AggregateIdentity, new UserName(("test", "ru"))));
         }
 
         public Boolean Handle(IDomainEvent<UserId, UserRenamedEvent> domainEvent)

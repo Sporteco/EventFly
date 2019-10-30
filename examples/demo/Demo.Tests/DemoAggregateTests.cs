@@ -2,7 +2,6 @@ using System;
 using Akka.TestKit.Xunit2;
 using Demo.Commands;
 using Demo.Domain.Aggregates;
-using Demo.Events;
 using Demo.Infrastructure;
 using Demo.ValueObjects;
 using EventFly.Commands.ExecutionResults;
@@ -26,20 +25,21 @@ namespace Demo.Tests
                 .Services
                 .BuildServiceProvider()
                 .UseEventFly();
+
         }
         [Fact]
         public void CreateEventCommandTest()
         {
 
             var aggregateId = UserId.New;
-            var cmd = new CreateUserCommand(aggregateId, new UserName("Test"), new Birth(DateTime.Today));
+            var cmd = new CreateUserCommand(aggregateId, new UserName(("Test", "ru")), new Birth(DateTime.Today));
             
 
             this.FixtureFor<UserAggregate, UserId>(aggregateId)
                 .Given(cmd)
                 .When(cmd)
-                .ThenExpect<UserCreatedEvent>(e => e.Name != null && e.Name == cmd.UserName)
-                .ThenExpectReply<ExecutionResult>(x => x.IsSuccess);
+                //.ThenExpect<UserCreatedEvent>(e => e.Name != null && e.Name == cmd.UserName)
+                .ThenExpectReply<UnauthorizedAccessResult>(x => !x.IsSuccess);
 
         }
     }

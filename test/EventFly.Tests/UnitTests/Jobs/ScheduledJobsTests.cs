@@ -35,6 +35,7 @@ using Xunit.Abstractions;
 using EventFly.TestHelpers.Aggregates.Sagas.Test;
 using System.Threading.Tasks;
 using EventFly.Jobs;
+using EventFly.TestFixture.Aggregates;
 
 namespace EventFly.Tests.UnitTests.Jobs
 {
@@ -52,7 +53,7 @@ namespace EventFly.Tests.UnitTests.Jobs
             .AddScoped<TestJobRunner>()
             .AddScoped<AsyncTestJobRunner>()
             .AddSingleton<TestJobRunnerProbeAccessor>()
-            .AddEventFly(Sys)
+            .AddTestEventFly(Sys)
                 .WithContext<TestContext>()
                 .Services
             .BuildServiceProvider()

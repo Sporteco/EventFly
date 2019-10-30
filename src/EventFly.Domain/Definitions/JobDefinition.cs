@@ -24,6 +24,4 @@ namespace EventFly.Definitions
         Type JobType { get; }
         Type IdentityType { get; }
     }
-
-
 }

@@ -34,4 +34,6 @@ namespace EventFly.TestFixture.Aggregates
     {
         IFixtureAsserter<TAggregate, TIdentity> When(params ICommand[] commands);
     }
+
+
 }

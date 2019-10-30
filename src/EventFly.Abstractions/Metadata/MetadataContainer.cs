@@ -76,7 +76,7 @@ namespace EventFly.Metadata
             return GetMetadataValue(key, s => s);
         }
 
-        public void AddValue(string key, string value)
+        public void AddOrUpdateValue(string key, string value)
         {
             if (ContainsKey(key)) this[key] = value;
             else Add(key,value);
@@ -107,6 +107,11 @@ namespace EventFly.Metadata
                 if (!ContainsKey(kv.Key))
                     Add(kv.Key,kv.Value);
             }
+        }
+        public string UserId
+        {
+            get => ContainsKey(MetadataKeys.UserId) ? GetMetadataValue(MetadataKeys.UserId) : null;
+            set => AddOrUpdateValue(MetadataKeys.UserId, value);
         }
 
 #pragma warning disable 659

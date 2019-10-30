@@ -1,6 +1,7 @@
 ﻿using EventFly.Domain;
 using System.Collections.Generic;
 using System.Linq;
+using EventFly.Permissions;
 
 namespace EventFly.Definitions
 {
@@ -31,6 +32,7 @@ namespace EventFly.Definitions
 
         public IReadOnlyCollection<ISagaDefinition> Sagas => Contexts.SelectMany(i => i.Sagas.Select(q => q)).ToList();
         public IReadOnlyCollection<IDomainServiceDefinition> DomainServices => Contexts.SelectMany(i => i.DomainServices.Select(q => q)).ToList();
+        public IReadOnlyCollection<IPermissionDefinition> Permissions => Contexts.SelectMany(i => i.Permissions.Select(q => q)).ToList();
 
         public IReadOnlyCollection<IJobDefinition> Jobs => Contexts.SelectMany(i => i.Jobs.Select(q => q)).ToList();
 

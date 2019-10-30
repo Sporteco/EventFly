@@ -22,7 +22,8 @@ namespace Demo.Application
 
         public async Task HandleAsync(IDomainEvent<UserId, UserCreatedEvent> domainEvent)
         {
-            await PublishCommandAsync(new RenameUserCommand(domainEvent.AggregateIdentity, new UserName(DateTime.Now.ToLongDateString())));
+            await PublishCommandAsync(new RenameUserCommand(domainEvent.AggregateIdentity, new UserName(
+                (DateTime.Now.ToLongDateString(), "ru"))));
         }
 
         public bool Handle(IDomainEvent<UserId, UserRenamedEvent> domainEvent)

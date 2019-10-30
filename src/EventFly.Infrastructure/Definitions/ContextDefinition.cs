@@ -4,8 +4,8 @@ using EventFly.Aggregates.Snapshot;
 using EventFly.Commands;
 using EventFly.Core;
 using EventFly.Domain;
-using EventFly.Extensions;
 using EventFly.Jobs;
+using EventFly.Permissions;
 using EventFly.Queries;
 using EventFly.ReadModels;
 using EventFly.Sagas;
@@ -16,42 +16,18 @@ using System.Collections.Generic;
 
 namespace EventFly.Definitions
 {
-    internal class JobDefinition : IJobDefinition
-    {
-        public JobName Name { get; }
-        public Type Type { get; }
-        public Type IdentityType { get; }
-        public IJobManagerDefinition ManagerDefinition { get; }
-
-        internal JobDefinition(Type type, Type identityType, IJobManagerDefinition managerDefinition)
-        {
-            Type = type;
-            Name = type.GetJobName();
-            IdentityType = identityType;
-            ManagerDefinition = managerDefinition;
-        }
-    }
-
     public abstract class ContextDefinition : IContextDefinition
     {
         public string Name => GetType().Name;
-
         public IReadOnlyCollection<IAggregateDefinition> Aggregates => _aggregates;
-
         public IReadOnlyCollection<ISagaDefinition> Sagas => _sagas;
-
         public IReadOnlyCollection<IDomainServiceDefinition> DomainServices => _services;
-
         public IReadOnlyCollection<IReadModelDefinition> ReadModels => _readModels;
-
         public IReadOnlyCollection<IQueryDefinition> Queries => _queries;
-
         public IReadOnlyCollection<IJobDefinition> Jobs => _jobs;
-
+        public IReadOnlyCollection<IPermissionDefinition> Permissions => _permissions;
         public EventDefinitions Events { get; } = new EventDefinitions();
-
         public CommandDefinitions Commands { get; } = new CommandDefinitions();
-
         public SnapshotDefinitions Snapshots { get; } = new SnapshotDefinitions();
 
         protected IContextDefinition RegisterAggregate<TAggregate, TIdentity>()
@@ -111,6 +87,26 @@ namespace EventFly.Definitions
             return this;
         }
 
+        protected IContextDefinition RegisterPermission(string permissionCode)
+        {
+            var permissionDef = new PermissionDefinition(permissionCode);
+
+            if (!_permissions.Contains(permissionDef)) _permissions.Add(permissionDef);
+
+            return this;
+        }
+
+        protected IContextDefinition RegisterPermission<TIdentity>(string permissionCode)
+        where TIdentity : IIdentity
+        {
+            var permissionDef = new PermissionDefinition(typeof(TIdentity), permissionCode);
+
+            if (!_permissions.Contains(permissionDef)) _permissions.Add(permissionDef);
+
+            return this;
+        }
+
+
         protected IContextDefinition RegisterReadModel<TReadModel, TReadModelManager>()
             where TReadModel : IReadModel
             where TReadModelManager : ActorBase, IReadModelManager, new()
@@ -169,5 +165,6 @@ namespace EventFly.Definitions
         private readonly List<IReadModelDefinition> _readModels = new List<IReadModelDefinition>();
         private readonly List<IQueryDefinition> _queries = new List<IQueryDefinition>();
         private readonly List<IJobDefinition> _jobs = new List<IJobDefinition>();
+        private readonly List<IPermissionDefinition> _permissions = new List<IPermissionDefinition>();
     }
 }
