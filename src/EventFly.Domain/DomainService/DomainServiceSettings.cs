@@ -1,18 +1,21 @@
 ﻿using Akka.Configuration;
 using EventFly.Configuration;
+using System;
 
-namespace EventFly.DomainService
+namespace EventFly.Domain
 {
     public class DomainServiceSettings
     {
-        private static string _section = "EventFly.domain-service";
-        public readonly bool AutoReceive;
         public DomainServiceSettings(Config config)
         {
-            var aggregateSagaConfig = config.WithFallback(EventFlyDefaultSettings.DefaultConfig());
-            aggregateSagaConfig = aggregateSagaConfig.GetConfig(_section);
+            var domainServiceConfig = config.WithFallback(EventFlyDefaultSettings.DefaultConfig());
+            domainServiceConfig = domainServiceConfig.GetConfig(_section);
 
-            AutoReceive = aggregateSagaConfig.GetBoolean("auto-receive");
+            AutoReceive = domainServiceConfig.GetBoolean("auto-receive");
         }
+
+        public Boolean AutoReceive { get; }
+
+        private const String _section = "EventFly.domain-service";
     }
 }

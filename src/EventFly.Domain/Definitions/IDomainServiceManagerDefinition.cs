@@ -1,11 +1,9 @@
 ﻿using System;
 
-namespace EventFly.Definitions
+namespace EventFly.Domain
 {
     public interface IDomainServiceManagerDefinition
     {
         Type ServiceType { get; }
-        Type ServiceLocatorType { get; }
-        Type IdentityType { get; }
     }
 }

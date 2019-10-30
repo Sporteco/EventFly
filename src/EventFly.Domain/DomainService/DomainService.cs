@@ -1,8 +1,3 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
 using Akka.Actor;
 using Akka.Event;
 using EventFly.Aggregates;
@@ -13,38 +8,48 @@ using EventFly.DependencyInjection;
 using EventFly.Exceptions;
 using EventFly.Extensions;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Linq;
+using System.Reflection;
+using System.Threading.Tasks;
 
-namespace EventFly.DomainService
+namespace EventFly.Domain
 {
-    public abstract class DomainService<TDomainService, TIdentity> : ReceiveActor, IDomainService<TIdentity>
-        where TDomainService : DomainService<TDomainService, TIdentity>
-        where TIdentity : IIdentity
+    public abstract class DomainService<TDomainService> : ReceiveActor, IDomainService
+        where TDomainService : DomainService<TDomainService>
     {
-        protected ILoggingAdapter Logger { get; set; }
-
-        private CircularBuffer<ISourceId> _previousSourceIds = new CircularBuffer<ISourceId>(100);
-        protected override void PreStart()
+        protected DomainService()
         {
-            base.PreStart();
-            _scope = _serviceProvider.CreateScope();
+            Logger = Context.GetLogger();
+
+            var serviceProviderHolder = Context.System.GetExtension<ServiceProviderHolder>();
+            if (serviceProviderHolder == null)
+            {
+                //todo Get rid of ServiceLocator anti-pattern?
+                throw new ArgumentNullException("ServiceProviderHolder", "Implicit argument wasn't found in ActorContext.");
+            }
+            _serviceProvider = serviceProviderHolder.ServiceProvider;
+
+            _settings = new DomainServiceSettings(Context.System.Settings.Config);
+
+            if ((this as TDomainService) == null)
+            {
+                throw new InvalidOperationException($"DomainService specifies Type={typeof(TDomainService).PrettyPrint()} as generic argument, it should be its own type.");
+            }
+
+            if (_settings.AutoReceive)
+            {
+                InitReceives();
+                InitAsyncReceives();
+            }
         }
 
-        protected override void PostStop()
-        {
-            base.PostStop();
-            _scope.Dispose();
-        }
-
-        public async Task<IExecutionResult> PublishCommandAsync<TCommandIdentity>(ICommand<TCommandIdentity> command) where TCommandIdentity : IIdentity 
+        public async Task<IExecutionResult> PublishCommandAsync<TCommandIdentity>(ICommand<TCommandIdentity> command)
+            where TCommandIdentity : IIdentity
         {
             if (_pinnedEvent != null)
             {
                 command.Metadata.Merge(_pinnedEvent.Metadata);
-            }
-
-            if (!command.Metadata.CorrelationIds.Contains(Id.Value))
-            {
-                command.Metadata.CorrelationIds = new List<string>(command.Metadata.CorrelationIds) { Id.Value };
             }
 
             var bus = _scope.ServiceProvider.GetRequiredService<ICommandBus>();
@@ -52,72 +57,22 @@ namespace EventFly.DomainService
             return await bus.Publish(command);
         }
 
-        public TIdentity Id { get; }
-
-        private readonly IServiceProvider _serviceProvider;
-        
-        private IServiceScope _scope;
-
-        private DomainServiceSettings Settings { get; }
-
-        private IDomainEvent _pinnedEvent;
-
-        protected DomainService()
-        {
-            Logger = Context.GetLogger();
-
-            _serviceProvider = Context.System.GetExtension<ServiceProviderHolder>().ServiceProvider;
-
-            Settings = new DomainServiceSettings(Context.System.Settings.Config);
-            var idValue = Context.Self.Path.Name;
-            Id = (TIdentity)Activator.CreateInstance(typeof(TIdentity), idValue);
-
-            if (Id == null)
-            {
-                throw new InvalidOperationException(
-                    $"Identity for DomainService '{Id.GetType().PrettyPrint()}' could not be activated.");
-            }
-
-            if ((this as TDomainService) == null)
-            {
-                throw new InvalidOperationException(
-                    $"DomainService specifies Type={typeof(TDomainService).PrettyPrint()} as generic argument, it should be its own type.");
-            }
-
-            if (Settings.AutoReceive)
-            {
-                InitReceives();
-                InitAsyncReceives();
-            }
-
-        }
-
         public void InitReceives()
         {
             var type = GetType();
 
-            var subscriptionTypes =
-                type
-                    .GetDomainServiceEventSubscriptionTypes();
+            var subscriptionTypes = type.GetDomainServiceEventSubscriptionTypes();
 
-            
             var methods = type
                 .GetTypeInfo()
                 .GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
                 .Where(mi =>
                 {
-                    if (mi.Name != "Handle")
-                        return false;
-
+                    if (mi.Name != "Handle") return false;
                     var parameters = mi.GetParameters();
-
-                    return
-                        parameters.Length == 1;
+                    return parameters.Length == 1;
                 })
-                .ToDictionary(
-                    mi => mi.GetParameters()[0].ParameterType,
-                    mi => mi);
-
+                .ToDictionary(mi => mi.GetParameters()[0].ParameterType, mi => mi);
 
             var method = type
                 .GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
@@ -133,39 +88,31 @@ namespace EventFly.DomainService
 
             foreach (var subscriptionType in subscriptionTypes)
             {
-                Context.System.EventStream.Subscribe(Self,subscriptionType);
-                var funcType = typeof(Func<,>).MakeGenericType(subscriptionType, typeof(bool));
+                Context.System.EventStream.Subscribe(Self, subscriptionType);
+                var funcType = typeof(Func<,>).MakeGenericType(subscriptionType, typeof(Boolean));
                 var subscriptionFunction = Delegate.CreateDelegate(funcType, this, methods[subscriptionType]);
                 var actorReceiveMethod = method.MakeGenericMethod(subscriptionType);
 
-                actorReceiveMethod.Invoke(this, new object[] { subscriptionFunction });
+                actorReceiveMethod.Invoke(this, new Object[] { subscriptionFunction });
             }
         }
+
         public void InitAsyncReceives()
         {
             var type = GetType();
 
-            var subscriptionTypes =
-                type
-                    .GetAsyncDomainEventSubscriberSubscriptionTypes();
+            var subscriptionTypes = type.GetAsyncDomainServiceEventSubscriptionTypes();
 
             var methods = type
                 .GetTypeInfo()
                 .GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
                 .Where(mi =>
                 {
-                    if (mi.Name != "HandleAsync")
-                        return false;
-
+                    if (mi.Name != "HandleAsync") return false;
                     var parameters = mi.GetParameters();
-
-                    return
-                        parameters.Length == 1;
+                    return parameters.Length == 1;
                 })
-                .ToDictionary(
-                    mi => mi.GetParameters()[0].ParameterType,
-                    mi => mi);
-
+                .ToDictionary(mi => mi.GetParameters()[0].ParameterType, mi => mi);
 
             var method = type
                 .GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
@@ -181,15 +128,35 @@ namespace EventFly.DomainService
 
             foreach (var subscriptionType in subscriptionTypes)
             {
-                Context.System.EventStream.Subscribe(Self,subscriptionType);
+                Context.System.EventStream.Subscribe(Self, subscriptionType);
                 var funcType = typeof(Func<,>).MakeGenericType(subscriptionType, typeof(Task));
                 var subscriptionFunction = Delegate.CreateDelegate(funcType, this, methods[subscriptionType]);
                 var actorReceiveMethod = method.MakeGenericMethod(subscriptionType);
 
-                actorReceiveMethod.Invoke(this, new[] { subscriptionFunction, (object)null });
+                actorReceiveMethod.Invoke(this, new[] { subscriptionFunction, (Object)null });
             }
         }
-        protected void CommandInternal<T>(Func<T, bool> handler)
+
+        public Boolean HasSourceId(ISourceId sourceId)
+        {
+            return !sourceId.IsNone() && _previousSourceIds.Any(s => s.Value == sourceId.Value);
+        }
+
+        protected ILoggingAdapter Logger { get; set; }
+
+        protected override void PreStart()
+        {
+            base.PreStart();
+            _scope = _serviceProvider.CreateScope();
+        }
+
+        protected override void PostStop()
+        {
+            base.PostStop();
+            _scope.Dispose();
+        }
+
+        protected void CommandInternal<T>(Func<T, Boolean> handler)
         {
             Receive<T>(e =>
             {
@@ -201,7 +168,7 @@ namespace EventFly.DomainService
             });
         }
 
-        protected void CommandInternal<T>(Func<T, Task> handler, object item)
+        protected void CommandInternal<T>(Func<T, Task> handler, Object _)
         {
             ReceiveAsync<T>(e =>
             {
@@ -213,20 +180,15 @@ namespace EventFly.DomainService
             });
         }
 
-        protected void SetSourceIdHistory(int count)
+        protected void SetSourceIdHistory(Int32 count)
         {
             _previousSourceIds = new CircularBuffer<ISourceId>(count);
         }
 
-        public bool HasSourceId(ISourceId sourceId)
-        {
-            return !sourceId.IsNone() && _previousSourceIds.Any(s => s.Value == sourceId.Value);
-        }
-
-        public IIdentity GetIdentity()
-        {
-            return Id;
-        }
-
+        private CircularBuffer<ISourceId> _previousSourceIds = new CircularBuffer<ISourceId>(100);
+        private readonly IServiceProvider _serviceProvider;
+        private IServiceScope _scope;
+        private readonly DomainServiceSettings _settings;
+        private IDomainEvent _pinnedEvent;
     }
 }

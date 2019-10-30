@@ -1,14 +1,14 @@
-﻿using System.Linq;
-using EventFly.Localization;
+﻿using EventFly.Localization;
 using EventFly.Validation;
 using FluentValidation;
+using System.Linq;
 
 namespace Demo.ValueObjects
 {
     [Validator(typeof(UserNameValidator))]
     public class UserName : LocalizedString
     {
-        public UserName(params StringLocalization[] locs) : base(locs){}
+        public UserName(params StringLocalization[] locs) : base(locs) { }
 
         public static implicit operator UserName((string value, LanguageCode lang) str)
         {

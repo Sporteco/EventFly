@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using EventFly.Core;
+﻿using EventFly.Core;
 using EventFly.Exceptions;
 using EventFly.Extensions;
+using System;
+using System.Collections.Generic;
 
 namespace EventFly.Aggregates
 {
     public abstract class EventDrivenAggregateRoot<TAggregate, TIdentity, TAggregateState> : AggregateRoot<TAggregate, TIdentity, TAggregateState>
         where TAggregate : EventDrivenAggregateRoot<TAggregate, TIdentity, TAggregateState>
-        where TAggregateState : AggregateState<TAggregate,TIdentity, IMessageApplier<TAggregate,TIdentity>>, IAggregateState<TIdentity>, new()
+        where TAggregateState : AggregateState<TAggregate, TIdentity, IMessageApplier<TAggregate, TIdentity>>, IAggregateState<TIdentity>, new()
         where TIdentity : IIdentity
     {
         private static readonly IReadOnlyDictionary<Type, Action<TAggregateState, IAggregateEvent>> ApplyMethodsFromState = typeof(TAggregateState).GetAggregateStateEventApplyMethods<TAggregate, TIdentity, TAggregateState>();
