@@ -25,14 +25,18 @@ namespace EventFly.TestFixture.Aggregates
                 foreach (var validator in validators.OrderBy(i => i.Priority))
                 {
                     var result = validator.Validate(command);
-                    if (!result.IsValid) return Task.FromResult((IExecutionResult) new FailedValidationExecutionResult(result));
+                    if (result.IsValid == false)
+                    {
+                        _senRef?.Tell(new FailedValidationExecutionResult(result));
+                        return Task.FromResult((IExecutionResult)new FailedValidationExecutionResult(result));
+                    }
                 }
             }
             catch (UnauthorizedAccessException)
             {
                 _senRef?.Tell(new UnauthorizedAccessResult());
 
-                return Task.FromResult((IExecutionResult) new UnauthorizedAccessResult());
+                return Task.FromResult((IExecutionResult)new UnauthorizedAccessResult());
             }
 
             if (_senRef != null)
@@ -42,13 +46,11 @@ namespace EventFly.TestFixture.Aggregates
                 return Task.FromResult(ExecutionResult.Success());
             }
 
-
             return GetAggregateManager(command.GetAggregateId().GetType()).Ask<IExecutionResult>(command, new TimeSpan?());
         }
 
-
-
-        public TestCommandBus(IDefinitionToManagerRegistry definitionToManagerRegistry, IServiceProvider serviceProvider) : 
-            base(definitionToManagerRegistry, serviceProvider){}
+        public TestCommandBus(IDefinitionToManagerRegistry definitionToManagerRegistry, IServiceProvider serviceProvider) :
+            base(definitionToManagerRegistry, serviceProvider)
+        { }
     }
 }

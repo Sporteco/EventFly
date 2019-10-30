@@ -164,7 +164,7 @@ namespace EventFly.Tests.UnitTests.Aggregates
 
         [Fact]
         [Category(Category)]
-        public void FailedCommands_AfterAggregateCreation_ExceptionThrown()
+        public void FailedCommands_AfterAggregateCreation_ExpectFailedTestExecutionResult()
         {
             var aggregateId = TestAggregateId.New;
             var commandId = CommandId.New;
@@ -173,6 +173,19 @@ namespace EventFly.Tests.UnitTests.Aggregates
                 .GivenNothing()
                 .When(new BadCommand(aggregateId, commandId))
                 .ThenExpectReply<FailedTestExecutionResult>();
+        }
+
+        [Fact]
+        [Category(Category)]
+        public void InvalidCommands_AfterAggregateCreation_ExpectFailedValidationExecutionResult()
+        {
+            var aggregateId = TestAggregateId.New;
+            var commandId = CommandId.New;
+
+            this.FixtureFor<TestAggregate, TestAggregateId>(aggregateId)
+                .GivenNothing()
+                .When(new ValidatedCommand(aggregateId, false, commandId))
+                .ThenExpectReply<FailedValidationExecutionResult>();
         }
 
         [Fact]
