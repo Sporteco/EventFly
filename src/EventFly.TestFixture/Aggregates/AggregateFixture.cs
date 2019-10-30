@@ -159,8 +159,8 @@ namespace EventFly.TestFixture.Aggregates
                 if (command == null)
                     throw new NullReferenceException(nameof(command));
 
-                var result = CommandBus.Publish(command).GetAwaiter().GetResult();
-                AggregateReplyTestProbe.Tell(result);
+                CommandBus.Publish(command).GetAwaiter().GetResult();
+                //do nothing because we receive result via AggregateReplyTestProbe
             }
 
             return this;

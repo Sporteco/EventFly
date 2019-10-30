@@ -2,6 +2,7 @@
 using Akka.TestKit.Xunit2;
 using EventFly.Commands.ExecutionResults;
 using EventFly.DependencyInjection;
+using EventFly.TestFixture.Aggregates;
 using EventFly.TestFixture.Extensions;
 using EventFly.TestHelpers;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,7 +21,7 @@ namespace EventFly.Tests.UnitTests.Permissions
         {
             Sys.RegisterDependencyResolver(
                 new ServiceCollection()
-                    .AddEventFly(Sys)
+                    .AddTestEventFly(Sys)
                     .WithContext<TestPermissionsContext>()
                     .Services
                     .BuildServiceProvider()

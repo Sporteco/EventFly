@@ -164,6 +164,19 @@ namespace EventFly.Tests.UnitTests.Aggregates
 
         [Fact]
         [Category(Category)]
+        public void FailedCommands_AfterAggregateCreation_ExceptionThrown()
+        {
+            var aggregateId = TestAggregateId.New;
+            var commandId = CommandId.New;
+
+            this.FixtureFor<TestAggregate, TestAggregateId>(aggregateId)
+                .GivenNothing()
+                .When(new BadCommand(aggregateId, commandId))
+                .ThenExpectReply<FailedTestExecutionResult>();
+        }
+
+        [Fact]
+        [Category(Category)]
         public void InitialSnapshot_After_TestCreatedEventEmitted()
         {
             var aggregateId = TestAggregateId.New;
