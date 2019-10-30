@@ -42,7 +42,7 @@ namespace EventFly.GraphQL
            var qas = new List<QueryArgument>();
             foreach (var prop in parametersType.GetProperties().Where(i=>i.CanWrite))
             {
-                var type = GetGraphType(prop.PropertyType);
+                var type = GetGraphType(prop.PropertyType,isInput);
 
                 var allowNulls = prop.GetCustomAttribute<AllowNullAttribute>() != null;
 
@@ -104,25 +104,33 @@ namespace EventFly.GraphQL
 
         };
 
-        private static Type GetGraphType(Type propType)
+        private static Type GetGraphType(Type propType, bool isInput)
         {
 
             if (propType.IsGenericType && propType.GetGenericArguments().Length == 1 && typeof(IEnumerable).IsAssignableFrom(propType))
             {
-                var innerType = GetGraphType(propType.GetGenericArguments().First());
+                var innerType = GetGraphType(propType.GetGenericArguments().First(), isInput);
                 if (innerType != null)
                     return typeof(ListGraphType<>).MakeGenericType(innerType);
                 return null;
             }
             if (propType.IsArray)
             {
-                var innerType = GetGraphType(propType.GetElementType());
+                var innerType = GetGraphType(propType.GetElementType(),isInput);
                 if (innerType != null)
                     return typeof(ListGraphType<>).MakeGenericType(innerType);
                 return null;
             }
+
             if (MapTypes.ContainsKey(propType))
-                return MapTypes[propType];
+            {
+                if (isInput)
+                    return MapTypes[propType];
+                var type = MapTypes[propType];
+                if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(NonNullGraphType<>))
+                    type = type.GetGenericArguments()[0];
+                return type;
+            }
 
             if (propType.IsEnum)
             {
@@ -140,7 +148,7 @@ namespace EventFly.GraphQL
             foreach (var prop in modelType.GetProperties())
             {
                 var description = prop.GetCustomAttribute<DescriptionAttribute>()?.Description;
-                var type = GetGraphType(prop.PropertyType);
+                var type = GetGraphType(prop.PropertyType,isInput);
                 qas.Add(type != null
                     ? new FieldType {Type = type, Name = prop.Name, Description = description}
                     : new FieldType
