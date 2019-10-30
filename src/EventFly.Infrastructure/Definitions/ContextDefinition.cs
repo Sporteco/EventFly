@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Akka.Actor;
+﻿using Akka.Actor;
 using EventFly.Aggregates;
 using EventFly.Aggregates.Snapshot;
 using EventFly.Commands;
@@ -13,11 +11,18 @@ using EventFly.ReadModels;
 using EventFly.Sagas;
 using EventFly.Sagas.AggregateSaga;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Collections.Generic;
 
 namespace EventFly.Definitions
 {
     internal class JobDefinition : IJobDefinition
     {
+        public JobName Name { get; }
+        public Type Type { get; }
+        public Type IdentityType { get; }
+        public IJobManagerDefinition ManagerDefinition { get; }
+
         internal JobDefinition(Type type, Type identityType, IJobManagerDefinition managerDefinition)
         {
             Type = type;
@@ -25,32 +30,17 @@ namespace EventFly.Definitions
             IdentityType = identityType;
             ManagerDefinition = managerDefinition;
         }
-
-        public JobName Name { get; }
-
-        public Type Type { get; }
-
-        public Type IdentityType { get; }
-
-        public IJobManagerDefinition ManagerDefinition { get; }
     }
 
     public abstract class ContextDefinition : IContextDefinition
     {
-        private readonly List<IAggregateDefinition> _aggregates = new List<IAggregateDefinition>();
-        private readonly List<IDomainServiceDefinition> _services = new List<IDomainServiceDefinition>();
-        private readonly List<ISagaDefinition> _sagas = new List<ISagaDefinition>();
-        private readonly List<IReadModelDefinition> _readModels = new List<IReadModelDefinition>();
-        private readonly List<IQueryDefinition> _queries = new List<IQueryDefinition>();
-        private readonly List<IJobDefinition> _jobs = new List<IJobDefinition>();
-
         public string Name => GetType().Name;
 
         public IReadOnlyCollection<IAggregateDefinition> Aggregates => _aggregates;
 
         public IReadOnlyCollection<ISagaDefinition> Sagas => _sagas;
-        public IReadOnlyCollection<IDomainServiceDefinition> DomainServices => _services;
 
+        public IReadOnlyCollection<IDomainServiceDefinition> DomainServices => _services;
 
         public IReadOnlyCollection<IReadModelDefinition> ReadModels => _readModels;
 
@@ -65,94 +55,48 @@ namespace EventFly.Definitions
         public SnapshotDefinitions Snapshots { get; } = new SnapshotDefinitions();
 
         protected IContextDefinition RegisterAggregate<TAggregate, TIdentity>()
-          where TAggregate : ActorBase, IAggregateRoot<TIdentity>
-          where TIdentity : IIdentity
+            where TAggregate : ActorBase, IAggregateRoot<TIdentity>
+            where TIdentity : IIdentity
         {
-            //var manager = _system.ActorOf(Props.Create(() => new AggregateManager<TAggregate, TIdentity>()),
-            //    $"aggregate-{typeof(TAggregate).GetAggregateName()}-manager");
-
-            _aggregates.Add(
-                new AggregateDefinition(typeof(TAggregate), typeof(TIdentity),
-                    new AggregateManagerDefinition(typeof(TAggregate), typeof(TIdentity))
-                )
-            );
+            var manager = new AggregateManagerDefinition(typeof(TAggregate), typeof(TIdentity));
+            _aggregates.Add(new AggregateDefinition(typeof(TAggregate), typeof(TIdentity), manager));
             return this;
         }
 
         public abstract IServiceCollection DI(IServiceCollection serviceDescriptors);
 
         protected IContextDefinition RegisterQuery<TQuery, TResult>()
-          where TQuery : IQuery<TResult>
+            where TQuery : IQuery<TResult>
         {
-            //var manager = _system.ActorOf(Props.Create(() => new QueryManager<TQueryHandler, TQuery, TResult>()),
-            //    $"query-{typeof(TQuery).Name}-manager");
-
-            _queries.Add(
-                new QueryDefinition(typeof(TQuery), typeof(TResult),
-                    new QueryManagerDefinition(typeof(QueryHandler<TQuery, TResult>), typeof(TQuery), typeof(TResult))
-                )
-            );
+            var manager = new QueryManagerDefinition(typeof(QueryHandler<TQuery, TResult>), typeof(TQuery), typeof(TResult));
+            _queries.Add(new QueryDefinition(typeof(TQuery), typeof(TResult), manager));
             return this;
         }
 
         protected IContextDefinition RegisterSaga<TSaga, TSagaId, TSagaLocator>()
-          where TSaga : ActorBase, IAggregateSaga<TSagaId>
-          where TSagaId : IIdentity
-          where TSagaLocator : class, ISagaLocator<TSagaId>, new()
+            where TSaga : ActorBase, IAggregateSaga<TSagaId>
+            where TSagaId : IIdentity
+            where TSagaLocator : class, ISagaLocator<TSagaId>, new()
         {
-            //var manager = _system.ActorOf(Props.Create(() => new AggregateSagaManager<TSaga, TSagaId, TSagaLocator>()),
-            //    $"saga-{typeof(TSagaId).Name}-manager");
-
-            _sagas.Add(
-                new SagaDefinition(typeof(TSaga), typeof(TSagaId),
-                    new AggregateSagaManagerDefinition(typeof(TSaga), typeof(TSagaId), typeof(TSagaLocator))
-                )
-            );
+            var manager = new AggregateSagaManagerDefinition(typeof(TSaga), typeof(TSagaId), typeof(TSagaLocator));
+            _sagas.Add(new SagaDefinition(typeof(TSaga), typeof(TSagaId), manager));
             return this;
         }
 
-        protected IContextDefinition RegisterDomainService<TService, TServiceId,TDomainServiceLocator>()
-            where TService : ActorBase, IDomainService<TServiceId>
-            where TServiceId : IIdentity
-            where TDomainServiceLocator : class, IDomainServiceLocator<TServiceId>, new()
+        protected IContextDefinition RegisterDomainService<TService>()
+            where TService : ActorBase, IDomainService
         {
-            //var manager = _system.ActorOf(Props.Create(() => new AggregateSagaManager<TSaga, TSagaId, TSagaLocator>()),
-            //    $"saga-{typeof(TSagaId).Name}-manager");
-
-            _services.Add(
-                new DomainServiceDefinition(typeof(TService), typeof(TService),
-                    new DomainServiceManagerDefinition(typeof(TService), typeof(TServiceId), typeof(TDomainServiceLocator))
-                )
-            );
-            return this;
-        }
-        protected IContextDefinition RegisterDomainService<TService, TServiceId>()
-            where TService : ActorBase, IDomainService<TServiceId>
-            where TServiceId : IIdentity
-        {
-            //var manager = _system.ActorOf(Props.Create(() => new AggregateSagaManager<TSaga, TSagaId, SagaLocatorByIdentity<TSagaId>>()),
-            //    $"saga-{typeof(TSagaId).Name}-manager");
-
-            _services.Add(
-                new DomainServiceDefinition(typeof(TService), typeof(TService),
-                    new DomainServiceManagerDefinition(typeof(TService), typeof(TServiceId), typeof(DomainServiceLocator<TServiceId>))
-                )
-            );
+            var manager = new DomainServiceManagerDefinition(typeof(TService));
+            _services.Add(new DomainServiceDefinition(typeof(TService), manager));
             return this;
         }
 
         protected IContextDefinition RegisterSaga<TSaga, TSagaId>()
-          where TSaga : ActorBase, IAggregateSaga<TSagaId>
-          where TSagaId : class, IIdentity
+            where TSaga : ActorBase, IAggregateSaga<TSagaId>
+            where TSagaId : class, IIdentity
         {
-            //var manager = _system.ActorOf(Props.Create(() => new AggregateSagaManager<TSaga, TSagaId, SagaLocatorByIdentity<TSagaId>>()),
-            //    $"saga-{typeof(TSagaId).Name}-manager");
-
-            _sagas.Add(
-                new SagaDefinition(typeof(TSaga), typeof(TSagaId),
-                    new AggregateSagaManagerDefinition(typeof(TSaga), typeof(TSagaId), typeof(SagaLocatorByIdentity<TSagaId>))
-                )
-            );
+            var manager = new AggregateSagaManagerDefinition(typeof(TSaga), typeof(TSagaId), typeof(SagaLocatorByIdentity<TSagaId>));
+            _sagas.Add(new SagaDefinition(typeof(TSaga), typeof(TSagaId), manager));
             return this;
         }
 
@@ -160,39 +104,28 @@ namespace EventFly.Definitions
             where TJob : IJob<TJobId>
             where TJobId : IJobId
             where TJobRunner : JobRunner<TJob, TJobId>
-            where TJobScheduler: JobScheduler<TJobScheduler, TJob, TJobId>
+            where TJobScheduler : JobScheduler<TJobScheduler, TJob, TJobId>
         {
-            _jobs.Add(
-                new JobDefinition(typeof(TJob), typeof(TJobId),
-                    new JobManagerDefinition(typeof(TJobRunner), typeof(TJobScheduler), typeof(TJob), typeof(TJobId))
-                )
-            );
-
+            var manager = new JobManagerDefinition(typeof(TJobRunner), typeof(TJobScheduler), typeof(TJob), typeof(TJobId));
+            _jobs.Add(new JobDefinition(typeof(TJob), typeof(TJobId), manager));
             return this;
         }
 
         protected IContextDefinition RegisterReadModel<TReadModel, TReadModelManager>()
-          where TReadModel : IReadModel
-          where TReadModelManager : ActorBase, IReadModelManager, new()
+            where TReadModel : IReadModel
+            where TReadModelManager : ActorBase, IReadModelManager, new()
         {
-            //var manager = _system.ActorOf(Props.Create(() => new TReadModelManager()),
-            //    $"read~model-{typeof(TReadModel).Name}-manager");
-
-            _readModels.Add(
-                new ReadModelDefinition(typeof(TReadModel),
-                    new ReadModelManagerDefinition(typeof(TReadModelManager), typeof(TReadModel))
-                )
-            );
+            var manager = new ReadModelManagerDefinition(typeof(TReadModelManager), typeof(TReadModel));
+            _readModels.Add(new ReadModelDefinition(typeof(TReadModel), manager));
             return this;
         }
 
         protected IContextDefinition RegisterAggregateReadModel<TReadModel, TIdentity>()
-          where TReadModel : ReadModel, new()
+            where TReadModel : ReadModel, new()
             where TIdentity : IIdentity
         {
             return RegisterReadModel<TReadModel, AggregateReadModelManager<TReadModel, TIdentity>>();
         }
-
 
         protected IContextDefinition RegisterCommand<TCommand>() where TCommand : ICommand
         {
@@ -229,5 +162,12 @@ namespace EventFly.Definitions
             Snapshots.Load(types);
             return this;
         }
+
+        private readonly List<IAggregateDefinition> _aggregates = new List<IAggregateDefinition>();
+        private readonly List<IDomainServiceDefinition> _services = new List<IDomainServiceDefinition>();
+        private readonly List<ISagaDefinition> _sagas = new List<ISagaDefinition>();
+        private readonly List<IReadModelDefinition> _readModels = new List<IReadModelDefinition>();
+        private readonly List<IQueryDefinition> _queries = new List<IQueryDefinition>();
+        private readonly List<IJobDefinition> _jobs = new List<IJobDefinition>();
     }
 }

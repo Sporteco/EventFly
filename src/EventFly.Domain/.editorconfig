@@ -5,3 +5,6 @@ dotnet_diagnostic.CA1062.severity = warning
 
 # CA1052: Static holder types should be Static or NotInheritable
 dotnet_diagnostic.CA1052.severity = suggestion
+
+# IDE0022: Use block body for methods
+csharp_style_expression_bodied_methods = false:silent

@@ -1,5 +1,4 @@
 using Akka.TestKit.Xunit2;
-using EventFly.Core;
 using EventFly.DependencyInjection;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,8 +8,7 @@ using Xunit.Abstractions;
 
 namespace EventFly.Domain.Tests
 {
-    public class Service : DomainService<Service, ServiceId> { }
-    public class ServiceId : Identity<ServiceId> { public ServiceId(String value) : base(value) { } }
+    public class Service : DomainService<Service> { }
 
     public class DomainServiceTests : TestKit
     {

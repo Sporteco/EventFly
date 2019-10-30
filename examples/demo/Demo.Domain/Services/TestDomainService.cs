@@ -2,14 +2,13 @@ using Demo.Commands;
 using Demo.Events;
 using Demo.ValueObjects;
 using EventFly.Aggregates;
-using EventFly.Core;
 using EventFly.Domain;
 using System;
 using System.Threading.Tasks;
 
 namespace Demo.Domain.Services
 {
-    public class TestDomainService : DomainService<TestDomainService, TestDomainServiceId>,
+    public class TestDomainService : DomainService<TestDomainService>,
         IDomainServiceIsStartedByAsync<UserId, UserCreatedEvent>,
         IDomainServiceHandles<UserId, UserRenamedEvent>
 
@@ -25,6 +24,4 @@ namespace Demo.Domain.Services
             return true;
         }
     }
-
-    public class TestDomainServiceId : Identity<TestDomainServiceId> { public TestDomainServiceId(String value) : base(value) { } }
 }

@@ -1,7 +1,6 @@
 ﻿using Akka.Actor;
 using Akka.Event;
 using EventFly.Aggregates;
-using EventFly.Core;
 using EventFly.Exceptions;
 using EventFly.Extensions;
 using EventFly.Messages;
@@ -10,10 +9,8 @@ using System.Collections.Generic;
 
 namespace EventFly.Domain
 {
-    public class DomainServiceManager<TDomainService, TIdentity, TDomainServiceLocator> : ReceiveActor, IDomainServiceManager<TDomainService, TIdentity, TDomainServiceLocator>
-        where TDomainService : ActorBase, IDomainService<TIdentity>
-        where TIdentity : IIdentity
-        where TDomainServiceLocator : class, IDomainServiceLocator<TIdentity>, new()
+    public class DomainServiceManager<TDomainService> : ReceiveActor, IDomainServiceManager<TDomainService>
+        where TDomainService : ActorBase, IDomainService
     {
         public DomainServiceManagerSettings Settings { get; }
 
@@ -23,7 +20,6 @@ namespace EventFly.Domain
 
             _subscriptionTypes = new List<Type>();
 
-            DomainServiceLocator = new TDomainServiceLocator();
             Settings = new DomainServiceManagerSettings(Context.System.Settings.Config);
 
             var domainServiceType = typeof(TDomainService);
@@ -53,7 +49,6 @@ namespace EventFly.Domain
         }
 
         protected ILoggingAdapter Logger { get; }
-        protected TDomainServiceLocator DomainServiceLocator { get; }
 
         protected virtual bool Handle(UnsubscribeFromAll command)
         {
@@ -72,9 +67,8 @@ namespace EventFly.Domain
 
         protected virtual bool Handle(IDomainEvent domainEvent)
         {
-            var domainServiceId = DomainServiceLocator.LocateDomainService(domainEvent);
-            var domainService = FindOrSpawn(domainServiceId);
-            domainService.Tell(domainEvent, Sender);
+            var service = FindOrSpawn();
+            service.Tell(domainEvent, Sender);
             return true;
         }
 
@@ -97,23 +91,21 @@ namespace EventFly.Domain
                 });
         }
 
-        protected IActorRef FindOrSpawn(TIdentity domainServiceId)
+        protected IActorRef FindOrSpawn()
         {
-            var domainService = Context.Child(domainServiceId);
-            if (domainService.IsNobody())
-            {
-                return Spawn(domainServiceId);
-            }
-            return domainService;
+            var service = Context.Child(GetDomainServiceId());
+            return service.IsNobody() ? Spawn() : service;
         }
 
         private readonly IReadOnlyList<Type> _subscriptionTypes;
 
-        private IActorRef Spawn(TIdentity domainServiceId)
+        private IActorRef Spawn()
         {
-            var domainService = Context.ActorOf(Props.Create<TDomainService>(), domainServiceId.Value);
-            Context.Watch(domainService);
-            return domainService;
+            var service = Context.ActorOf(Props.Create<TDomainService>(), GetDomainServiceId());
+            Context.Watch(service);
+            return service;
         }
+
+        private static String GetDomainServiceId() => typeof(TDomainService).FullName;
     }
 }

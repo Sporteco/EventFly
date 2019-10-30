@@ -9,19 +9,15 @@ using EventFly.Exceptions;
 using EventFly.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
 namespace EventFly.Domain
 {
-    public abstract class DomainService<TDomainService, TIdentity> : ReceiveActor, IDomainService<TIdentity>
-        where TDomainService : DomainService<TDomainService, TIdentity>
-        where TIdentity : IIdentity
+    public abstract class DomainService<TDomainService> : ReceiveActor, IDomainService
+        where TDomainService : DomainService<TDomainService>
     {
-        public TIdentity Id { get; }
-
         protected DomainService()
         {
             Logger = Context.GetLogger();
@@ -35,8 +31,6 @@ namespace EventFly.Domain
             _serviceProvider = serviceProviderHolder.ServiceProvider;
 
             _settings = new DomainServiceSettings(Context.System.Settings.Config);
-            var idValue = Context.Self.Path.Name;
-            Id = (TIdentity)Activator.CreateInstance(typeof(TIdentity), idValue);
 
             if ((this as TDomainService) == null)
             {
@@ -50,20 +44,16 @@ namespace EventFly.Domain
             }
         }
 
-        public async Task<ExecutionResult> PublishCommandAsync<TCommandIdentity, TExecutionResult>(ICommand<TCommandIdentity, TExecutionResult> command) where TCommandIdentity : IIdentity where TExecutionResult : IExecutionResult
+        public async Task<ExecutionResult> PublishCommandAsync<TCommandIdentity, TExecutionResult>(ICommand<TCommandIdentity, TExecutionResult> command)
+            where TCommandIdentity : IIdentity
+            where TExecutionResult : IExecutionResult
         {
             var result = CommandValidationHelper.ValidateCommand(command, _serviceProvider);
             if (!result.IsValid) return new FailedValidationExecutionResult(result);
 
-
             if (_pinnedEvent != null)
             {
                 command.Metadata.Merge(_pinnedEvent.Metadata);
-            }
-
-            if (!command.Metadata.CorrellationIds.Contains(Id.Value))
-            {
-                command.Metadata.CorrellationIds = new List<String>(command.Metadata.CorrellationIds) { Id.Value };
             }
 
             var bus = _scope.ServiceProvider.GetRequiredService<ICommandBus>();
@@ -154,11 +144,6 @@ namespace EventFly.Domain
         public Boolean HasSourceId(ISourceId sourceId)
         {
             return !sourceId.IsNone() && _previousSourceIds.Any(s => s.Value == sourceId.Value);
-        }
-
-        public IIdentity GetIdentity()
-        {
-            return Id;
         }
 
         protected ILoggingAdapter Logger { get; set; }
