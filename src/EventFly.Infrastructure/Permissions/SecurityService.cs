@@ -22,7 +22,7 @@ namespace EventFly.Permissions
                 throw new UnauthorizedAccessException();
         }
 
-        public void HasPermissions(string userId, IIdentity targetObjectId, params string[] permissionCodes)
+        public void HasPermissions(string userId, IIdentity targetObjectId, params PermissionCode[] permissionCodes)
         {
             if (permissionCodes == null || !permissionCodes.Any()) return;
 
@@ -32,7 +32,7 @@ namespace EventFly.Permissions
                 throw new UnauthorizedAccessException();
         }
 
-        public bool CheckPermissions(string userId, IIdentity targetObjectId, params string[] permissionCodes)
+        public bool CheckPermissions(string userId, IIdentity targetObjectId, params PermissionCode[] permissionCodes)
         {
             if (_permissionProvider == null)
                 throw new InvalidOperationException("IPermissionProvider not registered.");
@@ -47,18 +47,12 @@ namespace EventFly.Permissions
                 //The permission to object, the type of object and identifier must match
                 if (permission.TargetAggregateType != null && targetObjectType != permission.TargetAggregateType)
                     return false;
-
-                if (permission.TargetAggregateType == null && targetObjectId != null)
-                    return false;
-
             }
 
-            var userPermissions = targetObjectId != null ? _permissionProvider.GetUserPermissions(userId, targetObjectId.Value) 
-                : _permissionProvider.GetUserPermissions(userId, null);
+            var userPermissions = targetObjectId != null ? _permissionProvider.GetUserPermissions(userId, targetObjectId.Value).Distinct() 
+                : _permissionProvider.GetUserPermissions(userId, null).Distinct();
                 
-            if (userPermissions == null) return false;
-
-            var existsPermissions = userPermissions.Where(i => codes.Contains(i.PermissionCode)).Select(i=>i.PermissionCode);
+            var existsPermissions = userPermissions.Where(i => codes.Contains(i.PermissionCode)).Select(i=>i.PermissionCode).Distinct();
 
             if (existsPermissions.Count() != codes.Count) return false;
 

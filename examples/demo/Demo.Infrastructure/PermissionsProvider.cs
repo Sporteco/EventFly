@@ -6,9 +6,9 @@ namespace Demo.Infrastructure
     public class PermissionProvider : IPermissionProvider
     {
 
-        public IEnumerable<IPermissionDefinition> GetUserPermissions(string userId, string targetObjectId)
+        public IEnumerable<PermissionInfo> GetUserPermissions(string userId, string targetObjectId)
         {
-            yield return new PermissionDefinition(DemoContext.CreateUser);
+            yield return new PermissionInfo(DemoContext.CreateUser);
         }
     }
 }

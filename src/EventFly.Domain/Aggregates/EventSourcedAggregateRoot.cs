@@ -545,8 +545,15 @@ namespace EventFly.Aggregates
         {
             Command(x =>
                 {
-                    var result = handler(x);
-                    Context.Sender.Tell(result);
+                    try
+                    {
+                        var result = handler(x);
+                        Context.Sender.Tell(result);
+                    }
+                    catch (UnauthorizedAccessException)
+                    {
+                        Context.Sender.Tell(new UnauthorizedAccessResult());
+                    }
 
                 },
                 (Predicate<TCommand>) (command =>
