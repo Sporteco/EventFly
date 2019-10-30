@@ -3,21 +3,18 @@ using Demo.Commands;
 using Demo.Domain.Aggregates;
 using Demo.Events;
 using Demo.Infrastructure;
-using Demo.ValueObjects;
 using EventFly.Aggregates;
 using EventFly.Commands;
 using EventFly.DependencyInjection;
-using EventFly.Localization;
 using Microsoft.Extensions.DependencyInjection;
-using System;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace Demo.Tests
 {
-    public class TestDomainServiceTests : TestKit
+    public class UserTouchTrackingServiceTests : TestKit
     {
-        public TestDomainServiceTests(ITestOutputHelper testOutputHelper) : base(Configuration.Config, "TestDomainServiceTests", testOutputHelper)
+        public UserTouchTrackingServiceTests(ITestOutputHelper testOutputHelper) : base(Configuration.Config, "TestDomainServiceTests", testOutputHelper)
         {
             Sys.RegisterDependencyResolver(
                 new ServiceCollection()
@@ -33,15 +30,14 @@ namespace Demo.Tests
         public void RegisteredDomainServiceWorking()
         {
             var events = CreateTestProbe();
-            Sys.EventStream.Subscribe(events, typeof(DomainEvent<UserAggregate, UserId, UserRenamedEvent>));
+            //Sys.EventStream.Subscribe(events, typeof(DomainEvent<UserAggregate, UserId, UserNotesChangedEvent>));
+            Sys.EventStream.Subscribe(events, typeof(DomainEvent<UserAggregate, UserId, UserTouchedEvent>));
             var bus = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<ICommandBus>();
 
-            var name = new StringLocalization("name", new LanguageCode("ru-RU"));
-            var birth = new Birth(DateTime.MinValue);
-            var createUser = new CreateUserCommand(UserId.New, new UserName(name), birth);
-            bus.Publish(createUser).GetAwaiter().GetResult();
+            var changeUserNotes = new ChangeUserNotesCommand(UserId.New, "Such a nice user...");
+            bus.Publish(changeUserNotes).GetAwaiter().GetResult();
 
-            events.ExpectMsg<DomainEvent<UserAggregate, UserId, UserRenamedEvent>>();
+            events.ExpectMsg<DomainEvent<UserAggregate, UserId, UserTouchedEvent>>();
         }
     }
 }

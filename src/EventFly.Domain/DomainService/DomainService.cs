@@ -101,7 +101,7 @@ namespace EventFly.Domain
         {
             var type = GetType();
 
-            var subscriptionTypes = type.GetAsyncDomainEventSubscriberSubscriptionTypes();
+            var subscriptionTypes = type.GetAsyncDomainServiceEventSubscriptionTypes();
 
             var methods = type
                 .GetTypeInfo()

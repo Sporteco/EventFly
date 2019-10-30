@@ -3,18 +3,15 @@ using EventFly.Commands.ExecutionResults;
 using EventFly.Core;
 using EventFly.Definitions;
 using EventFly.Exceptions;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace EventFly.Commands
 {
     public class CommandToAggregateManagerBus : ICommandBus
     {
-        private readonly IDefinitionToManagerRegistry _definitionToManagerRegistry;
-        protected readonly IServiceProvider _serviceProvider;
-
         public CommandToAggregateManagerBus(IDefinitionToManagerRegistry definitionToManagerRegistry, IServiceProvider serviceProvider)
         {
             _definitionToManagerRegistry = definitionToManagerRegistry;
@@ -27,6 +24,8 @@ namespace EventFly.Commands
 
         public Task<IExecutionResult> Publish(ICommand command) => PublishInternal(command);
 
+        protected readonly IServiceProvider _serviceProvider;
+
         protected virtual Task<IExecutionResult> PublishInternal(ICommand command)
         {
             try
@@ -35,15 +34,17 @@ namespace EventFly.Commands
                 foreach (var validator in validators.OrderBy(i => i.Priority))
                 {
                     var result = validator.Validate(command);
-                    if (!result.IsValid) return Task.FromResult((IExecutionResult) new FailedValidationExecutionResult(result));
+                    if (!result.IsValid) return Task.FromResult((IExecutionResult)new FailedValidationExecutionResult(result));
                 }
             }
             catch (UnauthorizedAccessException)
             {
-                return Task.FromResult((IExecutionResult) new UnauthorizedAccessResult());
+                return Task.FromResult((IExecutionResult)new UnauthorizedAccessResult());
             }
 
-            return GetAggregateManager(command.GetAggregateId().GetType()).Ask<IExecutionResult>(command, new TimeSpan?());
+            var manager = GetAggregateManager(command.GetAggregateId().GetType());
+            var executionResult = manager.Ask<IExecutionResult>(command, new TimeSpan?());
+            return executionResult;
         }
 
         protected IActorRef GetAggregateManager(Type type)
@@ -55,11 +56,10 @@ namespace EventFly.Commands
                     return k.IdentityType == type;
                 return true;
             }).Value;
-            if (manager == null)
-                throw new InvalidOperationException("Aggregate " + type.PrettyPrint() + " not registered");
+            if (manager == null) throw new InvalidOperationException("Aggregate " + type.PrettyPrint() + " not registered");
             return manager;
         }
 
+        private readonly IDefinitionToManagerRegistry _definitionToManagerRegistry;
     }
-
 }

@@ -31,33 +31,44 @@ namespace Demo.Infrastructure
 
             RegisterAggregate<UserAggregate, UserId>();
 
-            RegisterCommand<CreateUserCommand>();
-            RegisterCommand<RenameUserCommand>();
+            RegisterEvents(
+                typeof(UserCreatedEvent),
+                typeof(UserRenamedEvent),
+                typeof(UserNotesChangedEvent),
+                typeof(UserTouchedEvent)
+            );
+
+            RegisterCommands(
+                typeof(CreateUserCommand),
+                typeof(RenameUserCommand),
+                typeof(ChangeUserNotesCommand),
+                typeof(TrackUserTouchingCommand)
+            );
 
             RegisterAggregateReadModel<UsersInfoReadModel, UserId>();
-
             RegisterReadModel<TotalUsersReadModel, TotalUsersReadModelManager>();
 
             RegisterSaga<TestSaga, TestSagaId>();
-
-            RegisterEvents(typeof(UserCreatedEvent), typeof(UserRenamedEvent));
-
-            RegisterDomainService<TestDomainService>();
+            RegisterDomainService<UserTouchTrackingService>();
         }
 
         public override IServiceCollection DI(IServiceCollection services)
         {
             return services
-                .AddScoped<TestSaga>()
                 .AddScoped<IAggregateStorage<UserAggregate>, InMemoryAggregateStorage<UserAggregate>>()
-                .AddScoped<QueryHandler<UsersQuery, UsersResult>, UsersQueryHandler>()
-                .AddScoped<QueryHandler<EventPostersQuery, EventPosters>, EventPostersQueryHandler>()
-                .AddScoped<ReadModelHandler<TotalUsersReadModel>>()
-                .AddScoped<ReadModelHandler<UsersInfoReadModel>>()
                 .AddSingleton<IReadModelStorage<UsersInfoReadModel>, InMemoryReadModelStorage<UsersInfoReadModel>>()
                 .AddSingleton<IReadModelStorage<TotalUsersReadModel>, InMemoryReadModelStorage<TotalUsersReadModel>>()
+
+                .AddScoped<TestSaga>()
+
+                .AddScoped<ReadModelHandler<TotalUsersReadModel>>()
+                .AddScoped<ReadModelHandler<UsersInfoReadModel>>()
+
+                .AddScoped<QueryHandler<UsersQuery, UsersResult>, UsersQueryHandler>()
                 .AddScoped<QueryHandler<User1Query, UsersResult>, UsersQuery1Handler>()
                 .AddScoped<QueryHandler<User2Query, UsersResult>, UsersQuery2Handler>()
+                .AddScoped<QueryHandler<EventPostersQuery, EventPosters>, EventPostersQueryHandler>()
+
                 .AddSingleton<IPermissionProvider, PermissionProvider>();
         }
     }

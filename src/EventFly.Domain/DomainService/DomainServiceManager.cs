@@ -6,6 +6,7 @@ using EventFly.Extensions;
 using EventFly.Messages;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace EventFly.Domain
 {
@@ -26,14 +27,9 @@ namespace EventFly.Domain
 
             if (Settings.AutoSubscribe)
             {
-                var domainServiceEventSubscriptionTypes = domainServiceType.GetDomainServiceEventSubscriptionTypes();
-                var asyncDomainServiceEventSubscriptionTypes = domainServiceType.GetAsyncDomainEventSubscriberSubscriptionTypes();
-                var subscriptionTypes = new List<Type>();
-
-                subscriptionTypes.AddRange(domainServiceEventSubscriptionTypes);
-                subscriptionTypes.AddRange(asyncDomainServiceEventSubscriptionTypes);
-
-                _subscriptionTypes = subscriptionTypes.AsReadOnly();
+                var types = domainServiceType.GetDomainServiceEventSubscriptionTypes();
+                var asyncTypes = domainServiceType.GetAsyncDomainServiceEventSubscriptionTypes();
+                _subscriptionTypes = types.Concat(asyncTypes).ToList().AsReadOnly();
                 foreach (var type in _subscriptionTypes)
                 {
                     Context.System.EventStream.Subscribe(Self, type);

@@ -18,7 +18,7 @@ namespace EventFly.Definitions
 {
     public abstract class ContextDefinition : IContextDefinition
     {
-        public string Name => GetType().Name;
+        public String Name => GetType().Name;
         public IReadOnlyCollection<IAggregateDefinition> Aggregates => _aggregates;
         public IReadOnlyCollection<ISagaDefinition> Sagas => _sagas;
         public IReadOnlyCollection<IDomainServiceDefinition> DomainServices => _services;
@@ -30,6 +30,8 @@ namespace EventFly.Definitions
         public CommandDefinitions Commands { get; } = new CommandDefinitions();
         public SnapshotDefinitions Snapshots { get; } = new SnapshotDefinitions();
 
+        public abstract IServiceCollection DI(IServiceCollection serviceDescriptors);
+
         protected IContextDefinition RegisterAggregate<TAggregate, TIdentity>()
             where TAggregate : ActorBase, IAggregateRoot<TIdentity>
             where TIdentity : IIdentity
@@ -38,8 +40,6 @@ namespace EventFly.Definitions
             _aggregates.Add(new AggregateDefinition(typeof(TAggregate), typeof(TIdentity), manager));
             return this;
         }
-
-        public abstract IServiceCollection DI(IServiceCollection serviceDescriptors);
 
         protected IContextDefinition RegisterQuery<TQuery, TResult>()
             where TQuery : IQuery<TResult>
@@ -87,25 +87,20 @@ namespace EventFly.Definitions
             return this;
         }
 
-        protected IContextDefinition RegisterPermission(string permissionCode)
+        protected IContextDefinition RegisterPermission(String permissionCode)
         {
             var permissionDef = new PermissionDefinition(permissionCode);
-
             if (!_permissions.Contains(permissionDef)) _permissions.Add(permissionDef);
-
             return this;
         }
 
-        protected IContextDefinition RegisterPermission<TIdentity>(string permissionCode)
-        where TIdentity : IIdentity
+        protected IContextDefinition RegisterPermission<TIdentity>(String permissionCode)
+            where TIdentity : IIdentity
         {
             var permissionDef = new PermissionDefinition(typeof(TIdentity), permissionCode);
-
             if (!_permissions.Contains(permissionDef)) _permissions.Add(permissionDef);
-
             return this;
         }
-
 
         protected IContextDefinition RegisterReadModel<TReadModel, TReadModelManager>()
             where TReadModel : IReadModel

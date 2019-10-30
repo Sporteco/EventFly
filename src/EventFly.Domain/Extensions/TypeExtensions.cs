@@ -25,11 +25,6 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using EventFly.Aggregates;
 using EventFly.Aggregates.Snapshot;
 using EventFly.Core;
@@ -37,15 +32,17 @@ using EventFly.Domain;
 using EventFly.Events;
 using EventFly.Exceptions;
 using EventFly.Subscribers;
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 
 namespace EventFly.Extensions
 {
     public static class TypeExtensions
     {
-        private static readonly ConcurrentDictionary<Type, AggregateName> AggregateNames = new ConcurrentDictionary<Type, AggregateName>();
-
-        public static AggregateName GetAggregateName(
-            this Type aggregateType)
+        public static AggregateName GetAggregateName(this Type aggregateType)
         {
             return AggregateNames.GetOrAdd(
                 aggregateType,
@@ -129,7 +126,6 @@ namespace EventFly.Extensions
                     mi => ReflectionHelper.CompileMethodInvocation<Action<TAggregateState, IAggregateEvent>>(type, "Apply", mi.GetParameters()[0].ParameterType));
         }
 
-
         internal static IReadOnlyList<Type> GetAsyncDomainEventSubscriberSubscriptionTypes(this Type type)
         {
             var interfaces = type
@@ -178,7 +174,6 @@ namespace EventFly.Extensions
             return domainEventTypes;
         }
 
-        private static readonly ConcurrentDictionary<Type, AggregateName> AggregateNameCache = new ConcurrentDictionary<Type, AggregateName>();
         internal static AggregateName GetCommittedEventAggregateRootName(this Type type)
         {
             return AggregateNameCache.GetOrAdd(
@@ -203,7 +198,6 @@ namespace EventFly.Extensions
                 });
         }
 
-        private static readonly ConcurrentDictionary<Type, Type> AggregateEventTypeCache = new ConcurrentDictionary<Type, Type>();
         internal static Type GetCommittedEventAggregateEventType(this Type type)
         {
             return AggregateEventTypeCache.GetOrAdd(
@@ -228,35 +222,31 @@ namespace EventFly.Extensions
                 });
         }
 
-
-
-
         internal static IReadOnlyList<Type> GetDomainServiceEventSubscriptionTypes(this Type type)
         {
-            var interfaces = type
-                .GetTypeInfo()
-                .GetInterfaces()
-                .Select(i => i.GetTypeInfo())
-                .ToList();
-
+            var interfaces = type.GetTypeInfo().GetInterfaces().ToList();
             var handleEventTypes = interfaces
-                .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IDomainServiceHandles<,>))
-                .Select(t => typeof(IDomainEvent<,>).MakeGenericType(t.GetGenericArguments()[0],
-                    t.GetGenericArguments()[1]))
+                .Where(i => i.IsGenericType)
+                .Where(i => i.GetGenericTypeDefinition() == typeof(IDomainServiceHandles<,>))
+                .Select(t => typeof(IDomainEvent<,>).MakeGenericType(t.GetGenericArguments()[0], t.GetGenericArguments()[1]))
                 .ToList();
 
-            var startedByEventTypes = interfaces
-                .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IDomainServiceIsStartedBy<,>))
-                .Select(t => typeof(IDomainEvent<,>).MakeGenericType(t.GetGenericArguments()[0],
-                    t.GetGenericArguments()[1]))
-                .ToList();
-            
-            startedByEventTypes.AddRange(handleEventTypes);
-
-            return startedByEventTypes;
+            return handleEventTypes;
         }
-        
-        internal static IReadOnlyDictionary<Type, Func<T,IAggregateEvent, IAggregateEvent>> GetAggregateEventUpcastMethods<TAggregate, TIdentity, T>(this Type type)
+
+        internal static IReadOnlyList<Type> GetAsyncDomainServiceEventSubscriptionTypes(this Type type)
+        {
+            var interfaces = type.GetTypeInfo().GetInterfaces().ToList();
+            var handleEventTypes = interfaces
+                .Where(i => i.IsGenericType)
+                .Where(i => i.GetGenericTypeDefinition() == typeof(IDomainServiceHandlesAsync<,>))
+                .Select(t => typeof(IDomainEvent<,>).MakeGenericType(t.GetGenericArguments()[0], t.GetGenericArguments()[1]))
+                .ToList();
+
+            return handleEventTypes;
+        }
+
+        internal static IReadOnlyDictionary<Type, Func<T, IAggregateEvent, IAggregateEvent>> GetAggregateEventUpcastMethods<TAggregate, TIdentity, T>(this Type type)
             where TAggregate : IAggregateRoot<TIdentity>
             where TIdentity : IIdentity
         {
@@ -312,5 +302,8 @@ namespace EventFly.Extensions
             return type;
         }
 
+        private static readonly ConcurrentDictionary<Type, AggregateName> AggregateNames = new ConcurrentDictionary<Type, AggregateName>();
+        private static readonly ConcurrentDictionary<Type, AggregateName> AggregateNameCache = new ConcurrentDictionary<Type, AggregateName>();
+        private static readonly ConcurrentDictionary<Type, Type> AggregateEventTypeCache = new ConcurrentDictionary<Type, Type>();
     }
 }

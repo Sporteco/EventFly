@@ -101,16 +101,16 @@ namespace EventFly.Definitions
 
         private IReadOnlyDictionary<IDomainServiceManagerDefinition, IActorRef> RegisterDomainServiceManagers(IReadOnlyCollection<IDomainServiceManagerDefinition> definitions)
         {
-            var dictionaryDomainService = new Dictionary<IDomainServiceManagerDefinition, IActorRef>();
-            foreach (var managerDef in definitions)
+            var dictionary = new Dictionary<IDomainServiceManagerDefinition, IActorRef>();
+            foreach (var definition in definitions)
             {
-                var type = typeof(DomainServiceManager<>);
-                var generics = type.MakeGenericType(managerDef.ServiceType);
-                var manager = _system.ActorOf(Props.Create(generics), $"service-{managerDef.ServiceType.Name}-manager");
-                dictionaryDomainService.Add(managerDef, manager);
+                var type = typeof(DomainServiceManager<>).MakeGenericType(definition.ServiceType);
+                var actor = _system.ActorOf(Props.Create(type), $"service-{definition.ServiceType.Name}-manager");
+                dictionary.Add(definition, actor);
             }
-            return dictionaryDomainService;
+            return dictionary;
         }
+
         private IReadOnlyDictionary<IReadModelManagerDefinition, IActorRef> RegisterReadModelManagers(IReadOnlyCollection<IReadModelManagerDefinition> definitions)
         {
             var dictionaryReadModel = new Dictionary<IReadModelManagerDefinition, IActorRef>();
