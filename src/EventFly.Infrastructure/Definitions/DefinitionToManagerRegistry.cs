@@ -1,6 +1,5 @@
 ﻿using Akka.Actor;
 using EventFly.Aggregates;
-using EventFly.Domain;
 using EventFly.Extensions;
 using EventFly.Jobs;
 using EventFly.Queries;
@@ -9,6 +8,7 @@ using EventFly.Schedulers.Commands;
 using EventFly.Schedulers.Events;
 using System.Collections.Generic;
 using System.Linq;
+using EventFly.DomainService;
 
 namespace EventFly.Definitions
 {

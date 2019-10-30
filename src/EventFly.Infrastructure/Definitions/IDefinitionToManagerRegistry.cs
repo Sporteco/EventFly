@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Akka.Actor;
-using EventFly.Domain;
 
 namespace EventFly.Definitions
 {

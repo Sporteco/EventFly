@@ -1,7 +1,6 @@
 ﻿using EventFly.Commands;
 using EventFly.Validation;
 using FluentValidation;
-using System.ComponentModel.DataAnnotations;
 
 namespace EventFly.TestHelpers.Aggregates.Commands
 {

@@ -1,14 +1,14 @@
-﻿using Akka.Actor;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Akka.Actor;
 using Akka.Event;
 using EventFly.Aggregates;
 using EventFly.Exceptions;
 using EventFly.Extensions;
 using EventFly.Messages;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
-namespace EventFly.Domain
+namespace EventFly.DomainService
 {
     public class DomainServiceManager<TDomainService> : ReceiveActor, IDomainServiceManager<TDomainService>
         where TDomainService : ActorBase, IDomainService

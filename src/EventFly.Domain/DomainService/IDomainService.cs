@@ -1,11 +1,11 @@
-﻿using EventFly.Aggregates;
+﻿using System;
+using System.Threading.Tasks;
+using EventFly.Aggregates;
 using EventFly.Commands;
 using EventFly.Commands.ExecutionResults;
 using EventFly.Core;
-using System;
-using System.Threading.Tasks;
 
-namespace EventFly.Domain
+namespace EventFly.DomainService
 {
     public interface IDomainService
     {

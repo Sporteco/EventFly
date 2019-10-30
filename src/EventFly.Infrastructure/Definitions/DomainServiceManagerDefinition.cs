@@ -1,5 +1,4 @@
-﻿using EventFly.Domain;
-using System;
+﻿using System;
 
 namespace EventFly.Definitions
 {

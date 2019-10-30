@@ -3,7 +3,6 @@ using EventFly.Aggregates;
 using EventFly.Aggregates.Snapshot;
 using EventFly.Commands;
 using EventFly.Core;
-using EventFly.Domain;
 using EventFly.Jobs;
 using EventFly.Permissions;
 using EventFly.Queries;
@@ -13,6 +12,7 @@ using EventFly.Sagas.AggregateSaga;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using EventFly.DomainService;
 
 namespace EventFly.Definitions
 {

@@ -28,7 +28,6 @@
 using EventFly.Aggregates;
 using EventFly.Aggregates.Snapshot;
 using EventFly.Core;
-using EventFly.Domain;
 using EventFly.Events;
 using EventFly.Exceptions;
 using EventFly.Subscribers;
@@ -37,6 +36,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using EventFly.DomainService;
 
 namespace EventFly.Extensions
 {

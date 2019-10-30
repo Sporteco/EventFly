@@ -1,3 +1,7 @@
+using System;
+using System.Linq;
+using System.Reflection;
+using System.Threading.Tasks;
 using Akka.Actor;
 using Akka.Event;
 using EventFly.Aggregates;
@@ -8,12 +12,8 @@ using EventFly.DependencyInjection;
 using EventFly.Exceptions;
 using EventFly.Extensions;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
 
-namespace EventFly.Domain
+namespace EventFly.DomainService
 {
     public abstract class DomainService<TDomainService> : ReceiveActor, IDomainService
         where TDomainService : DomainService<TDomainService>
@@ -26,7 +26,7 @@ namespace EventFly.Domain
             if (serviceProviderHolder == null)
             {
                 //todo Get rid of ServiceLocator anti-pattern?
-                throw new ArgumentNullException("ServiceProviderHolder", "Implicit argument wasn't found in ActorContext.");
+                throw new ArgumentNullException($"ServiceProviderHolder", "Implicit argument wasn't found in ActorContext.");
             }
             _serviceProvider = serviceProviderHolder.ServiceProvider;
 
@@ -188,6 +188,7 @@ namespace EventFly.Domain
         private CircularBuffer<ISourceId> _previousSourceIds = new CircularBuffer<ISourceId>(100);
         private readonly IServiceProvider _serviceProvider;
         private IServiceScope _scope;
+        // ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
         private readonly DomainServiceSettings _settings;
         private IDomainEvent _pinnedEvent;
     }

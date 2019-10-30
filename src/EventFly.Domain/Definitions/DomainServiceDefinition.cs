@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace EventFly.Domain
+namespace EventFly.Definitions
 {
     public class DomainServiceDefinition : IDomainServiceDefinition
     {

@@ -1,5 +1,4 @@
-﻿using EventFly.Domain;
-using EventFly.Permissions;
+﻿using EventFly.Permissions;
 using System.Collections.Generic;
 using System.Linq;
 

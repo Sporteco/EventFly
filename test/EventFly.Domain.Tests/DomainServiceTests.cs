@@ -3,6 +3,7 @@ using EventFly.DependencyInjection;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using EventFly.DomainService;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -20,6 +21,7 @@ namespace EventFly.Domain.Tests
         [Fact]
         public void SuccessfulConstruction()
         {
+            // ReSharper disable once ObjectCreationAsStatement
             Action act = () => new Service();
             act.Should().NotThrow();
         }

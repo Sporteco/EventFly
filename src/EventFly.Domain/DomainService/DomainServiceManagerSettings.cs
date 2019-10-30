@@ -1,8 +1,8 @@
-﻿using Akka.Configuration;
+﻿using System;
+using Akka.Configuration;
 using EventFly.Configuration;
-using System;
 
-namespace EventFly.Domain
+namespace EventFly.DomainService
 {
     public class DomainServiceManagerSettings
     {
