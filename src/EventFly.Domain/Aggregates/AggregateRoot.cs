@@ -206,6 +206,11 @@ namespace EventFly.Aggregates
             {
                 if (IsNew || Id.Equals(command.AggregateId))
                     PinnedCommand = command;
+                else
+                    PinnedCommand = null;
+
+                var userId = command.Metadata.ContainsKey(MetadataKeys.UserId) ? command.Metadata?.UserId : null;
+                SecurityContext = new SecurityContext(userId, _serviceProvider.GetService<ISecurityService>());
             }
 
             var result = base.AroundReceive(receive, message);
@@ -236,7 +241,6 @@ namespace EventFly.Aggregates
                 Sender.Tell(PinnedReply);
 
             PinnedReply = null;
-            PinnedCommand = null;
         }
 
         protected override void Unhandled(object message)
@@ -285,13 +289,7 @@ namespace EventFly.Aggregates
                         Context.Sender.Tell(new UnauthorizedAccessResult());
                     }
 
-                },
-                (Predicate<TCommand>) (command =>
-                {
-                    string userId = command.Metadata.ContainsKey(MetadataKeys.UserId) ? command.Metadata?.UserId : null;
-                    SecurityContext = new SecurityContext(userId, _serviceProvider.GetService<ISecurityService>());
-                    return true;
-                }));
+                }, (Predicate<TCommand>)null);
         }
     }
 }
