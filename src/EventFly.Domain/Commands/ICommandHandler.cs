@@ -28,6 +28,7 @@
 using EventFly.Aggregates;
 using EventFly.Commands.ExecutionResults;
 using EventFly.Core;
+using System.Threading.Tasks;
 
 namespace EventFly.Commands
 {
@@ -41,5 +42,13 @@ namespace EventFly.Commands
         where TCommand : ICommand<TIdentity>
     {
         IExecutionResult Handle(TAggregate aggregate, TCommand command);
+    }
+
+    public interface IAsyncCommandHandler<in TAggregate, TIdentity, in TCommand> : ICommandHandler
+        where TAggregate : IAggregateRoot<TIdentity>
+        where TIdentity : IIdentity
+        where TCommand : ICommand<TIdentity>
+    {
+        Task<IExecutionResult> Handle(TAggregate aggregate, TCommand command);
     }
 }

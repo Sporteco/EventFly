@@ -42,6 +42,6 @@ namespace EventFly.Specifications
             return IsNotSatisfiedBecause(obj);
         } 
 
-        protected abstract IEnumerable<string> IsNotSatisfiedBecause(T aggregate);
+        protected abstract IEnumerable<string> IsNotSatisfiedBecause(T obj);
     }
 }

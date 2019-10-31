@@ -1,7 +1,6 @@
 using Akka.TestKit.Xunit2;
-using Demo.Commands;
-using Demo.Domain.Aggregates;
 using Demo.Infrastructure;
+using Demo.User;
 using Demo.ValueObjects;
 using EventFly.Commands.ExecutionResults;
 using EventFly.DependencyInjection;
@@ -36,6 +35,23 @@ namespace Demo.Tests
                 .GivenNothing()
                 .When(cmd)
                 .ThenExpectReply<UnauthorizedAccessResult>(x => !x.IsSuccess);
+        }
+
+        [Fact]
+        public void CreateProjectTest()
+        {
+            var aggregateId = UserId.New;
+            var projectId = ProjectId.New;
+            var projectName = new ProjectName("TestProject");
+
+            //var cmd = new CreateProjectCommand(aggregateId, projectId, projectName);
+
+            this.FixtureFor<UserAggregate, UserId>(aggregateId)
+                .GivenNothing()
+                .When(new CreateProjectCommand(aggregateId, projectId, projectName))
+                .ThenExpectDomainEvent<ProjectCreatedEvent>(x =>
+                    x.AggregateEvent.ProjectId == projectId && x.AggregateEvent.Name == projectName
+                );
         }
     }
 }

@@ -2,7 +2,7 @@
 using System;
 using System.ComponentModel;
 
-namespace Demo.Commands
+namespace Demo.User
 {
     [Description("Изменить заметки о пользователе")]
     public class ChangeUserNotesCommand : Command<UserId>

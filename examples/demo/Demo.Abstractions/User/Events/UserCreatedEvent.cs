@@ -2,7 +2,7 @@
 using Demo.ValueObjects;
 using EventFly.Localization;
 
-namespace Demo.Events
+namespace Demo.User
 {
     public class UserCreatedEvent : AggregateEvent<UserId>
     {

@@ -49,26 +49,10 @@ namespace EventFly.TestFixture.Aggregates
             TestKitBase testKit)
         {
             _testKit = testKit;
+            _commandBus = testKit.Sys.GetExtension<ServiceProviderHolder>()?.ServiceProvider?.GetService<ICommandBus>();
         }
-        
+
         private ICommandBus _commandBus;
-        public ICommandBus CommandBus
-        {
-            get
-            {
-                if (_commandBus == null)
-                {
-                    _commandBus =  _testKit.Sys.GetExtension<ServiceProviderHolder>()?.ServiceProvider?.GetService<ICommandBus>();
-                    if (_commandBus != null && _commandBus is TestCommandBus tcb)
-                    {
-                        tcb.SetSender(AggregateReplyTestProbe);
-                    }
-                }
-
-                return _commandBus;
-            }
-        }
-
 
         public IFixtureArranger<TAggregate, TIdentity> For(TIdentity aggregateId)
         {
@@ -124,25 +108,16 @@ namespace EventFly.TestFixture.Aggregates
         {
             if (commands == null)
                 throw new ArgumentNullException(nameof(commands));
-            if (CommandBus is TestCommandBus tcb)
-            {
-                tcb.SetSender(null);
-            }
 
             foreach (var command in commands)
             {
                 if (command == null)
                     throw new NullReferenceException(nameof(command));
 
-                var result = CommandBus.Publish(command).GetAwaiter().GetResult();
+                var result = _commandBus.Publish(command).GetAwaiter().GetResult();
                 if (!result.IsSuccess)
                     throw new InvalidOperationException($"Given Command {command.GetType().PrettyPrint()} failed.");
 
-            }
-            
-            if (CommandBus is TestCommandBus tcb2)
-            {
-                tcb2.SetSender(AggregateReplyTestProbe);
             }
 
             return this;
@@ -150,7 +125,6 @@ namespace EventFly.TestFixture.Aggregates
 
         public IFixtureAsserter<TAggregate, TIdentity> When(params ICommand[] commands)
         {
-
             if (commands == null)
                 throw new ArgumentNullException(nameof(commands));
 
@@ -159,8 +133,9 @@ namespace EventFly.TestFixture.Aggregates
                 if (command == null)
                     throw new NullReferenceException(nameof(command));
 
-                CommandBus.Publish(command).GetAwaiter().GetResult();
-                //do nothing because we receive result via AggregateReplyTestProbe
+                _commandBus.Publish(command).ContinueWith(t => 
+                    AggregateReplyTestProbe.Tell(t.Result)
+                );
             }
 
             return this;

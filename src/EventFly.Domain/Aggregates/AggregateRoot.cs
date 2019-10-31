@@ -64,7 +64,6 @@ namespace EventFly.Aggregates
                 {
                     Context.GetLogger().Error(exception, "Unable to activate AggregateState of Type={0} for AggregateRoot of Name={1}.", typeof(TAggregateState).PrettyPrint(), Name);
                 }
-
             }
 
             PinnedCommand = null;
@@ -100,6 +99,7 @@ namespace EventFly.Aggregates
         {
             _aggregateStorage.SaveState<TAggregateState, TIdentity>(State);
         }
+
         protected void Command<TCommand, TCommandHandler>(Predicate<TCommand> shouldHandle = null)
             where TCommand : ICommand<TIdentity>
             where TCommandHandler : CommandHandler<TAggregate, TIdentity, TCommand>
@@ -121,6 +121,30 @@ namespace EventFly.Aggregates
             }
         }
 
+        protected void CommandAsync<TCommand, TAsyncCommandHandler>(Predicate<TCommand> shouldHandle = null)
+            where TCommand : ICommand<TIdentity>
+            where TAsyncCommandHandler : AsyncCommandHandler<TAggregate, TIdentity, TCommand>
+        {
+            try
+            {
+                // if no service available in the DI container then fall-back to simple activation!
+                ReceiveAsync(async x =>
+                {
+                    var handler = _scope.ServiceProvider.GetService<TAsyncCommandHandler>() ?? (TAsyncCommandHandler)Activator.CreateInstance(typeof(TAsyncCommandHandler));
+                    var commandBus = _scope.ServiceProvider.GetService<ICommandBus>();
+                    handler.Inject(commandBus);
+
+                    var result = await handler.Handle(this as TAggregate, x);
+                    Context.Sender.Tell(result);
+
+                }, shouldHandle);
+            }
+            catch (Exception exception)
+            {
+                Log.Error(exception, "Unable to activate CommandHandler of Type={0} for Aggregate of Type={1}.", typeof(TAsyncCommandHandler).PrettyPrint(), typeof(TAggregate).PrettyPrint());
+            }
+        }
+
         protected void SetSourceIdHistory(int count)
         {
             _previousSourceIds = new CircularBuffer<ISourceId>(count);
@@ -139,13 +163,11 @@ namespace EventFly.Aggregates
         public virtual void Emit<TAggregateEvent>(TAggregateEvent aggregateEvent, IEventMetadata metadata = null)
             where TAggregateEvent : class, IAggregateEvent<TIdentity>
         {
-
             var committedEvent = From(aggregateEvent, Version, metadata);
 
             SaveState();
             ApplyCommittedEvent(committedEvent);
         }
-
 
         public virtual CommittedEvent<TAggregate, TIdentity, TAggregateEvent> From<TAggregateEvent>(TAggregateEvent aggregateEvent,
             long version, IEventMetadata metadata = null)

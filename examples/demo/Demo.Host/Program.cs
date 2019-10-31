@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using EventFly.DependencyInjection;
-using Demo.Commands;
 using Demo.Queries;
 using Demo.ValueObjects;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,6 +8,7 @@ using EventFly.Queries;
 using EventFly.Commands;
 using System.Linq;
 using Demo.Infrastructure;
+using Demo.User;
 
 namespace Demo.Host
 {
@@ -41,8 +41,20 @@ namespace Demo.Host
             await bus.Publish(new RenameUserCommand(aggregateId, new UserName(("TEST","en"))));
             await bus.Publish(new CreateUserCommand(UserId.New, new UserName(("userName2","ru")), new Birth(DateTime.Today)));
 
-            var res = await queryProcessor.Process(new UsersQuery());
-            Console.WriteLine(res?.Items.First().Name);
+            var projectId1 = ProjectId.New;
+            var projectId2 = ProjectId.New;
+
+            var result1 = await bus.Publish(new CreateProjectCommand(aggregateId, projectId1, new ProjectName("Test project #1")));
+            Console.WriteLine(result1.ToString());
+
+            var result2 = await bus.Publish(new CreateProjectCommand(aggregateId, projectId2, new ProjectName("Test project #1")));
+            Console.WriteLine(result2.ToString());
+
+            var result3 = await bus.Publish(new DeleteProjectCommand(aggregateId, projectId1));
+            Console.WriteLine(result2.ToString());
+
+            //var res = await queryProcessor.Process(new UsersQuery());
+            //Console.WriteLine(res?.Items.First().Name);
 
             //block end of program
             Console.ReadLine();

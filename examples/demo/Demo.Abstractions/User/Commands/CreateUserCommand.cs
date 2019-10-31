@@ -7,7 +7,7 @@ using EventFly.Security;
 using EventFly.Validation;
 using FluentValidation;
 
-namespace Demo.Commands
+namespace Demo.User
 {
     [Description("Создание нового пользователя")]
     [HasPermissions(DemoContext.CreateUser,DemoContext.ChangeUser)]

@@ -2,11 +2,10 @@
 using System.Threading.Tasks;
 using EventFly.Aggregates;
 using EventFly.Core;
-using Demo.Commands;
-using Demo.Events;
 using Demo.ValueObjects;
 using EventFly.Sagas;
 using EventFly.Sagas.AggregateSaga;
+using Demo.User;
 
 namespace Demo.Application
 {
