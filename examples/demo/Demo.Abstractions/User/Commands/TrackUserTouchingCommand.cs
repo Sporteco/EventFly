@@ -1,6 +1,6 @@
 ﻿using EventFly.Commands;
 
-namespace Demo.Commands
+namespace Demo.User
 {
     public class TrackUserTouchingCommand : Command<UserId>
     {

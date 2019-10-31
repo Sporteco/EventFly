@@ -25,10 +25,12 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using System.Threading.Tasks;
 using Akka.Actor;
 using EventFly.Aggregates;
 using EventFly.Commands.ExecutionResults;
 using EventFly.Core;
+using EventFly.DomainService;
 
 namespace EventFly.Commands
 {
@@ -39,5 +41,28 @@ namespace EventFly.Commands
         where TCommand : ICommand<TIdentity>
     {
         public abstract IExecutionResult Handle(TAggregate aggregate, TCommand command);
+    }
+
+    public abstract class AsyncCommandHandler<TAggregate, TIdentity, TCommand> :
+        IAsyncCommandHandler<TAggregate, TIdentity, TCommand>
+        where TAggregate : ActorBase, IAggregateRoot<TIdentity>
+        where TIdentity : IIdentity
+        where TCommand : ICommand<TIdentity>
+    {
+        private ICommandBus _commandBus;
+
+        public abstract Task<IExecutionResult> Handle(TAggregate aggregate, TCommand command);
+
+        protected TDomainService Resolve<TDomainService>() where TDomainService : BaseDomainService<TDomainService>, new()
+        {
+            var service = new TDomainService();
+            service.Inject(_commandBus);
+            return service;
+        }
+
+        internal void Inject(ICommandBus commandBus)
+        {
+            _commandBus = commandBus;
+        }
     }
 }

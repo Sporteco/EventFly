@@ -1,28 +1,33 @@
-﻿using Demo.Commands;
-using Demo.Domain.CommandHandlers;
-using Demo.Events;
+﻿using Demo.User.CommandHandlers;
 using Demo.ValueObjects;
 using EventFly.Aggregates;
 using EventFly.Commands.ExecutionResults;
 using EventFly.Localization;
 using System;
+using System.Collections.Generic;
 
-namespace Demo.Domain.Aggregates
+namespace Demo.User
 {
     public class UserState : AggregateState<UserAggregate, UserId>,
         IApply<UserCreatedEvent>,
         IApply<UserRenamedEvent>,
         IApply<UserNotesChangedEvent>,
-        IApply<UserTouchedEvent>
+        IApply<UserTouchedEvent>,
+        IApply<ProjectCreatedEvent>
     {
         public LocalizedString Name { get; private set; }
         public Birth Birth { get; private set; }
         public String Notes { get; private set; } = String.Empty;
 
+        private readonly ICollection<Entities.Project> _projects = new List<Entities.Project>();
+        public IEnumerable<Entities.Project> Projects => _projects;
+
         public void Apply(UserCreatedEvent e) { (Name, Birth) = (e.Name, e.Birth); }
         public void Apply(UserRenamedEvent e) { Name = e.NewName; }
         public void Apply(UserNotesChangedEvent e) { Notes = e.NewValue; }
         public void Apply(UserTouchedEvent _) { }
+
+        public void Apply(ProjectCreatedEvent e) => _projects.Add(new Entities.Project(e.ProjectId, e.Name));
     }
 
     public class UserAggregate : EventDrivenAggregateRoot<UserAggregate, UserId, UserState>,
@@ -33,6 +38,18 @@ namespace Demo.Domain.Aggregates
         public UserAggregate(UserId id) : base(id)
         {
             Command<RenameUserCommand, RenameUserCommandHandler>();
+            CommandAsync<CreateProjectCommand, CreateProjectCommandHandler>();
+            CommandAsync<DeleteProjectCommand, DeleteProjectCommandHandler>();
+        }
+
+        internal void CreateProject(ProjectId projectId, ProjectName projectName)
+        {
+            Emit(new ProjectCreatedEvent(Id, projectId, projectName));
+        }
+
+        internal void DeleteProject(ProjectId projectId)
+        {
+            Emit(new ProjectDeletedEvent(Id, projectId));
         }
 
         public IExecutionResult Execute(CreateUserCommand cmd)

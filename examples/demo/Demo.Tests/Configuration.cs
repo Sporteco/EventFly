@@ -5,7 +5,7 @@ namespace Demo.Tests
         public static string Config =
             @"  akka.loglevel = ""INFO""
                 akka.stdout-loglevel = ""INFO""
-                akka.actor.serialize-messages = on
+                akka.actor.serialize-messages = off
                 loggers = [""Akka.TestKit.TestEventListener, Akka.TestKit""] 
                 akka.persistence.snapshot-store {
                     plugin = ""akka.persistence.snapshot-store.inmem""

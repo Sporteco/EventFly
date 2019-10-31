@@ -1,8 +1,6 @@
 ﻿using Akka.TestKit.Xunit2;
-using Demo.Commands;
-using Demo.Domain.Aggregates;
-using Demo.Events;
 using Demo.Infrastructure;
+using Demo.User;
 using EventFly.Aggregates;
 using EventFly.Commands;
 using EventFly.DependencyInjection;

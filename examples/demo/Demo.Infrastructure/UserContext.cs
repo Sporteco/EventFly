@@ -1,11 +1,9 @@
 using Demo.Application;
-using Demo.Commands;
-using Demo.Domain.Aggregates;
 using Demo.Domain.Services;
-using Demo.Events;
 using Demo.Infrastructure.QueryHandlers;
 using Demo.Infrastructure.ReadModels;
 using Demo.Queries;
+using Demo.User;
 using EventFly.AggregateStorages;
 using EventFly.Definitions;
 using EventFly.Permissions;
@@ -30,19 +28,28 @@ namespace Demo.Infrastructure
             RegisterQuery<EventPostersQuery, EventPosters>();
 
             RegisterAggregate<UserAggregate, UserId>();
+            RegisterAggregate<Project.ProjectAggregate, ProjectId>();
 
             RegisterEvents(
                 typeof(UserCreatedEvent),
                 typeof(UserRenamedEvent),
                 typeof(UserNotesChangedEvent),
-                typeof(UserTouchedEvent)
+                typeof(UserTouchedEvent),
+                typeof(ProjectCreatedEvent),
+                typeof(ProjectDeletedEvent),
+                typeof(Project.CreatedEvent),
+                typeof(Project.DeletedEvent)
             );
 
             RegisterCommands(
                 typeof(CreateUserCommand),
                 typeof(RenameUserCommand),
                 typeof(ChangeUserNotesCommand),
-                typeof(TrackUserTouchingCommand)
+                typeof(TrackUserTouchingCommand),
+                typeof(CreateProjectCommand),
+                typeof(DeleteProjectCommand),
+                typeof(Project.CreateCommand),
+                typeof(Project.DeleteCommand)
             );
 
             RegisterAggregateReadModel<UsersInfoReadModel, UserId>();
@@ -56,6 +63,7 @@ namespace Demo.Infrastructure
         {
             return services
                 .AddScoped<IAggregateStorage<UserAggregate>, InMemoryAggregateStorage<UserAggregate>>()
+                .AddScoped<IAggregateStorage<Project.ProjectAggregate>, InMemoryAggregateStorage<Project.ProjectAggregate>>()
                 .AddSingleton<IReadModelStorage<UsersInfoReadModel>, InMemoryReadModelStorage<UsersInfoReadModel>>()
                 .AddSingleton<IReadModelStorage<TotalUsersReadModel>, InMemoryReadModelStorage<TotalUsersReadModel>>()
 

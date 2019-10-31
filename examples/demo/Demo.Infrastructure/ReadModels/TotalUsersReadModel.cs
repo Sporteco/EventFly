@@ -1,6 +1,6 @@
-﻿using EventFly.Aggregates;
+﻿using Demo.User;
+using EventFly.Aggregates;
 using EventFly.ReadModels;
-using Demo.Events;
 
 namespace Demo.Infrastructure.ReadModels
 {

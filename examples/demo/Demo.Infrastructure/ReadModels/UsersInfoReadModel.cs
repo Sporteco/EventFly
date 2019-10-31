@@ -2,7 +2,7 @@
 using System.Linq;
 using EventFly.Aggregates;
 using EventFly.ReadModels;
-using Demo.Events;
+using Demo.User;
 
 namespace Demo.Infrastructure.ReadModels
 {

@@ -12,7 +12,6 @@ namespace EventFly.TestFixture.Aggregates
             ActorSystem actorSystem)
         {
             services.AddEventFly(actorSystem);
-            services.AddSingleton<ICommandBus, TestCommandBus>();
 
             return new EventFlyBuilder(services);
         }
