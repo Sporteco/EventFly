@@ -53,7 +53,7 @@ namespace EventFly.Commands
 
         public abstract Task<IExecutionResult> Handle(TAggregate aggregate, TCommand command);
 
-        protected TDomainService Resolve<TDomainService>() where TDomainService : BaseDomainService<TDomainService>, new()
+        protected TDomainService Resolve<TDomainService>() where TDomainService : SynchronizedDomainService<TDomainService>, new()
         {
             var service = new TDomainService();
             service.Inject(_commandBus);

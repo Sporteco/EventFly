@@ -4,6 +4,7 @@ using System.IO;
 using System.Reflection;
 using Akka.Util;
 using EventFly.Commands;
+using EventFly.Definitions;
 using EventFly.DependencyInjection;
 using EventFly.Queries;
 using Microsoft.AspNetCore.Builder;
@@ -16,13 +17,28 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace EventFly.Swagger
 {
+    public sealed class EventFlySwaggerOptions
+    {
+        public EventFlySwaggerOptions(string url, string name)
+        {
+            Url = url;
+            Name = name;
+        }
+
+        public string Url { get; set; }
+        public string Name { get; set; }
+    }
+
     public static class BuilderExtensions
     {
-        public static EventFlyBuilder AddSwagger(this EventFlyBuilder builder)
+        public static EventFlyBuilder WithSwagger(this EventFlyWebApiBuilder builder, Action<EventFlySwaggerOptions> optionsBuilder)
         {
+            var options = new EventFlySwaggerOptions("swagger", Assembly.GetEntryAssembly().GetName().Name);
+            optionsBuilder(options);
+            builder.Services.AddSingleton(options);
+        
             var services = builder.Services;
             services.TryAdd(ServiceDescriptor.Transient<IApiDescriptionGroupCollectionProvider, CommandsApiDescriptionGroupCollectionProvider>());
-
 
             services.AddSwaggerGen(c =>
             {
@@ -37,9 +53,9 @@ namespace EventFly.Swagger
             });
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new Info {Title = "R3 API", Version = "v1"});
-                //c.OperationFilter<AuthorizeCheckOperationFilter>();
-                //c.OperationFilter<OperationFilter>();
+                c.SwaggerDoc("v1", new Info {Title = options.Name + " API", Version = "v1"});
+
+
                 c.OperationFilter<DescriptionFilter>();
                 c.SchemaFilter<ReadOnlyFilter>();
                 c.CustomSchemaIds(i => i.FullName);
@@ -58,23 +74,23 @@ namespace EventFly.Swagger
                 //	Scopes = currentScopes
                 //});
             });
-            return builder;
+            return builder.Builder;
         }
 
-        public static IApplicationBuilder UseEventFlySwagger(this IApplicationBuilder app)
-        {
+        //public static IApplicationBuilder UseEventFlySwagger(this IApplicationBuilder app)
+        //{
 
-            app.UseSwagger();
+        //    app.UseSwagger();
+        //    var options = app.ApplicationServices.GetRequiredService<EventFlySwaggerOptions>();
+        //    app.UseSwaggerUI(c =>
+        //    {
+        //        c.SwaggerEndpoint("/" + options.Url.Trim('/') + "/v1/swagger.json", options.Name);
 
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "R3");
-                
-                //c.OAuthClientId("swaggerui");
-                //c.OAuthAppName("Swagger UI");
-            });
-            return app;
-        }
+        //        //c.OAuthClientId("swaggerui");
+        //        //c.OAuthAppName("Swagger UI");
+        //    });
+        //    return app;
+        //}
 
     }
 

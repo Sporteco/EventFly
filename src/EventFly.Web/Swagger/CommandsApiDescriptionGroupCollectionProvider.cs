@@ -24,12 +24,15 @@ namespace EventFly.Swagger
     {
         private readonly IApplicationDefinition _metadata;
         private readonly ApiDescriptionGroupCollectionProvider _internal;
+        private readonly EventFlyWebApiOptions _options;
 
         public CommandsApiDescriptionGroupCollectionProvider(
           IApplicationDefinition applicationDefinition,
+          EventFlyWebApiOptions options,
           IActionDescriptorCollectionProvider actionDescriptorCollectionProvider,
           IEnumerable<IApiDescriptionProvider> apiDescriptionProviders)
         {
+            _options = options;
             _metadata = applicationDefinition;
             _internal = new ApiDescriptionGroupCollectionProvider(actionDescriptorCollectionProvider, apiDescriptionProviders);
         }
@@ -55,7 +58,7 @@ namespace EventFly.Swagger
                 {
                     var type = query.Type;
                     var name = query.Name;
-                    var str = "api/" + query.Name;
+                    var str = _options.BasePath.Trim('/')+ "/" + query.Name;
                     var genericInterface = ReflectionExtensions.GetSubclassOfRawGenericInterface(typeof(IQuery<>), type);
                     if (!(genericInterface == null))
                     {
@@ -64,32 +67,35 @@ namespace EventFly.Swagger
                         var apiDescription2 = apiDescription1;
                         var actionDescriptor1 = new ControllerActionDescriptor();
                         actionDescriptor1.ActionConstraints = new List<IActionConstraintMetadata>
-            {
-                new HttpMethodActionConstraint(new[]
-                {
-                    "POST"
-                })
-            };
+                        {
+                            new HttpMethodActionConstraint(new[]
+                            {
+                                "POST"
+                            })
+                        };
+
                         actionDescriptor1.ActionName = name;
                         actionDescriptor1.ControllerName = "context";
                         actionDescriptor1.DisplayName = name;
                         actionDescriptor1.Parameters = new List<ParameterDescriptor>
-            {
-                new ParameterDescriptor
-                {
-                    Name = "query",
-                    ParameterType = type
-                }
-            };
+                        {
+                            new ParameterDescriptor
+                            {
+                                Name = "query",
+                                ParameterType = type
+                            }
+                        };
+
                         actionDescriptor1.MethodInfo = new CustomMethodInfo(name, type);
                         actionDescriptor1.ControllerTypeInfo = type.GetTypeInfo();
                         actionDescriptor1.RouteValues = new Dictionary<string, string>
-            {
-                {
-                    "controller",
-                    domain.Name
-                }
-            };
+                        {
+                            {
+                                "controller",
+                                domain.Name
+                            }
+                        };
+
                         var actionDescriptor2 = actionDescriptor1;
                         apiDescription2.ActionDescriptor = actionDescriptor2;
                         apiDescription1.HttpMethod = "POST";
@@ -100,12 +106,14 @@ namespace EventFly.Swagger
                             Type = genericArgument
                         });
                         var apiDescription3 = apiDescription1;
+
                         ((List<ApiParameterDescription>)apiDescription3.ParameterDescriptions).Add(new ApiParameterDescription
                         {
                             Name = "query",
                             Type = type,
                             Source = BindingSource.Body
                         });
+
                         apis.Add(apiDescription3);
                     }
                 }
@@ -123,7 +131,7 @@ namespace EventFly.Swagger
                 {
                     var type = allDefinition.Type;
                     var name = allDefinition.Name;
-                    var str = "api/" + allDefinition.Name + "/" + allDefinition.Version;
+                    var str = _options.BasePath.Trim('/') + "/" + allDefinition.Name + "/" + allDefinition.Version;
                     var subclassOfRawGeneric = ReflectionExtensions.GetSubclassOfRawGeneric(typeof(Command<>), type);
                     if (!(subclassOfRawGeneric == null))
                     {
@@ -167,7 +175,7 @@ namespace EventFly.Swagger
                             Type = typeof(IExecutionResult)
                         });
                         var apiDescription3 = apiDescription1;
-                        ((List<ApiParameterDescription>) apiDescription3.ParameterDescriptions).Add(new ApiParameterDescription
+                        ((List<ApiParameterDescription>)apiDescription3.ParameterDescriptions).Add(new ApiParameterDescription
                         {
                             Name = "request",
                             Type = type,

@@ -5,18 +5,53 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using EventFly.Commands;
+using EventFly.Definitions;
+using EventFly.DependencyInjection;
 using EventFly.Queries;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
 namespace EventFly
 {
+    public sealed class EventFlyWebApiOptions
+    {
+        public EventFlyWebApiOptions(string basePath)
+        {
+            BasePath = basePath;
+        }
+
+        public string BasePath { get; set; }
+    }
+
+    public sealed class EventFlyWebApiBuilder
+    {
+        public EventFlyWebApiBuilder(EventFlyBuilder builder)
+        {
+            Builder = builder;
+        }
+
+        public EventFlyBuilder Builder { get; }
+        public IServiceCollection Services => Builder.Services;
+        public IApplicationDefinition ApplicationDefinition => Builder.ApplicationDefinition;
+    }
+
+    public static class BuilderExtensions
+    {
+        public static EventFlyWebApiBuilder ConfigureWebApi(this EventFlyBuilder eventFlyBuilder, Action<EventFlyWebApiOptions> optionsBuilder)
+        {
+            var options = new EventFlyWebApiOptions("api");
+            optionsBuilder(options);
+            eventFlyBuilder.Services.AddSingleton(options);
+            return new EventFlyWebApiBuilder(eventFlyBuilder);
+        }
+    }
 
     public class EventFlyMiddleware
     {
-        private static readonly Regex CommandPath = new Regex("/*api/(?<name>[a-z]+)/(?<version>\\d+)/{0,1}", RegexOptions.IgnoreCase | RegexOptions.Compiled);
-        private static readonly Regex QueryPath = new Regex("/*api/(?<name>[a-z]+)/{0,1}", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        private readonly Regex CommandPath;
+        private readonly Regex QueryPath;
         private readonly RequestDelegate _next;
         private readonly ILogger _log;
         private readonly ISerializedCommandPublisher _serializedCommandPublisher;
@@ -25,6 +60,7 @@ namespace EventFly
         public EventFlyMiddleware(
           RequestDelegate next,
           ILogger<EventFlyMiddleware> log,
+          EventFlyWebApiOptions options,
           ISerializedCommandPublisher serializedCommandPublisher,
           ISerializedQueryExecutor serializedQueryExecutor)
         {
@@ -32,6 +68,11 @@ namespace EventFly
             _log = log;
             _serializedCommandPublisher = serializedCommandPublisher;
             _serializedQueryExecutor = serializedQueryExecutor;
+
+            var basePath = "/*" + options.BasePath.Trim('/');
+
+            CommandPath = new Regex(basePath + "/(?<name>[a-z]+)/(?<version>\\d+)/{0,1}", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+            QueryPath = new Regex(basePath + "/(?<name>[a-z0-9]+)/{0,1}", RegexOptions.IgnoreCase | RegexOptions.Compiled);
         }
 
         public async Task Invoke(HttpContext context)

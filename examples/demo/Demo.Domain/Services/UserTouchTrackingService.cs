@@ -5,7 +5,7 @@ using Demo.User;
 
 namespace Demo.Domain.Services
 {
-    public class UserTouchTrackingService : DomainService<UserTouchTrackingService>,
+    public class UserTouchTrackingService : AsynchronousDomainService<UserTouchTrackingService>,
         IDomainServiceIsStartedByAsync<UserId, UserNotesChangedEvent>
     {
         public Task HandleAsync(IDomainEvent<UserId, UserNotesChangedEvent> domainEvent)

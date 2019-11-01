@@ -27,8 +27,12 @@ namespace Demo.Web
                 .AddSingleton("AAAA")
                 .AddEventFly("user-example")
                     .WithContext<UserContext>()
-                    .AddGraphQl()
-                    .AddSwagger();
+
+                .ConfigureGraphQl(options => options.BasePath = "/graphql")
+                    .WithConsole(options => options.BasePath = "/graphql-console")
+
+                .ConfigureWebApi(options => options.BasePath = "/api-s")
+                    .WithSwagger(options => options.Url = "/swagger");
 
             services
                 .AddMvcCore()
@@ -39,9 +43,6 @@ namespace Demo.Web
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             app.UseEventFly();
-
-            app.UseEventFlyGraphQl();
-            app.UseEventFlySwagger();
 
             app.UseMvc(routes =>
             {
