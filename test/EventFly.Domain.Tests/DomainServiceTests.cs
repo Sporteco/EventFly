@@ -9,7 +9,7 @@ using Xunit.Abstractions;
 
 namespace EventFly.Domain.Tests
 {
-    public class Service : DomainService<Service> { }
+    public class Service : AsynchronousDomainService<Service> { }
 
     public class DomainServiceTests : TestKit
     {

@@ -2,8 +2,8 @@
 
 namespace EventFly.DomainService
 {
-    public abstract class BaseDomainService<TDomainService>
-        where TDomainService : BaseDomainService<TDomainService>, new()
+    public abstract class SynchronizedDomainService<TDomainService>
+        where TDomainService : SynchronizedDomainService<TDomainService>, new()
     {
         protected ICommandBus CommandBus { get; private set; }
 

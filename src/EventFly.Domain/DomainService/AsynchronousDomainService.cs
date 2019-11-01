@@ -15,10 +15,10 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace EventFly.DomainService
 {
-    public abstract class DomainService<TDomainService> : ReceiveActor, IDomainService
-        where TDomainService : DomainService<TDomainService>
+    public abstract class AsynchronousDomainService<TDomainService> : ReceiveActor, IDomainService
+        where TDomainService : AsynchronousDomainService<TDomainService>
     {
-        protected DomainService()
+        protected AsynchronousDomainService()
         {
             Logger = Context.GetLogger();
 

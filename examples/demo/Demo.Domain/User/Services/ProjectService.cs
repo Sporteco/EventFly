@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Demo.User.Services
 {
-    public sealed class ProjectService : BaseDomainService<ProjectService>
+    public sealed class ProjectService : SynchronizedDomainService<ProjectService>
     {
         public async Task Create(UserAggregate user, ProjectId projectId, ProjectName projectName)
         {
