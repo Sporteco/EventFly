@@ -1,7 +1,7 @@
 ﻿using Demo.ValueObjects;
 using EventFly.Commands;
 
-namespace Demo.Project
+namespace Demo.Domain.Project.Commands
 {
     public sealed class CreateCommand : Command<ProjectId>
     {

@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
 using EventFly.DependencyInjection;
-using Demo.Queries;
 using Demo.ValueObjects;
 using Microsoft.Extensions.DependencyInjection;
-using EventFly.Queries;
 using EventFly.Commands;
-using System.Linq;
 using Demo.Infrastructure;
-using Demo.User;
+using Demo.User.Commands;
 
 namespace Demo.Host
 {
@@ -34,7 +31,7 @@ namespace Demo.Host
 
 
             var bus = serviceProvider.GetRequiredService<ICommandBus>();
-            var queryProcessor = serviceProvider.GetRequiredService<IQueryProcessor>();
+            //var queryProcessor = serviceProvider.GetRequiredService<IQueryProcessor>();
 
             await bus.Publish(createUserAccountCommand);
 
@@ -50,7 +47,7 @@ namespace Demo.Host
             var result2 = await bus.Publish(new CreateProjectCommand(aggregateId, projectId2, new ProjectName("Test project #1")));
             Console.WriteLine(result2.ToString());
 
-            var result3 = await bus.Publish(new DeleteProjectCommand(aggregateId, projectId1));
+            await bus.Publish(new DeleteProjectCommand(aggregateId, projectId1));
             Console.WriteLine(result2.ToString());
 
             //var res = await queryProcessor.Process(new UsersQuery());

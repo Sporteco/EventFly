@@ -1,7 +1,7 @@
 ﻿using Demo.ValueObjects;
 using EventFly.Entities;
 
-namespace Demo.User.Entities
+namespace Demo.Domain.User.Entities
 {
     public sealed class Project : Entity<ProjectId>
     {

@@ -1,4 +1,4 @@
-﻿using Demo.User;
+﻿using Demo.User.Events;
 using EventFly.Aggregates;
 using EventFly.ReadModels;
 

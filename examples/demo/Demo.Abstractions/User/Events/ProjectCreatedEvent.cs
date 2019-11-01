@@ -1,7 +1,7 @@
 ﻿using Demo.ValueObjects;
 using EventFly.Aggregates;
 
-namespace Demo.User
+namespace Demo.User.Events
 {
     public sealed class ProjectCreatedEvent : AggregateEvent<UserId>
     {

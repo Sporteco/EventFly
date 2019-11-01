@@ -4,10 +4,8 @@ using System.IO;
 using System.Reflection;
 using Akka.Util;
 using EventFly.Commands;
-using EventFly.Definitions;
 using EventFly.DependencyInjection;
 using EventFly.Queries;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.Extensions.DependencyInjection;
@@ -33,7 +31,7 @@ namespace EventFly.Swagger
     {
         public static EventFlyBuilder WithSwagger(this EventFlyWebApiBuilder builder, Action<EventFlySwaggerOptions> optionsBuilder)
         {
-            var options = new EventFlySwaggerOptions("swagger", Assembly.GetEntryAssembly().GetName().Name);
+            var options = new EventFlySwaggerOptions("swagger", Assembly.GetEntryAssembly()?.GetName().Name);
             optionsBuilder(options);
             builder.Services.AddSingleton(options);
         

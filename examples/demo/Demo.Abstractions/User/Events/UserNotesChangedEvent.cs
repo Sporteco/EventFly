@@ -1,7 +1,7 @@
-﻿using EventFly.Aggregates;
-using System;
+﻿using System;
+using EventFly.Aggregates;
 
-namespace Demo.User
+namespace Demo.User.Events
 {
     public class UserNotesChangedEvent : AggregateEvent<UserId>
     {

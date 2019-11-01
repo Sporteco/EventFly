@@ -1,6 +1,6 @@
 ﻿using EventFly.Aggregates;
 
-namespace Demo.User
+namespace Demo.User.Events
 {
     public class UserTouchedEvent : AggregateEvent<UserId> { }
 }

@@ -1,15 +1,17 @@
-﻿using Demo.ValueObjects;
+﻿using Demo.Domain.Project.Commands;
+using Demo.Domain.Project.Events;
+using Demo.ValueObjects;
 using EventFly.Aggregates;
 using EventFly.Commands.ExecutionResults;
 
-namespace Demo.Project
+namespace Demo.Domain.Project
 {
     public sealed class ProjectAggregateState : AggregateState<ProjectAggregate, ProjectId>,
         IApply<CreatedEvent>,
         IApply<DeletedEvent>
     {
         public ProjectName ProjectName { get; private set; }
-        public bool IsDeleted { get; private set; } = false;
+        public bool IsDeleted { get; private set; }
 
         public void Apply(CreatedEvent e)
         {

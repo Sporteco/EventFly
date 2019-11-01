@@ -5,9 +5,7 @@ using EventFly.DependencyInjection;
 using GraphQL;
 using GraphQL.Http;
 using GraphQL.Server;
-using GraphQL.Server.Ui.Playground;
 using GraphQL.Types;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace EventFly.GraphQL

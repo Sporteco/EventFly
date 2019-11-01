@@ -1,9 +1,9 @@
-﻿using Demo.ValueObjects;
-using EventFly.Specifications;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using Demo.ValueObjects;
+using EventFly.Specifications;
 
-namespace Demo.User
+namespace Demo.Domain.User.Specifications
 {
     public sealed class IsCanCreateProjectWithNameSpecification : Specification<ProjectName>
     {

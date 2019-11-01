@@ -1,13 +1,13 @@
 ﻿using System;
 using System.ComponentModel;
-using EventFly.Commands;
 using Demo.ValueObjects;
+using EventFly.Commands;
 using EventFly.Localization;
 using EventFly.Security;
 using EventFly.Validation;
 using FluentValidation;
 
-namespace Demo.User
+namespace Demo.User.Commands
 {
     [Description("Создание нового пользователя")]
     [HasPermissions(DemoContext.CreateUser,DemoContext.ChangeUser)]

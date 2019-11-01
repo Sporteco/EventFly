@@ -1,8 +1,8 @@
-﻿using EventFly.Aggregates;
-using Demo.ValueObjects;
+﻿using Demo.ValueObjects;
+using EventFly.Aggregates;
 using EventFly.Localization;
 
-namespace Demo.User
+namespace Demo.User.Events
 {
     public class UserCreatedEvent : AggregateEvent<UserId>
     {

@@ -1,7 +1,7 @@
-﻿using EventFly.Aggregates;
-using Demo.ValueObjects;
+﻿using Demo.ValueObjects;
+using EventFly.Aggregates;
 
-namespace Demo.User
+namespace Demo.User.Events
 {
     public class UserRenamedEvent : AggregateEvent<UserId>
     {

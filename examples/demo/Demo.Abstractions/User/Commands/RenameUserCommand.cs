@@ -1,8 +1,8 @@
-﻿using EventFly.Commands;
-using Demo.ValueObjects;
+﻿using Demo.ValueObjects;
+using EventFly.Commands;
 using EventFly.Security;
 
-namespace Demo.User
+namespace Demo.User.Commands
 {
     [HasPermissions(DemoContext.ChangeUser)]
     public class RenameUserCommand : Command<UserId>

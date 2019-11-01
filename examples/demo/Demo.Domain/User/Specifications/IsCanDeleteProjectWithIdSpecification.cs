@@ -1,8 +1,8 @@
-﻿using EventFly.Specifications;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using EventFly.Specifications;
 
-namespace Demo.User
+namespace Demo.Domain.User.Specifications
 {
     public sealed class IsCanDeleteProjectWithIdSpecification : Specification<ProjectId>
     {

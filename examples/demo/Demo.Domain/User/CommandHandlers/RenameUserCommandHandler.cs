@@ -1,7 +1,8 @@
-﻿using EventFly.Commands;
+﻿using Demo.User.Commands;
+using EventFly.Commands;
 using EventFly.Commands.ExecutionResults;
 
-namespace Demo.User.CommandHandlers
+namespace Demo.Domain.User.CommandHandlers
 {
     public class RenameUserCommandHandler : CommandHandler<UserAggregate, UserId, RenameUserCommand>
     {

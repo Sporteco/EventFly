@@ -1,6 +1,6 @@
 ﻿using EventFly.Commands;
 
-namespace Demo.Project
+namespace Demo.Domain.Project.Commands
 {
     public sealed class DeleteCommand : Command<ProjectId>
     {

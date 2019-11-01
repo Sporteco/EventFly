@@ -1,7 +1,7 @@
-﻿using EventFly.Commands;
-using System.ComponentModel;
+﻿using System.ComponentModel;
+using EventFly.Commands;
 
-namespace Demo.User
+namespace Demo.User.Commands
 {
     [Description("Удалить проект")]
     public sealed class DeleteProjectCommand : Command<UserId>

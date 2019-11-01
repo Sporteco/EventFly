@@ -1,8 +1,8 @@
-﻿using Demo.ValueObjects;
+﻿using System.ComponentModel;
+using Demo.ValueObjects;
 using EventFly.Commands;
-using System.ComponentModel;
 
-namespace Demo.User
+namespace Demo.User.Commands
 {
     [Description("Создать проект")]
     public sealed class CreateProjectCommand : Command<UserId>

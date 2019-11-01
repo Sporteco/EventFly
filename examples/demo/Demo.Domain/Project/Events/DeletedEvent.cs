@@ -1,6 +1,6 @@
 ﻿using EventFly.Aggregates;
 
-namespace Demo.Project
+namespace Demo.Domain.Project.Events
 {
     public sealed class DeletedEvent : AggregateEvent<ProjectId>
     {

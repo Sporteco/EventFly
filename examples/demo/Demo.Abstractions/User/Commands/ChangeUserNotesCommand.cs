@@ -1,8 +1,8 @@
-﻿using EventFly.Commands;
-using System;
+﻿using System;
 using System.ComponentModel;
+using EventFly.Commands;
 
-namespace Demo.User
+namespace Demo.User.Commands
 {
     [Description("Изменить заметки о пользователе")]
     public class ChangeUserNotesCommand : Command<UserId>

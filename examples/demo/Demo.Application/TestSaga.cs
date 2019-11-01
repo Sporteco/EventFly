@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Demo.User.Commands;
+using Demo.User.Events;
 using EventFly.Aggregates;
 using EventFly.Core;
 using Demo.ValueObjects;
 using EventFly.Sagas;
 using EventFly.Sagas.AggregateSaga;
-using Demo.User;
 
 namespace Demo.Application
 {

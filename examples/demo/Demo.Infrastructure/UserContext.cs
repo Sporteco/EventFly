@@ -1,9 +1,14 @@
 using Demo.Application;
+using Demo.Domain.Project;
+using Demo.Domain.Project.Commands;
+using Demo.Domain.Project.Events;
 using Demo.Domain.Services;
+using Demo.Domain.User;
 using Demo.Infrastructure.QueryHandlers;
 using Demo.Infrastructure.ReadModels;
 using Demo.Queries;
-using Demo.User;
+using Demo.User.Commands;
+using Demo.User.Events;
 using EventFly.AggregateStorages;
 using EventFly.Definitions;
 using EventFly.Permissions;
@@ -28,7 +33,7 @@ namespace Demo.Infrastructure
             RegisterQuery<EventPostersQuery, EventPosters>();
 
             RegisterAggregate<UserAggregate, UserId>();
-            RegisterAggregate<Project.ProjectAggregate, ProjectId>();
+            RegisterAggregate<ProjectAggregate, ProjectId>();
 
             RegisterEvents(
                 typeof(UserCreatedEvent),
@@ -37,8 +42,8 @@ namespace Demo.Infrastructure
                 typeof(UserTouchedEvent),
                 typeof(ProjectCreatedEvent),
                 typeof(ProjectDeletedEvent),
-                typeof(Project.CreatedEvent),
-                typeof(Project.DeletedEvent)
+                typeof(CreatedEvent),
+                typeof(DeletedEvent)
             );
 
             RegisterCommands(
@@ -48,8 +53,8 @@ namespace Demo.Infrastructure
                 typeof(TrackUserTouchingCommand),
                 typeof(CreateProjectCommand),
                 typeof(DeleteProjectCommand),
-                typeof(Project.CreateCommand),
-                typeof(Project.DeleteCommand)
+                typeof(CreateCommand),
+                typeof(DeleteCommand)
             );
 
             RegisterAggregateReadModel<UsersInfoReadModel, UserId>();
@@ -63,7 +68,7 @@ namespace Demo.Infrastructure
         {
             return services
                 .AddScoped<IAggregateStorage<UserAggregate>, InMemoryAggregateStorage<UserAggregate>>()
-                .AddScoped<IAggregateStorage<Project.ProjectAggregate>, InMemoryAggregateStorage<Project.ProjectAggregate>>()
+                .AddScoped<IAggregateStorage<ProjectAggregate>, InMemoryAggregateStorage<ProjectAggregate>>()
                 .AddSingleton<IReadModelStorage<UsersInfoReadModel>, InMemoryReadModelStorage<UsersInfoReadModel>>()
                 .AddSingleton<IReadModelStorage<TotalUsersReadModel>, InMemoryReadModelStorage<TotalUsersReadModel>>()
 

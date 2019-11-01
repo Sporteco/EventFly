@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
+using Demo.User.Events;
 using EventFly.Aggregates;
 using EventFly.ReadModels;
-using Demo.User;
 
 namespace Demo.Infrastructure.ReadModels
 {

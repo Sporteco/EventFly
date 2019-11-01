@@ -1,9 +1,11 @@
-﻿using Demo.ValueObjects;
-using EventFly.DomainService;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using Demo.Domain.Project.Commands;
+using Demo.Domain.User.Specifications;
+using Demo.ValueObjects;
+using EventFly.DomainService;
 
-namespace Demo.User.Services
+namespace Demo.Domain.User.Services
 {
     public sealed class ProjectService : SynchronizedDomainService<ProjectService>
     {
@@ -13,7 +15,7 @@ namespace Demo.User.Services
             if (spec.IsSatisfiedBy(projectName) == false)
                 throw new InvalidOperationException(string.Join("\n", spec.WhyIsNotSatisfiedBy(projectName)));
 
-            var result = await CommandBus.Publish(new Project.CreateCommand(projectId, projectName));
+            var result = await CommandBus.Publish(new CreateCommand(projectId, projectName));
             if (result.IsSuccess == false)
                 throw new InvalidOperationException(result.ToString());
 
@@ -26,7 +28,7 @@ namespace Demo.User.Services
             if (spec.IsSatisfiedBy(projectId) == false)
                 throw new InvalidOperationException(string.Join("\n", spec.WhyIsNotSatisfiedBy(projectId)));
 
-            var result = await CommandBus.Publish(new Project.DeleteCommand(projectId));
+            var result = await CommandBus.Publish(new DeleteCommand(projectId));
             if (result.IsSuccess == false)
                 throw new InvalidOperationException(result.ToString());
 

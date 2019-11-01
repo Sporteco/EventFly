@@ -1,12 +1,14 @@
-﻿using Demo.User.CommandHandlers;
+﻿using System;
+using System.Collections.Generic;
+using Demo.Domain.User.CommandHandlers;
+using Demo.User.Commands;
+using Demo.User.Events;
 using Demo.ValueObjects;
 using EventFly.Aggregates;
 using EventFly.Commands.ExecutionResults;
 using EventFly.Localization;
-using System;
-using System.Collections.Generic;
 
-namespace Demo.User
+namespace Demo.Domain.User
 {
     public class UserState : AggregateState<UserAggregate, UserId>,
         IApply<UserCreatedEvent>,
