@@ -24,11 +24,11 @@ namespace EventFly.Swagger
     {
         private readonly IApplicationDefinition _metadata;
         private readonly ApiDescriptionGroupCollectionProvider _internal;
-        private readonly EventFlyHttpOptions _options;
+        private readonly EventFlyWebApiOptions _options;
 
         public CommandsApiDescriptionGroupCollectionProvider(
           IApplicationDefinition applicationDefinition,
-          EventFlyHttpOptions options,
+          EventFlyWebApiOptions options,
           IActionDescriptorCollectionProvider actionDescriptorCollectionProvider,
           IEnumerable<IApiDescriptionProvider> apiDescriptionProviders)
         {

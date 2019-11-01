@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using EventFly.Definitions;
 using EventFly.DependencyInjection;
 using GraphQL;
 using GraphQL.Http;
@@ -11,6 +12,38 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace EventFly.GraphQL
 {
+    public sealed class EventFlyGraphQlOptions
+    {
+        public EventFlyGraphQlOptions(string basePath)
+        {
+            BasePath = basePath;
+        }
+
+        public string BasePath { get; set; }
+    }
+
+    public sealed class EventFlyGraphQlConsoleOptions
+    {
+        public EventFlyGraphQlConsoleOptions(string basePath)
+        {
+            BasePath = basePath;
+        }
+
+        public string BasePath { get; set; }
+    }
+
+    public sealed class EventFlyGraphQlBuilder
+    {
+        public EventFlyGraphQlBuilder(EventFlyBuilder builder)
+        {
+            Builder = builder;
+        }
+
+        public EventFlyBuilder Builder { get; }
+        public IServiceCollection Services => Builder.Services;
+        public IApplicationDefinition ApplicationDefinition => Builder.ApplicationDefinition;
+    }
+
     public static class BuilderExtensions
     {
         private static ConcurrentDictionary<Type,object> _enumCache = new ConcurrentDictionary<Type,object>(); 
@@ -23,9 +56,12 @@ namespace EventFly.GraphQL
             return provider.GetRequiredService(serviceType);
         }
 
-        public static EventFlyHttpBuilder AddGraphQl(this EventFlyHttpBuilder builder)
+        public static EventFlyGraphQlBuilder ConfigureGraphQl(this EventFlyBuilder builder, Action<EventFlyGraphQlOptions> optionsBuilder)
         {
+            var options = new EventFlyGraphQlOptions("graphql");
+
             var services = builder.Services;
+            services.AddSingleton(options);
             services.AddSingleton<IDocumentExecuter, DocumentExecuter>();
             services.AddSingleton<IDocumentWriter, DocumentWriter>();
 
@@ -45,17 +81,31 @@ namespace EventFly.GraphQL
                 //services.AddSingleton(provider => (IGraphQueryHandler) provider.GetService(handlerFullType));
             }
 
-            return builder;
+            return new EventFlyGraphQlBuilder(builder);
         }
-        public static IApplicationBuilder UseEventFlyGraphQl(this IApplicationBuilder app)
+
+        public static EventFlyBuilder WithConsole(this EventFlyGraphQlBuilder builder, Action<EventFlyGraphQlConsoleOptions> builderOptions)
         {
-            var options = app.ApplicationServices.GetRequiredService<EventFlyHttpOptions>();
-            app.UseGraphQL<ISchema>("/" + options.BasePath.Trim('/'));
-            app.UseGraphQLPlayground(new GraphQLPlaygroundOptions
-            {
-                Path = "/graphql-console"
-            });
-            return app;
+            var options = new EventFlyGraphQlConsoleOptions("graphql-console");
+            builderOptions(options);
+            var services = builder.Services;
+            services.AddSingleton(options);
+
+            return builder.Builder;
         }
+
+        //public static IApplicationBuilder UseEventFlyGraphQl(this IApplicationBuilder app)
+        //{
+        //    var options = app.ApplicationServices.GetRequiredService<EventFlyGraphQlOptions>();
+        //    var optionsConsole = app.ApplicationServices.GetRequiredService<EventFlyGraphQlConsoleOptions>();
+
+
+        //    app.UseGraphQL<ISchema>("/" + options.BasePath.Trim('/'));
+        //    app.UseGraphQLPlayground(new GraphQLPlaygroundOptions
+        //    {
+        //        Path = "/" + optionsConsole.BasePath.Trim('/')
+        //    });
+        //    return app;
+        //}
     }
 }

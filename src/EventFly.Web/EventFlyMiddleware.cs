@@ -15,9 +15,9 @@ using Newtonsoft.Json;
 
 namespace EventFly
 {
-    public sealed class EventFlyHttpOptions
+    public sealed class EventFlyWebApiOptions
     {
-        public EventFlyHttpOptions(string basePath)
+        public EventFlyWebApiOptions(string basePath)
         {
             BasePath = basePath;
         }
@@ -25,9 +25,9 @@ namespace EventFly
         public string BasePath { get; set; }
     }
 
-    public sealed class EventFlyHttpBuilder
+    public sealed class EventFlyWebApiBuilder
     {
-        public EventFlyHttpBuilder(EventFlyBuilder builder)
+        public EventFlyWebApiBuilder(EventFlyBuilder builder)
         {
             Builder = builder;
         }
@@ -39,19 +39,19 @@ namespace EventFly
 
     public static class BuilderExtensions
     {
-        public static EventFlyHttpBuilder ConfigureWebApi(this EventFlyBuilder eventFlyBuilder, Action<EventFlyHttpOptions> optionsBuilder)
+        public static EventFlyWebApiBuilder ConfigureWebApi(this EventFlyBuilder eventFlyBuilder, Action<EventFlyWebApiOptions> optionsBuilder)
         {
-            var options = new EventFlyHttpOptions("api");
+            var options = new EventFlyWebApiOptions("api");
             optionsBuilder(options);
             eventFlyBuilder.Services.AddSingleton(options);
-            return new EventFlyHttpBuilder(eventFlyBuilder);
+            return new EventFlyWebApiBuilder(eventFlyBuilder);
         }
     }
 
     public class EventFlyMiddleware
     {
-        private readonly Regex CommandPath = new Regex("/*api/(?<name>[a-z]+)/(?<version>\\d+)/{0,1}", RegexOptions.IgnoreCase | RegexOptions.Compiled);
-        private readonly Regex QueryPath = new Regex("/*api/(?<name>[a-z]+)/{0,1}", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        private readonly Regex CommandPath;
+        private readonly Regex QueryPath;
         private readonly RequestDelegate _next;
         private readonly ILogger _log;
         private readonly ISerializedCommandPublisher _serializedCommandPublisher;
@@ -60,7 +60,7 @@ namespace EventFly
         public EventFlyMiddleware(
           RequestDelegate next,
           ILogger<EventFlyMiddleware> log,
-          EventFlyHttpOptions options,
+          EventFlyWebApiOptions options,
           ISerializedCommandPublisher serializedCommandPublisher,
           ISerializedQueryExecutor serializedQueryExecutor)
         {

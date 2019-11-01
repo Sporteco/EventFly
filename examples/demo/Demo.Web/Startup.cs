@@ -31,8 +31,8 @@ namespace Demo.Web
                 .ConfigureGraphQl(options => options.BasePath = "/graphql")
                     .WithConsole(options => options.BasePath = "/graphql-console")
 
-                .ConfigureWebApi(options => options.BasePath = "/api")
-                    .WithSwagger(options => options.BasePath = "/swagger");
+                .ConfigureWebApi(options => options.BasePath = "/api-s")
+                    .WithSwagger(options => options.Url = "/swagger");
 
             services
                 .AddMvcCore()
@@ -43,9 +43,6 @@ namespace Demo.Web
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             app.UseEventFly();
-
-            app.UseEventFlyGraphQl();
-            app.UseEventFlySwagger();
 
             app.UseMvc(routes =>
             {
