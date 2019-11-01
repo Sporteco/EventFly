@@ -23,7 +23,7 @@ namespace EventFly.GraphQL
             return provider.GetRequiredService(serviceType);
         }
 
-        public static EventFlyBuilder AddGraphQl(this EventFlyBuilder builder)
+        public static EventFlyHttpBuilder AddGraphQl(this EventFlyHttpBuilder builder)
         {
             var services = builder.Services;
             services.AddSingleton<IDocumentExecuter, DocumentExecuter>();
@@ -49,9 +49,8 @@ namespace EventFly.GraphQL
         }
         public static IApplicationBuilder UseEventFlyGraphQl(this IApplicationBuilder app)
         {
-	        
-            app.UseGraphQL<ISchema>();
-
+            var options = app.ApplicationServices.GetRequiredService<EventFlyHttpOptions>();
+            app.UseGraphQL<ISchema>("/" + options.BasePath.Trim('/'));
             app.UseGraphQLPlayground(new GraphQLPlaygroundOptions
             {
                 Path = "/graphql-console"

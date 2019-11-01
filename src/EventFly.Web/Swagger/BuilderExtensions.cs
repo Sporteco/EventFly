@@ -18,7 +18,7 @@ namespace EventFly.Swagger
 {
     public static class BuilderExtensions
     {
-        public static EventFlyBuilder AddSwagger(this EventFlyBuilder builder)
+        public static EventFlyHttpBuilder AddSwagger(this EventFlyHttpBuilder builder)
         {
             var services = builder.Services;
             services.TryAdd(ServiceDescriptor.Transient<IApiDescriptionGroupCollectionProvider, CommandsApiDescriptionGroupCollectionProvider>());
