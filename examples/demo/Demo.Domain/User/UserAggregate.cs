@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Demo.Domain.User.CommandHandlers;
 using Demo.User.Commands;
 using Demo.User.Events;
 using Demo.ValueObjects;
@@ -39,9 +38,9 @@ namespace Demo.Domain.User
     {
         public UserAggregate(UserId id) : base(id)
         {
-            Command<RenameUserCommand, RenameUserCommandHandler>();
-            CommandAsync<CreateProjectCommand, CreateProjectCommandHandler>();
-            CommandAsync<DeleteProjectCommand, DeleteProjectCommandHandler>();
+            Command<RenameUserCommand>();
+            CommandAsync<CreateProjectCommand>();
+            CommandAsync<DeleteProjectCommand>();
         }
 
         internal void CreateProject(ProjectId projectId, ProjectName projectName)

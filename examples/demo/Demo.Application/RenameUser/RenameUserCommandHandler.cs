@@ -1,8 +1,9 @@
-﻿using Demo.User.Commands;
+﻿using Demo.Domain.User;
+using Demo.User.Commands;
 using EventFly.Commands;
 using EventFly.Commands.ExecutionResults;
 
-namespace Demo.Domain.User.CommandHandlers
+namespace Demo.Application.DeleteProject.RenameUser
 {
     public class RenameUserCommandHandler : CommandHandler<UserAggregate, UserId, RenameUserCommand>
     {
