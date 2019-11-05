@@ -117,6 +117,7 @@ namespace EventFly.Aggregates
             catch (Exception exception)
             {
                 Log.Error(exception, "Unable to activate CommandHandler of Type={0} for Aggregate of Type={1}.", typeof(TCommandHandler).PrettyPrint(), typeof(TAggregate).PrettyPrint());
+                Context.Sender.Tell(new UnhandledExceptionCommandResult(exception.Message, exception.StackTrace));
             }
         }
 
@@ -142,6 +143,7 @@ namespace EventFly.Aggregates
             catch (Exception exception)
             {
                 Log.Error(exception, "Unable to activate CommandHandler of Type={0} for Aggregate of Type={1}.", typeof(TAsyncCommandHandler).PrettyPrint(), typeof(TAggregate).PrettyPrint());
+                Context.Sender.Tell(new UnhandledExceptionCommandResult(exception.Message, exception.StackTrace));
             }
         }
 
@@ -160,6 +162,7 @@ namespace EventFly.Aggregates
             catch (Exception exception)
             {
                 Log.Error(exception, "Unable to activate CommandHandler for command of Type={0} for Aggregate of Type={1}.", typeof(TCommand).PrettyPrint(), typeof(TAggregate).PrettyPrint());
+                Context.Sender.Tell(new UnhandledExceptionCommandResult(exception.Message, exception.StackTrace));
             }
         }
 
@@ -180,6 +183,7 @@ namespace EventFly.Aggregates
             catch (Exception exception)
             {
                 Log.Error(exception, "Unable to activate CommandHandler for command of Type={0} for Aggregate of Type={1}.", typeof(TCommand).PrettyPrint(), typeof(TAggregate).PrettyPrint());
+                Context.Sender.Tell(new UnhandledExceptionCommandResult(exception.Message, exception.StackTrace));
             }
         }
 
