@@ -7,6 +7,8 @@ using EventFly.Schedulers;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using EventFly.Permissions;
+using EventFly.Core;
+using EventFly.Aggregates;
 
 namespace EventFly.DependencyInjection
 {
@@ -22,7 +24,6 @@ namespace EventFly.DependencyInjection
 
             return serviceProvider;
         }
-
 
         public static EventFlyBuilder AddEventFly(
             this IServiceCollection services, string systemName)
@@ -53,6 +54,26 @@ namespace EventFly.DependencyInjection
             services.AddSingleton<ISecurityService, SecurityService>();
 
             return new EventFlyBuilder(services);
+        }
+
+        public static IServiceCollection AddAsyncCommandHandler<TAggregate, TIdentity, TCommand, TCommandHandler>(this IServiceCollection services)
+            where TAggregate : ActorBase, IAggregateRoot<TIdentity>
+            where TIdentity : IIdentity
+            where TCommand : ICommand<TIdentity>
+            where TCommandHandler: AsyncCommandHandler<TAggregate, TIdentity, TCommand>
+        {
+            services.AddScoped<AsyncCommandHandler<TAggregate, TIdentity, TCommand>, TCommandHandler>();
+            return services;
+        }
+
+        public static IServiceCollection AddCommandHandler<TAggregate, TIdentity, TCommand, TCommandHandler>(this IServiceCollection services)
+            where TAggregate : ActorBase, IAggregateRoot<TIdentity>
+            where TIdentity : IIdentity
+            where TCommand : ICommand<TIdentity>
+            where TCommandHandler : CommandHandler<TAggregate, TIdentity, TCommand>
+        {
+            services.AddScoped<CommandHandler<TAggregate, TIdentity, TCommand>, TCommandHandler>();
+            return services;
         }
     }
 }

@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Demo.Domain.User;
 using Demo.Domain.User.Services;
 using Demo.User.Commands;
 using EventFly.Commands;
 using EventFly.Commands.ExecutionResults;
 
-namespace Demo.Domain.User.CommandHandlers
+namespace Demo.Application.DeleteProject
 {
     public sealed class DeleteProjectCommandHandler : AsyncCommandHandler<UserAggregate, UserId, DeleteProjectCommand>
     {

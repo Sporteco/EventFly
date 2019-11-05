@@ -1,16 +1,22 @@
 using Demo.Application;
+using Demo.Application.CreateProject;
+using Demo.Application.DeleteProject;
+using Demo.Application.DeleteProject.RenameUser;
 using Demo.Domain.Project;
 using Demo.Domain.Project.Commands;
 using Demo.Domain.Project.Events;
 using Demo.Domain.Services;
 using Demo.Domain.User;
+using Demo.Infrastructure.CreateProject;
 using Demo.Infrastructure.QueryHandlers;
 using Demo.Infrastructure.ReadModels;
 using Demo.Queries;
 using Demo.User.Commands;
 using Demo.User.Events;
 using EventFly.AggregateStorages;
+using EventFly.Commands;
 using EventFly.Definitions;
+using EventFly.DependencyInjection;
 using EventFly.Permissions;
 using EventFly.Queries;
 using EventFly.ReadModels;
@@ -81,6 +87,12 @@ namespace Demo.Infrastructure
                 .AddScoped<QueryHandler<User1Query, UsersResult>, UsersQuery1Handler>()
                 .AddScoped<QueryHandler<User2Query, UsersResult>, UsersQuery2Handler>()
                 .AddScoped<QueryHandler<EventPostersQuery, EventPosters>, EventPostersQueryHandler>()
+
+                .AddScoped<IExternalService, TestExternalService>()
+
+                .AddCommandHandler<UserAggregate, UserId, RenameUserCommand, RenameUserCommandHandler>()
+                .AddAsyncCommandHandler<UserAggregate, UserId, CreateProjectCommand, CreateProjectCommandHandler>()
+                .AddAsyncCommandHandler<UserAggregate, UserId, DeleteProjectCommand, DeleteProjectCommandHandler>()
 
                 .AddSingleton<IPermissionProvider, PermissionProvider>();
         }

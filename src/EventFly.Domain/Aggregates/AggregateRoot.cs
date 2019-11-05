@@ -33,9 +33,7 @@ namespace EventFly.Aggregates
         public long Version => 1;
         public bool IsNew => false;
         public TIdentity Id { get; }
-
         protected SecurityContext SecurityContext { get; private set; }
-
 
         private IServiceScope _scope;
         private IAggregateStorage<TAggregate> _aggregateStorage;
@@ -100,6 +98,7 @@ namespace EventFly.Aggregates
             _aggregateStorage.SaveState<TAggregateState, TIdentity>(State);
         }
 
+        [Obsolete]
         protected void Command<TCommand, TCommandHandler>(Predicate<TCommand> shouldHandle = null)
             where TCommand : ICommand<TIdentity>
             where TCommandHandler : CommandHandler<TAggregate, TIdentity, TCommand>
@@ -121,6 +120,7 @@ namespace EventFly.Aggregates
             }
         }
 
+        [Obsolete]
         protected void CommandAsync<TCommand, TAsyncCommandHandler>(Predicate<TCommand> shouldHandle = null)
             where TCommand : ICommand<TIdentity>
             where TAsyncCommandHandler : AsyncCommandHandler<TAggregate, TIdentity, TCommand>
@@ -142,6 +142,44 @@ namespace EventFly.Aggregates
             catch (Exception exception)
             {
                 Log.Error(exception, "Unable to activate CommandHandler of Type={0} for Aggregate of Type={1}.", typeof(TAsyncCommandHandler).PrettyPrint(), typeof(TAggregate).PrettyPrint());
+            }
+        }
+
+        protected void Command<TCommand>()
+            where TCommand : ICommand<TIdentity>
+        {
+            try
+            {
+                Receive<TCommand>(cmd =>
+                {
+                    var handler = _scope.ServiceProvider.GetService<CommandHandler<TAggregate, TIdentity, TCommand>>();
+                    var result = handler.Handle(this as TAggregate, cmd);
+                    Context.Sender.Tell(result);
+                });
+            }
+            catch (Exception exception)
+            {
+                Log.Error(exception, "Unable to activate CommandHandler for command of Type={0} for Aggregate of Type={1}.", typeof(TCommand).PrettyPrint(), typeof(TAggregate).PrettyPrint());
+            }
+        }
+
+        protected void CommandAsync<TCommand>()
+            where TCommand : ICommand<TIdentity>
+        {
+            try
+            {
+                ReceiveAsync<TCommand>(async cmd =>
+                {
+                    var handler = _scope.ServiceProvider.GetService<AsyncCommandHandler<TAggregate, TIdentity, TCommand>>();
+                    var commandBus = _scope.ServiceProvider.GetService<ICommandBus>();
+                    handler.Inject(commandBus);
+                    var result = await handler.Handle(this as TAggregate, cmd);
+                    Context.Sender.Tell(result);
+                });
+            }
+            catch (Exception exception)
+            {
+                Log.Error(exception, "Unable to activate CommandHandler for command of Type={0} for Aggregate of Type={1}.", typeof(TCommand).PrettyPrint(), typeof(TAggregate).PrettyPrint());
             }
         }
 
@@ -293,7 +331,6 @@ namespace EventFly.Aggregates
             Log.Error(cause, "Aggregate of Name={0}, and Id={1}; has experienced an error and will now restart", Name, Id);
             base.AroundPreRestart(cause, message);
         }
-
 
         protected void Command<TCommand, TResult>(Func<TCommand, TResult> handler)
             where TCommand : ICommand<TIdentity>
