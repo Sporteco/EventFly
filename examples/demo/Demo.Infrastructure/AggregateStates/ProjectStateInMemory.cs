@@ -12,6 +12,11 @@ namespace Demo.Infrastructure.AggregateStates
         IApply<DeletedEvent>
     {
         public ProjectName ProjectName { get; private set; }
+        public int SaveTimings()
+        {
+            throw new System.NotImplementedException();
+        }
+
         public bool IsDeleted { get; private set; }
 
         public void Apply(CreatedEvent e)
