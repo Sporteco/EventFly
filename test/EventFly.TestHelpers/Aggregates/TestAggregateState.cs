@@ -23,6 +23,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using EventFly.Aggregates;
 using EventFly.Aggregates.Snapshot;
 using EventFly.TestHelpers.Aggregates.Entities;
@@ -42,23 +43,23 @@ namespace EventFly.TestHelpers.Aggregates
         public List<Test> TestCollection { get; private set; }
         public bool FromHydration { get; private set; }
 
-        public void Apply(TestCreatedEvent aggregateEvent)
+        public async Task Apply(TestCreatedEvent aggregateEvent)
         {
             TestCollection = new List<Test>();
             FromHydration = false;
         }
         
-        public void Apply(TestAddedEvent aggregateEvent)
+        public async Task Apply(TestAddedEvent aggregateEvent)
         {
             TestCollection.Add(aggregateEvent.Test);
         }
 
-        public void Apply(TestReceivedEvent aggregateEvent)
+        public async Task Apply(TestReceivedEvent aggregateEvent)
         {
             TestCollection.Add(aggregateEvent.Test);
         }
 
-        public void Apply(TestSentEvent aggregateEvent)
+        public async Task Apply(TestSentEvent aggregateEvent)
         {
             TestCollection.RemoveAll(x => x.Id == aggregateEvent.Test.Id);
         }

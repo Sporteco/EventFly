@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using EventFly.Aggregates;
 using EventFly.Commands;
 using EventFly.Commands.ExecutionResults;
@@ -28,21 +29,21 @@ namespace EventFly.TestHelpers
 
     {
         public TestPermissionsAggregate(TestPermissionsId id) : base(id){}
-        public IExecutionResult Execute(TestPermissionsAuthorizedInAggregateCommand command)
+        public async Task<IExecutionResult> Execute(TestPermissionsAuthorizedInAggregateCommand command)
         {
             SecurityContext.Authorized();
             return new SuccessExecutionResult();
         }
 
-        public IExecutionResult Execute(TestHasPermissionAttributeSuccessCommand command) => new SuccessExecutionResult();
+        public async Task<IExecutionResult> Execute(TestHasPermissionAttributeSuccessCommand command) => new SuccessExecutionResult();
 
-        public IExecutionResult Execute(TestHasPermissionsAttributeSuccessCommand command) => new SuccessExecutionResult();
+        public async Task<IExecutionResult> Execute(TestHasPermissionsAttributeSuccessCommand command) => new SuccessExecutionResult();
 
-        public IExecutionResult Execute(TestHasPermissionAttributeFailedCommand command) => new SuccessExecutionResult();
+        public async Task<IExecutionResult> Execute(TestHasPermissionAttributeFailedCommand command) => new SuccessExecutionResult();
 
-        public IExecutionResult Execute(TestHasPermissionsAttributeFailedCommand command) => new SuccessExecutionResult();
-        public IExecutionResult Execute(TestPermissionsAuthorizedAttributeCommand command)=> new SuccessExecutionResult();
-        public IExecutionResult Execute(TestHasObjectPermissionAttributeSuccessCommand command) => new SuccessExecutionResult();
+        public async Task<IExecutionResult> Execute(TestHasPermissionsAttributeFailedCommand command) => new SuccessExecutionResult();
+        public async Task<IExecutionResult> Execute(TestPermissionsAuthorizedAttributeCommand command)=> new SuccessExecutionResult();
+        public async Task<IExecutionResult> Execute(TestHasObjectPermissionAttributeSuccessCommand command) => new SuccessExecutionResult();
     }
 
     public static class TestPermissions

@@ -14,17 +14,17 @@ namespace Demo.Infrastructure.AggregateStates
         public ProjectName ProjectName { get; private set; }
         public int SaveTimings()
         {
-            throw new System.NotImplementedException();
+            return 0;
         }
 
         public bool IsDeleted { get; private set; }
 
-        public void Apply(CreatedEvent e)
+        public async Task Apply(CreatedEvent e)
         {
             ProjectName = e.Name;
         }
 
-        public void Apply(DeletedEvent _)
+        public async Task Apply(DeletedEvent _)
         {
             IsDeleted = true;
         }
@@ -53,18 +53,18 @@ namespace Demo.Infrastructure.AggregateStates
             }
         }
 
-        public void Apply(CreatedEvent aggregateEvent)
+        public async Task Apply(CreatedEvent aggregateEvent)
         {
             _model.Id = aggregateEvent.ProjectId;
             _model.ProjectName = aggregateEvent.Name;
 
-            DbContext.SaveChanges();
+            await DbContext.SaveChangesAsync();
         }
 
-        public void Apply(DeletedEvent aggregateEvent)
+        public async Task Apply(DeletedEvent aggregateEvent)
         {
             _model.IsDeleted = true;
-            DbContext.SaveChanges();
+            await DbContext.SaveChangesAsync();
         }
 
     }

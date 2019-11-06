@@ -37,6 +37,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using EventFly.DomainService;
+using System.Threading.Tasks;
 
 namespace EventFly.Extensions
 {
@@ -103,7 +104,7 @@ namespace EventFly.Extensions
                     mi => ReflectionHelper.CompileMethodInvocation<Action<T, IAggregateSnapshot>>(type, "Hydrate", mi.GetParameters()[0].ParameterType));
         }
 
-        internal static IReadOnlyDictionary<Type, Action<TAggregateState, IAggregateEvent>> GetAggregateStateEventApplyMethods<TAggregate, TIdentity, TAggregateState>(this Type type)
+        internal static IReadOnlyDictionary<Type, Func<TAggregateState, IAggregateEvent, Task>> GetAggregateStateEventApplyMethods<TAggregate, TIdentity, TAggregateState>(this Type type)
             where TAggregate : IAggregateRoot<TIdentity>
             where TIdentity : IIdentity
         {
@@ -123,7 +124,7 @@ namespace EventFly.Extensions
                 })
                 .ToDictionary(
                     mi => mi.GetParameters()[0].ParameterType,
-                    mi => ReflectionHelper.CompileMethodInvocation<Action<TAggregateState, IAggregateEvent>>(type, "Apply", mi.GetParameters()[0].ParameterType));
+                    mi => ReflectionHelper.CompileMethodInvocation<Func<TAggregateState, IAggregateEvent, Task>>(type, "Apply", mi.GetParameters()[0].ParameterType));
         }
 
         internal static IReadOnlyList<Type> GetAsyncDomainEventSubscriberSubscriptionTypes(this Type type)

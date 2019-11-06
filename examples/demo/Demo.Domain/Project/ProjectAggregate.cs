@@ -3,6 +3,7 @@ using Demo.Domain.Project.Events;
 using Demo.ValueObjects;
 using EventFly.Aggregates;
 using EventFly.Commands.ExecutionResults;
+using System.Threading.Tasks;
 
 namespace Demo.Domain.Project
 {
@@ -33,14 +34,14 @@ namespace Demo.Domain.Project
 
         #region Command handlers
 
-        public IExecutionResult Execute(CreateCommand cmd)
+        public async Task<IExecutionResult> Execute(CreateCommand cmd)
         {
             Create(cmd.ProjectName);
 
             return ExecutionResult.Success();
         }
 
-        public IExecutionResult Execute(DeleteCommand command)
+        public async Task<IExecutionResult> Execute(DeleteCommand command)
         {
             Delete();
 

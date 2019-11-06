@@ -24,6 +24,7 @@
 using EventFly.Commands;
 using EventFly.Commands.ExecutionResults;
 using EventFly.Core;
+using System.Threading.Tasks;
 
 namespace EventFly.Aggregates
 {
@@ -36,6 +37,6 @@ namespace EventFly.Aggregates
         where TCommand : ICommand<TIdentity>
         where TIdentity : IIdentity
     {
-        IExecutionResult Execute(TCommand command);
+        Task<IExecutionResult> Execute(TCommand command);
     }
 }

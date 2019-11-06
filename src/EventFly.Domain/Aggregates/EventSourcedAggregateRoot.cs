@@ -29,6 +29,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using Akka.Actor;
 using Akka.Event;
 using Akka.Persistence;
@@ -53,7 +54,7 @@ namespace EventFly.Aggregates
         where TAggregateState : AggregateState<TAggregate,TIdentity, IMessageApplier<TAggregate,TIdentity>>, new()
         where TIdentity : IIdentity
     {
-        private static readonly IReadOnlyDictionary<Type, Action<TAggregateState, IAggregateEvent>> ApplyMethodsFromState = typeof(TAggregateState).GetAggregateStateEventApplyMethods<TAggregate, TIdentity, TAggregateState>();
+        private static readonly IReadOnlyDictionary<Type, Func<TAggregateState, IAggregateEvent, Task>> ApplyMethodsFromState = typeof(TAggregateState).GetAggregateStateEventApplyMethods<TAggregate, TIdentity, TAggregateState>();
         private static readonly IReadOnlyDictionary<Type, Action<TAggregateState, IAggregateSnapshot>> HydrateMethodsFromState =  typeof(TAggregateState).GetAggregateSnapshotHydrateMethods<TAggregate, TIdentity, TAggregateState>();
         private static readonly IAggregateName AggregateName = typeof(TAggregate).GetAggregateName();
         private CircularBuffer<ISourceId> _previousSourceIds = new CircularBuffer<ISourceId>(100);
@@ -276,7 +277,7 @@ namespace EventFly.Aggregates
             where TAggregateEvent : class, IAggregateEvent<TIdentity>
         {
             var applyMethods = GetEventApplyMethods(committedEvent.AggregateEvent);
-            applyMethods(committedEvent.AggregateEvent);
+            applyMethods(committedEvent.AggregateEvent).GetAwaiter().GetResult();
 
             Log.Info("Aggregate of Name={0}, and Id={1}; committed and applied an AggregateEvent of Type={2}.", Name, Id, typeof(TAggregateEvent).PrettyPrint());
 
@@ -386,13 +387,12 @@ namespace EventFly.Aggregates
             return events.ToList();
         }
 
-        protected Action<IAggregateEvent> GetEventApplyMethods<TAggregateEvent>(TAggregateEvent aggregateEvent)
+        protected Func<IAggregateEvent, Task> GetEventApplyMethods<TAggregateEvent>(TAggregateEvent aggregateEvent)
             where TAggregateEvent : class, IAggregateEvent<TIdentity>
         {
             var eventType = aggregateEvent.GetType();
 
-            Action<TAggregateState, IAggregateEvent> applyMethod;
-            if (!ApplyMethodsFromState.TryGetValue(eventType, out applyMethod))
+            if (!ApplyMethodsFromState.TryGetValue(eventType, out Func<TAggregateState, IAggregateEvent, Task> applyMethod))
                 throw new NotImplementedException($"AggregateState of Type={State.GetType().PrettyPrint()} does not have an 'Apply' method that takes in an aggregate event of Type={eventType.PrettyPrint()} as an argument.");
 
             var aggregateApplyMethod = applyMethod.Bind(State);
@@ -420,7 +420,7 @@ namespace EventFly.Aggregates
         {
             var eventApplier = GetEventApplyMethods(aggregateEvent);
 
-            eventApplier(aggregateEvent);
+            eventApplier(aggregateEvent).GetAwaiter().GetResult();
 
             Version++;
         }
@@ -540,14 +540,14 @@ namespace EventFly.Aggregates
 
         }
         
-        protected void Command<TCommand, TResult>(Func<TCommand,TResult> handler)
+        protected void Command<TCommand, TResult>(Func<TCommand,Task<TResult>> handler)
             where TCommand : ICommand<TIdentity>
         {
             Command(x =>
                 {
                     try
                     {
-                        var result = handler(x);
+                        var result = handler(x).GetAwaiter().GetResult();
                         Context.Sender.Tell(result);
                     }
                     catch (UnauthorizedAccessException)

@@ -191,12 +191,14 @@ namespace EventFly.Aggregates
             return Id;
         }
 
-        public virtual void Emit<TAggregateEvent>(TAggregateEvent aggregateEvent, IEventMetadata metadata = null)
+        public virtual Task Emit<TAggregateEvent>(TAggregateEvent aggregateEvent, IEventMetadata metadata = null)
             where TAggregateEvent : class, IAggregateEvent<TIdentity>
         {
             var committedEvent = From(aggregateEvent, Version, metadata);
 
             ApplyCommittedEvent(committedEvent);
+
+            return Task.CompletedTask;
         }
 
         public virtual CommittedEvent<TAggregate, TIdentity, TAggregateEvent> From<TAggregateEvent>(TAggregateEvent aggregateEvent,
@@ -322,15 +324,15 @@ namespace EventFly.Aggregates
             base.AroundPreRestart(cause, message);
         }
 
-        protected void Command<TCommand, TResult>(Func<TCommand, TResult> handler)
+        protected void Command<TCommand, TResult>(Func<TCommand, Task<TResult>> handler)
             where TCommand : ICommand<TIdentity>
             where TResult : IExecutionResult
         {
-            Receive(x =>
+            ReceiveAsync(async x =>
                 {
                     try
                     {
-                        var result = handler(x);
+                        var result = await handler(x);
                         Context.Sender.Tell(result);
                     }
                     catch (UnauthorizedAccessException)

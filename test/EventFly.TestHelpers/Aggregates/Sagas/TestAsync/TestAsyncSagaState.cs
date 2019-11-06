@@ -26,6 +26,7 @@ using EventFly.Aggregates.Snapshot;
 using EventFly.Sagas;
 using EventFly.TestHelpers.Aggregates.Entities;
 using EventFly.TestHelpers.Aggregates.Sagas.TestAsync.Events;
+using System.Threading.Tasks;
 
 namespace EventFly.TestHelpers.Aggregates.Sagas.TestAsync
 {
@@ -38,18 +39,18 @@ namespace EventFly.TestHelpers.Aggregates.Sagas.TestAsync
         public TestAggregateId Sender { get; set; }
         public TestAggregateId Receiver { get; set; }
         public Entities.Test Test { get; set; }
-        public void Apply(TestAsyncSagaStartedEvent aggregateEvent)
+        public async Task Apply(TestAsyncSagaStartedEvent aggregateEvent)
         {
             Sender = aggregateEvent.Sender;
             Receiver = aggregateEvent.Receiver;
             Test = aggregateEvent.SentTest;
         }
 
-        public void Apply(TestAsyncSagaTransactionCompletedEvent aggregateEvent)
+        public async Task Apply(TestAsyncSagaTransactionCompletedEvent aggregateEvent)
         {
         }
 
-        public void Apply(TestAsyncSagaCompletedEvent aggregateEvent)
+        public async Task Apply(TestAsyncSagaCompletedEvent aggregateEvent)
         {
         }
 

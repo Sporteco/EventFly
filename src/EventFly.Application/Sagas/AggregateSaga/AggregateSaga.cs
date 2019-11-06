@@ -53,7 +53,7 @@ namespace EventFly.Sagas.AggregateSaga
         where TIdentity : IIdentity
         where TSagaState : SagaState<TAggregateSaga, TIdentity>
     {
-        private static readonly IReadOnlyDictionary<Type, Action<TSagaState, IAggregateEvent>> ApplyMethodsFromState = typeof(TSagaState).GetAggregateStateEventApplyMethods<TAggregateSaga, TIdentity, TSagaState>();
+        private static readonly IReadOnlyDictionary<Type, Func<TSagaState, IAggregateEvent, Task>> ApplyMethodsFromState = typeof(TSagaState).GetAggregateStateEventApplyMethods<TAggregateSaga, TIdentity, TSagaState>();
         private static readonly IReadOnlyDictionary<Type, Action<TSagaState, IAggregateSnapshot>> HydrateMethodsFromState = typeof(TSagaState).GetAggregateSnapshotHydrateMethods<TAggregateSaga, TIdentity, TSagaState>();
         private static readonly IAggregateName SagaName = typeof(TAggregateSaga).GetSagaName();
         private CircularBuffer<ISourceId> _previousSourceIds = new CircularBuffer<ISourceId>(100);
@@ -421,7 +421,7 @@ namespace EventFly.Sagas.AggregateSaga
             where TAggregateEvent : class, IAggregateEvent<TIdentity>
         {
             var applyMethods = GetEventApplyMethods(committedEvent.AggregateEvent);
-            applyMethods(committedEvent.AggregateEvent);
+            applyMethods(committedEvent.AggregateEvent).GetAwaiter().GetResult();
 
             Log.Info("AggregateSaga of Name={0}, and Id={1}; committed and applied an AggregateEvent of Type={2}", Name, Id, typeof(TAggregateEvent).PrettyPrint());
 
@@ -466,13 +466,12 @@ namespace EventFly.Sagas.AggregateSaga
             Log.Info("Aggregate of Name={0}, and Id={1}; published DomainEvent of Type={2}.", Name, Id, typeof(TEvent).PrettyPrint());
         }
 
-        protected Action<IAggregateEvent> GetEventApplyMethods<TAggregateEvent>(TAggregateEvent aggregateEvent)
+        protected Func<IAggregateEvent, Task> GetEventApplyMethods<TAggregateEvent>(TAggregateEvent aggregateEvent)
             where TAggregateEvent : IAggregateEvent<TIdentity>
         {
             var eventType = aggregateEvent.GetType();
 
-            Action<TSagaState, IAggregateEvent> applyMethod;
-            if (!ApplyMethodsFromState.TryGetValue(eventType, out applyMethod))
+            if (!ApplyMethodsFromState.TryGetValue(eventType, out Func<TSagaState, IAggregateEvent, Task> applyMethod))
                 throw new NotImplementedException($"SagaState of Type={State.GetType().PrettyPrint()} does not have an 'Apply' method that takes in an aggregate event of Type={eventType.PrettyPrint()} as an argument.");
 
             var aggregateApplyMethod = applyMethod.Bind(State);
@@ -484,7 +483,7 @@ namespace EventFly.Sagas.AggregateSaga
         {
             var eventApplier = GetEventApplyMethods(aggregateEvent);
 
-            eventApplier(aggregateEvent);
+            eventApplier(aggregateEvent).GetAwaiter().GetResult();
 
             Version++;
         }
