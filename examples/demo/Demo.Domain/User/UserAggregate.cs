@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Demo.User.Commands;
 using Demo.User.Events;
 using Demo.ValueObjects;
@@ -14,7 +15,8 @@ namespace Demo.Domain.User
         IApply<UserRenamedEvent>,
         IApply<UserNotesChangedEvent>,
         IApply<UserTouchedEvent>,
-        IApply<ProjectCreatedEvent>
+        IApply<ProjectCreatedEvent>,
+        IApply<ProjectDeletedEvent>
     {
         public LocalizedString Name { get; private set; }
         public Birth Birth { get; private set; }
@@ -29,6 +31,12 @@ namespace Demo.Domain.User
         public void Apply(UserTouchedEvent _) { }
 
         public void Apply(ProjectCreatedEvent e) => _projects.Add(new Entities.Project(e.ProjectId, e.Name));
+        public void Apply(ProjectDeletedEvent aggregateEvent)
+        {
+            var projectToRemove = _projects.FirstOrDefault(i => i.Id == aggregateEvent.ProjectId);
+            if (projectToRemove != null)
+                _projects.Remove(projectToRemove);
+        }
     }
 
     public class UserAggregate : EventDrivenAggregateRoot<UserAggregate, UserId, UserState>,
@@ -55,8 +63,8 @@ namespace Demo.Domain.User
 
         public IExecutionResult Execute(CreateUserCommand cmd)
         {
-            SecurityContext.Authorized();
-            SecurityContext.HasPermissions(cmd.AggregateId, DemoContext.TestUserPermission);
+            //SecurityContext.Authorized();
+            //SecurityContext.HasPermissions(cmd.AggregateId, DemoContext.TestUserPermission);
 
             Emit(new UserCreatedEvent(cmd.UserName, cmd.Birth));
             return ExecutionResult.Success();

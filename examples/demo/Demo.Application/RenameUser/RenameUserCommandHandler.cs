@@ -3,7 +3,7 @@ using Demo.User.Commands;
 using EventFly.Commands;
 using EventFly.Commands.ExecutionResults;
 
-namespace Demo.Application.DeleteProject.RenameUser
+namespace Demo.Application.RenameUser
 {
     public class RenameUserCommandHandler : CommandHandler<UserAggregate, UserId, RenameUserCommand>
     {

@@ -1,7 +1,13 @@
-﻿namespace EventFly.Aggregates
+﻿using System.Threading.Tasks;
+using EventFly.Core;
+
+namespace EventFly.Aggregates
 {
     public interface IAggregateState<TIdentity> 
+        where TIdentity : IIdentity
     {
-        string Id { get; set; }
+        TIdentity Id { get; set; }
+
+        Task LoadState(TIdentity id);
     }
 }

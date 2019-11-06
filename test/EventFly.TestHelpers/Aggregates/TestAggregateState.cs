@@ -67,6 +67,7 @@ namespace EventFly.TestHelpers.Aggregates
             TestCollection = aggregateSnapshot.Tests.Select(x => new Test(TestId.With(x.Id))).ToList();
             FromHydration = true;
         }
+
     }
 
 }

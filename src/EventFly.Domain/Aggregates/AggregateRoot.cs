@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Akka.Actor;
 using Akka.Event;
-using EventFly.AggregateStorages;
 using EventFly.Commands;
 using EventFly.Commands.ExecutionResults;
 using EventFly.Core;
@@ -19,7 +19,7 @@ namespace EventFly.Aggregates
 {
     public abstract class AggregateRoot<TAggregate, TIdentity, TAggregateState> : ReceiveActor, IAggregateRoot<TIdentity>
        where TAggregate : AggregateRoot<TAggregate, TIdentity, TAggregateState>
-       where TAggregateState : class, IAggregateState<TIdentity>, new()
+       where TAggregateState : IAggregateState<TIdentity>
        where TIdentity : IIdentity
     {
         private readonly IEventDefinitions _eventDefinitionService;
@@ -36,7 +36,6 @@ namespace EventFly.Aggregates
         protected SecurityContext SecurityContext { get; private set; }
 
         private IServiceScope _scope;
-        private IAggregateStorage<TAggregate> _aggregateStorage;
         private readonly IServiceProvider _serviceProvider;
 
         protected readonly ILoggingAdapter Log = Context.GetLogger();
@@ -52,18 +51,6 @@ namespace EventFly.Aggregates
                     $"Aggregate {Name} specifies Type={typeof(TAggregate).PrettyPrint()} as generic argument, it should be its own type.");
             }
 
-            if (State == null)
-            {
-                try
-                {
-                    State = new TAggregateState();
-                }
-                catch (Exception exception)
-                {
-                    Context.GetLogger().Error(exception, "Unable to activate AggregateState of Type={0} for AggregateRoot of Name={1}.", typeof(TAggregateState).PrettyPrint(), Name);
-                }
-            }
-
             PinnedCommand = null;
             _eventDefinitionService = _serviceProvider.GetService<IApplicationDefinition>().Events;
             Id = id;
@@ -76,9 +63,20 @@ namespace EventFly.Aggregates
             base.PreStart();
 
             _scope ??= _serviceProvider.CreateScope();
-            _aggregateStorage = _scope.ServiceProvider.GetRequiredService<IAggregateStorage<TAggregate>>()
-                                ?? throw new InvalidOperationException($"Aggregate [{typeof(TAggregate).PrettyPrint()}] storage not found.");
-            State = LoadState();
+
+            if (State == null)
+            {
+                try
+                {
+                    State = (TAggregateState) _scope.ServiceProvider.GetService<IAggregateState<TIdentity>>();
+                }
+                catch (Exception exception)
+                {
+                    Context.GetLogger().Error(exception, "Unable to activate AggregateState of Type={0} for AggregateRoot of Name={1}.", typeof(TAggregateState).PrettyPrint(), Name);
+                }
+            }
+
+            LoadState().GetAwaiter().GetResult();
         }
 
         protected override void PostStop()
@@ -88,14 +86,9 @@ namespace EventFly.Aggregates
         }
 
 
-        protected virtual TAggregateState LoadState()
+        private Task LoadState()
         {
-            return _aggregateStorage.LoadState<TAggregateState, TIdentity>(Id.Value) ?? new TAggregateState { Id = Id.Value };
-        }
-
-        protected virtual void SaveState()
-        {
-            _aggregateStorage.SaveState<TAggregateState, TIdentity>(State);
+            return State.LoadState(Id);
         }
 
         [Obsolete]
@@ -203,7 +196,6 @@ namespace EventFly.Aggregates
         {
             var committedEvent = From(aggregateEvent, Version, metadata);
 
-            SaveState();
             ApplyCommittedEvent(committedEvent);
         }
 
@@ -274,8 +266,6 @@ namespace EventFly.Aggregates
             }
 
             var result = base.AroundReceive(receive, message);
-            //Сохраняем состояние после каждой команды 
-            SaveState();
             return result;
         }
 

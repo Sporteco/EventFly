@@ -26,20 +26,21 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
+using System.Threading.Tasks;
 using EventFly.Core;
 using EventFly.Exceptions;
 
 namespace EventFly.Aggregates
 {
-    public abstract class AggregateState<TAggregate, TIdentity> : AggregateState<TAggregate, TIdentity, IMessageApplier<TAggregate, TIdentity>>,
-        IAggregateState<TIdentity>
+
+
+    public abstract class AggregateState<TAggregate, TIdentity> : AggregateState<TAggregate, TIdentity, IMessageApplier<TAggregate, TIdentity>>
         where TAggregate : IAggregateRoot<TIdentity>
         where TIdentity : IIdentity
     {
-        public string Id { get; set; }
     }
-    
-    public abstract class AggregateState<TAggregate, TIdentity, TMessageApplier> : IMessageApplier<TAggregate, TIdentity>
+
+    public abstract class AggregateState<TAggregate, TIdentity, TMessageApplier> : IAggregateState<TIdentity>, IMessageApplier<TAggregate, TIdentity>
         where TMessageApplier : class, IMessageApplier<TAggregate, TIdentity>
         where TAggregate : IAggregateRoot<TIdentity>
         where TIdentity : IIdentity
@@ -53,5 +54,12 @@ namespace EventFly.Aggregates
             
         }
 
+        public TIdentity Id { get; set; }
+
+        public virtual Task LoadState(TIdentity id)
+        {
+            Id = id;
+            return Task.CompletedTask;
+        }
     }
 }

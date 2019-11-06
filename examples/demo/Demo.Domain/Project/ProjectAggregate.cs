@@ -6,25 +6,15 @@ using EventFly.Commands.ExecutionResults;
 
 namespace Demo.Domain.Project
 {
-    public sealed class ProjectAggregateState : AggregateState<ProjectAggregate, ProjectId>,
-        IApply<CreatedEvent>,
-        IApply<DeletedEvent>
+    public interface IProjectState : IAggregateState<ProjectId>
     {
-        public ProjectName ProjectName { get; private set; }
-        public bool IsDeleted { get; private set; }
+        bool IsDeleted { get; }
+        ProjectName ProjectName { get; }
 
-        public void Apply(CreatedEvent e)
-        {
-            ProjectName = e.Name;
-        }
-
-        public void Apply(DeletedEvent _)
-        {
-            IsDeleted = true;
-        }
+        int SaveTimings();
     }
 
-    public sealed class ProjectAggregate : EventDrivenAggregateRoot<ProjectAggregate, ProjectId, ProjectAggregateState>,
+    public sealed class ProjectAggregate : EventDrivenAggregateRoot<ProjectAggregate, ProjectId, IProjectState>,
         IExecute<CreateCommand, ProjectId>,
         IExecute<DeleteCommand, ProjectId>
     {
@@ -32,7 +22,8 @@ namespace Demo.Domain.Project
 
         internal void Create(ProjectName projectName)
         {
-            Emit(new CreatedEvent(Id, projectName));
+            if (State.SaveTimings() > 0)
+                Emit(new CreatedEvent(Id, projectName));
         }
 
         internal void Delete()

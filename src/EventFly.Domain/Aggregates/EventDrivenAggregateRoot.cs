@@ -8,10 +8,12 @@ namespace EventFly.Aggregates
 {
     public abstract class EventDrivenAggregateRoot<TAggregate, TIdentity, TAggregateState> : AggregateRoot<TAggregate, TIdentity, TAggregateState>
         where TAggregate : EventDrivenAggregateRoot<TAggregate, TIdentity, TAggregateState>
-        where TAggregateState : AggregateState<TAggregate, TIdentity, IMessageApplier<TAggregate, TIdentity>>, IAggregateState<TIdentity>, new()
+        where TAggregateState : IAggregateState<TIdentity>
         where TIdentity : IIdentity
     {
-        private static readonly IReadOnlyDictionary<Type, Action<TAggregateState, IAggregateEvent>> ApplyMethodsFromState = typeof(TAggregateState).GetAggregateStateEventApplyMethods<TAggregate, TIdentity, TAggregateState>();
+        // ReSharper disable once StaticMemberInGenericType
+        private static readonly object _lockObject = new object();
+        private static IReadOnlyDictionary<Type, Action<TAggregateState, IAggregateEvent>> ApplyMethodsFromState;
 
         protected EventDrivenAggregateRoot(TIdentity id) : base(id)
         {
@@ -23,7 +25,6 @@ namespace EventFly.Aggregates
             var applyMethods = GetEventApplyMethods(committedEvent.AggregateEvent);
             applyMethods(committedEvent.AggregateEvent);
 
-            SaveState();
             ApplyCommittedEvent(committedEvent);
         }
 
@@ -33,6 +34,14 @@ namespace EventFly.Aggregates
             var eventType = aggregateEvent.GetType();
 
             Action<TAggregateState, IAggregateEvent> applyMethod;
+            lock (_lockObject)
+            {
+                if (ApplyMethodsFromState == null)
+                {
+                    ApplyMethodsFromState = State.GetType().GetAggregateStateEventApplyMethods<TAggregate, TIdentity, TAggregateState>();
+                }
+            }
+
             if (!ApplyMethodsFromState.TryGetValue(eventType, out applyMethod))
                 throw new NotImplementedException($"AggregateState of Type={State.GetType().PrettyPrint()} does not have an 'Apply' method that takes in an aggregate event of Type={eventType.PrettyPrint()} as an argument.");
 

@@ -1,20 +1,20 @@
 using Demo.Application;
 using Demo.Application.CreateProject;
 using Demo.Application.DeleteProject;
-using Demo.Application.DeleteProject.RenameUser;
+using Demo.Application.RenameUser;
 using Demo.Domain.Project;
 using Demo.Domain.Project.Commands;
 using Demo.Domain.Project.Events;
 using Demo.Domain.Services;
 using Demo.Domain.User;
+using Demo.Infrastructure.AggregateStates;
 using Demo.Infrastructure.CreateProject;
 using Demo.Infrastructure.QueryHandlers;
 using Demo.Infrastructure.ReadModels;
 using Demo.Queries;
 using Demo.User.Commands;
 using Demo.User.Events;
-using EventFly.AggregateStorages;
-using EventFly.Commands;
+using EventFly.Aggregates;
 using EventFly.Definitions;
 using EventFly.DependencyInjection;
 using EventFly.Permissions;
@@ -73,8 +73,8 @@ namespace Demo.Infrastructure
         public override IServiceCollection DI(IServiceCollection services)
         {
             return services
-                .AddScoped<IAggregateStorage<UserAggregate>, InMemoryAggregateStorage<UserAggregate>>()
-                .AddScoped<IAggregateStorage<ProjectAggregate>, InMemoryAggregateStorage<ProjectAggregate>>()
+                .AddScoped<IAggregateState<UserId>, UserState>()
+                .AddScoped<IAggregateState<ProjectId>, ProjectStateInMemory>()
                 .AddSingleton<IReadModelStorage<UsersInfoReadModel>, InMemoryReadModelStorage<UsersInfoReadModel>>()
                 .AddSingleton<IReadModelStorage<TotalUsersReadModel>, InMemoryReadModelStorage<TotalUsersReadModel>>()
 
