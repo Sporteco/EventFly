@@ -21,30 +21,28 @@ namespace Demo.Domain.Project
     {
         public ProjectAggregate(ProjectId id) : base(id) { }
 
-        internal void Create(ProjectName projectName)
+        internal async Task Create(ProjectName projectName)
         {
             if (State.SaveTimings() > 0)
-                Emit(new CreatedEvent(Id, projectName));
+                await Emit(new CreatedEvent(Id, projectName));
         }
 
-        internal void Delete()
+        internal async Task Delete()
         {
-            Emit(new DeletedEvent(Id));
+            await Emit(new DeletedEvent(Id));
         }
 
         #region Command handlers
 
         public async Task<IExecutionResult> Execute(CreateCommand cmd)
         {
-            Create(cmd.ProjectName);
-
+            await Create(cmd.ProjectName);
             return ExecutionResult.Success();
         }
 
         public async Task<IExecutionResult> Execute(DeleteCommand command)
         {
-            Delete();
-
+            await Delete();
             return ExecutionResult.Success();
         }
 
