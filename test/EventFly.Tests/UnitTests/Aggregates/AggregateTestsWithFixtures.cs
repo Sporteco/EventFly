@@ -42,7 +42,6 @@ using FluentAssertions;
 using Xunit;
 using Xunit.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
-using EventFly.TestHelpers.Aggregates.Sagas.TestAsync;
 using EventFly.TestHelpers.Aggregates.Sagas.Test;
 
 namespace EventFly.Tests.UnitTests.Aggregates
@@ -61,7 +60,6 @@ namespace EventFly.Tests.UnitTests.Aggregates
                     .WithContext<TestContext>()
                     .Services
                 .AddScoped<TestSaga>()
-                .AddScoped<TestAsyncSaga>()
                 .BuildServiceProvider()
                 .UseEventFly()
             );

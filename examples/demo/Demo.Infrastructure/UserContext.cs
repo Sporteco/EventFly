@@ -91,8 +91,8 @@ namespace Demo.Infrastructure
                 .AddScoped<IExternalService, TestExternalService>()
 
                 .AddCommandHandler<UserAggregate, UserId, RenameUserCommand, RenameUserCommandHandler>()
-                .AddAsyncCommandHandler<UserAggregate, UserId, CreateProjectCommand, CreateProjectCommandHandler>()
-                .AddAsyncCommandHandler<UserAggregate, UserId, DeleteProjectCommand, DeleteProjectCommandHandler>()
+                .AddCommandHandler<UserAggregate, UserId, CreateProjectCommand, CreateProjectCommandHandler>()
+                .AddCommandHandler<UserAggregate, UserId, DeleteProjectCommand, DeleteProjectCommandHandler>()
 
                 .AddSingleton<IPermissionProvider, PermissionProvider>();
         }

@@ -53,7 +53,7 @@ namespace EventFly.Sagas.AggregateSaga
         where TIdentity : IIdentity
         where TSagaState : SagaState<TAggregateSaga, TIdentity>
     {
-        private static readonly IReadOnlyDictionary<Type, Func<TSagaState, IAggregateEvent, Task>> ApplyMethodsFromState = typeof(TSagaState).GetAggregateStateEventApplyMethods<TAggregateSaga, TIdentity, TSagaState>();
+        private static IReadOnlyDictionary<Type, Action<TSagaState, IAggregateEvent>> ApplyMethodsFromState = typeof(TSagaState).GetAggregateSagaEventApplyMethods<TAggregateSaga, TIdentity, TSagaState>();
         private static readonly IReadOnlyDictionary<Type, Action<TSagaState, IAggregateSnapshot>> HydrateMethodsFromState = typeof(TSagaState).GetAggregateSnapshotHydrateMethods<TAggregateSaga, TIdentity, TSagaState>();
         private static readonly IAggregateName SagaName = typeof(TAggregateSaga).GetSagaName();
         private CircularBuffer<ISourceId> _previousSourceIds = new CircularBuffer<ISourceId>(100);
@@ -144,7 +144,6 @@ namespace EventFly.Sagas.AggregateSaga
 
             if (Settings.AutoReceive)
             {
-                InitReceives();
                 InitAsyncReceives();
             }
 
@@ -169,7 +168,8 @@ namespace EventFly.Sagas.AggregateSaga
 
         }
 
-        public void InitReceives()
+
+        public void InitAsyncReceives()
         {
             var type = GetType();
 
@@ -183,55 +183,6 @@ namespace EventFly.Sagas.AggregateSaga
                 .Where(mi =>
                 {
                     if (mi.Name != "Handle")
-                        return false;
-
-                    var parameters = mi.GetParameters();
-
-                    return
-                        parameters.Length == 1;
-                })
-                .ToDictionary(
-                    mi => mi.GetParameters()[0].ParameterType,
-                    mi => mi);
-
-
-            var method = type
-                .GetBaseType("ReceivePersistentActor")
-                .GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
-                .Where(mi =>
-                {
-                    if (mi.Name != "Command") return false;
-                    var parameters = mi.GetParameters();
-                    return
-                        parameters.Length == 1
-                        && parameters[0].ParameterType.Name.Contains("Func");
-                })
-                .First();
-
-            foreach (var subscriptionType in subscriptionTypes)
-            {
-                var funcType = typeof(Func<,>).MakeGenericType(subscriptionType, typeof(bool));
-                var subscriptionFunction = Delegate.CreateDelegate(funcType, this, methods[subscriptionType]);
-                var actorReceiveMethod = method.MakeGenericMethod(subscriptionType);
-
-                actorReceiveMethod.Invoke(this, new object[] { subscriptionFunction });
-            }
-        }
-
-        public void InitAsyncReceives()
-        {
-            var type = GetType();
-
-            var subscriptionTypes =
-                type
-                    .GetAsyncSagaEventSubscriptionTypes();
-
-            var methods = type
-                .GetTypeInfo()
-                .GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
-                .Where(mi =>
-                {
-                    if (mi.Name != "HandleAsync")
                         return false;
 
                     var parameters = mi.GetParameters();
@@ -265,18 +216,6 @@ namespace EventFly.Sagas.AggregateSaga
                 actorReceiveMethod.Invoke(this, new[] { subscriptionFunction, (object)null });
             }
         }
-
-        protected void CommandInternal<T>(Func<T, bool> handler)
-        {
-            Command<T>(e =>
-            {
-                if (e is IDomainEvent @event)
-                {
-                    PinnedEvent = @event;
-                }
-                handler(e);
-            });
-        }
         protected void CommandInternal<T>(Func<T, Task> handler, object item)
         {
             CommandAsync<T>(e =>
@@ -294,7 +233,6 @@ namespace EventFly.Sagas.AggregateSaga
         {
             var committedEvent = From(aggregateEvent, Version, metadata);
             Persist(committedEvent, ApplyCommittedEvent);
-
         }
 
         public virtual void EmitAll(params IAggregateEvent<TIdentity>[] aggregateEvents)
@@ -421,7 +359,7 @@ namespace EventFly.Sagas.AggregateSaga
             where TAggregateEvent : class, IAggregateEvent<TIdentity>
         {
             var applyMethods = GetEventApplyMethods(committedEvent.AggregateEvent);
-            applyMethods(committedEvent.AggregateEvent).GetAwaiter().GetResult();
+            applyMethods(committedEvent.AggregateEvent);
 
             Log.Info("AggregateSaga of Name={0}, and Id={1}; committed and applied an AggregateEvent of Type={2}", Name, Id, typeof(TAggregateEvent).PrettyPrint());
 
@@ -466,12 +404,12 @@ namespace EventFly.Sagas.AggregateSaga
             Log.Info("Aggregate of Name={0}, and Id={1}; published DomainEvent of Type={2}.", Name, Id, typeof(TEvent).PrettyPrint());
         }
 
-        protected Func<IAggregateEvent, Task> GetEventApplyMethods<TAggregateEvent>(TAggregateEvent aggregateEvent)
+        protected Action<IAggregateEvent> GetEventApplyMethods<TAggregateEvent>(TAggregateEvent aggregateEvent)
             where TAggregateEvent : IAggregateEvent<TIdentity>
         {
             var eventType = aggregateEvent.GetType();
 
-            if (!ApplyMethodsFromState.TryGetValue(eventType, out Func<TSagaState, IAggregateEvent, Task> applyMethod))
+            if (!ApplyMethodsFromState.TryGetValue(eventType, out Action<TSagaState, IAggregateEvent> applyMethod))
                 throw new NotImplementedException($"SagaState of Type={State.GetType().PrettyPrint()} does not have an 'Apply' method that takes in an aggregate event of Type={eventType.PrettyPrint()} as an argument.");
 
             var aggregateApplyMethod = applyMethod.Bind(State);
@@ -483,7 +421,7 @@ namespace EventFly.Sagas.AggregateSaga
         {
             var eventApplier = GetEventApplyMethods(aggregateEvent);
 
-            eventApplier(aggregateEvent).GetAwaiter().GetResult();
+            eventApplier(aggregateEvent);
 
             Version++;
         }

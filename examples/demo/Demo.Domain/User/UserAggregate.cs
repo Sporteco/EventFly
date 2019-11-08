@@ -48,8 +48,8 @@ namespace Demo.Domain.User
         public UserAggregate(UserId id) : base(id)
         {
             Command<RenameUserCommand>();
-            CommandAsync<CreateProjectCommand>();
-            CommandAsync<DeleteProjectCommand>();
+            Command<CreateProjectCommand>();
+            Command<DeleteProjectCommand>();
         }
 
         internal void CreateProject(ProjectId projectId, ProjectName projectName)

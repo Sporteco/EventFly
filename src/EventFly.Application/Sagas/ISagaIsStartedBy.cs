@@ -30,15 +30,10 @@ using EventFly.Core;
 
 namespace EventFly.Sagas
 {
-    public interface ISagaIsStartedByAsync<in TIdentity, in TAggregateEvent> : ISagaHandlesAsync<TIdentity, TAggregateEvent>
-        where TAggregateEvent : class, IAggregateEvent<TIdentity>
-        where TIdentity : IIdentity
-    {
-    }
-    
     public interface ISagaIsStartedBy<in TIdentity, in TAggregateEvent> : ISagaHandles<TIdentity, TAggregateEvent>
         where TAggregateEvent : class, IAggregateEvent<TIdentity>
         where TIdentity : IIdentity
     {
     }
+    
 }

@@ -29,25 +29,25 @@ using System.Threading.Tasks;
 namespace EventFly.TestHelpers.Aggregates.Sagas.Test
 {
     public class TestSagaState : SagaState<TestSaga, TestSagaId, IMessageApplier<TestSaga, TestSagaId>>,
-        IApply<TestSagaStartedEvent>,
-        IApply<TestSagaTransactionCompletedEvent>,
-        IApply<TestSagaCompletedEvent>
+        ISagaApply<TestSagaStartedEvent>,
+        ISagaApply<TestSagaTransactionCompletedEvent>,
+        ISagaApply<TestSagaCompletedEvent>
     {
         public TestAggregateId Sender { get; set; }
         public TestAggregateId Receiver { get; set; }
         public Entities.Test Test { get; set; }
-        public async Task Apply(TestSagaStartedEvent aggregateEvent)
+        public void Apply(TestSagaStartedEvent aggregateEvent)
         {
             Sender = aggregateEvent.Sender;
             Receiver = aggregateEvent.Receiver;
             Test = aggregateEvent.SentTest;
         }
 
-        public async Task Apply(TestSagaTransactionCompletedEvent aggregateEvent)
+        public void Apply(TestSagaTransactionCompletedEvent aggregateEvent)
         {
         }
 
-        public async Task Apply(TestSagaCompletedEvent aggregateEvent)
+        public void Apply(TestSagaCompletedEvent aggregateEvent)
         {
         }
     }

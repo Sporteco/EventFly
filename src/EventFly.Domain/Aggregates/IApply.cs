@@ -34,4 +34,10 @@ namespace EventFly.Aggregates
     {
         Task Apply(TAggregateEvent aggregateEvent);
     }
+
+    public interface ISagaApply<in TAggregateEvent>
+    where TAggregateEvent : IAggregateEvent
+    {
+        void Apply(TAggregateEvent aggregateEvent);
+    }
 }

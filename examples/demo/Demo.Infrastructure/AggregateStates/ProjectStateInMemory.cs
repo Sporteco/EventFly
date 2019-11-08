@@ -36,6 +36,10 @@ namespace Demo.Infrastructure.AggregateStates
     {
         private ProjectModel _model;
 
+        public ProjectState(DemoDbContext dbContext) : base(dbContext)
+        {
+        }
+
         public bool IsDeleted => _model.IsDeleted;
         public ProjectName ProjectName => _model.ProjectName;
         public int SaveTimings()
@@ -66,6 +70,5 @@ namespace Demo.Infrastructure.AggregateStates
             _model.IsDeleted = true;
             await DbContext.SaveChangesAsync();
         }
-
     }
 }

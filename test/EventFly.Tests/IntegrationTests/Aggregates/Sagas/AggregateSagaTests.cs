@@ -21,7 +21,9 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using System;
 using System.ComponentModel;
+using System.Threading.Tasks;
 using Akka.TestKit.Xunit2;
 using EventFly.Aggregates;
 using EventFly.Commands;
@@ -32,8 +34,6 @@ using EventFly.TestHelpers.Aggregates.Commands;
 using EventFly.TestHelpers.Aggregates.Entities;
 using EventFly.TestHelpers.Aggregates.Sagas.Test;
 using EventFly.TestHelpers.Aggregates.Sagas.Test.Events;
-using EventFly.TestHelpers.Aggregates.Sagas.TestAsync;
-using EventFly.TestHelpers.Aggregates.Sagas.TestAsync.Events;
 using EventFly.Tests.UnitTests.Subscribers;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
@@ -48,31 +48,29 @@ namespace EventFly.Tests.IntegrationTests.Aggregates.Sagas
         public AggregateSagaTests(ITestOutputHelper testOutputHelper)
             : base(TestHelpers.Akka.Configuration.Config, "aggregate-saga-tests", testOutputHelper)
         {
-            Sys.RegisterDependencyResolver(
-                new ServiceCollection()
-                .AddTestEventFly(Sys)
-                    .WithContext<TestContext>()
-                    .Services
-                .AddScoped<TestSaga>()
-                .AddScoped<TestAsyncSaga>()
-                .BuildServiceProvider()
-                .UseEventFly()
-            );
+
         }
 
         [Fact]
         [Category(Category)]
         public void SendingTest_FromTestAggregate_CompletesSaga()
         {
+            Sys.RegisterDependencyResolver(
+                new ServiceCollection()
+                .AddTestEventFly(Sys)
+                    .WithContext<TestContext>()
+                    .Services
+                .AddScoped<TestSaga>()
+                .BuildServiceProvider()
+                .UseEventFly()
+            );
+
             var eventProbe = CreateTestProbe("event-probe");
 
             Sys.EventStream.Subscribe(eventProbe, typeof(DomainEvent<TestSaga, TestSagaId, TestSagaStartedEvent>));
             Sys.EventStream.Subscribe(eventProbe, typeof(DomainEvent<TestSaga, TestSagaId, TestSagaCompletedEvent>));
             Sys.EventStream.Subscribe(eventProbe, typeof(DomainEvent<TestSaga, TestSagaId, TestSagaTransactionCompletedEvent>));
-            //var aggregateManager = Sys.ActorOf(Props.Create(() => new AggregateManager<TestAggregate,TestAggregateId>()), "test-aggregatemanager");
-            //Sys.ActorOf(Props.Create(() => new TestSagaManager(() => new TestSaga(aggregateManager))), "test-sagaaggregatemanager");
             var bus = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<ICommandBus>();
-
 
 
             var senderAggregateId = TestAggregateId.New;
@@ -93,7 +91,8 @@ namespace EventFly.Tests.IntegrationTests.Aggregates.Sagas
 
             eventProbe.
                 ExpectMsg<DomainEvent<TestSaga, TestSagaId, TestSagaStartedEvent>>(
-                    x => x.AggregateEvent.Sender.Equals(senderAggregateId)
+                    x => 
+                    x.AggregateEvent.Sender.Equals(senderAggregateId)
                          && x.AggregateEvent.Receiver.Equals(receiverAggregateId)
                          && x.AggregateEvent.SentTest.Equals(senderTest));
 
@@ -102,52 +101,6 @@ namespace EventFly.Tests.IntegrationTests.Aggregates.Sagas
 
             eventProbe.
                 ExpectMsg<DomainEvent<TestSaga, TestSagaId, TestSagaCompletedEvent>>();
-        }
-
-        [Fact]
-        [Category(Category)]
-        public void SendingTest_FromTestAggregate_CompletesSagaAsync()
-        {
-            var eventProbe = CreateTestProbe("event-probe");
-
-            var bus = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<ICommandBus>();
-
-            Sys.EventStream.Subscribe(eventProbe, typeof(DomainEvent<TestAsyncSaga, TestAsyncSagaId, TestAsyncSagaStartedEvent>));
-            Sys.EventStream.Subscribe(eventProbe, typeof(DomainEvent<TestAsyncSaga, TestAsyncSagaId, TestAsyncSagaCompletedEvent>));
-            Sys.EventStream.Subscribe(eventProbe, typeof(DomainEvent<TestAsyncSaga, TestAsyncSagaId, TestAsyncSagaTransactionCompletedEvent>));
-            //var aggregateManager = Sys.ActorOf(Props.Create(() => new AggregateManager<TestAggregate,TestAggregateId>()), "test-aggregatemanager");
-            //Sys.ActorOf(Props.Create(() => new TestAsyncSagaManager(() => new TestAsyncSaga(aggregateManager))), "test-sagaaggregatemanager");
-
-            var senderAggregateId = TestAggregateId.New;
-            var senderCreateAggregateCommand = new CreateTestCommand(senderAggregateId, CommandId.New);
-            bus.Publish(senderCreateAggregateCommand).GetAwaiter().GetResult();
-
-            var receiverAggregateId = TestAggregateId.New;
-            var receiverCreateAggregateCommand = new CreateTestCommand(receiverAggregateId, CommandId.New);
-            bus.Publish(receiverCreateAggregateCommand).GetAwaiter().GetResult();
-
-            var senderTestId = TestId.New;
-            var senderTest = new Test(senderTestId);
-            var nextAggregateCommand = new AddTestCommand(senderAggregateId, CommandId.New, senderTest);
-            bus.Publish(nextAggregateCommand).GetAwaiter().GetResult();
-
-            var sagaStartingCommand = new GiveTestCommand(senderAggregateId, CommandId.New, receiverAggregateId, senderTest);
-            bus.Publish(sagaStartingCommand).GetAwaiter().GetResult();
-
-
-
-            eventProbe.
-                ExpectMsg<DomainEvent<TestAsyncSaga, TestAsyncSagaId, TestAsyncSagaStartedEvent>>(
-                    x => x.AggregateEvent.Sender.Equals(senderAggregateId)
-                         && x.AggregateEvent.Receiver.Equals(receiverAggregateId)
-                         && x.AggregateEvent.SentTest.Equals(senderTest)
-                         && x.Metadata.ContainsKey("some-key"));
-
-            eventProbe.
-                ExpectMsg<DomainEvent<TestAsyncSaga, TestAsyncSagaId, TestAsyncSagaTransactionCompletedEvent>>();
-
-            eventProbe.
-                ExpectMsg<DomainEvent<TestAsyncSaga, TestAsyncSagaId, TestAsyncSagaCompletedEvent>>();
         }
     }
 }

@@ -12,9 +12,9 @@ namespace EventFly.Storages.EntityFramework
         private TDbContext _dbContext;
         protected TDbContext DbContext => _dbContext;
 
-        protected EntityFrameworkAggregateState()
+        protected EntityFrameworkAggregateState(TDbContext dbContext)
         {
-            _dbContext = new TDbContext();
+            _dbContext = dbContext;
         }
 
         public void Dispose()

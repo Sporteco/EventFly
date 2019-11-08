@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Demo.Application.CreateProject
 {
-    public sealed class CreateProjectCommandHandler : AsyncCommandHandler<UserAggregate, UserId, CreateProjectCommand>
+    public sealed class CreateProjectCommandHandler : CommandHandler<UserAggregate, UserId, CreateProjectCommand>
     {
         private readonly IExternalService _externalService;
 

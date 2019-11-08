@@ -33,9 +33,9 @@ using EventFly.Sagas.AggregateSaga;
 namespace EventFly.Examples.Api.Domain.Sagas
 {
     public class ResourceCreationSaga : AggregateSaga<ResourceCreationSaga, ResourceCreationSagaId, ResourceCreationSagaState>,
-        ISagaIsStartedByAsync<ResourceId, ResourceCreatedEvent>
+        ISagaIsStartedBy<ResourceId, ResourceCreatedEvent>
     {
-        public async Task HandleAsync(IDomainEvent<ResourceId, ResourceCreatedEvent> domainEvent)
+        public async Task Handle(IDomainEvent<ResourceId, ResourceCreatedEvent> domainEvent)
         {
             //simulates a long running process
             var resourceId = domainEvent.AggregateIdentity;
