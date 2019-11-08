@@ -10,7 +10,7 @@ namespace Demo.Application.RenameUser
     {
         public override async Task<IExecutionResult> Handle(UserAggregate aggregate, RenameUserCommand command)
         {
-            aggregate.Rename(command.UserName);
+            await aggregate.Rename(command.UserName);
             return ExecutionResult.Success();
         }
     }

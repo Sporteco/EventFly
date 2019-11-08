@@ -52,14 +52,14 @@ namespace Demo.Domain.User
             Command<DeleteProjectCommand>();
         }
 
-        internal void CreateProject(ProjectId projectId, ProjectName projectName)
+        internal async Task CreateProject(ProjectId projectId, ProjectName projectName)
         {
-            Emit(new ProjectCreatedEvent(Id, projectId, projectName)).GetAwaiter().GetResult();
+            await Emit(new ProjectCreatedEvent(Id, projectId, projectName));
         }
 
-        internal void DeleteProject(ProjectId projectId)
+        internal async Task DeleteProject(ProjectId projectId)
         {
-            Emit(new ProjectDeletedEvent(Id, projectId)).GetAwaiter().GetResult();
+            await Emit(new ProjectDeletedEvent(Id, projectId));
         }
 
         public async Task<IExecutionResult> Execute(CreateUserCommand cmd)
@@ -67,25 +67,25 @@ namespace Demo.Domain.User
             //SecurityContext.Authorized();
             //SecurityContext.HasPermissions(cmd.AggregateId, DemoContext.TestUserPermission);
 
-            Emit(new UserCreatedEvent(cmd.UserName, cmd.Birth)).GetAwaiter().GetResult();
+            await Emit(new UserCreatedEvent(cmd.UserName, cmd.Birth));
             return ExecutionResult.Success();
         }
 
         public async Task<IExecutionResult> Execute(ChangeUserNotesCommand cmd)
         {
-            Emit(new UserNotesChangedEvent(Id, State.Notes, cmd.NewValue)).GetAwaiter().GetResult();
+            await Emit(new UserNotesChangedEvent(Id, State.Notes, cmd.NewValue));
             return ExecutionResult.Success();
         }
 
         public async Task<IExecutionResult> Execute(TrackUserTouchingCommand cmd)
         {
-            Emit(new UserTouchedEvent()).GetAwaiter().GetResult();
+            await Emit(new UserTouchedEvent());
             return ExecutionResult.Success();
         }
 
-        public void Rename(UserName newName)
+        public async Task Rename(UserName newName)
         {
-            Emit(new UserRenamedEvent(newName)).GetAwaiter().GetResult();
+            await Emit(new UserRenamedEvent(newName));
         }
     }
 }
