@@ -99,6 +99,24 @@ namespace EventFly.Aggregates
         {
             try
             {
+                Receive<TCommand>(cmd =>
+                {
+                    var handler = _scope.ServiceProvider.GetService<CommandHandler<TAggregate, TIdentity, TCommand>>();
+                    var result = handler.Handle(this as TAggregate, cmd);
+                    Context.Sender.Tell(result);
+                });
+            }
+            catch (Exception exception)
+            {
+                Log.Error(exception, "Unable to activate CommandHandler for command of Type={0} for Aggregate of Type={1}.", typeof(TCommand).PrettyPrint(), typeof(TAggregate).PrettyPrint());
+            }
+        }
+
+        protected void CommandAsync<TCommand>()
+            where TCommand : ICommand<TIdentity>
+        {
+            try
+            {
                 ReceiveAsync<TCommand>(async cmd =>
                 {
                     var handler = _scope.ServiceProvider.GetService<CommandHandler<TAggregate, TIdentity, TCommand>>();
@@ -111,6 +129,7 @@ namespace EventFly.Aggregates
             catch (Exception exception)
             {
                 Log.Error(exception, "Unable to activate CommandHandler for command of Type={0} for Aggregate of Type={1}.", typeof(TCommand).PrettyPrint(), typeof(TAggregate).PrettyPrint());
+                Context.Sender.Tell(new UnhandledExceptionCommandResult(exception.Message, exception.StackTrace));
             }
         }
 

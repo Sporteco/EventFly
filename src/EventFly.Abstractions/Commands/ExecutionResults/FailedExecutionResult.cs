@@ -25,9 +25,11 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentValidation.Results;
+using Newtonsoft.Json;
 
 namespace EventFly.Commands.ExecutionResults
 {
@@ -35,11 +37,13 @@ namespace EventFly.Commands.ExecutionResults
     {
         public virtual IReadOnlyCollection<string> Errors { get; }
 
-        public FailedExecutionResult(
-            IEnumerable<string> errors)
+        [JsonConstructor]
+        public FailedExecutionResult(IEnumerable<string> errors)
         {
             Errors = (errors ?? Enumerable.Empty<string>()).ToList();
         }
+
+        public FailedExecutionResult(string error) : this(new[] { error }) { }
 
         public override bool IsSuccess { get; } = false;
 
@@ -50,24 +54,32 @@ namespace EventFly.Commands.ExecutionResults
                 : "Failed execution";
         }
     }
-    public class UnauthorizedAccessResult : ExecutionResult
-    {
-        public override bool IsSuccess { get; } = false;
 
+    public sealed class UnhandledExceptionCommandResult : FailedExecutionResult
+    {
+        public UnhandledExceptionCommandResult(string message, string stackTrace) : base(message)
+        {
+            StackTrace = stackTrace;
+        }
+
+        public string StackTrace { get; }
+    }
+
+    public sealed class UnauthorizedAccessResult : FailedExecutionResult
+    {
+        public UnauthorizedAccessResult()
+            : base("Unauthorized access")
+        {
+        }
     }
 
     public class FailedValidationExecutionResult : FailedExecutionResult
     {
         public ValidationResult ValidationResult { get; }
 
-        public FailedValidationExecutionResult(ValidationResult validationResult) : base(null)
+        public FailedValidationExecutionResult(ValidationResult validationResult) : base(validationResult.Errors.Select(i => i.ErrorMessage).ToList())
         {
             ValidationResult = validationResult;
         }
-
-        public override IReadOnlyCollection<string> Errors
-            => ValidationResult.Errors.Select(i => i.ErrorMessage).ToList();
-
-        public override bool IsSuccess { get; } = false;
     }
 }
