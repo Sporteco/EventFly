@@ -34,17 +34,8 @@ using EventFly.DomainService;
 
 namespace EventFly.Commands
 {
-    public abstract class CommandHandler<TAggregate, TIdentity,TCommand> :
+    public abstract class CommandHandler<TAggregate, TIdentity, TCommand> :
         ICommandHandler<TAggregate, TIdentity, TCommand>
-        where TAggregate : ActorBase, IAggregateRoot<TIdentity>
-        where TIdentity : IIdentity
-        where TCommand : ICommand<TIdentity>
-    {
-        public abstract IExecutionResult Handle(TAggregate aggregate, TCommand command);
-    }
-
-    public abstract class AsyncCommandHandler<TAggregate, TIdentity, TCommand> :
-        IAsyncCommandHandler<TAggregate, TIdentity, TCommand>
         where TAggregate : ActorBase, IAggregateRoot<TIdentity>
         where TIdentity : IIdentity
         where TCommand : ICommand<TIdentity>

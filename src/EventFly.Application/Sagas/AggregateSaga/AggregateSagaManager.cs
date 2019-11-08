@@ -61,14 +61,9 @@ namespace EventFly.Sagas.AggregateSaga
                     sagaType
                         .GetSagaEventSubscriptionTypes();
 
-                var asyncSagaEventSubscriptionTypes =
-                    sagaType
-                        .GetAsyncSagaEventSubscriptionTypes();
-
                 var subscriptionTypes = new List<Type>();
                 
                 subscriptionTypes.AddRange(sagaEventSubscriptionTypes);
-                subscriptionTypes.AddRange(asyncSagaEventSubscriptionTypes);
 
                 _subscriptionTypes = subscriptionTypes.AsReadOnly();
                 

@@ -24,6 +24,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Akka.Persistence;
 using EventFly.Aggregates;
 using EventFly.Aggregates.Snapshot;
@@ -66,7 +67,7 @@ namespace EventFly.TestHelpers.Aggregates
             SetSnapshotStrategy(new SnapshotEveryFewVersionsStrategy(10));
         }
 
-        public IExecutionResult Execute(CreateTestCommand command)
+        public async Task<IExecutionResult> Execute(CreateTestCommand command)
         {
             if (IsNew)
             {
@@ -84,7 +85,7 @@ namespace EventFly.TestHelpers.Aggregates
         }
         
 
-        public IExecutionResult Execute(CreateAndAddTwoTestsCommand command)
+        public async Task<IExecutionResult> Execute(CreateAndAddTwoTestsCommand command)
         {
             if (IsNew)
             {
@@ -104,7 +105,7 @@ namespace EventFly.TestHelpers.Aggregates
             return ExecutionResult.Success();
         }
 
-        public IExecutionResult Execute(AddTestCommand command)
+        public async Task<IExecutionResult> Execute(AddTestCommand command)
         {
             if (!IsNew)
             {
@@ -122,7 +123,7 @@ namespace EventFly.TestHelpers.Aggregates
             return new SuccessTestExecutionResult(command.Metadata.SourceId);
         }
 
-        public IExecutionResult Execute(AddFourTestsCommand command)
+        public async Task<IExecutionResult> Execute(AddFourTestsCommand command)
         {
             if (!IsNew)
             {
@@ -144,7 +145,7 @@ namespace EventFly.TestHelpers.Aggregates
             return ExecutionResult.Success();
         }
 
-        public IExecutionResult Execute(GiveTestCommand command)
+        public async Task<IExecutionResult> Execute(GiveTestCommand command)
         {
             if (!IsNew)
             {
@@ -165,7 +166,7 @@ namespace EventFly.TestHelpers.Aggregates
             return ExecutionResult.Success();
         }
 
-        public IExecutionResult Execute(ReceiveTestCommand command)
+        public async Task<IExecutionResult> Execute(ReceiveTestCommand command)
         {
             if (!IsNew)
             {
@@ -181,19 +182,19 @@ namespace EventFly.TestHelpers.Aggregates
 
             return ExecutionResult.Success();
         }
-        public IExecutionResult Execute(TestFailedExecutionResultCommand command)
+        public async Task<IExecutionResult> Execute(TestFailedExecutionResultCommand command)
         {
             Sender.Tell(ExecutionResult.Failed(), Self);
             return ExecutionResult.Success();
         }
         
-        public IExecutionResult Execute(TestSuccessExecutionResultCommand command)
+        public async Task<IExecutionResult> Execute(TestSuccessExecutionResultCommand command)
         {
             Sender.Tell(ExecutionResult.Success(), Self);
             return ExecutionResult.Success();
         }
 
-        public IExecutionResult Execute(PoisonTestAggregateCommand command)
+        public async Task<IExecutionResult> Execute(PoisonTestAggregateCommand command)
         {
             if (!IsNew)
             {
@@ -209,7 +210,7 @@ namespace EventFly.TestHelpers.Aggregates
             return ExecutionResult.Success();
         }
 
-        public IExecutionResult Execute(PublishTestStateCommand command)
+        public async Task<IExecutionResult> Execute(PublishTestStateCommand command)
         {
             Signal(new TestStateSignalEvent(State,LastSequenceNr,Version));
 
@@ -217,7 +218,7 @@ namespace EventFly.TestHelpers.Aggregates
         }
 
 
-        public IExecutionResult Execute(TestDomainErrorCommand command)
+        public async Task<IExecutionResult> Execute(TestDomainErrorCommand command)
         {
             TestErrors++;
             Throw(new TestedErrorEvent(TestErrors));
@@ -277,7 +278,7 @@ namespace EventFly.TestHelpers.Aggregates
             Signal(aggregateEvent, metadata);
         }
 
-        public IExecutionResult Execute(BadCommand command)
+        public async Task<IExecutionResult> Execute(BadCommand command)
         {
             return new FailedTestExecutionResult(command.Metadata.SourceId, new List<string> { "Test cause"});
         }

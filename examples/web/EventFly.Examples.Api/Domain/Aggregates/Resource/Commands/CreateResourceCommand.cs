@@ -22,6 +22,7 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using EventFly.Commands;
 using EventFly.Commands.ExecutionResults;
 using EventFly.Examples.Api.Domain.Aggregates.Resource.Events;
@@ -39,7 +40,7 @@ namespace EventFly.Examples.Api.Domain.Aggregates.Resource.Commands
 
     public class CreateResourceCommandHandler : CommandHandler<Resource, ResourceId, CreateResourceCommand>
     {
-        public override IExecutionResult Handle(Resource aggregate, CreateResourceCommand command)
+        public override async Task<IExecutionResult> Handle(Resource aggregate, CreateResourceCommand command)
         {
             if (aggregate.IsNew)
             {

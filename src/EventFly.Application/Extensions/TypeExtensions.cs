@@ -68,31 +68,6 @@ namespace EventFly.Extensions
                     mi => ReflectionHelper.CompileMethodInvocation<Action<TReadModel, IDomainEvent>>(type, "Apply", mi.GetParameters()[0].ParameterType));
         }
 
-        internal static IReadOnlyList<Type> GetAsyncSagaEventSubscriptionTypes(this Type type)
-        {
-            var interfaces = type
-                .GetTypeInfo()
-                .GetInterfaces()
-                .Select(i => i.GetTypeInfo())
-                .ToList();
-
-            var handleEventTypes = interfaces
-                .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ISagaHandlesAsync<,>))
-                .Select(t => typeof(IDomainEvent<,>).MakeGenericType(t.GetGenericArguments()[0],
-                    t.GetGenericArguments()[1]))
-                .ToList();
-
-            var startedByEventTypes = interfaces
-                .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ISagaIsStartedByAsync<,>))
-                .Select(t => typeof(IDomainEvent<,>).MakeGenericType(t.GetGenericArguments()[0],
-                    t.GetGenericArguments()[1]))
-                .ToList();
-
-            startedByEventTypes.AddRange(handleEventTypes);
-
-            return startedByEventTypes;
-        }
-
         internal static IReadOnlyList<Type> GetSagaEventSubscriptionTypes(this Type type)
         {
             var interfaces = type

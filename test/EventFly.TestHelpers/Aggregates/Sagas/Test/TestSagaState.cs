@@ -24,13 +24,14 @@
 using EventFly.Aggregates;
 using EventFly.Sagas;
 using EventFly.TestHelpers.Aggregates.Sagas.Test.Events;
+using System.Threading.Tasks;
 
 namespace EventFly.TestHelpers.Aggregates.Sagas.Test
 {
     public class TestSagaState : SagaState<TestSaga, TestSagaId, IMessageApplier<TestSaga, TestSagaId>>,
-        IApply<TestSagaStartedEvent>,
-        IApply<TestSagaTransactionCompletedEvent>,
-        IApply<TestSagaCompletedEvent>
+        ISagaApply<TestSagaStartedEvent>,
+        ISagaApply<TestSagaTransactionCompletedEvent>,
+        ISagaApply<TestSagaCompletedEvent>
     {
         public TestAggregateId Sender { get; set; }
         public TestAggregateId Receiver { get; set; }

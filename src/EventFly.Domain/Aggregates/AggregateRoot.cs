@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Akka.Actor;
 using Akka.Event;
-using EventFly.AggregateStorages;
 using EventFly.Commands;
 using EventFly.Commands.ExecutionResults;
 using EventFly.Core;
@@ -19,7 +19,7 @@ namespace EventFly.Aggregates
 {
     public abstract class AggregateRoot<TAggregate, TIdentity, TAggregateState> : ReceiveActor, IAggregateRoot<TIdentity>
        where TAggregate : AggregateRoot<TAggregate, TIdentity, TAggregateState>
-       where TAggregateState : class, IAggregateState<TIdentity>, new()
+       where TAggregateState : IAggregateState<TIdentity>
        where TIdentity : IIdentity
     {
         private readonly IEventDefinitions _eventDefinitionService;
@@ -36,7 +36,6 @@ namespace EventFly.Aggregates
         protected SecurityContext SecurityContext { get; private set; }
 
         private IServiceScope _scope;
-        private IAggregateStorage<TAggregate> _aggregateStorage;
         private readonly IServiceProvider _serviceProvider;
 
         protected readonly ILoggingAdapter Log = Context.GetLogger();
@@ -52,18 +51,6 @@ namespace EventFly.Aggregates
                     $"Aggregate {Name} specifies Type={typeof(TAggregate).PrettyPrint()} as generic argument, it should be its own type.");
             }
 
-            if (State == null)
-            {
-                try
-                {
-                    State = new TAggregateState();
-                }
-                catch (Exception exception)
-                {
-                    Context.GetLogger().Error(exception, "Unable to activate AggregateState of Type={0} for AggregateRoot of Name={1}.", typeof(TAggregateState).PrettyPrint(), Name);
-                }
-            }
-
             PinnedCommand = null;
             _eventDefinitionService = _serviceProvider.GetService<IApplicationDefinition>().Events;
             Id = id;
@@ -76,9 +63,20 @@ namespace EventFly.Aggregates
             base.PreStart();
 
             _scope ??= _serviceProvider.CreateScope();
-            _aggregateStorage = _scope.ServiceProvider.GetRequiredService<IAggregateStorage<TAggregate>>()
-                                ?? throw new InvalidOperationException($"Aggregate [{typeof(TAggregate).PrettyPrint()}] storage not found.");
-            State = LoadState();
+
+            if (State == null)
+            {
+                try
+                {
+                    State = (TAggregateState) _scope.ServiceProvider.GetService<IAggregateState<TIdentity>>();
+                }
+                catch (Exception exception)
+                {
+                    Context.GetLogger().Error(exception, "Unable to activate AggregateState of Type={0} for AggregateRoot of Name={1}.", typeof(TAggregateState).PrettyPrint(), Name);
+                }
+            }
+
+            LoadState().GetAwaiter().GetResult();
         }
 
         protected override void PostStop()
@@ -88,92 +86,20 @@ namespace EventFly.Aggregates
         }
 
 
-        protected virtual TAggregateState LoadState()
+        private Task LoadState()
         {
-            return _aggregateStorage.LoadState<TAggregateState, TIdentity>(Id.Value) ?? new TAggregateState { Id = Id.Value };
+            return State.LoadState(Id);
         }
 
-        protected virtual void SaveState()
-        {
-            _aggregateStorage.SaveState<TAggregateState, TIdentity>(State);
-        }
-
-        [Obsolete]
-        protected void Command<TCommand, TCommandHandler>(Predicate<TCommand> shouldHandle = null)
-            where TCommand : ICommand<TIdentity>
-            where TCommandHandler : CommandHandler<TAggregate, TIdentity, TCommand>
-        {
-            try
-            {
-                // if no service available in the DI container then fall-back to simple activation!
-                Receive(x =>
-                {
-                    var handler = _scope.ServiceProvider.GetService<TCommandHandler>() ?? (TCommandHandler)Activator.CreateInstance(typeof(TCommandHandler));
-                    var result = handler.Handle(this as TAggregate, x);
-                    Context.Sender.Tell(result);
-
-                }, shouldHandle);
-            }
-            catch (Exception exception)
-            {
-                Log.Error(exception, "Unable to activate CommandHandler of Type={0} for Aggregate of Type={1}.", typeof(TCommandHandler).PrettyPrint(), typeof(TAggregate).PrettyPrint());
-                Context.Sender.Tell(new UnhandledExceptionCommandResult(exception.Message, exception.StackTrace));
-            }
-        }
-
-        [Obsolete]
-        protected void CommandAsync<TCommand, TAsyncCommandHandler>(Predicate<TCommand> shouldHandle = null)
-            where TCommand : ICommand<TIdentity>
-            where TAsyncCommandHandler : AsyncCommandHandler<TAggregate, TIdentity, TCommand>
-        {
-            try
-            {
-                // if no service available in the DI container then fall-back to simple activation!
-                ReceiveAsync(async x =>
-                {
-                    var handler = _scope.ServiceProvider.GetService<TAsyncCommandHandler>() ?? (TAsyncCommandHandler)Activator.CreateInstance(typeof(TAsyncCommandHandler));
-                    var commandBus = _scope.ServiceProvider.GetService<ICommandBus>();
-                    handler.Inject(commandBus);
-
-                    var result = await handler.Handle(this as TAggregate, x);
-                    Context.Sender.Tell(result);
-
-                }, shouldHandle);
-            }
-            catch (Exception exception)
-            {
-                Log.Error(exception, "Unable to activate CommandHandler of Type={0} for Aggregate of Type={1}.", typeof(TAsyncCommandHandler).PrettyPrint(), typeof(TAggregate).PrettyPrint());
-                Context.Sender.Tell(new UnhandledExceptionCommandResult(exception.Message, exception.StackTrace));
-            }
-        }
 
         protected void Command<TCommand>()
             where TCommand : ICommand<TIdentity>
         {
             try
             {
-                Receive<TCommand>(cmd =>
-                {
-                    var handler = _scope.ServiceProvider.GetService<CommandHandler<TAggregate, TIdentity, TCommand>>();
-                    var result = handler.Handle(this as TAggregate, cmd);
-                    Context.Sender.Tell(result);
-                });
-            }
-            catch (Exception exception)
-            {
-                Log.Error(exception, "Unable to activate CommandHandler for command of Type={0} for Aggregate of Type={1}.", typeof(TCommand).PrettyPrint(), typeof(TAggregate).PrettyPrint());
-                Context.Sender.Tell(new UnhandledExceptionCommandResult(exception.Message, exception.StackTrace));
-            }
-        }
-
-        protected void CommandAsync<TCommand>()
-            where TCommand : ICommand<TIdentity>
-        {
-            try
-            {
                 ReceiveAsync<TCommand>(async cmd =>
                 {
-                    var handler = _scope.ServiceProvider.GetService<AsyncCommandHandler<TAggregate, TIdentity, TCommand>>();
+                    var handler = _scope.ServiceProvider.GetService<CommandHandler<TAggregate, TIdentity, TCommand>>();
                     var commandBus = _scope.ServiceProvider.GetService<ICommandBus>();
                     handler.Inject(commandBus);
                     var result = await handler.Handle(this as TAggregate, cmd);
@@ -202,13 +128,14 @@ namespace EventFly.Aggregates
             return Id;
         }
 
-        public virtual void Emit<TAggregateEvent>(TAggregateEvent aggregateEvent, IEventMetadata metadata = null)
+        public virtual Task Emit<TAggregateEvent>(TAggregateEvent aggregateEvent, IEventMetadata metadata = null)
             where TAggregateEvent : class, IAggregateEvent<TIdentity>
         {
             var committedEvent = From(aggregateEvent, Version, metadata);
 
-            SaveState();
             ApplyCommittedEvent(committedEvent);
+
+            return Task.CompletedTask;
         }
 
         public virtual CommittedEvent<TAggregate, TIdentity, TAggregateEvent> From<TAggregateEvent>(TAggregateEvent aggregateEvent,
@@ -278,8 +205,6 @@ namespace EventFly.Aggregates
             }
 
             var result = base.AroundReceive(receive, message);
-            //Сохраняем состояние после каждой команды 
-            SaveState();
             return result;
         }
 
@@ -336,15 +261,15 @@ namespace EventFly.Aggregates
             base.AroundPreRestart(cause, message);
         }
 
-        protected void Command<TCommand, TResult>(Func<TCommand, TResult> handler)
+        protected void Command<TCommand, TResult>(Func<TCommand, Task<TResult>> handler)
             where TCommand : ICommand<TIdentity>
             where TResult : IExecutionResult
         {
-            Receive(x =>
+            ReceiveAsync(async x =>
                 {
                     try
                     {
-                        var result = handler(x);
+                        var result = await handler(x);
                         Context.Sender.Tell(result);
                     }
                     catch (UnauthorizedAccessException)

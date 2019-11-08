@@ -29,6 +29,7 @@ using EventFly.Sagas.AggregateSaga;
 using EventFly.TestHelpers.Aggregates.Commands;
 using EventFly.TestHelpers.Aggregates.Events;
 using EventFly.TestHelpers.Aggregates.Sagas.Test.Events;
+using System.Threading.Tasks;
 
 namespace EventFly.TestHelpers.Aggregates.Sagas.Test
 {
@@ -38,11 +39,10 @@ namespace EventFly.TestHelpers.Aggregates.Sagas.Test
     {
         public TestSaga()
         {
-            
             Command<EmitTestSagaState>(Handle);
         }
 
-        public bool Handle(IDomainEvent<TestAggregateId, TestSentEvent> domainEvent)
+        public async Task Handle(IDomainEvent<TestAggregateId, TestSentEvent> domainEvent)
         {
             if (IsNew)
             {
@@ -54,13 +54,12 @@ namespace EventFly.TestHelpers.Aggregates.Sagas.Test
 
                 Emit(new TestSagaStartedEvent(domainEvent.AggregateIdentity, domainEvent.AggregateEvent.RecipientAggregateId, domainEvent.AggregateEvent.Test));
 
-                PublishCommandAsync(command).GetAwaiter().GetResult();
+                await PublishCommandAsync(command);
             }
 
-            return true;
         }
 
-        public bool Handle(IDomainEvent<TestAggregateId, TestReceivedEvent> domainEvent)
+        public async Task Handle(IDomainEvent<TestAggregateId, TestReceivedEvent> domainEvent)
         {
             if (!IsNew)
             {
@@ -68,7 +67,6 @@ namespace EventFly.TestHelpers.Aggregates.Sagas.Test
                 Self.Tell(new EmitTestSagaState());
 
             }
-            return true;
         }
 
         private bool Handle(EmitTestSagaState testCommand)
@@ -81,6 +79,4 @@ namespace EventFly.TestHelpers.Aggregates.Sagas.Test
         {
         }
     }
-    
-    
 }

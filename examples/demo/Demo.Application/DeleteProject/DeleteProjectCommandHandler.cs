@@ -8,7 +8,7 @@ using EventFly.Commands.ExecutionResults;
 
 namespace Demo.Application.DeleteProject
 {
-    public sealed class DeleteProjectCommandHandler : AsyncCommandHandler<UserAggregate, UserId, DeleteProjectCommand>
+    public sealed class DeleteProjectCommandHandler : CommandHandler<UserAggregate, UserId, DeleteProjectCommand>
     {
         public override async Task<IExecutionResult> Handle(UserAggregate user, DeleteProjectCommand cmd)
         {

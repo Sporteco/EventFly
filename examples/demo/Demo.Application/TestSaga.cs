@@ -16,20 +16,19 @@ namespace Demo.Application
     #endregion
     
     public class TestSaga : StatelessSaga<TestSaga, TestSagaId>,
-        ISagaIsStartedByAsync<UserId, UserCreatedEvent>,
+        ISagaIsStartedBy<UserId, UserCreatedEvent>,
         ISagaHandles<UserId,UserRenamedEvent>
     {
 
-        public async Task HandleAsync(IDomainEvent<UserId, UserCreatedEvent> domainEvent)
+        public async Task Handle(IDomainEvent<UserId, UserCreatedEvent> domainEvent)
         {
             await PublishCommandAsync(new RenameUserCommand(domainEvent.AggregateIdentity, new UserName(
                 (DateTime.Now.ToLongDateString(), "ru"))));
         }
 
-        public bool Handle(IDomainEvent<UserId, UserRenamedEvent> domainEvent)
+        public async Task Handle(IDomainEvent<UserId, UserRenamedEvent> domainEvent)
         {
             Console.WriteLine($"FROM SAGA:Renamed to {domainEvent.AggregateEvent.NewName}");
-            return true;
         }
     }
 }

@@ -11,7 +11,6 @@ using EventFly.TestFixture.Aggregates;
 using EventFly.TestHelpers.Aggregates;
 using EventFly.TestHelpers.Aggregates.Entities;
 using EventFly.TestHelpers.Aggregates.Events;
-using EventFly.TestHelpers.Aggregates.Sagas.TestAsync;
 using EventFly.TestHelpers.Aggregates.Snapshots;
 using EventFly.Tests.UnitTests.Subscribers;
 using FluentAssertions;
@@ -60,7 +59,6 @@ namespace EventFly.Tests.UnitTests.Fixtures
                             .WithContext<TestContext>()
                             .Services
                         .AddScoped<TestSaga>()
-                        .AddScoped<TestAsyncSaga>()
                         .BuildServiceProvider()
                         .UseEventFly()
                     );

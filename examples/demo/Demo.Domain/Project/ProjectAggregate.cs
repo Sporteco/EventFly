@@ -3,56 +3,46 @@ using Demo.Domain.Project.Events;
 using Demo.ValueObjects;
 using EventFly.Aggregates;
 using EventFly.Commands.ExecutionResults;
+using System.Threading.Tasks;
 
 namespace Demo.Domain.Project
 {
-    public sealed class ProjectAggregateState : AggregateState<ProjectAggregate, ProjectId>,
-        IApply<CreatedEvent>,
-        IApply<DeletedEvent>
+    public interface IProjectState : IAggregateState<ProjectId>
     {
-        public ProjectName ProjectName { get; private set; }
-        public bool IsDeleted { get; private set; }
+        bool IsDeleted { get; }
+        ProjectName ProjectName { get; }
 
-        public void Apply(CreatedEvent e)
-        {
-            ProjectName = e.Name;
-        }
-
-        public void Apply(DeletedEvent _)
-        {
-            IsDeleted = true;
-        }
+        int SaveTimings();
     }
 
-    public sealed class ProjectAggregate : EventDrivenAggregateRoot<ProjectAggregate, ProjectId, ProjectAggregateState>,
+    public sealed class ProjectAggregate : EventDrivenAggregateRoot<ProjectAggregate, ProjectId, IProjectState>,
         IExecute<CreateCommand, ProjectId>,
         IExecute<DeleteCommand, ProjectId>
     {
         public ProjectAggregate(ProjectId id) : base(id) { }
 
-        internal void Create(ProjectName projectName)
+        internal async Task Create(ProjectName projectName)
         {
-            Emit(new CreatedEvent(Id, projectName));
+            if (State.SaveTimings() > 0)
+                await Emit(new CreatedEvent(Id, projectName));
         }
 
-        internal void Delete()
+        internal async Task Delete()
         {
-            Emit(new DeletedEvent(Id));
+            await Emit(new DeletedEvent(Id));
         }
 
         #region Command handlers
 
-        public IExecutionResult Execute(CreateCommand cmd)
+        public async Task<IExecutionResult> Execute(CreateCommand cmd)
         {
-            Create(cmd.ProjectName);
-
+            await Create(cmd.ProjectName);
             return ExecutionResult.Success();
         }
 
-        public IExecutionResult Execute(DeleteCommand command)
+        public async Task<IExecutionResult> Execute(DeleteCommand command)
         {
-            Delete();
-
+            await Delete();
             return ExecutionResult.Success();
         }
 

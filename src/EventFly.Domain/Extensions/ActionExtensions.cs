@@ -22,12 +22,18 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
+using System.Threading.Tasks;
 
 namespace EventFly.Extensions
 {
     public static class FunctionalBindingExtensions
     {
         public static Action<T2> Bind<T1, T2>(this Action<T1, T2> action, T1 value)
+        {
+            return openArg => action(value, openArg);
+        }
+
+        public static Func<T2, T3> Bind<T1, T2, T3>(this Func<T1, T2, T3> action, T1 value)
         {
             return openArg => action(value, openArg);
         }

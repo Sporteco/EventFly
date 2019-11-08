@@ -24,6 +24,7 @@
 using EventFly.Aggregates;
 using EventFly.Examples.Api.Domain.Sagas.Events;
 using EventFly.Sagas;
+using System.Threading.Tasks;
 
 namespace EventFly.Examples.Api.Domain.Sagas
 {
@@ -34,17 +35,17 @@ namespace EventFly.Examples.Api.Domain.Sagas
     {
         public int Progress { get; private set; }
         
-        public void Apply(ResourceCreationStartedEvent aggregateEvent)
+        public async Task Apply(ResourceCreationStartedEvent aggregateEvent)
         {
             Progress = 0;
         }
 
-        public void Apply(ResourceCreationProgressEvent aggregateEvent)
+        public async Task Apply(ResourceCreationProgressEvent aggregateEvent)
         {
             Progress = aggregateEvent.Progress;
         }
 
-        public void Apply(ResourceCreationEndedEvent aggregateEvent)
+        public async Task Apply(ResourceCreationEndedEvent aggregateEvent)
         {
             Progress = 100;
         }

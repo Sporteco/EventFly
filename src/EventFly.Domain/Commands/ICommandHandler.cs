@@ -41,14 +41,6 @@ namespace EventFly.Commands
         where TIdentity : IIdentity
         where TCommand : ICommand<TIdentity>
     {
-        IExecutionResult Handle(TAggregate aggregate, TCommand command);
-    }
-
-    public interface IAsyncCommandHandler<in TAggregate, TIdentity, in TCommand> : ICommandHandler
-        where TAggregate : IAggregateRoot<TIdentity>
-        where TIdentity : IIdentity
-        where TCommand : ICommand<TIdentity>
-    {
         Task<IExecutionResult> Handle(TAggregate aggregate, TCommand command);
     }
 }

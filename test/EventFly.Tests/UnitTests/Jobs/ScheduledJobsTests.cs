@@ -24,7 +24,6 @@
 using System;
 using Akka.TestKit;
 using Akka.TestKit.Xunit2;
-using EventFly.TestHelpers.Aggregates.Sagas.TestAsync;
 using EventFly.TestHelpers.Jobs;
 using EventFly.Tests.UnitTests.Subscribers;
 using FluentAssertions;
@@ -49,7 +48,6 @@ namespace EventFly.Tests.UnitTests.Jobs
         {
             new ServiceCollection()
             .AddScoped<TestSaga>()
-            .AddScoped<TestAsyncSaga>()
             .AddScoped<TestJobRunner>()
             .AddScoped<AsyncTestJobRunner>()
             .AddSingleton<TestJobRunnerProbeAccessor>()

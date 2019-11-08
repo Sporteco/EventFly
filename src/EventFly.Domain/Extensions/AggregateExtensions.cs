@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using EventFly.Aggregates;
 using EventFly.Commands.ExecutionResults;
 
@@ -43,9 +44,9 @@ namespace EventFly.Extensions
 
             foreach (var subscriptionType in subscriptionTypes)
             {
-                var funcType = typeof(Func<,>).MakeGenericType(subscriptionType.Item1, typeof(IExecutionResult));
+                var funcType = typeof(Func<,>).MakeGenericType(subscriptionType.Item1, typeof(Task<IExecutionResult>));
                 var subscriptionFunction = Delegate.CreateDelegate(funcType, aggregate, methods[subscriptionType.Item1]);
-                var actorReceiveMethod = method.MakeGenericMethod(subscriptionType.Item1,typeof(IExecutionResult));
+                var actorReceiveMethod = method.MakeGenericMethod(subscriptionType.Item1, typeof(IExecutionResult));
 
                 actorReceiveMethod.Invoke(aggregate, new object[] { subscriptionFunction });
             }

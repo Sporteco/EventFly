@@ -56,21 +56,11 @@ namespace EventFly.DependencyInjection
             return new EventFlyBuilder(services);
         }
 
-        public static IServiceCollection AddAsyncCommandHandler<TAggregate, TIdentity, TCommand, TCommandHandler>(this IServiceCollection services)
-            where TAggregate : ActorBase, IAggregateRoot<TIdentity>
-            where TIdentity : IIdentity
-            where TCommand : ICommand<TIdentity>
-            where TCommandHandler: AsyncCommandHandler<TAggregate, TIdentity, TCommand>
-        {
-            services.AddScoped<AsyncCommandHandler<TAggregate, TIdentity, TCommand>, TCommandHandler>();
-            return services;
-        }
-
         public static IServiceCollection AddCommandHandler<TAggregate, TIdentity, TCommand, TCommandHandler>(this IServiceCollection services)
             where TAggregate : ActorBase, IAggregateRoot<TIdentity>
             where TIdentity : IIdentity
             where TCommand : ICommand<TIdentity>
-            where TCommandHandler : CommandHandler<TAggregate, TIdentity, TCommand>
+            where TCommandHandler: CommandHandler<TAggregate, TIdentity, TCommand>
         {
             services.AddScoped<CommandHandler<TAggregate, TIdentity, TCommand>, TCommandHandler>();
             return services;

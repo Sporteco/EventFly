@@ -36,12 +36,6 @@ namespace EventFly.Sagas
         where TAggregateEvent : class, IAggregateEvent<TIdentity>
         where TIdentity : IIdentity
     {
-        bool Handle(IDomainEvent<TIdentity, TAggregateEvent> domainEvent);
-    }
-    public interface ISagaHandlesAsync<in TIdentity, in TAggregateEvent> : ISaga
-        where TAggregateEvent : class, IAggregateEvent<TIdentity>
-        where TIdentity : IIdentity
-    {
-        Task HandleAsync(IDomainEvent<TIdentity, TAggregateEvent> domainEvent);
+        Task Handle(IDomainEvent<TIdentity, TAggregateEvent> domainEvent);
     }
 }

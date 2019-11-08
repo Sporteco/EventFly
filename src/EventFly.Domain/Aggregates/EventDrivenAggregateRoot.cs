@@ -1,39 +1,49 @@
-﻿using EventFly.Core;
+﻿using Akka.Actor;
+using EventFly.Core;
 using EventFly.Exceptions;
 using EventFly.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace EventFly.Aggregates
 {
     public abstract class EventDrivenAggregateRoot<TAggregate, TIdentity, TAggregateState> : AggregateRoot<TAggregate, TIdentity, TAggregateState>
         where TAggregate : EventDrivenAggregateRoot<TAggregate, TIdentity, TAggregateState>
-        where TAggregateState : AggregateState<TAggregate, TIdentity, IMessageApplier<TAggregate, TIdentity>>, IAggregateState<TIdentity>, new()
+        where TAggregateState : IAggregateState<TIdentity>
         where TIdentity : IIdentity
     {
-        private static readonly IReadOnlyDictionary<Type, Action<TAggregateState, IAggregateEvent>> ApplyMethodsFromState = typeof(TAggregateState).GetAggregateStateEventApplyMethods<TAggregate, TIdentity, TAggregateState>();
+        // ReSharper disable once StaticMemberInGenericType
+        private static readonly object _lockObject = new object();
+        private static IReadOnlyDictionary<Type, Func<TAggregateState, IAggregateEvent, Task>> ApplyMethodsFromState;
 
         protected EventDrivenAggregateRoot(TIdentity id) : base(id)
         {
         }
-        public override void Emit<TAggregateEvent>(TAggregateEvent aggregateEvent, IEventMetadata metadata = null)
+        public async override Task Emit<TAggregateEvent>(TAggregateEvent aggregateEvent, IEventMetadata metadata = null)
         {
             var committedEvent = From(aggregateEvent, Version, metadata);
 
             var applyMethods = GetEventApplyMethods(committedEvent.AggregateEvent);
-            applyMethods(committedEvent.AggregateEvent);
-
-            SaveState();
+            await applyMethods(committedEvent.AggregateEvent);
+            
             ApplyCommittedEvent(committedEvent);
         }
 
-        protected Action<IAggregateEvent> GetEventApplyMethods<TAggregateEvent>(TAggregateEvent aggregateEvent)
+        protected Func<IAggregateEvent, Task> GetEventApplyMethods<TAggregateEvent>(TAggregateEvent aggregateEvent)
             where TAggregateEvent : class, IAggregateEvent<TIdentity>
         {
             var eventType = aggregateEvent.GetType();
 
-            Action<TAggregateState, IAggregateEvent> applyMethod;
-            if (!ApplyMethodsFromState.TryGetValue(eventType, out applyMethod))
+            lock (_lockObject)
+            {
+                if (ApplyMethodsFromState == null)
+                {
+                    ApplyMethodsFromState = State.GetType().GetAggregateStateEventApplyMethods<TAggregate, TIdentity, TAggregateState>();
+                }
+            }
+
+            if (!ApplyMethodsFromState.TryGetValue(eventType, out Func<TAggregateState, IAggregateEvent, Task> applyMethod))
                 throw new NotImplementedException($"AggregateState of Type={State.GetType().PrettyPrint()} does not have an 'Apply' method that takes in an aggregate event of Type={eventType.PrettyPrint()} as an argument.");
 
             var aggregateApplyMethod = applyMethod.Bind(State);
