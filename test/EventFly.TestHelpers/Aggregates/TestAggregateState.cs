@@ -43,25 +43,32 @@ namespace EventFly.TestHelpers.Aggregates
         public List<Test> TestCollection { get; private set; }
         public bool FromHydration { get; private set; }
 
-        public async Task Apply(TestCreatedEvent aggregateEvent)
+        public Task Apply(TestCreatedEvent aggregateEvent)
         {
             TestCollection = new List<Test>();
             FromHydration = false;
+            return Task.CompletedTask;
         }
         
-        public async Task Apply(TestAddedEvent aggregateEvent)
+        public Task Apply(TestAddedEvent aggregateEvent)
         {
             TestCollection.Add(aggregateEvent.Test);
+            return Task.CompletedTask;
+
         }
 
-        public async Task Apply(TestReceivedEvent aggregateEvent)
+        public Task Apply(TestReceivedEvent aggregateEvent)
         {
             TestCollection.Add(aggregateEvent.Test);
+            return Task.CompletedTask;
+
         }
 
-        public async Task Apply(TestSentEvent aggregateEvent)
+        public Task Apply(TestSentEvent aggregateEvent)
         {
             TestCollection.RemoveAll(x => x.Id == aggregateEvent.Test.Id);
+            return Task.CompletedTask;
+
         }
         public void Hydrate(TestAggregateSnapshot aggregateSnapshot)
         {

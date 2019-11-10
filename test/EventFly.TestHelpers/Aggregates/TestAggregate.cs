@@ -67,7 +67,7 @@ namespace EventFly.TestHelpers.Aggregates
             SetSnapshotStrategy(new SnapshotEveryFewVersionsStrategy(10));
         }
 
-        public async Task<IExecutionResult> Execute(CreateTestCommand command)
+        public Task<IExecutionResult> Execute(CreateTestCommand command)
         {
             if (IsNew)
             {
@@ -81,11 +81,11 @@ namespace EventFly.TestHelpers.Aggregates
                 ReplyFailure(TestExecutionResult.FailedWith(command.Metadata.SourceId));
             }
 
-            return new SuccessTestExecutionResult(command.Metadata.SourceId);
+            return Task.FromResult((IExecutionResult) new SuccessTestExecutionResult(command.Metadata.SourceId));
         }
         
 
-        public async Task<IExecutionResult> Execute(CreateAndAddTwoTestsCommand command)
+        public Task<IExecutionResult> Execute(CreateAndAddTwoTestsCommand command)
         {
             if (IsNew)
             {
@@ -102,10 +102,10 @@ namespace EventFly.TestHelpers.Aggregates
                 ReplyFailure(TestExecutionResult.FailedWith(command.Metadata.SourceId));
             }
 
-            return ExecutionResult.Success();
+            return Task.FromResult(ExecutionResult.Success());
         }
 
-        public async Task<IExecutionResult> Execute(AddTestCommand command)
+        public Task<IExecutionResult> Execute(AddTestCommand command)
         {
             if (!IsNew)
             {
@@ -120,10 +120,10 @@ namespace EventFly.TestHelpers.Aggregates
                 Throw(new TestedErrorEvent(TestErrors));
                 ReplyFailure(TestExecutionResult.FailedWith(command.Metadata.SourceId));
             }
-            return new SuccessTestExecutionResult(command.Metadata.SourceId);
+            return Task.FromResult((IExecutionResult) new SuccessTestExecutionResult(command.Metadata.SourceId));
         }
 
-        public async Task<IExecutionResult> Execute(AddFourTestsCommand command)
+        public Task<IExecutionResult> Execute(AddFourTestsCommand command)
         {
             if (!IsNew)
             {
@@ -142,10 +142,10 @@ namespace EventFly.TestHelpers.Aggregates
                 Throw(new TestedErrorEvent(TestErrors));
                 ReplyFailure(TestExecutionResult.FailedWith(command.Metadata.SourceId));
             }
-            return ExecutionResult.Success();
+            return Task.FromResult(ExecutionResult.Success());
         }
 
-        public async Task<IExecutionResult> Execute(GiveTestCommand command)
+        public Task<IExecutionResult> Execute(GiveTestCommand command)
         {
             if (!IsNew)
             {
@@ -163,10 +163,10 @@ namespace EventFly.TestHelpers.Aggregates
                 ReplyFailure(TestExecutionResult.FailedWith(command.Metadata.SourceId));
             }
 
-            return ExecutionResult.Success();
+            return Task.FromResult(ExecutionResult.Success());
         }
 
-        public async Task<IExecutionResult> Execute(ReceiveTestCommand command)
+        public Task<IExecutionResult> Execute(ReceiveTestCommand command)
         {
             if (!IsNew)
             {
@@ -180,21 +180,21 @@ namespace EventFly.TestHelpers.Aggregates
                 ReplyFailure(TestExecutionResult.FailedWith(command.Metadata.SourceId));
             }
 
-            return ExecutionResult.Success();
+            return Task.FromResult(ExecutionResult.Success());
         }
-        public async Task<IExecutionResult> Execute(TestFailedExecutionResultCommand command)
+        public Task<IExecutionResult> Execute(TestFailedExecutionResultCommand command)
         {
             Sender.Tell(ExecutionResult.Failed(), Self);
-            return ExecutionResult.Success();
+            return Task.FromResult(ExecutionResult.Success());
         }
         
-        public async Task<IExecutionResult> Execute(TestSuccessExecutionResultCommand command)
+        public Task<IExecutionResult> Execute(TestSuccessExecutionResultCommand command)
         {
             Sender.Tell(ExecutionResult.Success(), Self);
-            return ExecutionResult.Success();
+            return Task.FromResult(ExecutionResult.Success());
         }
 
-        public async Task<IExecutionResult> Execute(PoisonTestAggregateCommand command)
+        public Task<IExecutionResult> Execute(PoisonTestAggregateCommand command)
         {
             if (!IsNew)
             {
@@ -207,23 +207,23 @@ namespace EventFly.TestHelpers.Aggregates
                 ReplyFailure(TestExecutionResult.FailedWith(command.Metadata.SourceId));
             }
 
-            return ExecutionResult.Success();
+            return Task.FromResult(ExecutionResult.Success());
         }
 
-        public async Task<IExecutionResult> Execute(PublishTestStateCommand command)
+        public Task<IExecutionResult> Execute(PublishTestStateCommand command)
         {
             Signal(new TestStateSignalEvent(State,LastSequenceNr,Version));
 
-            return ExecutionResult.Success();
+            return Task.FromResult(ExecutionResult.Success());
         }
 
 
-        public async Task<IExecutionResult> Execute(TestDomainErrorCommand command)
+        public Task<IExecutionResult> Execute(TestDomainErrorCommand command)
         {
             TestErrors++;
             Throw(new TestedErrorEvent(TestErrors));
 
-            return ExecutionResult.Success();
+            return Task.FromResult(ExecutionResult.Success());
         }
 
         protected override bool SnapshotStatus(SaveSnapshotSuccess snapshotSuccess)
@@ -278,9 +278,9 @@ namespace EventFly.TestHelpers.Aggregates
             Signal(aggregateEvent, metadata);
         }
 
-        public async Task<IExecutionResult> Execute(BadCommand command)
+        public Task<IExecutionResult> Execute(BadCommand command)
         {
-            return new FailedTestExecutionResult(command.Metadata.SourceId, new List<string> { "Test cause"});
+            return Task.FromResult((IExecutionResult) new FailedTestExecutionResult(command.Metadata.SourceId, new List<string> { "Test cause"}));
         }
     }
 }

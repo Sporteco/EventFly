@@ -24,7 +24,6 @@
 using EventFly.Aggregates;
 using EventFly.Sagas;
 using EventFly.TestHelpers.Aggregates.Sagas.Test.Events;
-using System.Threading.Tasks;
 
 namespace EventFly.TestHelpers.Aggregates.Sagas.Test
 {

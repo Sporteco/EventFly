@@ -40,7 +40,7 @@ namespace EventFly.Examples.Api.Domain.Aggregates.Resource.Commands
 
     public class CreateResourceCommandHandler : CommandHandler<Resource, ResourceId, CreateResourceCommand>
     {
-        public override async Task<IExecutionResult> Handle(Resource aggregate, CreateResourceCommand command)
+        public override Task<IExecutionResult> Handle(Resource aggregate, CreateResourceCommand command)
         {
             if (aggregate.IsNew)
             {
@@ -48,12 +48,12 @@ namespace EventFly.Examples.Api.Domain.Aggregates.Resource.Commands
                 aggregate.Emit(aggregateEvent);
 
                 var executionResult = new SuccessExecutionResult();
-                return executionResult;
+                return Task.FromResult<IExecutionResult>(executionResult);
             }
             else
             {
                 var executionResult = new FailedExecutionResult(new List<string>{"aggregate is already created"});
-                return executionResult;
+                return Task.FromResult<IExecutionResult>(executionResult);
             }
         }
     }

@@ -26,17 +26,23 @@ namespace Demo.Domain.User
         private readonly ICollection<Entities.Project> _projects = new List<Entities.Project>();
         public IEnumerable<Entities.Project> Projects => _projects;
 
-        public async Task Apply(UserCreatedEvent e) { (Name, Birth) = (e.Name, e.Birth); }
-        public async Task Apply(UserRenamedEvent e) { Name = e.NewName; }
-        public async Task Apply(UserNotesChangedEvent e) { Notes = e.NewValue; }
-        public async Task Apply(UserTouchedEvent _) { }
+        public Task Apply(UserCreatedEvent e) { (Name, Birth) = (e.Name, e.Birth); return Task.CompletedTask;}
+        public Task Apply(UserRenamedEvent e) { Name = e.NewName; return Task.CompletedTask;}
+        public Task Apply(UserNotesChangedEvent e) { Notes = e.NewValue; return Task.CompletedTask;}
+        public Task Apply(UserTouchedEvent _) {  return Task.CompletedTask;}
 
-        public async Task Apply(ProjectCreatedEvent e) => _projects.Add(new Entities.Project(e.ProjectId, e.Name));
-        public async Task Apply(ProjectDeletedEvent aggregateEvent)
+        public Task Apply(ProjectCreatedEvent e)
+        {
+            _projects.Add(new Entities.Project(e.ProjectId, e.Name));
+            return Task.CompletedTask;
+        }
+
+        public Task Apply(ProjectDeletedEvent aggregateEvent)
         {
             var projectToRemove = _projects.FirstOrDefault(i => i.Id == aggregateEvent.ProjectId);
             if (projectToRemove != null)
                 _projects.Remove(projectToRemove);
+            return Task.CompletedTask;
         }
     }
 

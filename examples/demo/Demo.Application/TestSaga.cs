@@ -26,9 +26,10 @@ namespace Demo.Application
                 (DateTime.Now.ToLongDateString(), "ru"))));
         }
 
-        public async Task Handle(IDomainEvent<UserId, UserRenamedEvent> domainEvent)
+        public Task Handle(IDomainEvent<UserId, UserRenamedEvent> domainEvent)
         {
             Console.WriteLine($"FROM SAGA:Renamed to {domainEvent.AggregateEvent.NewName}");
+            return Task.CompletedTask;
         }
     }
 }

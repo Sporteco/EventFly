@@ -1,5 +1,4 @@
-﻿using Akka.Actor;
-using EventFly.Core;
+﻿using EventFly.Core;
 using EventFly.Exceptions;
 using EventFly.Extensions;
 using System;

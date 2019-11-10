@@ -19,7 +19,7 @@ namespace Demo.Domain.User.Services
             if (result.IsSuccess == false)
                 throw new InvalidOperationException(result.ToString());
 
-            user.CreateProject(projectId, projectName);
+            await user.CreateProject(projectId, projectName);
         }
 
         public async Task Delete(UserAggregate user, ProjectId projectId)
@@ -32,7 +32,7 @@ namespace Demo.Domain.User.Services
             if (result.IsSuccess == false)
                 throw new InvalidOperationException(result.ToString());
 
-            user.DeleteProject(projectId);
+            await user.DeleteProject(projectId);
         }
     }
 }

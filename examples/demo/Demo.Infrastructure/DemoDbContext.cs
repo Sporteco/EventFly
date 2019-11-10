@@ -12,6 +12,6 @@ namespace Demo.Infrastructure
     }
     public class DemoDbContext : DbContext
     {
-        public DbSet<ProjectModel> Projects { get; }
+        //public DbSet<ProjectModel> Projects { get; }
     }
 }

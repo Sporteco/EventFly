@@ -30,9 +30,10 @@ namespace EventFly.Examples.Api.Domain.Aggregates.Resource
     public class ResourceState : AggregateState<Resource, ResourceId>,
         IApply<ResourceCreatedEvent>
     {
-        public async Task Apply(ResourceCreatedEvent aggregateEvent)
+        public Task Apply(ResourceCreatedEvent aggregateEvent)
         {
             //nothing to be done
+            return Task.CompletedTask;
         }
     }
 }

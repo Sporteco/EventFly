@@ -35,19 +35,22 @@ namespace EventFly.Examples.Api.Domain.Sagas
     {
         public int Progress { get; private set; }
         
-        public async Task Apply(ResourceCreationStartedEvent aggregateEvent)
+        public Task Apply(ResourceCreationStartedEvent aggregateEvent)
         {
             Progress = 0;
+            return Task.CompletedTask;
         }
 
-        public async Task Apply(ResourceCreationProgressEvent aggregateEvent)
+        public Task Apply(ResourceCreationProgressEvent aggregateEvent)
         {
             Progress = aggregateEvent.Progress;
+            return Task.CompletedTask;
         }
 
-        public async Task Apply(ResourceCreationEndedEvent aggregateEvent)
+        public Task Apply(ResourceCreationEndedEvent aggregateEvent)
         {
             Progress = 100;
+            return Task.CompletedTask;
         }
     }
 }

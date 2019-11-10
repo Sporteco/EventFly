@@ -59,14 +59,15 @@ namespace EventFly.TestHelpers.Aggregates.Sagas.Test
 
         }
 
-        public async Task Handle(IDomainEvent<TestAggregateId, TestReceivedEvent> domainEvent)
+        public Task Handle(IDomainEvent<TestAggregateId, TestReceivedEvent> domainEvent)
         {
             if (!IsNew)
             {
                 Emit(new TestSagaTransactionCompletedEvent());
                 Self.Tell(new EmitTestSagaState());
-
             }
+
+            return Task.CompletedTask;
         }
 
         private bool Handle(EmitTestSagaState testCommand)

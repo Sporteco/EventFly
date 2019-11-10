@@ -19,14 +19,17 @@ namespace Demo.Infrastructure.AggregateStates
 
         public bool IsDeleted { get; private set; }
 
-        public async Task Apply(CreatedEvent e)
+        public Task Apply(CreatedEvent e)
         {
             ProjectName = e.Name;
+            return Task.CompletedTask;
         }
 
-        public async Task Apply(DeletedEvent _)
+        public Task Apply(DeletedEvent _)
         {
             IsDeleted = true;
+            return Task.CompletedTask;
+
         }
     }
 
@@ -49,11 +52,11 @@ namespace Demo.Infrastructure.AggregateStates
 
         public override async Task LoadState(ProjectId id)
         {
-            _model = await DbContext.Projects.FindAsync(id);
+            //_model = await DbContext.Projects.FindAsync(id);
             if (_model == null)
             {
                 _model = new ProjectModel();
-                DbContext.Add(_model);
+                await DbContext.AddAsync(_model);
             }
         }
 

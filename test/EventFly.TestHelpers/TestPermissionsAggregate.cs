@@ -29,21 +29,21 @@ namespace EventFly.TestHelpers
 
     {
         public TestPermissionsAggregate(TestPermissionsId id) : base(id){}
-        public async Task<IExecutionResult> Execute(TestPermissionsAuthorizedInAggregateCommand command)
+        public Task<IExecutionResult> Execute(TestPermissionsAuthorizedInAggregateCommand command)
         {
             SecurityContext.Authorized();
-            return new SuccessExecutionResult();
+            return Task.FromResult((IExecutionResult) new SuccessExecutionResult());
         }
 
-        public async Task<IExecutionResult> Execute(TestHasPermissionAttributeSuccessCommand command) => new SuccessExecutionResult();
+        public Task<IExecutionResult> Execute(TestHasPermissionAttributeSuccessCommand command) => Task.FromResult((IExecutionResult) new SuccessExecutionResult());
 
-        public async Task<IExecutionResult> Execute(TestHasPermissionsAttributeSuccessCommand command) => new SuccessExecutionResult();
+        public Task<IExecutionResult> Execute(TestHasPermissionsAttributeSuccessCommand command) => Task.FromResult((IExecutionResult) new SuccessExecutionResult());
 
-        public async Task<IExecutionResult> Execute(TestHasPermissionAttributeFailedCommand command) => new SuccessExecutionResult();
+        public Task<IExecutionResult> Execute(TestHasPermissionAttributeFailedCommand command) => Task.FromResult((IExecutionResult) new SuccessExecutionResult());
 
-        public async Task<IExecutionResult> Execute(TestHasPermissionsAttributeFailedCommand command) => new SuccessExecutionResult();
-        public async Task<IExecutionResult> Execute(TestPermissionsAuthorizedAttributeCommand command)=> new SuccessExecutionResult();
-        public async Task<IExecutionResult> Execute(TestHasObjectPermissionAttributeSuccessCommand command) => new SuccessExecutionResult();
+        public Task<IExecutionResult> Execute(TestHasPermissionsAttributeFailedCommand command) => Task.FromResult((IExecutionResult) new SuccessExecutionResult());
+        public Task<IExecutionResult> Execute(TestPermissionsAuthorizedAttributeCommand command)=> Task.FromResult((IExecutionResult) new SuccessExecutionResult());
+        public Task<IExecutionResult> Execute(TestHasObjectPermissionAttributeSuccessCommand command) => Task.FromResult((IExecutionResult) new SuccessExecutionResult());
     }
 
     public static class TestPermissions
