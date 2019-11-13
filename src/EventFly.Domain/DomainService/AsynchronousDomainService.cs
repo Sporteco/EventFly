@@ -89,11 +89,11 @@ namespace EventFly.DomainService
             foreach (var subscriptionType in subscriptionTypes)
             {
                 Context.System.EventStream.Subscribe(Self, subscriptionType);
-                var funcType = typeof(Func<,>).MakeGenericType(subscriptionType, typeof(Boolean));
+                var funcType = typeof(Func<,>).MakeGenericType(subscriptionType, typeof(bool));
                 var subscriptionFunction = Delegate.CreateDelegate(funcType, this, methods[subscriptionType]);
                 var actorReceiveMethod = method.MakeGenericMethod(subscriptionType);
 
-                actorReceiveMethod.Invoke(this, new Object[] { subscriptionFunction });
+                actorReceiveMethod.Invoke(this, new object[] { subscriptionFunction });
             }
         }
 
@@ -133,11 +133,11 @@ namespace EventFly.DomainService
                 var subscriptionFunction = Delegate.CreateDelegate(funcType, this, methods[subscriptionType]);
                 var actorReceiveMethod = method.MakeGenericMethod(subscriptionType);
 
-                actorReceiveMethod.Invoke(this, new[] { subscriptionFunction, (Object)null });
+                actorReceiveMethod.Invoke(this, new[] { subscriptionFunction, (object)null });
             }
         }
 
-        public Boolean HasSourceId(ISourceId sourceId)
+        public bool HasSourceId(ISourceId sourceId)
         {
             return !sourceId.IsNone() && _previousSourceIds.Any(s => s.Value == sourceId.Value);
         }
@@ -156,7 +156,7 @@ namespace EventFly.DomainService
             _scope.Dispose();
         }
 
-        protected void CommandInternal<T>(Func<T, Boolean> handler)
+        protected void CommandInternal<T>(Func<T, bool> handler)
         {
             Receive<T>(e =>
             {
@@ -168,7 +168,7 @@ namespace EventFly.DomainService
             });
         }
 
-        protected void CommandInternal<T>(Func<T, Task> handler, Object _)
+        protected void CommandInternal<T>(Func<T, Task> handler, object _)
         {
             ReceiveAsync<T>(e =>
             {
@@ -180,7 +180,7 @@ namespace EventFly.DomainService
             });
         }
 
-        protected void SetSourceIdHistory(Int32 count)
+        protected void SetSourceIdHistory(int count)
         {
             _previousSourceIds = new CircularBuffer<ISourceId>(count);
         }

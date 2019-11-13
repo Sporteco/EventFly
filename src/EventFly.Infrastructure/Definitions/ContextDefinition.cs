@@ -18,7 +18,7 @@ namespace EventFly.Definitions
 {
     public abstract class ContextDefinition : IContextDefinition
     {
-        public String Name => GetType().Name;
+        public string Name => GetType().Name;
         public IReadOnlyCollection<IAggregateDefinition> Aggregates => _aggregates;
         public IReadOnlyCollection<ISagaDefinition> Sagas => _sagas;
         public IReadOnlyCollection<IDomainServiceDefinition> DomainServices => _services;
@@ -87,14 +87,14 @@ namespace EventFly.Definitions
             return this;
         }
 
-        protected IContextDefinition RegisterPermission(String permissionCode)
+        protected IContextDefinition RegisterPermission(string permissionCode)
         {
             var permissionDef = new PermissionDefinition(permissionCode);
             if (!_permissions.Contains(permissionDef)) _permissions.Add(permissionDef);
             return this;
         }
 
-        protected IContextDefinition RegisterPermission<TIdentity>(String permissionCode)
+        protected IContextDefinition RegisterPermission<TIdentity>(string permissionCode)
             where TIdentity : IIdentity
         {
             var permissionDef = new PermissionDefinition(typeof(TIdentity), permissionCode);

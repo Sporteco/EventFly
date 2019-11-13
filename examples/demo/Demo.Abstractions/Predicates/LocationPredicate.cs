@@ -11,7 +11,7 @@ namespace Demo.Predicates
         public LocationPoint Source { get; set; }
         public DoubleRangePredicate Distance { get; set; }
 
-        public Boolean Check(LocationPoint destination)
+        public bool Check(LocationPoint destination)
         {
             return Distance.Check(Source.GetDistanceTo(destination));
         }
@@ -24,19 +24,19 @@ namespace Demo.Predicates
         /// </summary>
         public LocationPoint() { }
 
-        public LocationPoint(Double latitude, Double longitude)
+        public LocationPoint(double latitude, double longitude)
         {
             Latitude = latitude;
             Longitude = longitude;
         }
 
-        public Double Latitude { get; set; }
-        public Double Longitude { get; set; }
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
     }
 
     public static class LocationPointExtension
     {
-        public static Double GetDistanceTo(this LocationPoint srcPoint, LocationPoint dstPoint)
+        public static double GetDistanceTo(this LocationPoint srcPoint, LocationPoint dstPoint)
         {
             const long RADIUS = 6372795;
 
@@ -58,7 +58,7 @@ namespace Demo.Predicates
             double ad = Math.Atan2(y, x);
             return ad * RADIUS;
 
-            Double ToRadians(Double degrees)
+            double ToRadians(double degrees)
             {
                 double radians = (Math.PI / 180) * degrees;
                 return (radians);

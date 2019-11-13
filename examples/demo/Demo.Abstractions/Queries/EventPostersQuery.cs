@@ -29,11 +29,11 @@ namespace Demo.Queries
     {
         public EventPosterId Id { get; set; }
         public PosterEventType EventType { get; set; }
-        public String Title { get; set; }
+        public string Title { get; set; }
         public EventOrganizer Organizer { get; set; }
         public EventPlace Place { get; set; }
         public EventPeriod Period { get; set; }
-        public String Idea { get; set; }
+        public string Idea { get; set; }
         public EventSights Sights { get; set; }
         public EventEntertainments Entertainments { get; set; }
         public EventHospitalityServices HospitalityServices { get; set; }
@@ -51,77 +51,77 @@ namespace Demo.Queries
 
     public class PosterEventType
     {
-        public String Name { get; set; }
-        public String Code { get; set; }
+        public string Name { get; set; }
+        public string Code { get; set; }
     }
 
     public class EventDescription
     {
-        public String Title { get; set; }
-        public String Text { get; set; }
+        public string Title { get; set; }
+        public string Text { get; set; }
     }
 
     public class EventLink
     {
-        public String Title { get; set; }
+        public string Title { get; set; }
         public Uri Uri { get; set; }
     }
 
     public class EventPartner
     {
         public Uri Logo { get; set; }
-        public String Name { get; set; }
+        public string Name { get; set; }
         public Uri Link { get; set; }
-        public String Description { get; set; }
+        public string Description { get; set; }
     }
 
     public class EventCelebrities
     {
-        public String Description { get; set; }
+        public string Description { get; set; }
         public IEnumerable<EventCelebrity> Items { get; set; }
     }
 
     public class EventCelebrity
     {
-        public String Name { get; set; }
-        public String Awards { get; set; }
+        public string Name { get; set; }
+        public string Awards { get; set; }
         public Uri Photo { get; set; }
     }
 
     public class EventHospitalityServices
     {
-        public String Description { get; set; }
+        public string Description { get; set; }
         public IEnumerable<EventHospitalityService> Items { get; set; }
     }
 
     public class EventHospitalityService
     {
-        public String Name { get; set; }
-        public String Description { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
     }
 
     public class EventEntertainments
     {
-        public String Description { get; set; }
+        public string Description { get; set; }
         public IEnumerable<EventEntertainment> Items { get; set; }
     }
 
     public class EventEntertainment
     {
-        public String Name { get; set; }
-        public String Description { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
     }
 
     public class EventSights
     {
-        public String Description { get; set; }
+        public string Description { get; set; }
         public IEnumerable<EventSight> Items { get; set; }
     }
 
     public class EventSight
     {
-        public String Name { get; set; }
-        public String Description { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
     }
 
     public class EventPeriod
@@ -135,51 +135,51 @@ namespace Demo.Queries
         public EventPosterCountry Country { get; set; }
         public EventPosterRegion Region { get; set; }
         public EventPosterSettlement Settlement { get; set; }
-        public String AddressInsideSettlement { get; set; }
+        public string AddressInsideSettlement { get; set; }
     }
 
     public class EventPosterCountry
     {
-        public String Name { get; set; }
-        public String Code { get; set; }
+        public string Name { get; set; }
+        public string Code { get; set; }
     }
 
     public class EventPosterRegion
     {
-        public String Name { get; set; }
-        public String Code { get; set; }
+        public string Name { get; set; }
+        public string Code { get; set; }
     }
 
     public class EventPosterSettlement
     {
-        public String Name { get; set; }
-        public String Code { get; set; }
+        public string Name { get; set; }
+        public string Code { get; set; }
     }
 
     public class Location
     {
-        public Double Latitude { get; set; }
-        public Double Longitude { get; set; }
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
     }
 
     public class EventPlace
     {
         public Address Address { get; set; }
         public Location Location { get; set; }
-        public String HowToGetTo { get; set; }
-        public String Description { get; set; }
+        public string HowToGetTo { get; set; }
+        public string Description { get; set; }
     }
 
     public class EventOrganizer
     {
-        public String Name { get; set; }
+        public string Name { get; set; }
         public IEnumerable<Contact> Contacts { get; set; }
     }
 
     public class Contact
     {
-        public String Value { get; set; }
-        public String Title { get; set; }
+        public string Value { get; set; }
+        public string Title { get; set; }
     }
 
     public class CompetitionPoster
@@ -188,28 +188,28 @@ namespace Demo.Queries
         public SlotCost SlotCost { get; set; }
         public IEnumerable<CompetitionPrize> Prizes { get; set; }
         public IEnumerable<CompetitionStarterPackItem> StarterPacks { get; set; }
-        public String Description { get; set; }
+        public string Description { get; set; }
     }
 
     public class CompetitionDiscipline
     {
-        public String Name { get; set; }
+        public string Name { get; set; }
         public Uri Icon { get; set; }
-        public String Code { get; set; }
+        public string Code { get; set; }
     }
 
     public class CompetitionStarterPackItem
     {
-        public String Name { get; set; }
-        public String Description { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
         public Uri Icon { get; set; }
     }
 
     public class CompetitionPrize
     {
-        public String Name { get; set; }
+        public string Name { get; set; }
         public Money MonetaryEquivalent { get; set; }
-        public String Description { get; set; }
+        public string Description { get; set; }
     }
 
     public class SlotCost
@@ -220,7 +220,7 @@ namespace Demo.Queries
 
     public class Money
     {
-        public Decimal Amount { get; set; }
+        public decimal Amount { get; set; }
     }
 
     public sealed class EventPlacePredicate : ObjectPredicate<EventPlace>
@@ -238,7 +238,7 @@ namespace Demo.Queries
     public sealed class DisciplinePredicate : ObjectPredicate<CompetitionDiscipline>
     {
         public StringPredicate Code { get; set; }
-        public override Boolean Check(CompetitionDiscipline @object)
+        public override bool Check(CompetitionDiscipline @object)
         {
             return Code?.Check(@object.Code) ?? true;
         }
@@ -277,7 +277,7 @@ namespace Demo.Queries
         public DecimalRangePredicate SlotCost { get; set; }
         public StringPredicate Description { get; set; }
 
-        public override Boolean Check(CompetitionPoster @object)
+        public override bool Check(CompetitionPoster @object)
         {
             return (Discipline?.Check(@object.Discipline) ?? true)
                 && (Prizes?.Check(@object.Prizes) ?? true)
@@ -296,7 +296,7 @@ namespace Demo.Queries
         public StringPredicate RegionCode { get; set; }
         public StringPredicate SettlementCode { get; set; }
 
-        public override Boolean Check(Address @object)
+        public override bool Check(Address @object)
         {
             return (CountryCode != null && RegionCode != null && SettlementCode != null && SettlementCode.Check(@object.Settlement.Code))
                    || (CountryCode != null && RegionCode != null && SettlementCode == null && RegionCode.Check(@object.Region.Code))

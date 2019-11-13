@@ -1,8 +1,6 @@
-﻿using System;
-
-namespace Demo.Predicates
+﻿namespace Demo.Predicates
 {
-    public sealed class DoublePredicate :  Predicate<Double, Double, NumericOperator>
+    public sealed class DoublePredicate :  Predicate<double, double, NumericOperator>
     {
         public DoublePredicate()
         {
@@ -15,7 +13,7 @@ namespace Demo.Predicates
         }
     }
 
-    public sealed class DecimalPredicate : Predicate<Decimal, Decimal, NumericOperator>
+    public sealed class DecimalPredicate : Predicate<decimal, decimal, NumericOperator>
     {
         public DecimalPredicate()
         {
@@ -27,7 +25,7 @@ namespace Demo.Predicates
         }
     }
 
-    public sealed class IntegerPredicate : Predicate<Int32, Int32, NumericOperator>
+    public sealed class IntegerPredicate : Predicate<int, int, NumericOperator>
     {
         public IntegerPredicate()
         {
@@ -39,7 +37,7 @@ namespace Demo.Predicates
         }
     }
 
-    public sealed class LongPredicate : Predicate<Int64, Int64, NumericOperator>
+    public sealed class LongPredicate : Predicate<long, long, NumericOperator>
     {
         public LongPredicate()
         {

@@ -148,14 +148,35 @@ namespace EventFly.GraphQL
             foreach (var prop in modelType.GetProperties())
             {
                 var description = prop.GetCustomAttribute<DescriptionAttribute>()?.Description;
+
+                var allowNulls = prop.GetCustomAttribute<AllowNullAttribute>() != null;
+
                 var type = GetGraphType(prop.PropertyType,isInput);
-                qas.Add(type != null
-                    ? new FieldType {Type = type, Name = prop.Name, Description = description}
-                    : new FieldType
+
+                if (type == null)
+                {
+                    var gType = GetQueryItemType(graphQuery, prop.PropertyType, isInput);
+
+                    if (!allowNulls && isInput) gType = new NonNullGraphType(gType);
+                    
+                    qas.Add(new FieldType { ResolvedType = gType, Name = prop.Name, Description = description});
+                }
+                else
+                {
+                    if (!allowNulls && isInput)
                     {
-                        ResolvedType = GetQueryItemType(graphQuery,prop.PropertyType, isInput), Name = prop.Name,
-                        Description = description,
-                    });
+                        if (!type.IsGenericType || type.GetGenericTypeDefinition() != typeof(NonNullGraphType<>))
+                            type = typeof(NonNullGraphType<>).MakeGenericType(type);
+                    }
+                    else
+                    {
+                        if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(NonNullGraphType<>))
+                            type = type.GetGenericArguments()[0];
+                        
+                    }
+
+                    qas.Add(new FieldType {Type = type, Name = prop.Name, Description = description});
+                }
             }
             return qas;
         }

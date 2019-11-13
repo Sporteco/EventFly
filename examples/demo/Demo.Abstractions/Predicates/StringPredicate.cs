@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace Demo.Predicates
 {
-    public sealed class StringPredicate : Predicate<String, IEnumerable<String>, StringOperator>
+    public sealed class StringPredicate : Predicate<string, IEnumerable<string>, StringOperator>
     {
         public StringPredicate()
         {

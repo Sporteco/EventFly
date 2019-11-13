@@ -48,6 +48,5 @@ namespace Demo.Queries
     {
         public UserId Id { get; set; }
     }
-
 }
 

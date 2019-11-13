@@ -102,6 +102,6 @@ namespace EventFly.DomainService
             return service;
         }
 
-        private static String GetDomainServiceId() => typeof(TDomainService).FullName;
+        private static string GetDomainServiceId() => typeof(TDomainService).FullName;
     }
 }

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Demo.Application;
 using Demo.Application.CreateProject;
 using Demo.Application.DeleteProject;
@@ -36,6 +37,7 @@ namespace Demo.Infrastructure
             RegisterQuery<User1Query, UsersResult>();
             RegisterQuery<User2Query, UsersResult>();
             RegisterQuery<UsersQuery, UsersResult>();
+            RegisterQuery<TestQuery, IEnumerable<TestResult>>();
             RegisterQuery<EventPostersQuery, EventPosters>();
 
             RegisterAggregate<UserAggregate, UserId>();

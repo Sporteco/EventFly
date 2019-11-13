@@ -48,7 +48,7 @@ namespace EventFly.Examples.Api.Controllers
                 scheme = "https";
             }
 
-            return String.Concat(
+            return string.Concat(
                 scheme,
                 "://",
                 request.Host.ToUriComponent());

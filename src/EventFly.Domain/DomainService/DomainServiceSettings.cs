@@ -1,5 +1,4 @@
-﻿using System;
-using Akka.Configuration;
+﻿using Akka.Configuration;
 using EventFly.Configuration;
 
 namespace EventFly.DomainService
@@ -14,8 +13,8 @@ namespace EventFly.DomainService
             AutoReceive = domainServiceConfig.GetBoolean("auto-receive");
         }
 
-        public Boolean AutoReceive { get; }
+        public bool AutoReceive { get; }
 
-        private const String _section = "EventFly.domain-service";
+        private const string _section = "EventFly.domain-service";
     }
 }

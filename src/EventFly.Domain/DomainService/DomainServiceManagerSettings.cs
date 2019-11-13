@@ -1,5 +1,4 @@
-﻿using System;
-using Akka.Configuration;
+﻿using Akka.Configuration;
 using EventFly.Configuration;
 
 namespace EventFly.DomainService
@@ -15,9 +14,9 @@ namespace EventFly.DomainService
             AutoSubscribe = domainServiceManagerConfig.GetBoolean("auto-subscribe");
         }
 
-        public Boolean AutoSubscribe { get; }
-        public Boolean AutoSpawnOnReceive { get; }
+        public bool AutoSubscribe { get; }
+        public bool AutoSpawnOnReceive { get; }
 
-        private const String _section = "EventFly.domain-service-manager";
+        private const string _section = "EventFly.domain-service-manager";
     }
 }
