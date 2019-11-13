@@ -25,41 +25,38 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System;
-using System.Threading.Tasks;
 using EventFly.Core;
 using EventFly.Exceptions;
+using System;
+using System.Threading.Tasks;
 
 namespace EventFly.Aggregates
 {
-
-
     public abstract class AggregateState<TAggregate, TIdentity> : AggregateState<TAggregate, TIdentity, IMessageApplier<TAggregate, TIdentity>>
         where TAggregate : IAggregateRoot<TIdentity>
         where TIdentity : IIdentity
-    {
-    }
+    { }
 
     public abstract class AggregateState<TAggregate, TIdentity, TMessageApplier> : IAggregateState<TIdentity>, IMessageApplier<TAggregate, TIdentity>
         where TMessageApplier : class, IMessageApplier<TAggregate, TIdentity>
         where TAggregate : IAggregateRoot<TIdentity>
         where TIdentity : IIdentity
     {
-        protected AggregateState()
-        {
-            var me = this as TMessageApplier;
-            
-            if (me == null)
-                throw new InvalidOperationException($"MessageApplier of Type={GetType().PrettyPrint()} has a wrong generic argument Type={typeof(TMessageApplier).PrettyPrint()}.");
-            
-        }
-
         public TIdentity Id { get; set; }
 
         public virtual Task LoadState(TIdentity id)
         {
             Id = id;
             return Task.CompletedTask;
+        }
+
+        protected AggregateState()
+        {
+            if (!(this is TMessageApplier))
+            {
+                var message = $"MessageApplier of Type={GetType().PrettyPrint()} has a wrong generic argument Type={typeof(TMessageApplier).PrettyPrint()}.";
+                throw new InvalidOperationException(message);
+            }
         }
     }
 }

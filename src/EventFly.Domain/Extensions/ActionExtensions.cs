@@ -37,5 +37,5 @@ namespace EventFly.Extensions
             return openArg => action(value, openArg);
         }
     }
-   
+
 }

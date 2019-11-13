@@ -28,6 +28,7 @@
 using EventFly.Aggregates;
 using EventFly.Aggregates.Snapshot;
 using EventFly.Core;
+using EventFly.DomainService;
 using EventFly.Events;
 using EventFly.Exceptions;
 using EventFly.Subscribers;
@@ -36,7 +37,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using EventFly.DomainService;
 using System.Threading.Tasks;
 
 namespace EventFly.Extensions
@@ -131,8 +131,7 @@ namespace EventFly.Extensions
             where TAggregate : IAggregateRoot<TIdentity>
             where TIdentity : IIdentity
         {
-            var aggregateEventType = typeof(IAggregateEvent<TIdentity>);
-
+            var eventType = typeof(IAggregateEvent<TIdentity>);
 
             return type
                 .GetTypeInfo()
@@ -141,9 +140,7 @@ namespace EventFly.Extensions
                 {
                     if (mi.Name != "Apply") return false;
                     var parameters = mi.GetParameters();
-                    return
-                        parameters.Length == 1 &&
-                        aggregateEventType.GetTypeInfo().IsAssignableFrom(parameters[0].ParameterType);
+                    return parameters.Length == 1 && eventType.GetTypeInfo().IsAssignableFrom(parameters[0].ParameterType);
                 })
                 .ToDictionary(
                     mi => mi.GetParameters()[0].ParameterType,

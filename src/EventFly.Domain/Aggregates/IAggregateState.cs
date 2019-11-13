@@ -1,9 +1,9 @@
-﻿using System.Threading.Tasks;
-using EventFly.Core;
+﻿using EventFly.Core;
+using System.Threading.Tasks;
 
 namespace EventFly.Aggregates
 {
-    public interface IAggregateState<TIdentity> 
+    public interface IAggregateState<TIdentity>
         where TIdentity : IIdentity
     {
         TIdentity Id { get; set; }

@@ -12,22 +12,15 @@ namespace EventFly.Aggregates
         where TAggregateState : IAggregateState<TIdentity>
         where TIdentity : IIdentity
     {
-        // ReSharper disable once StaticMemberInGenericType
-        private static readonly object _lockObject = new object();
-        private static IReadOnlyDictionary<Type, Func<TAggregateState, IAggregateEvent, Task>> ApplyMethodsFromState;
-
-        protected EventDrivenAggregateRoot(TIdentity id) : base(id)
-        {
-        }
         public async override Task Emit<TAggregateEvent>(TAggregateEvent aggregateEvent, IEventMetadata metadata = null)
         {
-            var committedEvent = From(aggregateEvent, Version, metadata);
+            var applyMethods = GetEventApplyMethods(aggregateEvent);
+            await applyMethods(aggregateEvent);
 
-            var applyMethods = GetEventApplyMethods(committedEvent.AggregateEvent);
-            await applyMethods(committedEvent.AggregateEvent);
-            
-            ApplyCommittedEvent(committedEvent);
+            await base.Emit(aggregateEvent, metadata);
         }
+
+        protected EventDrivenAggregateRoot(TIdentity id) : base(id) { }
 
         protected Func<IAggregateEvent, Task> GetEventApplyMethods<TAggregateEvent>(TAggregateEvent aggregateEvent)
             where TAggregateEvent : class, IAggregateEvent<TIdentity>
@@ -36,18 +29,22 @@ namespace EventFly.Aggregates
 
             lock (_lockObject)
             {
-                if (ApplyMethodsFromState == null)
+                if (_applyMethodsFromState == null)
                 {
-                    ApplyMethodsFromState = State.GetType().GetAggregateStateEventApplyMethods<TAggregate, TIdentity, TAggregateState>();
+                    _applyMethodsFromState = State.GetType().GetAggregateStateEventApplyMethods<TAggregate, TIdentity, TAggregateState>();
                 }
             }
+            if (!_applyMethodsFromState.TryGetValue(eventType, out var applyMethod))
+            {
+                var message = $"AggregateState of Type={State.GetType().PrettyPrint()} does not have an 'Apply' method that takes in an aggregate event of Type={eventType.PrettyPrint()} as an argument.";
+                throw new NotImplementedException(message);
+            }
 
-            if (!ApplyMethodsFromState.TryGetValue(eventType, out Func<TAggregateState, IAggregateEvent, Task> applyMethod))
-                throw new NotImplementedException($"AggregateState of Type={State.GetType().PrettyPrint()} does not have an 'Apply' method that takes in an aggregate event of Type={eventType.PrettyPrint()} as an argument.");
-
-            var aggregateApplyMethod = applyMethod.Bind(State);
-
-            return aggregateApplyMethod;
+            return applyMethod.Bind(State);
         }
+
+        // ReSharper disable once StaticMemberInGenericType
+        private static readonly object _lockObject = new object();
+        private static IReadOnlyDictionary<Type, Func<TAggregateState, IAggregateEvent, Task>> _applyMethodsFromState;
     }
 }
