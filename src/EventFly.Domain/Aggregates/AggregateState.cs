@@ -1,7 +1,9 @@
-﻿using System;
-using System.Threading.Tasks;
-using EventFly.Core;
+﻿using EventFly.Core;
 using EventFly.Exceptions;
+using System;
+using System.Linq;
+using System.Reflection;
+using System.Threading.Tasks;
 
 namespace EventFly.Aggregates
 {
@@ -18,6 +20,18 @@ namespace EventFly.Aggregates
             return Task.CompletedTask;
         }
 
+        public async Task UpdateAndSaveState(IAggregateEvent<TIdentity> @event)
+        {
+            var eventType = @event.GetType();
+            var applyMethod = GetApplierOfConcreteEvent(eventType);
+            if (applyMethod == null)
+            {
+                var message = $"'{GetType().PrettyPrint()}' does not have an 'Apply' method that takes in a '{eventType.PrettyPrint()}'.";
+                throw new NotImplementedException(message);
+            }
+            await (Task)applyMethod.Invoke(this, new[] { @event });
+        }
+
         protected AggregateState()
         {
             if (!(this is TMessageApplier))
@@ -25,6 +39,23 @@ namespace EventFly.Aggregates
                 var message = $"MessageApplier of Type={GetType().PrettyPrint()} has a wrong generic argument Type={typeof(TMessageApplier).PrettyPrint()}.";
                 throw new InvalidOperationException(message);
             }
+        }
+
+        protected Task Apply(IAggregateEvent<TIdentity> @event)
+        {
+            var applier = GetApplierOfConcreteEvent(@event.GetType());
+            return (Task)applier?.Invoke(this, new Object[] { @event });
+        }
+
+        private MethodInfo GetApplierOfConcreteEvent(Type eventType)
+        {
+            foreach (var method in GetType().GetRuntimeMethods().Where(x => x.Name == "Apply"))
+            {
+                var parameters = method.GetParameters();
+                if (parameters.Length != 1) continue;
+                if (parameters[0].ParameterType == eventType) return method;
+            }
+            return null;
         }
     }
 

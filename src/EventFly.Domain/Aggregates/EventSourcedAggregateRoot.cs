@@ -245,11 +245,8 @@ namespace EventFly.Aggregates
         protected void ApplyCommittedEvent<TAggregateEvent>(ICommittedEvent<TAggregate, TIdentity, TAggregateEvent> committedEvent)
             where TAggregateEvent : class, IAggregateEvent<TIdentity>
         {
-            var applyMethods = GetEventApplyMethods(committedEvent.AggregateEvent);
-            applyMethods(committedEvent.AggregateEvent).GetAwaiter().GetResult();
-
+            State.UpdateAndSaveState(committedEvent.AggregateEvent).GetAwaiter().GetResult();
             Log.Info("Aggregate of Name={0}, and Id={1}; committed and applied an AggregateEvent of Type={2}.", Name, Id, typeof(TAggregateEvent).PrettyPrint());
-
             Version++;
 
             var domainEvent = new DomainEvent<TAggregate, TIdentity, TAggregateEvent>(Id, committedEvent.AggregateEvent, committedEvent.EventMetadata, committedEvent.Timestamp, Version);
@@ -324,19 +321,6 @@ namespace EventFly.Aggregates
 
         protected IEnumerable<IAggregateEvent<TIdentity>> Events(params IAggregateEvent<TIdentity>[] events) => events.ToList();
 
-        protected Func<IAggregateEvent, Task> GetEventApplyMethods<TAggregateEvent>(TAggregateEvent aggregateEvent)
-            where TAggregateEvent : class, IAggregateEvent<TIdentity>
-        {
-            var eventType = aggregateEvent.GetType();
-
-            if (!ApplyMethodsFromState.TryGetValue(eventType, out var applyMethod))
-                throw new NotImplementedException($"AggregateState of Type={State.GetType().PrettyPrint()} does not have an 'Apply' method that takes in an aggregate event of Type={eventType.PrettyPrint()} as an argument.");
-
-            var aggregateApplyMethod = applyMethod.Bind(State);
-
-            return aggregateApplyMethod;
-        }
-
         protected Action<IAggregateSnapshot> GetSnapshotHydrateMethods<TAggregateSnapshot>(TAggregateSnapshot aggregateSnapshot)
             where TAggregateSnapshot : class, IAggregateSnapshot<TAggregate, TIdentity>
         {
@@ -350,8 +334,7 @@ namespace EventFly.Aggregates
 
         protected virtual void ApplyEvent(IAggregateEvent<TIdentity> aggregateEvent)
         {
-            var eventApplier = GetEventApplyMethods(aggregateEvent);
-            eventApplier(aggregateEvent).GetAwaiter().GetResult();
+            State.UpdateAndSaveState(aggregateEvent).GetAwaiter().GetResult();
             Version++;
         }
 
@@ -470,7 +453,6 @@ namespace EventFly.Aggregates
             }));
         }
 
-        private static readonly IReadOnlyDictionary<Type, Func<TAggregateState, IAggregateEvent, Task>> ApplyMethodsFromState = typeof(TAggregateState).GetAggregateStateEventApplyMethods<TAggregate, TIdentity, TAggregateState>();
         private static readonly IReadOnlyDictionary<Type, Action<TAggregateState, IAggregateSnapshot>> HydrateMethodsFromState = typeof(TAggregateState).GetAggregateSnapshotHydrateMethods<TAggregate, TIdentity, TAggregateState>();
         private static readonly IAggregateName AggregateName = typeof(TAggregate).GetAggregateName();
         private CircularBuffer<ISourceId> _previousSourceIds = new CircularBuffer<ISourceId>(100);

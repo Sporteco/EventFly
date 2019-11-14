@@ -37,7 +37,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 
 namespace EventFly.Extensions
 {
@@ -125,26 +124,6 @@ namespace EventFly.Extensions
                 .ToDictionary(
                     mi => mi.GetParameters()[0].ParameterType,
                     mi => ReflectionHelper.CompileMethodInvocation<Action<TAggregateState, IAggregateEvent>>(type, "Apply", mi.GetParameters()[0].ParameterType));
-        }
-
-        internal static IReadOnlyDictionary<Type, Func<TAggregateState, IAggregateEvent, Task>> GetAggregateStateEventApplyMethods<TAggregate, TIdentity, TAggregateState>(this Type type)
-            where TAggregate : IAggregateRoot<TIdentity>
-            where TIdentity : IIdentity
-        {
-            var eventType = typeof(IAggregateEvent<TIdentity>);
-
-            return type
-                .GetTypeInfo()
-                .GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
-                .Where(mi =>
-                {
-                    if (mi.Name != "Apply") return false;
-                    var parameters = mi.GetParameters();
-                    return parameters.Length == 1 && eventType.GetTypeInfo().IsAssignableFrom(parameters[0].ParameterType);
-                })
-                .ToDictionary(
-                    mi => mi.GetParameters()[0].ParameterType,
-                    mi => ReflectionHelper.CompileMethodInvocation<Func<TAggregateState, IAggregateEvent, Task>>(type, "Apply", mi.GetParameters()[0].ParameterType));
         }
 
         internal static IReadOnlyList<Type> GetAsyncDomainEventSubscriberSubscriptionTypes(this Type type)
