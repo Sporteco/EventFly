@@ -30,6 +30,7 @@ namespace EventFly.Aggregates
                 throw new NotImplementedException(message);
             }
             await (Task)applyMethod.Invoke(this, new[] { @event });
+            await PostApplyAction(@event);
         }
 
         protected AggregateState()
@@ -46,6 +47,8 @@ namespace EventFly.Aggregates
             var applier = GetApplierOfConcreteEvent(@event.GetType());
             return (Task)applier?.Invoke(this, new Object[] { @event });
         }
+
+        protected virtual Task PostApplyAction(IAggregateEvent<TIdentity> @event) => Task.CompletedTask;
 
         private MethodInfo GetApplierOfConcreteEvent(Type eventType)
         {
