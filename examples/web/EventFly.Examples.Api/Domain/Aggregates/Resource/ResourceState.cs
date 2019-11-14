@@ -23,17 +23,12 @@
 
 using EventFly.Aggregates;
 using EventFly.Examples.Api.Domain.Aggregates.Resource.Events;
-using System.Threading.Tasks;
 
 namespace EventFly.Examples.Api.Domain.Aggregates.Resource
 {
     public class ResourceState : AggregateState<Resource, ResourceId>,
         IApply<ResourceCreatedEvent>
     {
-        public Task Apply(ResourceCreatedEvent aggregateEvent)
-        {
-            //nothing to be done
-            return Task.CompletedTask;
-        }
+        public void Apply(ResourceCreatedEvent _) { }
     }
 }

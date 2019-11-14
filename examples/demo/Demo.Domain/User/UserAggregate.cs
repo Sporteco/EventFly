@@ -24,23 +24,20 @@ namespace Demo.Domain.User
         public String Notes { get; private set; } = String.Empty;
         public IEnumerable<Entities.Project> Projects => _projects;
 
-        public Task Apply(UserCreatedEvent e) { (Name, Birth) = (e.Name, e.Birth); return Task.CompletedTask; }
-        public Task Apply(UserRenamedEvent e) { Name = e.NewName; return Task.CompletedTask; }
-        public Task Apply(UserNotesChangedEvent e) { Notes = e.NewValue; return Task.CompletedTask; }
-        public Task Apply(UserTouchedEvent _) { return Task.CompletedTask; }
+        public void Apply(UserCreatedEvent e) { (Name, Birth) = (e.Name, e.Birth); }
+        public void Apply(UserRenamedEvent e) { Name = e.NewName; }
+        public void Apply(UserNotesChangedEvent e) { Notes = e.NewValue; }
+        public void Apply(UserTouchedEvent _) { }
 
-        public Task Apply(ProjectCreatedEvent e)
+        public void Apply(ProjectCreatedEvent e)
         {
             _projects.Add(new Entities.Project(e.ProjectId, e.Name));
-            return Task.CompletedTask;
         }
 
-        public Task Apply(ProjectDeletedEvent aggregateEvent)
+        public void Apply(ProjectDeletedEvent aggregateEvent)
         {
             var projectToRemove = _projects.FirstOrDefault(i => i.Id == aggregateEvent.ProjectId);
-            if (projectToRemove != null)
-                _projects.Remove(projectToRemove);
-            return Task.CompletedTask;
+            if (projectToRemove != null) _projects.Remove(projectToRemove);
         }
 
         private readonly ICollection<Entities.Project> _projects = new List<Entities.Project>();

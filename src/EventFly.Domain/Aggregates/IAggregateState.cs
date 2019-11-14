@@ -9,5 +9,7 @@ namespace EventFly.Aggregates
         TIdentity Id { get; set; }
 
         Task LoadState(TIdentity id);
+
+        Task UpdateAndSaveState(IAggregateEvent<TIdentity> @event);
     }
 }

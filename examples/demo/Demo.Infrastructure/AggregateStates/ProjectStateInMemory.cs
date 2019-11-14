@@ -17,16 +17,14 @@ namespace Demo.Infrastructure.AggregateStates
 
         public Int32 SaveTimings() => 0;
 
-        public Task Apply(CreatedEvent e)
+        public void Apply(CreatedEvent e)
         {
             ProjectName = e.Name;
-            return Task.CompletedTask;
         }
 
-        public Task Apply(DeletedEvent _)
+        public void Apply(DeletedEvent _)
         {
             IsDeleted = true;
-            return Task.CompletedTask;
         }
     }
 
@@ -49,17 +47,15 @@ namespace Demo.Infrastructure.AggregateStates
             }
         }
 
-        public async Task Apply(CreatedEvent aggregateEvent)
+        public void Apply(CreatedEvent aggregateEvent)
         {
             _model.Id = aggregateEvent.ProjectId;
             _model.ProjectName = aggregateEvent.Name;
-            await DbContext.SaveChangesAsync();
         }
 
-        public async Task Apply(DeletedEvent aggregateEvent)
+        public void Apply(DeletedEvent aggregateEvent)
         {
             _model.IsDeleted = true;
-            await DbContext.SaveChangesAsync();
         }
 
         private ProjectModel _model;
