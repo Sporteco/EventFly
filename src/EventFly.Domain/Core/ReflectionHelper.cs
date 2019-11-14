@@ -25,18 +25,17 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using EventFly.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using EventFly.Exceptions;
 
 namespace EventFly.Core
 {
     public static class ReflectionHelper
     {
-
         public static TResult CompileMethodInvocation<TResult>(Type type, string methodName, params Type[] methodSignature)
         {
             var typeInfo = type.GetTypeInfo();
@@ -55,7 +54,7 @@ namespace EventFly.Core
 
             return CompileMethodInvocation<TResult>(methodInfo);
         }
-        
+
         public static TResult CompileMethodInvocation<TResult>(MethodInfo methodInfo)
         {
             var genericArguments = typeof(TResult).GetTypeInfo().GetGenericArguments();
@@ -69,29 +68,29 @@ namespace EventFly.Core
 
             var instanceArgument = Expression.Parameter(genericArguments[0]);
 
-            var argumentPairs = funcArgumentList.Zip(methodArgumentList, (s, d) => new {Source = s, Destination = d}).ToList();
+            var argumentPairs = funcArgumentList.Zip(methodArgumentList, (s, d) => new { Source = s, Destination = d }).ToList();
             if (argumentPairs.All(a => a.Source == a.Destination))
             {
                 // No need to do anything fancy, the types are the same
                 var parameters = funcArgumentList.Select(Expression.Parameter).ToList();
-                return Expression.Lambda<TResult>(Expression.Call(instanceArgument, methodInfo, parameters), new [] { instanceArgument }.Concat(parameters)).Compile();
+                return Expression.Lambda<TResult>(Expression.Call(instanceArgument, methodInfo, parameters), new[] { instanceArgument }.Concat(parameters)).Compile();
             }
 
             var lambdaArgument = new List<ParameterExpression>
-                {
-                    instanceArgument
-                };
+            {
+                instanceArgument
+            };
 
             var type = methodInfo.DeclaringType;
             var instanceVariable = Expression.Variable(type ?? throw new InvalidOperationException());
             var blockVariables = new List<ParameterExpression>
-                {
-                        instanceVariable
-                };
+            {
+                instanceVariable
+            };
             var blockExpressions = new List<Expression>
-                {
-                    Expression.Assign(instanceVariable, Expression.ConvertChecked(instanceArgument, type))
-                };
+            {
+                Expression.Assign(instanceVariable, Expression.ConvertChecked(instanceArgument, type))
+            };
             var callArguments = new List<ParameterExpression>();
 
             foreach (var a in argumentPairs)
@@ -117,11 +116,8 @@ namespace EventFly.Core
 
             var callExpression = Expression.Call(instanceVariable, methodInfo, callArguments);
             blockExpressions.Add(callExpression);
-
             var block = Expression.Block(blockVariables, blockExpressions);
-
             var lambdaExpression = Expression.Lambda<TResult>(block, lambdaArgument);
-
             return lambdaExpression.Compile();
         }
     }

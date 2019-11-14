@@ -159,7 +159,6 @@ namespace EventFly.Extensions
                 .Select(i => typeof(IDomainEvent<,>).MakeGenericType(i.GetGenericArguments()[0], i.GetGenericArguments()[1]))
                 .ToList();
 
-
             return domainEventTypes;
         }
 
@@ -175,7 +174,6 @@ namespace EventFly.Extensions
                 .Select(i => new Tuple<Type, Type>(i.GetGenericArguments()[0], i.GetGenericArguments()[1]))
                 .ToList();
 
-
             return domainEventTypes;
         }
 
@@ -190,7 +188,6 @@ namespace EventFly.Extensions
                 .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ISubscribeTo<,>))
                 .Select(i => typeof(IDomainEvent<,>).MakeGenericType(i.GetGenericArguments()[0], i.GetGenericArguments()[1]))
                 .ToList();
-
 
             return domainEventTypes;
         }
@@ -211,10 +208,7 @@ namespace EventFly.Extensions
                         .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ICommittedEvent<,>))
                         .Select(i => i.GetGenericArguments()[0]).SingleOrDefault();
 
-
-                    if (aggregateType != null)
-                        return aggregateType.GetAggregateName();
-
+                    if (aggregateType != null) return aggregateType.GetAggregateName();
                     throw new ArgumentException(nameof(type));
                 });
         }
@@ -235,10 +229,7 @@ namespace EventFly.Extensions
                         .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ICommittedEvent<,,>))
                         .Select(i => i.GetGenericArguments()[2]).SingleOrDefault();
 
-
-                    if (aggregateEvent != null)
-                        return aggregateEvent;
-
+                    if (aggregateEvent != null) return aggregateEvent;
                     throw new ArgumentException(nameof(type));
                 });
         }
@@ -278,13 +269,11 @@ namespace EventFly.Extensions
                 .GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
                 .Where(mi =>
                 {
-                    if (mi.Name != "Upcast")
-                        return false;
+                    if (mi.Name != "Upcast") return false;
                     var parameters = mi.GetParameters();
                     return
                         parameters.Length == 1 &&
                         aggregateEventType.GetTypeInfo().IsAssignableFrom(parameters[0].ParameterType);
-
                 })
                 .ToDictionary(
                     //problem might be here
@@ -311,13 +300,9 @@ namespace EventFly.Extensions
         internal static Type GetBaseType(this Type type, string name)
         {
             var currentType = type;
-
             while (currentType != null)
             {
-                if (currentType.Name.Contains(name))
-                {
-                    return currentType;
-                }
+                if (currentType.Name.Contains(name)) return currentType;
                 currentType = currentType.BaseType;
             }
             return type;

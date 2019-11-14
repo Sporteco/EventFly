@@ -99,7 +99,7 @@ namespace EventFly.Aggregates
                 throw new InvalidOperationException(message);
             }
 
-            _serviceProvider = Context.System.GetExtension<ServiceProviderHolder>().ServiceProvider;            
+            _serviceProvider = Context.System.GetExtension<ServiceProviderHolder>().ServiceProvider;
             _pinnedCommand = null;
             _eventDefinitionService = _serviceProvider.GetService<IApplicationDefinition>().Events;
             Id = id;

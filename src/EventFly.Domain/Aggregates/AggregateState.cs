@@ -5,11 +5,6 @@ using EventFly.Exceptions;
 
 namespace EventFly.Aggregates
 {
-    public abstract class AggregateState<TAggregate, TIdentity> : AggregateState<TAggregate, TIdentity, IMessageApplier<TAggregate, TIdentity>>
-        where TAggregate : IAggregateRoot<TIdentity>
-        where TIdentity : IIdentity
-    { }
-
     public abstract class AggregateState<TAggregate, TIdentity, TMessageApplier> : IAggregateState<TIdentity>, IMessageApplier<TAggregate, TIdentity>
         where TMessageApplier : class, IMessageApplier<TAggregate, TIdentity>
         where TAggregate : IAggregateRoot<TIdentity>
@@ -32,4 +27,9 @@ namespace EventFly.Aggregates
             }
         }
     }
+
+    public abstract class AggregateState<TAggregate, TIdentity> : AggregateState<TAggregate, TIdentity, IMessageApplier<TAggregate, TIdentity>>
+        where TAggregate : IAggregateRoot<TIdentity>
+        where TIdentity : IIdentity
+    { }
 }
