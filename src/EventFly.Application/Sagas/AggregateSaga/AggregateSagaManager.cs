@@ -44,6 +44,7 @@ namespace EventFly.Sagas.AggregateSaga
         protected TSagaLocator SagaLocator { get; }
         public AggregateSagaManagerSettings Settings { get; }
 
+
         public AggregateSagaManager()
         {
             Logger = Context.GetLogger();

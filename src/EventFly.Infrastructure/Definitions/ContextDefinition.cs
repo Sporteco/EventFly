@@ -104,7 +104,7 @@ namespace EventFly.Definitions
 
         protected IContextDefinition RegisterReadModel<TReadModel, TReadModelManager>()
             where TReadModel : IReadModel
-            where TReadModelManager : ActorBase, IReadModelManager, new()
+            where TReadModelManager : ActorBase, IReadModelManager
         {
             var manager = new ReadModelManagerDefinition(typeof(TReadModelManager), typeof(TReadModel));
             _readModels.Add(new ReadModelDefinition(typeof(TReadModel), manager));
@@ -121,6 +121,7 @@ namespace EventFly.Definitions
         protected IContextDefinition RegisterCommand<TCommand>() where TCommand : ICommand
         {
             Commands.Load(typeof(TCommand));
+
             return this;
         }
 

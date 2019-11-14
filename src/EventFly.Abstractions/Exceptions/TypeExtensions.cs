@@ -44,11 +44,11 @@ namespace EventFly.Exceptions
                 {
                     try
                     {
-                        return PrettyPrintRecursive(t, 0);
+                        return type.Assembly.FullName.Split('.').First() + "." + PrettyPrintRecursive(t, 0);
                     }
                     catch (Exception)
                     {
-                        return t.Name;
+                        return type.Assembly.FullName.Split('.').First() + "." + t.Name;
                     }
                 });
         }
@@ -67,9 +67,11 @@ namespace EventFly.Exceptions
             }
 
             var genericArguments = type.GetTypeInfo().GetGenericArguments();
-            return !type.IsConstructedGenericType
-                ? $"{nameParts[0]}<{new string(',', genericArguments.Length - 1)}>"
-                : $"{nameParts[0]}<{string.Join(",", genericArguments.Select(t => PrettyPrintRecursive(t, depth + 1)))}>";
+            return
+                !type.IsConstructedGenericType
+                    ? $"{nameParts[0]}<{new string(',', genericArguments.Length - 1)}>"
+                    : $"{nameParts[0]}<{string.Join(",", genericArguments.Select(t => PrettyPrintRecursive(t, depth + 1)))}>"
+            ;
         }
     }
 }

@@ -16,8 +16,11 @@ namespace EventFly.Queries
 
         public string Name { get; }
 
-        public QueryManager()
+        private readonly string _contextName;
+
+        public QueryManager(string contextName)
         {
+            _contextName = contextName;
             Logger = Context.GetLogger();
             Name = GetType().PrettyPrint();
 
@@ -72,7 +75,7 @@ namespace EventFly.Queries
         private string GenerateQueryId(TQuery query)
         {
             var json = JsonConvert.SerializeObject(query);
-            return CalculateMD5Hash(json);
+            return _contextName + CalculateMD5Hash(json);
         }
 
 

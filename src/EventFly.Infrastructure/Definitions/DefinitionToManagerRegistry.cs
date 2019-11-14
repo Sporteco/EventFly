@@ -27,16 +27,18 @@ namespace EventFly.Definitions
 
             foreach (var context in applicationDefinition.Contexts)
             {
-                DefinitionToAggregateManager = DefinitionToAggregateManager.Union(RegisterAggregateManagers(applicationDefinition.Aggregates.Select(a => a.ManagerDefinition).ToList(), context.Name)).ToDictionary(k => k.Key, v => v.Value);
-                DefinitionToQueryManager = DefinitionToQueryManager.Union(RegisterQueryManagers(applicationDefinition.Queries.Select(a => a.ManagerDefinition).ToList(), context.Name)).ToDictionary(k => k.Key, v => v.Value);
-                DefinitionToReadModelManager = DefinitionToReadModelManager.Union(RegisterReadModelManagers(applicationDefinition.ReadModels.Select(a => a.ManagerDefinition).ToList(), context.Name)).ToDictionary(k => k.Key, v => v.Value);
-                DefinitionToSagaManager = DefinitionToSagaManager.Union(RegisterSagaManagers(applicationDefinition.Sagas.Select(a => a.ManagerDefinition).ToList(), context.Name)).ToDictionary(k => k.Key, v => v.Value);
-                DefinitionToDomainServiceManager = DefinitionToDomainServiceManager.Union(RegisterDomainServiceManagers(applicationDefinition.DomainServices.Select(a => a.ManagerDefinition).ToList(), context.Name)).ToDictionary(k => k.Key, v => v.Value);
-                DefinitionToJobManager = DefinitionToJobManager.Union(RegisterJobManagers(applicationDefinition.Jobs.Select(a => a.ManagerDefinition).ToList(), context.Name)).ToDictionary(k => k.Key, v => v.Value);
-            }
+                var name = context.Name.ToLowerInvariant();
 
-            RegisterCommandsScheduler();
-            RegisterEventsScheduler();
+                DefinitionToAggregateManager = DefinitionToAggregateManager.Union(RegisterAggregateManagers(applicationDefinition.Aggregates.Select(a => a.ManagerDefinition).ToList(), name)).ToDictionary(k => k.Key, v => v.Value);
+                DefinitionToQueryManager = DefinitionToQueryManager.Union(RegisterQueryManagers(applicationDefinition.Queries.Select(a => a.ManagerDefinition).ToList(), name)).ToDictionary(k => k.Key, v => v.Value);
+                DefinitionToReadModelManager = DefinitionToReadModelManager.Union(RegisterReadModelManagers(applicationDefinition.ReadModels.Select(a => a.ManagerDefinition).ToList(), name)).ToDictionary(k => k.Key, v => v.Value);
+                DefinitionToSagaManager = DefinitionToSagaManager.Union(RegisterSagaManagers(applicationDefinition.Sagas.Select(a => a.ManagerDefinition).ToList(), name)).ToDictionary(k => k.Key, v => v.Value);
+                DefinitionToDomainServiceManager = DefinitionToDomainServiceManager.Union(RegisterDomainServiceManagers(applicationDefinition.DomainServices.Select(a => a.ManagerDefinition).ToList(), name)).ToDictionary(k => k.Key, v => v.Value);
+                DefinitionToJobManager = DefinitionToJobManager.Union(RegisterJobManagers(applicationDefinition.Jobs.Select(a => a.ManagerDefinition).ToList(), name)).ToDictionary(k => k.Key, v => v.Value);
+
+                RegisterCommandsScheduler(name);
+                RegisterEventsScheduler(name);
+            }
         }
         
         public IReadOnlyDictionary<IJobManagerDefinition, IActorRef> RegisterJobManagers(IReadOnlyCollection<IJobManagerDefinition> definitions, string contextName)
@@ -46,20 +48,20 @@ namespace EventFly.Definitions
             {
                 var type = typeof(JobManager<,,,>);
                 var generic = type.MakeGenericType(new[] { managerDef.JobSchedulreType, managerDef.JobRunnerType, managerDef.JobType, managerDef.IdentityType });
-                var manager = _system.ActorOf(Props.Create(generic), $"job-{contextName}{managerDef.IdentityType.Name}-manager");
+                var manager = _system.ActorOf(Props.Create(generic, contextName), $"job-{contextName}-{managerDef.IdentityType.Name}-manager");
                 dictionaryJob.Add(managerDef, manager);
             }
             return dictionaryJob;
         }
 
-        public void RegisterCommandsScheduler()
+        public void RegisterCommandsScheduler(string contextName)
         {
-            _system.ActorOf(Props.Create(typeof(JobManager<PublishCommandJobScheduler, PublishCommandJobRunner, PublishCommandJob, PublishCommandJobId>)), $"job-commands-publisher-manager");
+            _system.ActorOf(Props.Create(typeof(JobManager<PublishCommandJobScheduler, PublishCommandJobRunner, PublishCommandJob, PublishCommandJobId>), contextName), $"job-{contextName}-commands-publisher-manager");
         }
 
-        public void RegisterEventsScheduler()
+        public void RegisterEventsScheduler(string contextName)
         {
-            _system.ActorOf(Props.Create(typeof(JobManager<PublishEventJobScheduler, PublishEventJobRunner, PublishEventJob, PublishEventJobId>)), $"job-events-publisher-manager");
+            _system.ActorOf(Props.Create(typeof(JobManager<PublishEventJobScheduler, PublishEventJobRunner, PublishEventJob, PublishEventJobId>), contextName), $"job-{contextName}-events-publisher-manager");
         }
 
         private readonly ActorSystem _system;
@@ -71,7 +73,7 @@ namespace EventFly.Definitions
             {
                 var type = typeof(AggregateManager<,>);
                 var generics = type.MakeGenericType(new[] { managerDef.AggregateType, managerDef.IdentityType });
-                var manager = _system.ActorOf(Props.Create(generics), $"aggregate-{contextName}{managerDef.AggregateType.GetAggregateName()}-manager");
+                var manager = _system.ActorOf(Props.Create(generics), $"aggregate-{contextName}-{managerDef.AggregateType.GetAggregateName()}-manager");
                 dictionaryAggregate.Add(managerDef, manager);
             }
             return dictionaryAggregate;
@@ -84,7 +86,7 @@ namespace EventFly.Definitions
             {
                 var type = typeof(QueryManager<,,>);
                 var generics = type.MakeGenericType(new[] { managerDef.QueryHandlerType, managerDef.QueryType, managerDef.ResultType });
-                var manager = _system.ActorOf(Props.Create(generics), $"query-{contextName}{managerDef.QueryType.Name}-manager");
+                var manager = _system.ActorOf(Props.Create(generics, contextName), $"query-{contextName}-{managerDef.QueryType.Name}-manager");
                 dictionaryQuery.Add(managerDef, manager);
             }
             return dictionaryQuery;
@@ -97,7 +99,7 @@ namespace EventFly.Definitions
             {
                 var type = typeof(AggregateSagaManager<,,>);
                 var generics = type.MakeGenericType(new[] { managerDef.AggregateType, managerDef.IdentityType, managerDef.SagaLocatorType });
-                var manager = _system.ActorOf(Props.Create(generics), $"saga-{contextName}{managerDef.IdentityType.Name}-manager");
+                var manager = _system.ActorOf(Props.Create(generics), $"saga-{contextName}-{managerDef.IdentityType.Name}-manager");
                 dictionarySaga.Add(managerDef, manager);
             }
             return dictionarySaga;
@@ -109,7 +111,7 @@ namespace EventFly.Definitions
             foreach (var definition in definitions)
             {
                 var type = typeof(DomainServiceManager<>).MakeGenericType(definition.ServiceType);
-                var actor = _system.ActorOf(Props.Create(type), $"service-{contextName}{definition.ServiceType.Name}-manager");
+                var actor = _system.ActorOf(Props.Create(type), $"service-{contextName}-{definition.ServiceType.Name}-manager");
                 dictionary.Add(definition, actor);
             }
             return dictionary;
@@ -120,7 +122,7 @@ namespace EventFly.Definitions
             var dictionaryReadModel = new Dictionary<IReadModelManagerDefinition, IActorRef>();
             foreach (var managerDef in definitions)
             {
-                var manager = _system.ActorOf(Props.Create(managerDef.ReadModelManagerType), $"readmodel-{contextName}{managerDef.ReadModelType}-manager");
+                var manager = _system.ActorOf(Props.Create(managerDef.ReadModelManagerType), $"readmodel-{contextName}-{managerDef.ReadModelType}-manager");
                 dictionaryReadModel.Add(managerDef, manager);
             }
             return dictionaryReadModel;

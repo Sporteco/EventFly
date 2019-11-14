@@ -25,7 +25,7 @@ using EventFly.Sagas.AggregateSaga;
 
 namespace EventFly.Examples.Api.Domain.Sagas
 {
-    public class ResourceCreationSagaManager: AggregateSagaManager<ResourceCreationSaga,ResourceCreationSagaId,ResourceCreationSagaLocator>
+    public class ResourceCreationSagaManager : AggregateSagaManager<ResourceCreationSaga, ResourceCreationSagaId, ResourceCreationSagaLocator>
     {
     }
 }

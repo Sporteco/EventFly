@@ -42,8 +42,11 @@ namespace EventFly.Jobs
         protected ILoggingAdapter Log { get; }
         protected IActorRef JobRunner { get; }
         protected IActorRef JobScheduler { get; }
-        public JobManager()
+        private readonly string _contextName;
+        public JobManager(string contextName)
         {
+            _contextName = contextName;
+
             var schedulerProps = Props.Create(typeof(TJobScheduler)).WithDispatcher(Context.Props.Dispatcher);
             var schedulerName = $"{Name}-scheduler";
 
@@ -58,7 +61,7 @@ namespace EventFly.Jobs
                         3)).WithDispatcher(Context.Props.Dispatcher);
 
             JobRunner = SpawnRunner();
-            JobScheduler = Context.ActorOf(schedulerSupervisorProps, $"{schedulerName}-supervisor");
+            JobScheduler = Context.ActorOf(schedulerSupervisorProps, $"{_contextName}-{schedulerName}-supervisor");
 
             Log = Context.GetLogger();
 
@@ -82,7 +85,7 @@ namespace EventFly.Jobs
 
         protected IActorRef FindOrSpawnJobRunner()
         {
-            var runner = Context.Child($"{Name}-runner-supervisor");
+            var runner = Context.Child($"{_contextName}-{Name}-runner-supervisor");
             if (runner.IsNobody())
             {
                 return SpawnRunner();
@@ -114,7 +117,7 @@ namespace EventFly.Jobs
                         0.2,
                         3)).WithDispatcher(Context.Props.Dispatcher);
 
-            var runner = Context.ActorOf(runnerSupervisorProps, $"{Name}-runner-supervisor");
+            var runner = Context.ActorOf(runnerSupervisorProps, $"{_contextName}-{Name}-runner-supervisor");
             return runner;
         }
     }

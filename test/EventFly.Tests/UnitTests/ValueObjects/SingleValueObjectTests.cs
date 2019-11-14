@@ -97,7 +97,7 @@ namespace EventFly.Tests.UnitTests.ValueObjects
         {
             this.Invoking(test => new MagicEnumSingleValue((MagicEnum) 42))
                 .Should().Throw<ArgumentException>().And.Message.Should()
-                .Be("The value '42' isn't defined in enum 'MagicEnum'");
+                .Be("The value '42' isn't defined in enum 'EventFly.MagicEnum'");
         }
 
         [Fact]

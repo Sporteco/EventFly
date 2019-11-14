@@ -42,14 +42,15 @@ namespace EventFly.Tests.UnitTests.Extensions
     public class TypeExtensionTests
     {
         [Theory]
-        [InlineData(typeof(string), "String")]
-        [InlineData(typeof(int), "Int32")]
-        [InlineData(typeof(IEnumerable<>), "IEnumerable<>")]
-        [InlineData(typeof(KeyValuePair<,>), "KeyValuePair<,>")]
-        [InlineData(typeof(IEnumerable<string>), "IEnumerable<String>")]
-        [InlineData(typeof(IEnumerable<IEnumerable<string>>), "IEnumerable<IEnumerable<String>>")]
-        [InlineData(typeof(KeyValuePair<bool, long>), "KeyValuePair<Boolean,Int64>")]
-        [InlineData(typeof(KeyValuePair<KeyValuePair<bool, long>, KeyValuePair<bool, long>>), "KeyValuePair<KeyValuePair<Boolean,Int64>,KeyValuePair<Boolean,Int64>>")]
+        [InlineData(typeof(EventFly.Aggregates.AggregateRoot<,,>), "EventFly.AggregateRoot<,,>")]
+        [InlineData(typeof(string), "System.String")]
+        [InlineData(typeof(int), "System.Int32")]
+        [InlineData(typeof(IEnumerable<>), "System.IEnumerable<>")]
+        [InlineData(typeof(KeyValuePair<,>), "System.KeyValuePair<,>")]
+        [InlineData(typeof(IEnumerable<string>), "System.IEnumerable<String>")]
+        [InlineData(typeof(IEnumerable<IEnumerable<string>>), "System.IEnumerable<IEnumerable<String>>")]
+        [InlineData(typeof(KeyValuePair<bool, long>), "System.KeyValuePair<Boolean,Int64>")]
+        [InlineData(typeof(KeyValuePair<KeyValuePair<bool, long>, KeyValuePair<bool, long>>), "System.KeyValuePair<KeyValuePair<Boolean,Int64>,KeyValuePair<Boolean,Int64>>")]
         public void PrettyPrint_Output_ShouldBeExpected(Type type, string expectedPrettyPrint)
         {
             var prettyPrint = type.PrettyPrint();
