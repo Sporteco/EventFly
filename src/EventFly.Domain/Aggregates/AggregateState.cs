@@ -29,7 +29,7 @@ namespace EventFly.Aggregates
                 var message = $"'{GetType().PrettyPrint()}' does not have an 'Apply' method that takes in a '{eventType.PrettyPrint()}'.";
                 throw new NotImplementedException(message);
             }
-            await (Task)applyMethod.Invoke(this, new[] { @event });
+            applyMethod.Invoke(this, new[] { @event });
             await PostApplyAction(@event);
         }
 
@@ -42,10 +42,10 @@ namespace EventFly.Aggregates
             }
         }
 
-        protected Task Apply(IAggregateEvent<TIdentity> @event)
+        protected void Apply(IAggregateEvent<TIdentity> @event)
         {
             var applier = GetApplierOfConcreteEvent(@event.GetType());
-            return (Task)applier?.Invoke(this, new Object[] { @event });
+            applier?.Invoke(this, new Object[] { @event });
         }
 
         protected virtual Task PostApplyAction(IAggregateEvent<TIdentity> @event) => Task.CompletedTask;

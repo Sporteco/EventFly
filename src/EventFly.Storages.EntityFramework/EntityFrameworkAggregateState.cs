@@ -2,6 +2,7 @@
 using EventFly.Core;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Threading.Tasks;
 
 namespace EventFly.Storages.EntityFramework
 {
@@ -13,6 +14,11 @@ namespace EventFly.Storages.EntityFramework
         {
             DbContext.Dispose();
             DbContext = null;
+        }
+
+        protected override async Task PostApplyAction(IAggregateEvent<TIdentity> @event)
+        {
+            await DbContext.SaveChangesAsync();
         }
 
         protected TDbContext DbContext;

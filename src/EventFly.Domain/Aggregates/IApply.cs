@@ -25,14 +25,12 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System.Threading.Tasks;
-
 namespace EventFly.Aggregates
 {
     public interface IApply<in TAggregateEvent>
         where TAggregateEvent : IAggregateEvent
     {
-        Task Apply(TAggregateEvent aggregateEvent);
+        void Apply(TAggregateEvent aggregateEvent);
     }
 
     public interface ISagaApply<in TAggregateEvent>
