@@ -21,18 +21,17 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using EventFly.Aggregates;
 using EventFly.Aggregates.Snapshot;
 using EventFly.TestHelpers.Aggregates.Entities;
 using EventFly.TestHelpers.Aggregates.Events;
 using EventFly.TestHelpers.Aggregates.Snapshots;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace EventFly.TestHelpers.Aggregates
 {
-
     public class TestAggregateState : AggregateState<TestAggregate, TestAggregateId>,
         IApply<TestAddedEvent>,
         IApply<TestReceivedEvent>,
@@ -49,33 +48,29 @@ namespace EventFly.TestHelpers.Aggregates
             FromHydration = false;
             return Task.CompletedTask;
         }
-        
+
         public Task Apply(TestAddedEvent aggregateEvent)
         {
             TestCollection.Add(aggregateEvent.Test);
             return Task.CompletedTask;
-
         }
 
         public Task Apply(TestReceivedEvent aggregateEvent)
         {
             TestCollection.Add(aggregateEvent.Test);
             return Task.CompletedTask;
-
         }
 
         public Task Apply(TestSentEvent aggregateEvent)
         {
             TestCollection.RemoveAll(x => x.Id == aggregateEvent.Test.Id);
             return Task.CompletedTask;
-
         }
+
         public void Hydrate(TestAggregateSnapshot aggregateSnapshot)
         {
             TestCollection = aggregateSnapshot.Tests.Select(x => new Test(TestId.With(x.Id))).ToList();
             FromHydration = true;
         }
-
     }
-
 }

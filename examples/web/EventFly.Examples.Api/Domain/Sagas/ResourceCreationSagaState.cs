@@ -24,6 +24,7 @@
 using EventFly.Aggregates;
 using EventFly.Examples.Api.Domain.Sagas.Events;
 using EventFly.Sagas;
+using System;
 using System.Threading.Tasks;
 
 namespace EventFly.Examples.Api.Domain.Sagas
@@ -33,9 +34,9 @@ namespace EventFly.Examples.Api.Domain.Sagas
         IApply<ResourceCreationProgressEvent>,
         IApply<ResourceCreationEndedEvent>
     {
-        public int Progress { get; private set; }
-        
-        public Task Apply(ResourceCreationStartedEvent aggregateEvent)
+        public Int32 Progress { get; private set; }
+
+        public Task Apply(ResourceCreationStartedEvent _)
         {
             Progress = 0;
             return Task.CompletedTask;
@@ -47,7 +48,7 @@ namespace EventFly.Examples.Api.Domain.Sagas
             return Task.CompletedTask;
         }
 
-        public Task Apply(ResourceCreationEndedEvent aggregateEvent)
+        public Task Apply(ResourceCreationEndedEvent _)
         {
             Progress = 100;
             return Task.CompletedTask;

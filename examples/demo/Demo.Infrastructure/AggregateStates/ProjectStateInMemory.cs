@@ -1,9 +1,10 @@
-﻿using System.Threading.Tasks;
-using Demo.Domain.Project;
+﻿using Demo.Domain.Project;
 using Demo.Domain.Project.Events;
 using Demo.ValueObjects;
 using EventFly.Aggregates;
 using EventFly.Storages.EntityFramework;
+using System;
+using System.Threading.Tasks;
 
 namespace Demo.Infrastructure.AggregateStates
 {
@@ -12,12 +13,9 @@ namespace Demo.Infrastructure.AggregateStates
         IApply<DeletedEvent>
     {
         public ProjectName ProjectName { get; private set; }
-        public int SaveTimings()
-        {
-            return 0;
-        }
+        public Boolean IsDeleted { get; private set; }
 
-        public bool IsDeleted { get; private set; }
+        public Int32 SaveTimings() => 0;
 
         public Task Apply(CreatedEvent e)
         {
@@ -29,7 +27,6 @@ namespace Demo.Infrastructure.AggregateStates
         {
             IsDeleted = true;
             return Task.CompletedTask;
-
         }
     }
 
@@ -37,22 +34,14 @@ namespace Demo.Infrastructure.AggregateStates
         IApply<CreatedEvent>,
         IApply<DeletedEvent>
     {
-        private ProjectModel _model;
+        public ProjectState(DemoDbContext dbContext) : base(dbContext) { }
 
-        public ProjectState(DemoDbContext dbContext) : base(dbContext)
-        {
-        }
-
-        public bool IsDeleted => _model.IsDeleted;
+        public Boolean IsDeleted => _model.IsDeleted;
         public ProjectName ProjectName => _model.ProjectName;
-        public int SaveTimings()
-        {
-            return 0;
-        }
+        public Int32 SaveTimings() => 0;
 
         public override async Task LoadState(ProjectId id)
         {
-            //_model = await DbContext.Projects.FindAsync(id);
             if (_model == null)
             {
                 _model = new ProjectModel();
@@ -64,7 +53,6 @@ namespace Demo.Infrastructure.AggregateStates
         {
             _model.Id = aggregateEvent.ProjectId;
             _model.ProjectName = aggregateEvent.Name;
-
             await DbContext.SaveChangesAsync();
         }
 
@@ -73,5 +61,7 @@ namespace Demo.Infrastructure.AggregateStates
             _model.IsDeleted = true;
             await DbContext.SaveChangesAsync();
         }
+
+        private ProjectModel _model;
     }
 }

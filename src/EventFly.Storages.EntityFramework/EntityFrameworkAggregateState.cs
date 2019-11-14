@@ -1,7 +1,7 @@
-﻿using System;
-using EventFly.Aggregates;
+﻿using EventFly.Aggregates;
 using EventFly.Core;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace EventFly.Storages.EntityFramework
 {
@@ -9,19 +9,17 @@ namespace EventFly.Storages.EntityFramework
         where TAggregate : IAggregateRoot<TIdentity> where TIdentity : IIdentity
         where TDbContext : DbContext, new()
     {
-        private TDbContext _dbContext;
-        protected TDbContext DbContext => _dbContext;
+        public void Dispose()
+        {
+            DbContext.Dispose();
+            DbContext = null;
+        }
+
+        protected TDbContext DbContext;
 
         protected EntityFrameworkAggregateState(TDbContext dbContext)
         {
-            _dbContext = dbContext;
+            DbContext = dbContext;
         }
-
-        public void Dispose()
-        {
-            _dbContext.Dispose();
-            _dbContext = null;
-        }
-
     }
 }

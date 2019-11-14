@@ -1,12 +1,13 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Demo.User.Commands;
+﻿using Demo.User.Commands;
 using Demo.User.Events;
 using Demo.ValueObjects;
 using EventFly.Aggregates;
 using EventFly.Commands.ExecutionResults;
 using EventFly.Localization;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Demo.Domain.User
 {
@@ -20,15 +21,13 @@ namespace Demo.Domain.User
     {
         public LocalizedString Name { get; private set; }
         public Birth Birth { get; private set; }
-        public string Notes { get; private set; } = string.Empty;
-
-        private readonly ICollection<Entities.Project> _projects = new List<Entities.Project>();
+        public String Notes { get; private set; } = String.Empty;
         public IEnumerable<Entities.Project> Projects => _projects;
 
-        public Task Apply(UserCreatedEvent e) { (Name, Birth) = (e.Name, e.Birth); return Task.CompletedTask;}
-        public Task Apply(UserRenamedEvent e) { Name = e.NewName; return Task.CompletedTask;}
-        public Task Apply(UserNotesChangedEvent e) { Notes = e.NewValue; return Task.CompletedTask;}
-        public Task Apply(UserTouchedEvent _) {  return Task.CompletedTask;}
+        public Task Apply(UserCreatedEvent e) { (Name, Birth) = (e.Name, e.Birth); return Task.CompletedTask; }
+        public Task Apply(UserRenamedEvent e) { Name = e.NewName; return Task.CompletedTask; }
+        public Task Apply(UserNotesChangedEvent e) { Notes = e.NewValue; return Task.CompletedTask; }
+        public Task Apply(UserTouchedEvent _) { return Task.CompletedTask; }
 
         public Task Apply(ProjectCreatedEvent e)
         {
@@ -43,6 +42,8 @@ namespace Demo.Domain.User
                 _projects.Remove(projectToRemove);
             return Task.CompletedTask;
         }
+
+        private readonly ICollection<Entities.Project> _projects = new List<Entities.Project>();
     }
 
     public class UserAggregate : EventDrivenAggregateRoot<UserAggregate, UserId, UserState>,
