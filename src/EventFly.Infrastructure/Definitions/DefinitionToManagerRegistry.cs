@@ -29,12 +29,12 @@ namespace EventFly.Definitions
             {
                 var name = context.Name.ToLowerInvariant();
 
-                DefinitionToAggregateManager = DefinitionToAggregateManager.Union(RegisterAggregateManagers(applicationDefinition.Aggregates.Select(a => a.ManagerDefinition).ToList(), name)).ToDictionary(k => k.Key, v => v.Value);
-                DefinitionToQueryManager = DefinitionToQueryManager.Union(RegisterQueryManagers(applicationDefinition.Queries.Select(a => a.ManagerDefinition).ToList(), name)).ToDictionary(k => k.Key, v => v.Value);
-                DefinitionToReadModelManager = DefinitionToReadModelManager.Union(RegisterReadModelManagers(applicationDefinition.ReadModels.Select(a => a.ManagerDefinition).ToList(), name)).ToDictionary(k => k.Key, v => v.Value);
-                DefinitionToSagaManager = DefinitionToSagaManager.Union(RegisterSagaManagers(applicationDefinition.Sagas.Select(a => a.ManagerDefinition).ToList(), name)).ToDictionary(k => k.Key, v => v.Value);
+                DefinitionToAggregateManager = DefinitionToAggregateManager.Union(RegisterAggregateManagers(context.Aggregates.Select(a => a.ManagerDefinition).ToList(), name)).ToDictionary(k => k.Key, v => v.Value);
+                DefinitionToQueryManager = DefinitionToQueryManager.Union(RegisterQueryManagers(context.Queries.Select(a => a.ManagerDefinition).ToList(), name)).ToDictionary(k => k.Key, v => v.Value);
+                DefinitionToReadModelManager = DefinitionToReadModelManager.Union(RegisterReadModelManagers(context.ReadModels.Select(a => a.ManagerDefinition).ToList(), name)).ToDictionary(k => k.Key, v => v.Value);
+                DefinitionToSagaManager = DefinitionToSagaManager.Union(RegisterSagaManagers(context.Sagas.Select(a => a.ManagerDefinition).ToList(), name)).ToDictionary(k => k.Key, v => v.Value);
                 DefinitionToDomainServiceManager = DefinitionToDomainServiceManager.Union(RegisterDomainServiceManagers(applicationDefinition.DomainServices.Select(a => a.ManagerDefinition).ToList(), name)).ToDictionary(k => k.Key, v => v.Value);
-                DefinitionToJobManager = DefinitionToJobManager.Union(RegisterJobManagers(applicationDefinition.Jobs.Select(a => a.ManagerDefinition).ToList(), name)).ToDictionary(k => k.Key, v => v.Value);
+                DefinitionToJobManager = DefinitionToJobManager.Union(RegisterJobManagers(context.Jobs.Select(a => a.ManagerDefinition).ToList(), name)).ToDictionary(k => k.Key, v => v.Value);
 
                 RegisterCommandsScheduler(name);
                 RegisterEventsScheduler(name);
