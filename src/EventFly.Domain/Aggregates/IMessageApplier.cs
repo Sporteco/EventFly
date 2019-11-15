@@ -3,8 +3,7 @@ using EventFly.Core;
 
 namespace EventFly.Aggregates
 {
-    public interface IMessageApplier<TAggregate, TIdentity> : IEventApplier<TAggregate, TIdentity>, ISnapshotHydrater<TAggregate, TIdentity>
-        where TAggregate : IAggregateRoot<TIdentity>
+    public interface IMessageApplier<TIdentity> : IEventApplier<TIdentity>, ISnapshotHydrater<TIdentity>
         where TIdentity : IIdentity
     {
         

@@ -95,14 +95,14 @@ namespace EventFly.Tests.UnitTests.Extensions
             }
         }
 
-        public class FooStateWithAttribute : AggregateState<FooAggregateWithAttribute, FooId,
-            IMessageApplier<FooAggregateWithAttribute, FooId>>
+        public class FooStateWithAttribute : AggregateState<FooStateWithAttribute, FooId,
+            IMessageApplier<FooId>>
         {
 
         }
 
-        public class FooStateWithOutAttribute : AggregateState<FooAggregateWithOutAttribute, FooId,
-            IMessageApplier<FooAggregateWithOutAttribute, FooId>>
+        public class FooStateWithOutAttribute : AggregateState<FooStateWithOutAttribute, FooId,
+            IMessageApplier<FooId>>
         {
         }
     }

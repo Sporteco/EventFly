@@ -31,7 +31,7 @@ using System.Linq;
 
 namespace EventFly.TestHelpers.Aggregates
 {
-    public class TestAggregateState : AggregateState<TestAggregate, TestAggregateId>,
+    public class TestAggregateState : AggregateState<TestAggregateState,TestAggregateId>,
         IApply<TestAddedEvent>,
         IApply<TestReceivedEvent>,
         IApply<TestSentEvent>,

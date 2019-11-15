@@ -26,7 +26,7 @@ using EventFly.Examples.Api.Domain.Aggregates.Resource.Events;
 
 namespace EventFly.Examples.Api.Domain.Aggregates.Resource
 {
-    public class ResourceState : AggregateState<Resource, ResourceId>,
+    public class ResourceState : AggregateState<ResourceState, ResourceId>,
         IApply<ResourceCreatedEvent>
     {
         public void Apply(ResourceCreatedEvent _) { }

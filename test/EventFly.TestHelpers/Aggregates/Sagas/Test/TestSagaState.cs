@@ -27,7 +27,7 @@ using EventFly.TestHelpers.Aggregates.Sagas.Test.Events;
 
 namespace EventFly.TestHelpers.Aggregates.Sagas.Test
 {
-    public class TestSagaState : SagaState<TestSaga, TestSagaId, IMessageApplier<TestSaga, TestSagaId>>,
+    public class TestSagaState : SagaState<TestSaga, TestSagaId, IMessageApplier<TestSagaId>>,
         ISagaApply<TestSagaStartedEvent>,
         ISagaApply<TestSagaTransactionCompletedEvent>,
         ISagaApply<TestSagaCompletedEvent>

@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace EventFly.Storages.EntityFramework
 {
-    public abstract class EntityFrameworkAggregateState<TAggregate, TIdentity, TDbContext> : AggregateState<TAggregate, TIdentity>, IDisposable
-        where TAggregate : IAggregateRoot<TIdentity> where TIdentity : IIdentity
-        where TDbContext : DbContext, new()
+    public abstract class EntityFrameworkAggregateState<TAggregateState, TIdentity, TDbContext> : AggregateState<TAggregateState, TIdentity>, IDisposable
+        where TDbContext : DbContext, new() where TAggregateState : class, IAggregateState<TIdentity>, IMessageApplier<TIdentity> 
+        where TIdentity : IIdentity
     {
         public void Dispose()
         {

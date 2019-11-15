@@ -29,8 +29,7 @@ using EventFly.Core;
 
 namespace EventFly.Aggregates
 {
-    public interface IEventApplier<TAggregate, TIdentity>
-        where TAggregate : IAggregateRoot<TIdentity>
+    public interface IEventApplier<TIdentity>
         where TIdentity : IIdentity
     {
     }

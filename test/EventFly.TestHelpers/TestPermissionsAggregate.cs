@@ -16,7 +16,7 @@ namespace EventFly.TestHelpers
         public TestPermissionsId(string value) : base(value){}
     }
 
-    public class TestPermissionsState : AggregateState<TestPermissionsAggregate,TestPermissionsId>{}
+    public class TestPermissionsState : AggregateState<TestPermissionsState,TestPermissionsId>{}
 
     public class TestPermissionsAggregate : EventSourcedAggregateRoot<TestPermissionsAggregate,TestPermissionsId,TestPermissionsState>,
     IExecute<TestPermissionsAuthorizedAttributeCommand,TestPermissionsId>,

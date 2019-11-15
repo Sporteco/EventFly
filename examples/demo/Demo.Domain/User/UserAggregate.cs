@@ -4,14 +4,13 @@ using Demo.ValueObjects;
 using EventFly.Aggregates;
 using EventFly.Commands.ExecutionResults;
 using EventFly.Localization;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Demo.Domain.User
 {
-    public class UserState : AggregateState<UserAggregate, UserId>,
+    public class UserState : AggregateState<UserState, UserId>,
         IApply<UserCreatedEvent>,
         IApply<UserRenamedEvent>,
         IApply<UserNotesChangedEvent>,
@@ -21,7 +20,7 @@ namespace Demo.Domain.User
     {
         public LocalizedString Name { get; private set; }
         public Birth Birth { get; private set; }
-        public String Notes { get; private set; } = String.Empty;
+        public string Notes { get; private set; } = string.Empty;
         public IEnumerable<Entities.Project> Projects => _projects;
 
         public void Apply(UserCreatedEvent e) { (Name, Birth) = (e.Name, e.Birth); }

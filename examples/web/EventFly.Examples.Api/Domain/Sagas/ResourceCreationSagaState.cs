@@ -24,16 +24,15 @@
 using EventFly.Aggregates;
 using EventFly.Examples.Api.Domain.Sagas.Events;
 using EventFly.Sagas;
-using System;
 
 namespace EventFly.Examples.Api.Domain.Sagas
 {
-    public class ResourceCreationSagaState : SagaState<ResourceCreationSaga, ResourceCreationSagaId, IMessageApplier<ResourceCreationSaga, ResourceCreationSagaId>>,
+    public class ResourceCreationSagaState : SagaState<ResourceCreationSaga, ResourceCreationSagaId, IMessageApplier<ResourceCreationSagaId>>,
         IApply<ResourceCreationStartedEvent>,
         IApply<ResourceCreationProgressEvent>,
         IApply<ResourceCreationEndedEvent>
     {
-        public Int32 Progress { get; private set; }
+        public int Progress { get; private set; }
 
         public void Apply(ResourceCreationStartedEvent _)
         {

@@ -51,19 +51,19 @@ namespace EventFly.Aggregates
 {
     public abstract class EventSourcedAggregateRoot<TAggregate, TIdentity, TAggregateState> : ReceivePersistentActor, IAggregateRoot<TIdentity>
         where TAggregate : EventSourcedAggregateRoot<TAggregate, TIdentity, TAggregateState>
-        where TAggregateState : AggregateState<TAggregate, TIdentity, IMessageApplier<TAggregate, TIdentity>>, new()
+        where TAggregateState : IAggregateState<TIdentity>, new()
         where TIdentity : IIdentity
     {
         public TAggregateState State { get; }
         public IAggregateName Name => AggregateName;
-        public override String PersistenceId { get; }
+        public override string PersistenceId { get; }
         public TIdentity Id { get; }
-        public Int64 Version { get; protected set; }
-        public Boolean IsNew => Version <= 0;
+        public long Version { get; protected set; }
+        public bool IsNew => Version <= 0;
         public override Recovery Recovery => new Recovery(SnapshotSelectionCriteria.Latest);
         public ISecurityContext SecurityContext { get; private set; }
 
-        public Boolean HasSourceId(ISourceId sourceId) => !sourceId.IsNone() && _previousSourceIds.Any(s => s.Value == sourceId.Value);
+        public bool HasSourceId(ISourceId sourceId) => !sourceId.IsNone() && _previousSourceIds.Any(s => s.Value == sourceId.Value);
 
         public IIdentity GetIdentity() => Id;
 
@@ -77,7 +77,7 @@ namespace EventFly.Aggregates
         public virtual void EmitAll(params IAggregateEvent<TIdentity>[] aggregateEvents)
         {
             var version = Version;
-            var committedEvents = new List<Object>();
+            var committedEvents = new List<object>();
             foreach (var aggregateEvent in aggregateEvents)
             {
                 var committedEvent = FromObject(aggregateEvent, version + 1);
@@ -87,7 +87,7 @@ namespace EventFly.Aggregates
             PersistAll(committedEvents, ApplyObjectCommittedEvent);
         }
 
-        public virtual CommittedEvent<TAggregate, TIdentity, TAggregateEvent> From<TAggregateEvent>(TAggregateEvent aggregateEvent, Int64 version, IEventMetadata metadata = null)
+        public virtual CommittedEvent<TAggregate, TIdentity, TAggregateEvent> From<TAggregateEvent>(TAggregateEvent aggregateEvent, long version, IEventMetadata metadata = null)
             where TAggregateEvent : class, IAggregateEvent<TIdentity>
         {
             if (aggregateEvent == null) throw new ArgumentNullException(nameof(aggregateEvent));
@@ -113,20 +113,20 @@ namespace EventFly.Aggregates
             return new CommittedEvent<TAggregate, TIdentity, TAggregateEvent>(Id, aggregateEvent, eventMetadata, now, aggregateSequenceNumber);
         }
 
-        public Boolean Timeout(ReceiveTimeout message)
+        public bool Timeout(ReceiveTimeout message)
         {
             Log.Debug("Aggregate of Name={0}, and Id={1}; has received a timeout message and will stop.", Name, Id);
             Context.Stop(Self);
             return true;
         }
 
-        public override void AroundPreRestart(Exception cause, Object message)
+        public override void AroundPreRestart(Exception cause, object message)
         {
             Log.Error(cause, "Aggregate of Name={0}, and Id={1}; has experienced an error and will now restart", Name, Id);
             base.AroundPreRestart(cause, message);
         }
 
-        public override String ToString() => $"{GetType().PrettyPrint()} v{Version}";
+        public override string ToString() => $"{GetType().PrettyPrint()} v{Version}";
 
         #region Stuff
 
@@ -142,7 +142,7 @@ namespace EventFly.Aggregates
             }
 
             _serviceProvider = Context.System.GetExtension<ServiceProviderHolder>().ServiceProvider;
-            _settings = new AggregateRootSettings(Context.System.Settings.Config);
+            var settings = new AggregateRootSettings(Context.System.Settings.Config);
             if (State == null)
             {
                 try
@@ -163,7 +163,7 @@ namespace EventFly.Aggregates
             PersistenceId = id.Value;
             SetSourceIdHistory(100);
 
-            if (_settings.UseDefaultSnapshotRecover)
+            if (settings.UseDefaultSnapshotRecover)
             {
                 Recover<SnapshotOffer>(Recover);
             }
@@ -171,7 +171,7 @@ namespace EventFly.Aggregates
             Command<SaveSnapshotSuccess>(SnapshotStatus);
             Command<SaveSnapshotFailure>(SnapshotStatus);
 
-            if (_settings.UseDefaultEventRecover)
+            if (settings.UseDefaultEventRecover)
             {
                 Recover<ICommittedEvent<TAggregate, TIdentity, IAggregateEvent<TIdentity>>>(Recover);
                 Recover<RecoveryCompleted>(Recover);
@@ -179,7 +179,7 @@ namespace EventFly.Aggregates
 
             this.InitAggregateReceivers();
 
-            SetReceiveTimeout(_settings.SetReceiveTimeout);
+            SetReceiveTimeout(settings.SetReceiveTimeout);
             Command<ReceiveTimeout>(Timeout);
         }
 
@@ -195,12 +195,12 @@ namespace EventFly.Aggregates
             _scope?.Dispose();
         }
 
-        protected void SetSourceIdHistory(Int32 count)
+        protected void SetSourceIdHistory(int count)
         {
             _previousSourceIds = new CircularBuffer<ISourceId>(count);
         }
 
-        protected virtual Object FromObject(Object aggregateEvent, Int64 version, IEventMetadata metadata = null)
+        protected virtual object FromObject(object aggregateEvent, long version, IEventMetadata metadata = null)
         {
             if (aggregateEvent is IAggregateEvent)
             {
@@ -287,7 +287,7 @@ namespace EventFly.Aggregates
             Log.Info("Aggregate of Name={0}, and Id={1}; published DomainEvent of Type={2}.", Name, Id, typeof(TEvent).PrettyPrint());
         }
 
-        protected override Boolean AroundReceive(Receive receive, Object message)
+        protected override bool AroundReceive(Receive receive, object message)
         {
             if (message is ICommand command)
             {
@@ -296,12 +296,12 @@ namespace EventFly.Aggregates
             return base.AroundReceive(receive, message);
         }
 
-        protected virtual void Reply(Object replyMessage)
+        protected virtual void Reply(object replyMessage)
         {
             if (!Sender.IsNobody()) _pinnedReply = replyMessage;
         }
 
-        protected virtual void ReplyFailure(Object replyMessage)
+        protected virtual void ReplyFailure(object replyMessage)
         {
             if (!Sender.IsNobody()) Context.Sender.Tell(replyMessage);
         }
@@ -313,7 +313,7 @@ namespace EventFly.Aggregates
             _pinnedCommand = null;
         }
 
-        protected override void Unhandled(Object message)
+        protected override void Unhandled(object message)
         {
             Log.Warning("Aggregate of Name={0}, and Id={1}; has received an unhandled message of Type={2}.", Name, Id, message.GetType().PrettyPrint());
             base.Unhandled(message);
@@ -338,14 +338,14 @@ namespace EventFly.Aggregates
             Version++;
         }
 
-        protected virtual void HydrateSnapshot(IAggregateSnapshot<TAggregate, TIdentity> aggregateSnapshot, Int64 version)
+        protected virtual void HydrateSnapshot(IAggregateSnapshot<TAggregate, TIdentity> aggregateSnapshot, long version)
         {
             var snapshotHydrater = GetSnapshotHydrateMethods(aggregateSnapshot);
             snapshotHydrater(aggregateSnapshot);
             Version = version;
         }
 
-        protected virtual Boolean Recover(ICommittedEvent<TAggregate, TIdentity, IAggregateEvent<TIdentity>> committedEvent)
+        protected virtual bool Recover(ICommittedEvent<TAggregate, TIdentity, IAggregateEvent<TIdentity>> committedEvent)
         {
             try
             {
@@ -361,7 +361,7 @@ namespace EventFly.Aggregates
             return true;
         }
 
-        protected virtual Boolean Recover(SnapshotOffer aggregateSnapshotOffer)
+        protected virtual bool Recover(SnapshotOffer aggregateSnapshotOffer)
         {
             try
             {
@@ -385,20 +385,20 @@ namespace EventFly.Aggregates
             if (snapshotStrategy != null) _snapshotStrategy = snapshotStrategy;
         }
 
-        protected virtual Boolean SnapshotStatus(SaveSnapshotSuccess snapshotSuccess)
+        protected virtual bool SnapshotStatus(SaveSnapshotSuccess snapshotSuccess)
         {
             Log.Debug("Aggregate of Name={0}, and Id={1}; saved a snapshot at Version={2}.", Name, Id, snapshotSuccess.Metadata.SequenceNr);
             DeleteSnapshots(new SnapshotSelectionCriteria(snapshotSuccess.Metadata.SequenceNr - 1));
             return true;
         }
 
-        protected virtual Boolean SnapshotStatus(SaveSnapshotFailure snapshotFailure)
+        protected virtual bool SnapshotStatus(SaveSnapshotFailure snapshotFailure)
         {
             Log.Error(snapshotFailure.Cause, "Aggregate of Name={0}, and Id={1}; failed to save snapshot at Version={2}.", Name, Id, snapshotFailure.Metadata.SequenceNr);
             return true;
         }
 
-        protected virtual Boolean Recover(RecoveryCompleted recoveryCompleted)
+        protected virtual bool Recover(RecoveryCompleted recoveryCompleted)
         {
             Log.Debug("Aggregate of Name={0}, and Id={1}; has completed recovering from it's event journal at Version={2}.", Name, Id, Version);
             return true;
@@ -457,13 +457,12 @@ namespace EventFly.Aggregates
         private static readonly IAggregateName AggregateName = typeof(TAggregate).GetAggregateName();
         private CircularBuffer<ISourceId> _previousSourceIds = new CircularBuffer<ISourceId>(100);
         private ICommand _pinnedCommand;
-        private Object _pinnedReply;
+        private object _pinnedReply;
         private readonly IEventDefinitions _eventDefinitionService;
         private readonly ISnapshotDefinitions _snapshotDefinitionService;
         private ISnapshotStrategy _snapshotStrategy = SnapshotNeverStrategy.Instance;
-        private readonly AggregateRootSettings _settings;
 
-        private void ApplyObjectCommittedEvent(Object committedEvent)
+        private void ApplyObjectCommittedEvent(object committedEvent)
         {
             try
             {

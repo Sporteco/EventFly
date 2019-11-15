@@ -59,8 +59,7 @@ namespace EventFly.Extensions
                 });
         }
 
-        internal static IReadOnlyDictionary<Type, Action<T, IAggregateEvent>> GetAggregateEventApplyMethods<TAggregate, TIdentity, T>(this Type type)
-            where TAggregate : IAggregateRoot<TIdentity>
+        internal static IReadOnlyDictionary<Type, Action<T, IAggregateEvent>> GetAggregateEventApplyMethods<TIdentity, T>(this Type type)
             where TIdentity : IIdentity
         {
             var aggregateEventType = typeof(IAggregateEvent<TIdentity>);

@@ -37,8 +37,8 @@ namespace EventFly.Sagas
         where TIdentity : IIdentity
     {
     }
-    public abstract class SagaState<TSaga, TIdentity, TMessageApplier> : SagaState<TSaga, TIdentity>, IMessageApplier<TSaga, TIdentity>
-        where TMessageApplier : class, IMessageApplier<TSaga, TIdentity>
+    public abstract class SagaState<TSaga, TIdentity, TMessageApplier> : SagaState<TSaga, TIdentity>, IMessageApplier<TIdentity>
+        where TMessageApplier : class, IMessageApplier<TIdentity>
         where TSaga : IAggregateRoot<TIdentity>
         where TIdentity : IIdentity
     {
