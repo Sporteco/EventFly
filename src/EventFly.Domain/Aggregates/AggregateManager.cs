@@ -22,6 +22,7 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
+using System.Linq;
 using Akka.Actor;
 using Akka.Event;
 using EventFly.Commands;
@@ -111,21 +112,19 @@ namespace EventFly.Aggregates
 
         protected virtual IActorRef FindOrCreate(TIdentity aggregateId)
         {
-            var aggregate = Context.Child(aggregateId);
+            var assemblyName = typeof(TIdentity).Assembly.FullName.Split('.').FirstOrDefault() ?? "";
+            var realAggregateId = string.IsNullOrEmpty(assemblyName) ? aggregateId.Value : $"{assemblyName}-{aggregateId}";
+
+            var aggregate = Context.Child(realAggregateId);
 
             if (aggregate.IsNobody())
             {
-                aggregate = CreateAggregate(aggregateId);
+                var aggregateRef = Context.ActorOf(Props.Create<TAggregate>(args: aggregateId), realAggregateId);
+                Context.Watch(aggregateRef);
+                aggregate = aggregateRef;
             }
 
             return aggregate;
-        }
-
-        protected virtual IActorRef CreateAggregate(TIdentity aggregateId)
-        {
-            var aggregateRef = Context.ActorOf(Props.Create<TAggregate>(args: aggregateId), aggregateId.Value);
-            Context.Watch(aggregateRef);
-            return aggregateRef;
         }
 
         protected override SupervisorStrategy SupervisorStrategy()

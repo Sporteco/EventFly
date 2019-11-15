@@ -46,7 +46,7 @@ namespace EventFly.Definitions
             {
                 var type = typeof(JobManager<,,,>);
                 var generic = type.MakeGenericType(new[] { managerDef.JobSchedulreType, managerDef.JobRunnerType, managerDef.JobType, managerDef.IdentityType });
-                var manager = _system.ActorOf(Props.Create(generic), $"job-{contextName}{managerDef.IdentityType.Name}-manager");
+                var manager = _system.ActorOf(Props.Create(generic), $"job-{contextName}-{managerDef.IdentityType.Name}-manager");
                 dictionaryJob.Add(managerDef, manager);
             }
             return dictionaryJob;
@@ -71,7 +71,7 @@ namespace EventFly.Definitions
             {
                 var type = typeof(AggregateManager<,>);
                 var generics = type.MakeGenericType(new[] { managerDef.AggregateType, managerDef.IdentityType });
-                var manager = _system.ActorOf(Props.Create(generics), $"aggregate-{contextName}{managerDef.AggregateType.GetAggregateName()}-manager");
+                var manager = _system.ActorOf(Props.Create(generics), $"aggregate-{contextName}-{managerDef.AggregateType.GetAggregateName()}-manager");
                 dictionaryAggregate.Add(managerDef, manager);
             }
             return dictionaryAggregate;
@@ -84,7 +84,7 @@ namespace EventFly.Definitions
             {
                 var type = typeof(QueryManager<,,>);
                 var generics = type.MakeGenericType(new[] { managerDef.QueryHandlerType, managerDef.QueryType, managerDef.ResultType });
-                var manager = _system.ActorOf(Props.Create(generics), $"query-{contextName}{managerDef.QueryType.Name}-manager");
+                var manager = _system.ActorOf(Props.Create(generics), $"query-{contextName}-{managerDef.QueryType.Name}-manager");
                 dictionaryQuery.Add(managerDef, manager);
             }
             return dictionaryQuery;
@@ -97,7 +97,7 @@ namespace EventFly.Definitions
             {
                 var type = typeof(AggregateSagaManager<,,>);
                 var generics = type.MakeGenericType(new[] { managerDef.AggregateType, managerDef.IdentityType, managerDef.SagaLocatorType });
-                var manager = _system.ActorOf(Props.Create(generics), $"saga-{contextName}{managerDef.IdentityType.Name}-manager");
+                var manager = _system.ActorOf(Props.Create(generics), $"saga-{contextName}-{managerDef.IdentityType.Name}-manager");
                 dictionarySaga.Add(managerDef, manager);
             }
             return dictionarySaga;
@@ -109,7 +109,7 @@ namespace EventFly.Definitions
             foreach (var definition in definitions)
             {
                 var type = typeof(DomainServiceManager<>).MakeGenericType(definition.ServiceType);
-                var actor = _system.ActorOf(Props.Create(type), $"service-{contextName}{definition.ServiceType.Name}-manager");
+                var actor = _system.ActorOf(Props.Create(type), $"service-{contextName}-{definition.ServiceType.Name}-manager");
                 dictionary.Add(definition, actor);
             }
             return dictionary;
@@ -120,7 +120,7 @@ namespace EventFly.Definitions
             var dictionaryReadModel = new Dictionary<IReadModelManagerDefinition, IActorRef>();
             foreach (var managerDef in definitions)
             {
-                var manager = _system.ActorOf(Props.Create(managerDef.ReadModelManagerType), $"readmodel-{contextName}{managerDef.ReadModelType}-manager");
+                var manager = _system.ActorOf(Props.Create(managerDef.ReadModelManagerType), $"readmodel-{contextName}-{managerDef.ReadModelType}-manager");
                 dictionaryReadModel.Add(managerDef, manager);
             }
             return dictionaryReadModel;
