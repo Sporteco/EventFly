@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <ProjectGuid>{0CB7A8CC-E3CD-481C-81C9-BA830DC32361}</ProjectGuid>
@@ -22,7 +22,7 @@
     <PackageTags>
       tdd;bdd;testing;akka;cqrs;es;eventsourcing;actors;actor-model
     </PackageTags>
-    <Version>0.8.5</Version>
+    <Version>0.8.6</Version>
     <Authors>Sporteco</Authors>
     <Company>Sporteco</Company>
     <RepositoryUrl>https://github.com/Sporteco/EventFly</RepositoryUrl>
