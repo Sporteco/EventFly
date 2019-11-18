@@ -21,18 +21,18 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using EventFly.Akka;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using EventFly.Akka;
 
 namespace EventFly.Examples.Api.Domain.Repositories.Resources
 {
     public class ResourcesQueryHandler : IQueryResources
     {
         private readonly ActorRefProvider<ResourcesStorageHandler> _resourceStorageHandler;
-        
+
         public ResourcesQueryHandler(
             ActorRefProvider<ResourcesStorageHandler> resourceStorageHandler)
         {
@@ -41,18 +41,18 @@ namespace EventFly.Examples.Api.Domain.Repositories.Resources
         public async Task<ResourcesProjection> Find(Guid id)
         {
             var query = new GetResourcesQuery();
-            
+
             var result = await _resourceStorageHandler.Ask<List<ResourcesProjection>>(query);
 
             var readModel = result.SingleOrDefault(x => x.Id == id);
-            
+
             return readModel;
         }
 
         public async Task<IReadOnlyCollection<ResourcesProjection>> FindAll()
         {
-            var query =new GetResourcesQuery();
-            
+            var query = new GetResourcesQuery();
+
             var result = await _resourceStorageHandler.Ask<List<ResourcesProjection>>(query);
 
             return result;
@@ -61,6 +61,6 @@ namespace EventFly.Examples.Api.Domain.Repositories.Resources
 
     public class GetResourcesQuery
     {
-        
+
     }
 }

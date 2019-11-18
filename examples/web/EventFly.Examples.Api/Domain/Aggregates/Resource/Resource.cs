@@ -26,7 +26,7 @@ using EventFly.Examples.Api.Domain.Aggregates.Resource.Commands;
 
 namespace EventFly.Examples.Api.Domain.Aggregates.Resource
 {
-    public class Resource : EventSourcedAggregateRoot<Resource,ResourceId,ResourceState>
+    public class Resource : EventSourcedAggregateRoot<Resource, ResourceId, ResourceState>
     {
         public Resource(ResourceId id)
             : base(id)

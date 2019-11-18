@@ -15,22 +15,22 @@ namespace EventFly.Schedulers
             _scheduler = scheduler;
         }
 
-        public Task<bool> Schedule(PublishEventJobId id, IDomainEvent @event, DateTime triggerDate)
+        public Task<Boolean> Schedule(PublishEventJobId id, IDomainEvent @event, DateTime triggerDate)
         {
             return _scheduler.Schedule<PublishEventJob, PublishEventJobId>(new PublishEventJob(id, @event), triggerDate);
         }
 
-        public Task<bool> Schedule(PublishEventJobId id, IDomainEvent @event, TimeSpan interval, DateTime triggerDate)
+        public Task<Boolean> Schedule(PublishEventJobId id, IDomainEvent @event, TimeSpan interval, DateTime triggerDate)
         {
             return _scheduler.Schedule<PublishEventJob, PublishEventJobId>(new PublishEventJob(id, @event), interval, triggerDate);
         }
 
-        public Task<bool> Schedule(PublishEventJobId id, IDomainEvent @event, string cronExpression, DateTime triggerDate)
+        public Task<Boolean> Schedule(PublishEventJobId id, IDomainEvent @event, String cronExpression, DateTime triggerDate)
         {
             return _scheduler.Schedule<PublishEventJob, PublishEventJobId>(new PublishEventJob(id, @event), cronExpression, triggerDate);
         }
 
-        public Task<bool> Cancel(PublishEventJobId jobId)
+        public Task<Boolean> Cancel(PublishEventJobId jobId)
         {
             return _scheduler.Cancel<PublishEventJob, PublishEventJobId>(jobId);
         }

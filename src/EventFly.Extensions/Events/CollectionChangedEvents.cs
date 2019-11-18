@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using EventFly.Aggregates;
+﻿using EventFly.Aggregates;
 using EventFly.Commands;
 using EventFly.Core;
 using EventFly.Entities;
 using EventFly.ValueObjects;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace EventFly.Events
 {
@@ -47,7 +47,7 @@ namespace EventFly.Events
         public ICollection<TEntity> AddOrUpdate { get; }
         public ICollection<TEntityIdentity> Remove { get; }
 
-        protected EntityCollectionChangedEvent(ChangeEntityCollectionCommand<TIdentity, TEntity,TEntityIdentity> cmd)
+        protected EntityCollectionChangedEvent(ChangeEntityCollectionCommand<TIdentity, TEntity, TEntityIdentity> cmd)
         {
             AddOrUpdate = cmd.AddOrUpdate;
             Remove = cmd.Remove;
@@ -61,9 +61,9 @@ namespace EventFly.Events
                 toRemove.AddRange(Remove);
 
             if (AddOrUpdate != null && AddOrUpdate.Any())
-                toRemove.AddRange(AddOrUpdate.Select(i=>i.Id));
+                toRemove.AddRange(AddOrUpdate.Select(i => i.Id));
 
-            foreach (var item in collection.Where(i=>toRemove.Contains(i.Id)).ToList())
+            foreach (var item in collection.Where(i => toRemove.Contains(i.Id)).ToList())
             {
                 collection.Remove(item);
             }
@@ -74,7 +74,7 @@ namespace EventFly.Events
 
     public abstract class ValueObjectWithCodeCollectionChangedEvent<TIdentity, TValueObjectWithCode, TCode> : AggregateEvent<TIdentity>
         where TIdentity : IIdentity
-        where TCode : SingleValueObject<string>
+        where TCode : SingleValueObject<String>
         where TValueObjectWithCode : ValueObjectWithCode<TCode>
     {
         public ICollection<TValueObjectWithCode> AddOrUpdate { get; }
@@ -94,9 +94,9 @@ namespace EventFly.Events
                 toRemove.AddRange(Remove);
 
             if (AddOrUpdate != null && AddOrUpdate.Any())
-                toRemove.AddRange(AddOrUpdate.Select(i=>i.Code));
+                toRemove.AddRange(AddOrUpdate.Select(i => i.Code));
 
-            foreach (var item in collection.Where(i=>toRemove.Contains(i.Code)).ToList())
+            foreach (var item in collection.Where(i => toRemove.Contains(i.Code)).ToList())
             {
                 collection.Remove(item);
             }

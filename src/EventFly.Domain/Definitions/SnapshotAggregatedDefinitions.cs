@@ -8,7 +8,7 @@ using EventFly.Aggregates.Snapshot;
 
 namespace EventFly.Definitions
 {
-  public class SnapshotAggregatedDefinitions : AggregatedDefinitions<SnapshotDefinitions, SnapshotVersionAttribute, SnapshotDefinition>, ISnapshotDefinitions
-  {
-  }
+    public class SnapshotAggregatedDefinitions : AggregatedDefinitions<SnapshotDefinitions, SnapshotVersionAttribute, SnapshotDefinition>, ISnapshotDefinitions
+    {
+    }
 }

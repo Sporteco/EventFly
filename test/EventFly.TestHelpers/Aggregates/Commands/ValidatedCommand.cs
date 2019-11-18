@@ -7,12 +7,12 @@ namespace EventFly.TestHelpers.Aggregates.Commands
     [Validator(typeof(ValidatedCommandValidator))]
     public sealed class ValidatedCommand : Command<TestAggregateId>
     {
-        public ValidatedCommand(TestAggregateId aggregateId, bool isValid, CommandId sourceId) : base(aggregateId, new CommandMetadata(sourceId))
+        public ValidatedCommand(TestAggregateId aggregateId, System.Boolean isValid, CommandId sourceId) : base(aggregateId, new CommandMetadata(sourceId))
         {
             IsValid = isValid;
         }
 
-        public bool IsValid { get; }
+        public System.Boolean IsValid { get; }
 
     }
 

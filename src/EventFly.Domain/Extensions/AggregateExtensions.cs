@@ -1,9 +1,9 @@
-﻿using System;
+﻿using EventFly.Aggregates;
+using EventFly.Commands.ExecutionResults;
+using System;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using EventFly.Aggregates;
-using EventFly.Commands.ExecutionResults;
 
 namespace EventFly.Extensions
 {
@@ -12,7 +12,7 @@ namespace EventFly.Extensions
         public static void InitAggregateReceivers(this IAggregateRoot aggregate)
         {
             var type = aggregate.GetType();
-            
+
             var subscriptionTypes =
                 type.GetAggregateExecuteTypes();
 
@@ -29,7 +29,7 @@ namespace EventFly.Extensions
                 .ToDictionary(
                     mi => mi.GetParameters()[0].ParameterType,
                     mi => mi);
-            
+
             var method = type
                 .GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
                 .Where(mi =>
@@ -48,7 +48,7 @@ namespace EventFly.Extensions
                 var subscriptionFunction = Delegate.CreateDelegate(funcType, aggregate, methods[subscriptionType.Item1]);
                 var actorReceiveMethod = method.MakeGenericMethod(subscriptionType.Item1, typeof(IExecutionResult));
 
-                actorReceiveMethod.Invoke(aggregate, new object[] { subscriptionFunction });
+                actorReceiveMethod.Invoke(aggregate, new Object[] { subscriptionFunction });
             }
         }
     }

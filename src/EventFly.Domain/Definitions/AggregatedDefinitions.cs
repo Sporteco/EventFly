@@ -4,10 +4,10 @@
 // MVID: 61DF059E-E5F5-4992-B320-644C3E4F5C82
 // Assembly location: C:\Users\naych\source\repos\!!!!!\netcoreapp2.2\EventFly.dll
 
+using EventFly.Core.VersionedTypes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using EventFly.Core.VersionedTypes;
 
 namespace EventFly.Definitions
 {
@@ -28,12 +28,12 @@ namespace EventFly.Definitions
             throw new NotImplementedException();
         }
 
-        public IEnumerable<TDefinition> GetDefinitions(string name)
+        public IEnumerable<TDefinition> GetDefinitions(String name)
         {
             return _definitions.SelectMany(d => d.GetDefinitions(name));
         }
 
-        public bool TryGetDefinition(string name, int version, out TDefinition definition)
+        public Boolean TryGetDefinition(String name, Int32 version, out TDefinition definition)
         {
             foreach (var definition1 in _definitions)
             {
@@ -49,7 +49,7 @@ namespace EventFly.Definitions
             return _definitions.SelectMany(d => d.GetAllDefinitions());
         }
 
-        public TDefinition GetDefinition(string name, int version)
+        public TDefinition GetDefinition(String name, Int32 version)
         {
             foreach (var definition1 in _definitions)
             {
@@ -57,7 +57,7 @@ namespace EventFly.Definitions
                 if (definition1.TryGetDefinition(name, version, out definition2))
                     return definition2;
             }
-            throw new InvalidOperationException($"{(object)name} version {(object)version} not registered.");
+            throw new InvalidOperationException($"{(Object)name} version {(Object)version} not registered.");
         }
 
         public TDefinition GetDefinition(Type type)
@@ -76,7 +76,7 @@ namespace EventFly.Definitions
             return _definitions.SelectMany(d => (IEnumerable<TDefinition>)d.GetDefinitions(type)).ToList();
         }
 
-        public bool TryGetDefinition(Type type, out TDefinition definition)
+        public Boolean TryGetDefinition(Type type, out TDefinition definition)
         {
             foreach (var definition1 in _definitions)
             {
@@ -87,7 +87,7 @@ namespace EventFly.Definitions
             return false;
         }
 
-        public bool TryGetDefinitions(Type type, out IReadOnlyCollection<TDefinition> definitions)
+        public Boolean TryGetDefinitions(Type type, out IReadOnlyCollection<TDefinition> definitions)
         {
             foreach (var definition in _definitions)
             {

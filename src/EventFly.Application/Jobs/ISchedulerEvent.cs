@@ -25,7 +25,7 @@ using EventFly.Core.VersionedTypes;
 
 namespace EventFly.Jobs
 {
-    
+
     public interface ISchedulerEvent : IVersionedType
     {
     }

@@ -31,8 +31,8 @@ namespace EventFly.TestHelpers.Aggregates.Entities
         public Test(TestId id)
             : base(id)
         {
-           
+
         }
-       
+
     }
 }

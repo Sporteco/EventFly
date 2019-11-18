@@ -27,7 +27,7 @@ namespace EventFly.TestHelpers.Jobs
 {
     public class TestJobId : Identity<TestJobId>, EventFly.Jobs.IJobId
     {
-        public TestJobId(string value)
+        public TestJobId(System.String value)
             : base(value)
         {
         }
@@ -35,7 +35,7 @@ namespace EventFly.TestHelpers.Jobs
 
     public class AsyncTestJobId : Identity<AsyncTestJobId>, EventFly.Jobs.IJobId
     {
-        public AsyncTestJobId(string value)
+        public AsyncTestJobId(System.String value)
             : base(value)
         {
         }

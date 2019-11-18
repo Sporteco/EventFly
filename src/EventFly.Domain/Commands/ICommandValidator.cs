@@ -5,6 +5,6 @@ namespace EventFly.Commands
     public interface ICommandValidator
     {
         ValidationResult Validate(ICommand command);
-        int Priority { get; }
+        System.Int32 Priority { get; }
     }
 }

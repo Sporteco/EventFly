@@ -20,7 +20,7 @@ namespace Demo.Domain.User
     {
         public LocalizedString Name { get; private set; }
         public Birth Birth { get; private set; }
-        public string Notes { get; private set; } = string.Empty;
+        public System.String Notes { get; private set; } = System.String.Empty;
         public IEnumerable<Entities.Project> Projects => _projects;
 
         public void Apply(UserCreatedEvent e) { (Name, Birth) = (e.Name, e.Birth); }

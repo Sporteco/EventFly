@@ -1,14 +1,14 @@
 ﻿using Akka.Actor;
+using EventFly.Aggregates;
 using EventFly.Commands;
-using EventFly.Jobs;
+using EventFly.Core;
 using EventFly.Definitions;
+using EventFly.Jobs;
+using EventFly.Permissions;
 using EventFly.Queries;
 using EventFly.Schedulers;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using EventFly.Permissions;
-using EventFly.Core;
-using EventFly.Aggregates;
 
 namespace EventFly.DependencyInjection
 {
@@ -26,7 +26,7 @@ namespace EventFly.DependencyInjection
         }
 
         public static EventFlyBuilder AddEventFly(
-            this IServiceCollection services, string systemName)
+            this IServiceCollection services, String systemName)
         {
             var actorSystem = ActorSystem.Create(systemName);
 
@@ -60,7 +60,7 @@ namespace EventFly.DependencyInjection
             where TAggregate : ActorBase, IAggregateRoot<TIdentity>
             where TIdentity : IIdentity
             where TCommand : ICommand<TIdentity>
-            where TCommandHandler: CommandHandler<TAggregate, TIdentity, TCommand>
+            where TCommandHandler : CommandHandler<TAggregate, TIdentity, TCommand>
         {
             services.AddScoped<CommandHandler<TAggregate, TIdentity, TCommand>, TCommandHandler>();
             return services;

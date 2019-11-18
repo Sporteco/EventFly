@@ -7,7 +7,7 @@ namespace Demo.Infrastructure.ReadModels
     public class TotalUsersReadModel : ReadModel<TotalUsersReadModel>,
         IAmReadModelFor<UserId, UserCreatedEvent>
     {
-        public int UsersCount { get; private set; }
+        public System.Int32 UsersCount { get; private set; }
 
         public void Apply(IDomainEvent<UserId, UserCreatedEvent> domainEvent)
         {
@@ -17,6 +17,6 @@ namespace Demo.Infrastructure.ReadModels
 
     public class TotalUsersReadModelManager : ReadModelManager<TotalUsersReadModel>
     {
-        protected override string GetReadModelId(IDomainEvent domainEvent) => "Total";
+        protected override System.String GetReadModelId(IDomainEvent domainEvent) => "Total";
     }
 }

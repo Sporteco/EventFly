@@ -4,20 +4,20 @@
 // MVID: 61DF059E-E5F5-4992-B320-644C3E4F5C82
 // Assembly location: C:\Users\naych\source\repos\!!!!!\netcoreapp2.2\EventFly.dll
 
-using System;
 using EventFly.Aggregates.Snapshot;
 using EventFly.Core.VersionedTypes;
+using System;
 
 namespace EventFly.Definitions
 {
-  public class SnapshotDefinitions : VersionedTypeDefinitions<IAggregateSnapshot, SnapshotVersionAttribute, SnapshotDefinition>, ISnapshotDefinitions
-  {
-    protected override SnapshotDefinition CreateDefinition(
-      int version,
-      Type type,
-      string name)
+    public class SnapshotDefinitions : VersionedTypeDefinitions<IAggregateSnapshot, SnapshotVersionAttribute, SnapshotDefinition>, ISnapshotDefinitions
     {
-      return new SnapshotDefinition(version, type, name);
+        protected override SnapshotDefinition CreateDefinition(
+          Int32 version,
+          Type type,
+          String name)
+        {
+            return new SnapshotDefinition(version, type, name);
+        }
     }
-  }
 }

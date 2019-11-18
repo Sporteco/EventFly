@@ -1,5 +1,5 @@
-﻿using System.ComponentModel;
-using EventFly.Commands;
+﻿using EventFly.Commands;
+using System.ComponentModel;
 
 namespace Demo.User.Commands
 {

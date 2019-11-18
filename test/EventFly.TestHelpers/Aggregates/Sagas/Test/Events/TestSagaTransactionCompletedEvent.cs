@@ -27,6 +27,6 @@ namespace EventFly.TestHelpers.Aggregates.Sagas.Test.Events
 {
     public class TestSagaTransactionCompletedEvent : AggregateEvent<TestSagaId>
     {
-        
+
     }
 }

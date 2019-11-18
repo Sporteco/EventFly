@@ -28,9 +28,9 @@ namespace EventFly.Subscribers
 {
     public class DomainEventSubscriberSettings
     {
-        private static readonly string _section = "EventFly.domain-event-subscriber";
-        public readonly bool AutoSubscribe;
-        public readonly bool AutoReceive;
+        private static readonly System.String _section = "EventFly.domain-event-subscriber";
+        public readonly System.Boolean AutoSubscribe;
+        public readonly System.Boolean AutoReceive;
 
         public DomainEventSubscriberSettings(Config config)
         {

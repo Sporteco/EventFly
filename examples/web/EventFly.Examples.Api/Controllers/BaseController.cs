@@ -21,10 +21,10 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System;
 using Akka.Actor;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace EventFly.Examples.Api.Controllers
 {
@@ -36,7 +36,7 @@ namespace EventFly.Examples.Api.Controllers
         {
             System = system;
         }
-        public static string GetAbsoluteUri(HttpContext context)
+        public static String GetAbsoluteUri(HttpContext context)
         {
             var request = context.Request;
 
@@ -48,12 +48,12 @@ namespace EventFly.Examples.Api.Controllers
                 scheme = "https";
             }
 
-            return string.Concat(
+            return String.Concat(
                 scheme,
                 "://",
                 request.Host.ToUriComponent());
         }
-        
+
         [NonAction]
         protected IActionResult SeeOther(Uri location)
         {

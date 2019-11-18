@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Akka.Actor;
+﻿using Akka.Actor;
 using Akka.Event;
 using EventFly.Aggregates;
 using EventFly.Exceptions;
 using EventFly.Extensions;
 using EventFly.Messages;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace EventFly.DomainService
 {
@@ -46,7 +46,7 @@ namespace EventFly.DomainService
 
         protected ILoggingAdapter Logger { get; }
 
-        protected virtual bool Handle(UnsubscribeFromAll command)
+        protected virtual Boolean Handle(UnsubscribeFromAll command)
         {
             UnsubscribeFromAllTopics();
 
@@ -61,14 +61,14 @@ namespace EventFly.DomainService
             }
         }
 
-        protected virtual bool Handle(IDomainEvent domainEvent)
+        protected virtual Boolean Handle(IDomainEvent domainEvent)
         {
             var service = FindOrSpawn();
             service.Tell(domainEvent, Sender);
             return true;
         }
 
-        protected virtual bool Terminate(Terminated message)
+        protected virtual Boolean Terminate(Terminated message)
         {
             Logger.Warning("DomainService of Type={0}, and Id={1}; has terminated.", typeof(TDomainService).PrettyPrint(), message.ActorRef.Path.Name);
             Context.Unwatch(message.ActorRef);
@@ -102,6 +102,6 @@ namespace EventFly.DomainService
             return service;
         }
 
-        private static string GetDomainServiceId() => typeof(TDomainService).FullName;
+        private static String GetDomainServiceId() => typeof(TDomainService).FullName;
     }
 }

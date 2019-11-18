@@ -21,8 +21,8 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System;
 using EventFly.Jobs.Commands;
+using System;
 
 namespace EventFly.Jobs.Events
 {
@@ -31,12 +31,12 @@ namespace EventFly.Jobs.Events
         where TIdentity : IJobId
     {
         public Schedule<TJob, TIdentity> Entry { get; }
-        
+
         public Scheduled(
             Schedule<TJob, TIdentity> entry)
         {
             if (entry == null) throw new ArgumentException(nameof(entry));
-            
+
             Entry = entry;
         }
 

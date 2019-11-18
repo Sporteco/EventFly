@@ -9,8 +9,8 @@ namespace EventFly.ReadModels
     public interface IReadModelStorage<TReadModel> : IDisposable, IReadModelStorage
         where TReadModel : IReadModel
     {
-        TReadModel Load(string id);
-        void  Save(string id, TReadModel model);
+        TReadModel Load(String id);
+        void Save(String id, TReadModel model);
         void PreApply(TReadModel model);
     }
 }

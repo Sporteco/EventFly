@@ -1,14 +1,14 @@
-﻿using System;
-using EventFly.Validation;
+﻿using EventFly.Validation;
 using EventFly.ValueObjects;
 using FluentValidation;
+using System;
 
 namespace Demo.ValueObjects
 {
     [Validator(typeof(BirthValidator))]
     public class Birth : SingleValueObject<DateTime>
     {
-        public Birth(DateTime value) : base(value){}
+        public Birth(DateTime value) : base(value) { }
     }
     public class BirthValidator : AbstractValidator<Birth>
     {

@@ -1,23 +1,23 @@
-﻿using System;
-using System.Threading.Tasks;
-using Demo.User.Commands;
+﻿using Demo.User.Commands;
 using Demo.User.Events;
+using Demo.ValueObjects;
 using EventFly.Aggregates;
 using EventFly.Core;
-using Demo.ValueObjects;
 using EventFly.Sagas;
 using EventFly.Sagas.AggregateSaga;
+using System;
+using System.Threading.Tasks;
 
 namespace Demo.Application
 {
     #region TestSagaId
-    public class TestSagaId : Identity<TestSagaId> { public TestSagaId(string value) : base(value){} }
-    
+    public class TestSagaId : Identity<TestSagaId> { public TestSagaId(String value) : base(value) { } }
+
     #endregion
-    
+
     public class TestSaga : StatelessSaga<TestSaga, TestSagaId>,
         ISagaIsStartedBy<UserId, UserCreatedEvent>,
-        ISagaHandles<UserId,UserRenamedEvent>
+        ISagaHandles<UserId, UserRenamedEvent>
     {
 
         public async Task Handle(IDomainEvent<UserId, UserCreatedEvent> domainEvent)

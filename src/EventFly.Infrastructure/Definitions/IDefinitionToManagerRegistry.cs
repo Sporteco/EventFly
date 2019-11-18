@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using Akka.Actor;
+﻿using Akka.Actor;
+using System.Collections.Generic;
 
 namespace EventFly.Definitions
 {

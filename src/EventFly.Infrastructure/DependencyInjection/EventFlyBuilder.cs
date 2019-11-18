@@ -1,11 +1,11 @@
-﻿using System;
-using System.Linq;
-using System.Reflection;
-using EventFly.Definitions;
+﻿using EventFly.Definitions;
 using EventFly.Validation;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using System;
+using System.Linq;
+using System.Reflection;
 
 namespace EventFly.DependencyInjection
 {

@@ -25,25 +25,25 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using EventFly.Metadata;
 using System;
 using System.Collections.Generic;
-using EventFly.Metadata;
 
 namespace EventFly.Aggregates
 {
     public interface IEventMetadata : ICommonMetadata
     {
         IEventId EventId { get; }
-        string EventName { get; }
-        int EventVersion { get; }
+        String EventName { get; }
+        Int32 EventVersion { get; }
         DateTimeOffset Timestamp { get; }
-        long TimestampEpoch { get; }
-        long AggregateSequenceNumber { get; }
-        string AggregateId { get; }
-        string CausationId { get; }
+        Int64 TimestampEpoch { get; }
+        Int64 AggregateSequenceNumber { get; }
+        String AggregateId { get; }
+        String CausationId { get; }
 
-        IEventMetadata CloneWith(params KeyValuePair<string, string>[] keyValuePairs);
-        IEventMetadata CloneWith(IEnumerable<KeyValuePair<string, string>> keyValuePairs);
+        IEventMetadata CloneWith(params KeyValuePair<String, String>[] keyValuePairs);
+        IEventMetadata CloneWith(IEnumerable<KeyValuePair<String, String>> keyValuePairs);
     }
-    
+
 }

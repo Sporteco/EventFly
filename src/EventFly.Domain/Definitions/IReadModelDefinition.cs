@@ -10,7 +10,7 @@ namespace EventFly.Definitions
 {
     public interface IReadModelDefinition
     {
-        string Name { get; }
+        String Name { get; }
 
         Type Type { get; }
 

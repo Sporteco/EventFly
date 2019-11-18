@@ -31,7 +31,7 @@ namespace EventFly.Commands
 {
     public class CommandId : Identity<CommandId>, ICommandId
     {
-        public CommandId(string value) 
+        public CommandId(System.String value)
             : base(value)
         {
         }

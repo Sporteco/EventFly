@@ -21,12 +21,12 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using EventFly.Aggregates;
 using EventFly.Examples.Api.Domain.Sagas;
 using EventFly.Examples.Api.Domain.Sagas.Events;
 using EventFly.Subscribers;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace EventFly.Examples.Api.Domain.Repositories.Resources
 {
@@ -39,19 +39,19 @@ namespace EventFly.Examples.Api.Domain.Repositories.Resources
         {
             Receive<GetResourcesQuery>(Handle);
         }
-        
+
         public Task HandleAsync(IDomainEvent<ResourceCreationSagaId, ResourceCreationEndedEvent> domainEvent)
         {
-            var readModel = new ResourcesProjection(domainEvent.AggregateEvent.ResourceId.GetGuid(),domainEvent.AggregateEvent.Elapsed,domainEvent.AggregateEvent.EndedAt);
-            
+            var readModel = new ResourcesProjection(domainEvent.AggregateEvent.ResourceId.GetGuid(), domainEvent.AggregateEvent.Elapsed, domainEvent.AggregateEvent.EndedAt);
+
             _resources.Add(readModel);
-            
+
             return Task.CompletedTask;
         }
 
-        public bool Handle(GetResourcesQuery query)
+        public System.Boolean Handle(GetResourcesQuery query)
         {
-            Sender.Tell(_resources,Self);
+            Sender.Tell(_resources, Self);
             return true;
         }
     }

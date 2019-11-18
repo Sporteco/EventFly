@@ -25,9 +25,9 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System;
 using EventFly.Core;
 using EventFly.Exceptions;
+using System;
 
 namespace EventFly.Aggregates
 {
@@ -38,8 +38,8 @@ namespace EventFly.Aggregates
     {
         public TIdentity AggregateIdentity { get; }
         public TAggregateEvent AggregateEvent { get; }
-	    public EventMetadata EventMetadata { get; }
-        public long AggregateSequenceNumber { get; }
+        public EventMetadata EventMetadata { get; }
+        public Int64 AggregateSequenceNumber { get; }
         public DateTimeOffset Timestamp { get; }
 
         public CommittedEvent(
@@ -47,14 +47,14 @@ namespace EventFly.Aggregates
             TAggregateEvent aggregateEvent,
             EventMetadata metadata,
             DateTimeOffset timestamp,
-            long aggregateSequenceNumber)
+            Int64 aggregateSequenceNumber)
         {
             if (aggregateEvent == null) throw new ArgumentNullException(nameof(aggregateEvent));
             if (metadata == null) metadata = new EventMetadata();
             if (timestamp == default) throw new ArgumentNullException(nameof(timestamp));
-            if (aggregateIdentity == null || string.IsNullOrEmpty(aggregateIdentity.Value)) throw new ArgumentNullException(nameof(aggregateIdentity));
+            if (aggregateIdentity == null || String.IsNullOrEmpty(aggregateIdentity.Value)) throw new ArgumentNullException(nameof(aggregateIdentity));
             if (aggregateSequenceNumber <= 0) throw new ArgumentOutOfRangeException(nameof(aggregateSequenceNumber));
-            
+
             AggregateIdentity = aggregateIdentity;
             AggregateSequenceNumber = aggregateSequenceNumber;
             AggregateEvent = aggregateEvent;
@@ -71,8 +71,8 @@ namespace EventFly.Aggregates
         {
             return AggregateEvent;
         }
-        
-        public override string ToString()
+
+        public override String ToString()
         {
             return $"{typeof(TAggregate).PrettyPrint()} v{AggregateSequenceNumber}/{typeof(TAggregateEvent).PrettyPrint()}:{AggregateIdentity}";
         }

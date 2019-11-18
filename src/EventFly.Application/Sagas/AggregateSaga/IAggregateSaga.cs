@@ -26,11 +26,11 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-using System.Threading.Tasks;
 using EventFly.Aggregates;
 using EventFly.Commands;
 using EventFly.Commands.ExecutionResults;
 using EventFly.Core;
+using System.Threading.Tasks;
 
 namespace EventFly.Sagas.AggregateSaga
 {

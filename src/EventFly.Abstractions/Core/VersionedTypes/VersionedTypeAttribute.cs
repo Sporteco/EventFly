@@ -31,14 +31,14 @@ namespace EventFly.Core.VersionedTypes
 {
     public abstract class VersionedTypeAttribute : Attribute
     {
-        public string Name { get; }
-        public int Version { get; }
+        public String Name { get; }
+        public Int32 Version { get; }
 
         protected VersionedTypeAttribute(
-            string name, 
-            int version)
+            String name,
+            Int32 version)
         {
-            if (string.IsNullOrEmpty(name)) throw new ArgumentNullException(nameof(name));
+            if (String.IsNullOrEmpty(name)) throw new ArgumentNullException(nameof(name));
             if (version <= 0) throw new ArgumentOutOfRangeException(nameof(version), "Version must be positive");
 
             Name = name;

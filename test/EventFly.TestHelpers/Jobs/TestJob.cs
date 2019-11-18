@@ -28,9 +28,9 @@ namespace EventFly.TestHelpers.Jobs
     [JobName("test-job")]
     public class TestJob : Job<TestJobId>
     {
-        public string Greeting { get; }
+        public System.String Greeting { get; }
 
-        public TestJob(TestJobId jobId, string greeting)
+        public TestJob(TestJobId jobId, System.String greeting)
             : base(jobId)
         {
             Greeting = greeting;
@@ -40,9 +40,9 @@ namespace EventFly.TestHelpers.Jobs
     [JobName("async-test-job")]
     public class AsyncTestJob : Job<AsyncTestJobId>
     {
-        public string Greeting { get; }
+        public System.String Greeting { get; }
 
-        public AsyncTestJob(AsyncTestJobId jobId, string greeting)
+        public AsyncTestJob(AsyncTestJobId jobId, System.String greeting)
             : base(jobId)
         {
             Greeting = greeting;

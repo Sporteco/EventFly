@@ -1,9 +1,9 @@
-﻿using System;
+﻿using EventFly.Definitions;
+using Newtonsoft.Json;
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using EventFly.Definitions;
-using Newtonsoft.Json;
 
 namespace EventFly.Queries
 {
@@ -18,12 +18,12 @@ namespace EventFly.Queries
             _queryProcessor = queryProcessor;
         }
 
-        public Task<object> ExecuteQueryAsync(string name, string json, CancellationToken cancellationToken)
+        public Task<Object> ExecuteQueryAsync(String name, String json, CancellationToken cancellationToken)
         {
-            if (string.IsNullOrEmpty(name))
-                throw new ArgumentNullException(nameof (name));
-            if (string.IsNullOrEmpty(json))
-                throw new ArgumentNullException(nameof (json));
+            if (String.IsNullOrEmpty(name))
+                throw new ArgumentNullException(nameof(name));
+            if (String.IsNullOrEmpty(json))
+                throw new ArgumentNullException(nameof(json));
 
             var def = _applicationDefinition.Queries.FirstOrDefault(i => i.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
             if (def == null)
@@ -32,7 +32,7 @@ namespace EventFly.Queries
 
             try
             {
-                query = (IQuery) JsonConvert.DeserializeObject(json, def.Type);
+                query = (IQuery)JsonConvert.DeserializeObject(json, def.Type);
             }
             catch (Exception ex)
             {

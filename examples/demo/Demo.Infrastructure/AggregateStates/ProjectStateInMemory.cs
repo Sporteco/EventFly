@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 
 namespace Demo.Infrastructure.AggregateStates
 {
-    public sealed class ProjectStateInMemory : AggregateState<ProjectStateInMemory,ProjectId>, IProjectState,
+    public sealed class ProjectStateInMemory : AggregateState<ProjectStateInMemory, ProjectId>, IProjectState,
         IApply<CreatedEvent>,
         IApply<DeletedEvent>
     {
         public ProjectName ProjectName { get; private set; }
-        public bool IsDeleted { get; private set; }
+        public System.Boolean IsDeleted { get; private set; }
 
-        public int SaveTimings() => 0;
+        public System.Int32 SaveTimings() => 0;
 
         public void Apply(CreatedEvent e)
         {
@@ -33,9 +33,9 @@ namespace Demo.Infrastructure.AggregateStates
     {
         public ProjectState(DemoDbContext dbContext) : base(dbContext) { }
 
-        public bool IsDeleted => _model.IsDeleted;
+        public System.Boolean IsDeleted => _model.IsDeleted;
         public ProjectName ProjectName => _model.ProjectName;
-        public int SaveTimings() => 0;
+        public System.Int32 SaveTimings() => 0;
 
         public override async Task LoadState(ProjectId id)
         {

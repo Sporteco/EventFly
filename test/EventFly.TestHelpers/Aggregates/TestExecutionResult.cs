@@ -1,6 +1,6 @@
-using System.Collections.Generic;
 using EventFly.Commands.ExecutionResults;
 using EventFly.Core;
+using System.Collections.Generic;
 
 namespace EventFly.TestHelpers.Aggregates
 {
@@ -11,10 +11,10 @@ namespace EventFly.TestHelpers.Aggregates
 
     public static class TestExecutionResult
     {
-        public static ITestExecutionResult SucceededWith(ISourceId sourceId) => 
+        public static ITestExecutionResult SucceededWith(ISourceId sourceId) =>
             new SuccessTestExecutionResult(sourceId);
-        public static ITestExecutionResult FailedWith(ISourceId sourceId) 
-            => new FailedTestExecutionResult(sourceId, new[]{"Ошибка!!!"});
+        public static ITestExecutionResult FailedWith(ISourceId sourceId)
+            => new FailedTestExecutionResult(sourceId, new[] { "Ошибка!!!" });
     }
 
     public class SuccessTestExecutionResult : SuccessExecutionResult, ITestExecutionResult
@@ -31,7 +31,7 @@ namespace EventFly.TestHelpers.Aggregates
     {
         public ISourceId SourceId { get; set; }
 
-        public FailedTestExecutionResult(ISourceId sourceId, IEnumerable<string> errors) : base(errors)
+        public FailedTestExecutionResult(ISourceId sourceId, IEnumerable<System.String> errors) : base(errors)
         {
             SourceId = sourceId;
         }

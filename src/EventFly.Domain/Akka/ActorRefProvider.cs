@@ -21,10 +21,10 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using Akka.Actor;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Akka.Actor;
 
 namespace EventFly.Akka
 {
@@ -47,47 +47,47 @@ namespace EventFly.Akka
 
     public static class ActorRefProviderExtensions
     {
-        public static void Tell(this ActorRefProvider provider, object message, IActorRef sender)
+        public static void Tell(this ActorRefProvider provider, Object message, IActorRef sender)
         {
             provider.ActorRef.Tell(message, sender);
         }
-        
-        public static void Tell(this ActorRefProvider provider, object message)
+
+        public static void Tell(this ActorRefProvider provider, Object message)
         {
             provider.ActorRef.Tell(message, ActorRefs.NoSender);
         }
 
-        public static Task<object> Ask(this ActorRefProvider provider, object message, TimeSpan? timeout = null)
+        public static Task<Object> Ask(this ActorRefProvider provider, Object message, TimeSpan? timeout = null)
         {
             return provider.ActorRef.Ask(message, timeout);
         }
 
-        public static Task<object> Ask(this ActorRefProvider provider, object message, CancellationToken cancellationToken)
+        public static Task<Object> Ask(this ActorRefProvider provider, Object message, CancellationToken cancellationToken)
         {
             return provider.ActorRef.Ask(message, cancellationToken);
         }
 
-        public static Task<object> Ask(this ActorRefProvider provider, object message, TimeSpan? timeout, CancellationToken cancellationToken)
+        public static Task<Object> Ask(this ActorRefProvider provider, Object message, TimeSpan? timeout, CancellationToken cancellationToken)
         {
             return provider.ActorRef.Ask(message, timeout, cancellationToken);
         }
 
-        public static Task<T> Ask<T>(this ActorRefProvider provider, object message, TimeSpan? timeout = null)
+        public static Task<T> Ask<T>(this ActorRefProvider provider, Object message, TimeSpan? timeout = null)
         {
             return provider.ActorRef.Ask<T>(message, timeout);
         }
 
-        public static Task<T> Ask<T>(this ActorRefProvider provider, object message, CancellationToken cancellationToken)
+        public static Task<T> Ask<T>(this ActorRefProvider provider, Object message, CancellationToken cancellationToken)
         {
             return provider.ActorRef.Ask<T>(message, cancellationToken);
         }
 
-        public static Task<T> Ask<T>(this ActorRefProvider provider, object message, TimeSpan? timeout, CancellationToken cancellationToken)
+        public static Task<T> Ask<T>(this ActorRefProvider provider, Object message, TimeSpan? timeout, CancellationToken cancellationToken)
         {
             return provider.ActorRef.Ask<T>(message, timeout, cancellationToken);
         }
 
-        public static Task<T> Ask<T>(this ActorRefProvider provider, Func<IActorRef, object> messageFactory, TimeSpan? timeout, CancellationToken cancellationToken)
+        public static Task<T> Ask<T>(this ActorRefProvider provider, Func<IActorRef, Object> messageFactory, TimeSpan? timeout, CancellationToken cancellationToken)
         {
             return provider.ActorRef.Ask<T>(messageFactory, timeout, cancellationToken);
         }

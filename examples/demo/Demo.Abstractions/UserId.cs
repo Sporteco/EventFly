@@ -7,6 +7,6 @@ namespace Demo
     [JsonConverter(typeof(SingleValueObjectConverter))]
     public class UserId : Identity<UserId>
     {
-        public UserId(string value) : base(value){}
+        public UserId(System.String value) : base(value) { }
     }
 }

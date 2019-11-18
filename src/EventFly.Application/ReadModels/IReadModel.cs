@@ -4,7 +4,7 @@ namespace EventFly.ReadModels
 {
     public interface IReadModel
     {
-        string Id { get;  }
+        System.String Id { get; }
         void ApplyEvent(IDomainEvent e);
     }
 }

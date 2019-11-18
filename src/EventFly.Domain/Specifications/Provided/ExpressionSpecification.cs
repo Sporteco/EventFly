@@ -25,31 +25,31 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using EventFly.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using EventFly.Exceptions;
 
 namespace EventFly.Specifications.Provided
 {
     public class ExpressionSpecification<T> : Specification<T>
     {
-        private readonly Func<T, bool> _predicate;
-        private readonly Lazy<string> _string;
+        private readonly Func<T, Boolean> _predicate;
+        private readonly Lazy<String> _string;
 
         public ExpressionSpecification(
-            Expression<Func<T, bool>> expression)
+            Expression<Func<T, Boolean>> expression)
         {
             _predicate = expression.Compile();
-            _string = new Lazy<string>(() => MakeString(expression));
+            _string = new Lazy<String>(() => MakeString(expression));
         }
 
-        public override string ToString()
+        public override String ToString()
         {
             return _string.Value;
         }
 
-        protected override IEnumerable<string> IsNotSatisfiedBecause(T aggregate)
+        protected override IEnumerable<String> IsNotSatisfiedBecause(T aggregate)
         {
             if (!_predicate(aggregate))
             {
@@ -57,7 +57,7 @@ namespace EventFly.Specifications.Provided
             }
         }
 
-        private static string MakeString(Expression<Func<T, bool>> expression)
+        private static String MakeString(Expression<Func<T, Boolean>> expression)
         {
             try
             {

@@ -21,17 +21,17 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System;
 using Akka.Configuration;
 using EventFly.Configuration;
+using System;
 
 namespace EventFly.Aggregates
 {
     public class AggregateRootSettings
     {
-        private static readonly string _section = "EventFly.aggregate-root";
-        public readonly bool UseDefaultEventRecover;
-        public readonly bool UseDefaultSnapshotRecover;
+        private static readonly String _section = "EventFly.aggregate-root";
+        public readonly Boolean UseDefaultEventRecover;
+        public readonly Boolean UseDefaultSnapshotRecover;
         public readonly TimeSpan SetReceiveTimeout;
 
         public AggregateRootSettings(Config config)

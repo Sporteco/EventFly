@@ -25,10 +25,10 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System;
-using System.Collections.Generic;
 using EventFly.Core;
 using EventFly.ValueObjects;
+using System;
+using System.Collections.Generic;
 
 namespace EventFly.Entities
 {
@@ -37,7 +37,7 @@ namespace EventFly.Entities
     {
         protected Entity(TIdentity id)
         {
-            if (id == null) 
+            if (id == null)
                 throw new ArgumentNullException(nameof(id));
 
             Id = id;
@@ -50,7 +50,7 @@ namespace EventFly.Entities
             return Id;
         }
 
-        protected override IEnumerable<object> GetEqualityComponents()
+        protected override IEnumerable<Object> GetEqualityComponents()
         {
             yield return Id;
         }

@@ -21,19 +21,19 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System;
-using System.Threading.Tasks;
 using Akka.Actor;
 using EventFly.Definitions;
 using EventFly.DependencyInjection;
 using EventFly.Examples.Jobs;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Threading.Tasks;
 
 namespace EventFly.Examples.JobApplication
 {
     public class Program
     {
-        public static async Task Main(string[] args)
+        public static async Task Main(String[] args)
         {
             var actorSystem = ActorSystem.Create("print-job-system", Configuration.Config);
 

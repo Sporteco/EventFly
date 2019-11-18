@@ -25,11 +25,11 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using Newtonsoft.Json;
 using System;
 using System.Collections.Concurrent;
 using System.Linq;
 using System.Reflection;
-using Newtonsoft.Json;
 
 namespace EventFly.ValueObjects
 {
@@ -37,7 +37,7 @@ namespace EventFly.ValueObjects
     {
         private static readonly ConcurrentDictionary<Type, Type> ConstructorArgumenTypes = new ConcurrentDictionary<Type, Type>();
 
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        public override void WriteJson(JsonWriter writer, Object value, JsonSerializer serializer)
         {
             var singleValueObject = value as ISingleValueObject;
             if (singleValueObject == null)
@@ -47,7 +47,7 @@ namespace EventFly.ValueObjects
             serializer.Serialize(writer, singleValueObject.GetValue());
         }
 
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        public override Object ReadJson(JsonReader reader, Type objectType, Object existingValue, JsonSerializer serializer)
         {
             var parameterType = ConstructorArgumenTypes.GetOrAdd(
                 objectType,
@@ -62,7 +62,7 @@ namespace EventFly.ValueObjects
             return Activator.CreateInstance(objectType, value);
         }
 
-        public override bool CanConvert(Type objectType)
+        public override Boolean CanConvert(Type objectType)
         {
             return typeof(ISingleValueObject).GetTypeInfo().IsAssignableFrom(objectType);
         }

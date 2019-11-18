@@ -21,9 +21,9 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System;
 using EventFly.Aggregates;
 using EventFly.Examples.Api.Domain.Aggregates.Resource;
+using System;
 
 namespace EventFly.Examples.Api.Domain.Sagas.Events
 {
@@ -31,7 +31,7 @@ namespace EventFly.Examples.Api.Domain.Sagas.Events
     {
         public ResourceId ResourceId { get; }
         public DateTime StartedAt { get; }
-        
+
         public ResourceCreationStartedEvent(
             ResourceId resourceId,
             DateTime startedAt)

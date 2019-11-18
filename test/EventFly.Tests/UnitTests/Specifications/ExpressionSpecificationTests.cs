@@ -25,10 +25,10 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System.ComponentModel;
 using EventFly.Specifications.Provided;
 using EventFly.TestHelpers;
 using FluentAssertions;
+using System.ComponentModel;
 using Xunit;
 
 namespace EventFly.Tests.UnitTests.Specifications
@@ -39,7 +39,7 @@ namespace EventFly.Tests.UnitTests.Specifications
         [Fact]
         public void StringIsRight()
         {
-            var specification = new ExpressionSpecification<int>(i => (i > 1 && i < 10) || i == 42);
+            var specification = new ExpressionSpecification<System.Int32>(i => (i > 1 && i < 10) || i == 42);
 
             var str = specification.ToString();
 
@@ -49,9 +49,9 @@ namespace EventFly.Tests.UnitTests.Specifications
         [Theory]
         [InlineData(42, true)]
         [InlineData(-42, false)]
-        public void ExpressionIsEvaluated(int value, bool expectedIsSatisfied)
+        public void ExpressionIsEvaluated(System.Int32 value, System.Boolean expectedIsSatisfied)
         {
-            var is42 = new ExpressionSpecification<int>(i => i == 42);
+            var is42 = new ExpressionSpecification<System.Int32>(i => i == 42);
 
             var result = is42.IsSatisfiedBy(value);
 

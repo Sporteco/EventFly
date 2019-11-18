@@ -27,7 +27,7 @@ namespace EventFly.Jobs
 {
     public class JobId : Identity<JobId>, IJobId
     {
-        public JobId(string value) 
+        public JobId(System.String value)
             : base(value)
         {
         }

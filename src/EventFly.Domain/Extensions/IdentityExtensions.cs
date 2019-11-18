@@ -26,14 +26,14 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-using System.Text;
 using EventFly.Core;
+using System.Text;
 
 namespace EventFly.Extensions
 {
     public static class IdentityExtensions
     {
-        public static byte[] GetBytes(this IIdentity identity)
+        public static System.Byte[] GetBytes(this IIdentity identity)
         {
             return Encoding.UTF8.GetBytes(identity.Value);
         }

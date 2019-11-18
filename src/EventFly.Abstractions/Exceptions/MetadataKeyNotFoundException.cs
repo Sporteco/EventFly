@@ -31,7 +31,7 @@ namespace EventFly.Exceptions
 {
     public class MetadataKeyNotFoundException : ArgumentOutOfRangeException
     {
-        public MetadataKeyNotFoundException(string key)
+        public MetadataKeyNotFoundException(String key)
             : base($"Could not find metadata key '{key}'")
         {
         }

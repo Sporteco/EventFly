@@ -21,24 +21,24 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System;
 using Akka.Configuration;
 using EventFly.Configuration;
+using System;
 
 namespace EventFly.Jobs
 {
     public class JobSchedulerSettings
     {
-        private static string _section = "EventFly.job-scheduler";
-        public string JournalPluginId { get; }
-        public string SnapshotPluginId { get; }
+        private static String _section = "EventFly.job-scheduler";
+        public String JournalPluginId { get; }
+        public String SnapshotPluginId { get; }
         public TimeSpan TickInterval { get; }
 
         public JobSchedulerSettings(Config config)
         {
             var schedulerConfig = config.WithFallback(EventFlyDefaultSettings.DefaultConfig());
             schedulerConfig = schedulerConfig.GetConfig(_section);
-            
+
             JournalPluginId = schedulerConfig.GetString("journal-plugin-id");
             SnapshotPluginId = schedulerConfig.GetString("snapshot-plugin-id");
             TickInterval = schedulerConfig.GetTimeSpan("tick-interval");

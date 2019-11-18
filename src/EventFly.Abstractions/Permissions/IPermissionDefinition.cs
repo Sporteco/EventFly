@@ -4,7 +4,7 @@ namespace EventFly.Permissions
 {
     public interface IPermissionDefinition
     {
-        string PermissionCode { get; }
-        Type TargetAggregateType  { get; }
+        String PermissionCode { get; }
+        Type TargetAggregateType { get; }
     }
 }

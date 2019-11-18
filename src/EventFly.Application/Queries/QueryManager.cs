@@ -1,11 +1,11 @@
-﻿using System;
-using System.Security.Cryptography;
-using System.Text;
-using Akka.Actor;
+﻿using Akka.Actor;
 using Akka.DI.Core;
 using Akka.Event;
 using EventFly.Exceptions;
 using Newtonsoft.Json;
+using System;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace EventFly.Queries
 {
@@ -14,7 +14,7 @@ namespace EventFly.Queries
     {
         protected ILoggingAdapter Logger { get; set; }
 
-        public string Name { get; }
+        public String Name { get; }
 
         public QueryManager()
         {
@@ -24,10 +24,10 @@ namespace EventFly.Queries
             Receive<Terminated>(Terminate);
 
             Receive<TQuery>(Dispatch);
-             
+
         }
 
-        protected virtual bool Dispatch(TQuery query)
+        protected virtual Boolean Dispatch(TQuery query)
         {
             Logger.Info("QueryManager of Type={0}; has received a query of Type={1}", Name, query.GetType().PrettyPrint());
 
@@ -41,7 +41,7 @@ namespace EventFly.Queries
         }
 
 
-        protected virtual bool ReDispatch(TQuery query)
+        protected virtual Boolean ReDispatch(TQuery query)
         {
             Logger.Info("QueryManager of Type={0}; is ReDispatching deadletter of Type={1}", Name, query.GetType().PrettyPrint());
 
@@ -53,13 +53,13 @@ namespace EventFly.Queries
             return true;
         }
 
-        private string CalculateMD5Hash(string input)
+        private String CalculateMD5Hash(String input)
         {
             // step 1, calculate MD5 hash from input
             var md5 = MD5.Create();
             var inputBytes = Encoding.ASCII.GetBytes(input);
             var hash = md5.ComputeHash(inputBytes);
- 
+
             // step 2, convert byte array to hex string
             var sb = new StringBuilder();
             foreach (var t in hash)
@@ -69,25 +69,25 @@ namespace EventFly.Queries
             return sb.ToString();
         }
 
-        private string GenerateQueryId(TQuery query)
+        private String GenerateQueryId(TQuery query)
         {
             var json = JsonConvert.SerializeObject(query);
             return CalculateMD5Hash(json);
         }
 
 
-        protected virtual bool Terminate(Terminated message)
+        protected virtual Boolean Terminate(Terminated message)
         {
-            Logger.Warning("Query of Type={0}, and Id={1}; has terminated.",typeof(TQuery).PrettyPrint(), message.ActorRef.Path.Name);
+            Logger.Warning("Query of Type={0}, and Id={1}; has terminated.", typeof(TQuery).PrettyPrint(), message.ActorRef.Path.Name);
             Context.Unwatch(message.ActorRef);
             return true;
         }
 
-        protected virtual IActorRef FindOrCreate(string queryId)
+        protected virtual IActorRef FindOrCreate(String queryId)
         {
             var aggregate = Context.Child(queryId);
 
-            if(aggregate.IsNobody())
+            if (aggregate.IsNobody())
             {
                 aggregate = CreateQueryHandler(queryId);
             }
@@ -95,7 +95,7 @@ namespace EventFly.Queries
             return aggregate;
         }
 
-        protected virtual IActorRef CreateQueryHandler(string queryId)
+        protected virtual IActorRef CreateQueryHandler(String queryId)
         {
             Props props;
             try
@@ -122,7 +122,7 @@ namespace EventFly.Queries
                 localOnlyDecider: x =>
                 {
 
-                    logger.Warning("QueryManager of Type={0}; will supervise Exception={1} to be decided as {2}.",Name, x.ToString(), Directive.Restart);
+                    logger.Warning("QueryManager of Type={0}; will supervise Exception={1} to be decided as {2}.", Name, x.ToString(), Directive.Restart);
                     return Directive.Restart;
                 });
         }

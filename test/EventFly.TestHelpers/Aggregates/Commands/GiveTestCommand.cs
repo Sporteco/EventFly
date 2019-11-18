@@ -28,19 +28,19 @@ namespace EventFly.TestHelpers.Aggregates.Commands
 {
     public class GiveTestCommand : Command<TestAggregateId>
     {
-        public TestAggregateId ReceiverAggregateId { get; } 
+        public TestAggregateId ReceiverAggregateId { get; }
         public Test TestToGive { get; }
-        
+
         public GiveTestCommand(
             TestAggregateId aggregateId,
-            CommandId sourceId, 
+            CommandId sourceId,
             TestAggregateId receiverAggregateId,
             Test testToGive)
-            : base(aggregateId,  new CommandMetadata(sourceId))
+            : base(aggregateId, new CommandMetadata(sourceId))
         {
             TestToGive = testToGive;
             ReceiverAggregateId = receiverAggregateId;
         }
-        
+
     }
 }

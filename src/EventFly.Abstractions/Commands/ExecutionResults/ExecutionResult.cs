@@ -33,16 +33,16 @@ namespace EventFly.Commands.ExecutionResults
     public abstract class ExecutionResult : IExecutionResult
     {
         private static readonly IExecutionResult SuccessResult = new SuccessExecutionResult();
-        private static readonly IExecutionResult FailedResult = new FailedExecutionResult(Enumerable.Empty<string>());
+        private static readonly IExecutionResult FailedResult = new FailedExecutionResult(Enumerable.Empty<System.String>());
 
         public static IExecutionResult Success() => SuccessResult;
         public static IExecutionResult Failed() => FailedResult;
-        public static IExecutionResult Failed(IEnumerable<string> errors) => new FailedExecutionResult(errors.ToArray());
-        public static IExecutionResult Failed(params string[] errors) => new FailedExecutionResult(errors);
+        public static IExecutionResult Failed(IEnumerable<System.String> errors) => new FailedExecutionResult(errors.ToArray());
+        public static IExecutionResult Failed(params System.String[] errors) => new FailedExecutionResult(errors);
 
-        public abstract bool IsSuccess { get; }
+        public abstract System.Boolean IsSuccess { get; }
 
-        public override string ToString()
+        public override System.String ToString()
         {
             return $"ExecutionResult - IsSuccess:{IsSuccess}";
         }

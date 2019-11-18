@@ -21,8 +21,8 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System;
 using EventFly.ValueObjects;
+using System;
 
 namespace EventFly.Jobs
 {
@@ -37,13 +37,13 @@ namespace EventFly.Jobs
         where TIdentity : IJobId
     {
         public TIdentity JobId { get; }
-        public object Ack { get; }
-        public object Nack { get; }
+        public Object Ack { get; }
+        public Object Nack { get; }
 
         public SchedulerCommand(
             TIdentity jobId,
-            object ack = null,
-            object nack = null)
+            Object ack = null,
+            Object nack = null)
         {
             if (jobId == null) throw new ArgumentNullException(nameof(jobId));
 

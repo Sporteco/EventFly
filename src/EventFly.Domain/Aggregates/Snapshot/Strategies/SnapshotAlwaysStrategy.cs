@@ -26,7 +26,7 @@ namespace EventFly.Aggregates.Snapshot.Strategies
     public class SnapshotAlwaysStrategy : ISnapshotStrategy
     {
         public static ISnapshotStrategy Instance => new SnapshotAlwaysStrategy();
-        public bool ShouldCreateSnapshot(IAggregateRoot snapshotAggregateRoot)
+        public System.Boolean ShouldCreateSnapshot(IAggregateRoot snapshotAggregateRoot)
         {
             return true;
         }

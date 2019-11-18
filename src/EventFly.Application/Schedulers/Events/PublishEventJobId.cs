@@ -5,7 +5,7 @@ namespace EventFly.Schedulers.Events
 {
     public sealed class PublishEventJobId : Identity<PublishEventJobId>, IJobId
     {
-        public PublishEventJobId(string value)
+        public PublishEventJobId(System.String value)
             : base(value)
         {
         }

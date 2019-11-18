@@ -34,9 +34,9 @@ namespace EventFly.Exceptions
 {
     public static class TypeExtensions
     {
-        private static readonly ConcurrentDictionary<Type, string> PrettyPrintCache = new ConcurrentDictionary<Type, string>();
+        private static readonly ConcurrentDictionary<Type, String> PrettyPrintCache = new ConcurrentDictionary<Type, String>();
 
-        public static string PrettyPrint(this Type type)
+        public static String PrettyPrint(this Type type)
         {
             return PrettyPrintCache.GetOrAdd(
                 type,
@@ -53,7 +53,7 @@ namespace EventFly.Exceptions
                 });
         }
 
-        private static string PrettyPrintRecursive(Type type, int depth)
+        private static String PrettyPrintRecursive(Type type, Int32 depth)
         {
             if (depth > 3)
             {
@@ -68,8 +68,8 @@ namespace EventFly.Exceptions
 
             var genericArguments = type.GetTypeInfo().GetGenericArguments();
             return !type.IsConstructedGenericType
-                ? $"{nameParts[0]}<{new string(',', genericArguments.Length - 1)}>"
-                : $"{nameParts[0]}<{string.Join(",", genericArguments.Select(t => PrettyPrintRecursive(t, depth + 1)))}>";
+                ? $"{nameParts[0]}<{new String(',', genericArguments.Length - 1)}>"
+                : $"{nameParts[0]}<{String.Join(",", genericArguments.Select(t => PrettyPrintRecursive(t, depth + 1)))}>";
         }
     }
 }

@@ -27,10 +27,10 @@ namespace EventFly.Events
 {
     public class DomainEventReadAdapter : IReadEventAdapter
     {
-        public IEventSequence FromJournal(object evt, string manifest)
+        public IEventSequence FromJournal(System.Object evt, System.String manifest)
         {
             var newEvent = DomainEventMapper.FromCommittedEvent(evt);
-            
+
             return new SingleEventSequence(newEvent);
         }
     }

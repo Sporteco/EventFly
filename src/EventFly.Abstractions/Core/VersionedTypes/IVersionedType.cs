@@ -29,6 +29,6 @@ namespace EventFly.Core.VersionedTypes
 {
     public interface IVersionedType
     {
-        
+
     }
 }

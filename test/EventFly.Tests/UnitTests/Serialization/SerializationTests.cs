@@ -21,10 +21,6 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
 using EventFly.Aggregates;
 using EventFly.Aggregates.Snapshot;
 using EventFly.Commands;
@@ -38,13 +34,17 @@ using EventFly.TestHelpers.Aggregates.Entities;
 using EventFly.TestHelpers.Aggregates.Events;
 using EventFly.TestHelpers.Aggregates.Snapshots;
 using FluentAssertions;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
 using Xunit;
 
 namespace EventFly.Tests.UnitTests.Serialization
 {
     public class SerializationTests
     {
-        private const string Category = "Serialization";
+        private const String Category = "Serialization";
 
         [Fact]
         [Category(Category)]
@@ -69,7 +69,7 @@ namespace EventFly.Tests.UnitTests.Serialization
             };
             var committedEvent =
                 new CommittedEvent<TestAggregate, TestAggregateId, TestAddedEvent>(
-                    aggregateId, 
+                    aggregateId,
                     aggregateEvent,
                     eventMetadata,
                     now,
@@ -77,7 +77,7 @@ namespace EventFly.Tests.UnitTests.Serialization
 
             committedEvent.SerializeDeserialize().Should().BeEquivalentTo(committedEvent);
         }
-        
+
         [Fact]
         [Category(Category)]
         public void DomainEvent_AfterSerialization_IsValidAfterDeserialization()
@@ -101,7 +101,7 @@ namespace EventFly.Tests.UnitTests.Serialization
             };
             var domainEvent =
                 new DomainEvent<TestAggregate, TestAggregateId, TestAddedEvent>(
-                    aggregateId, 
+                    aggregateId,
                     aggregateEvent,
                     eventMetadata,
                     now,
@@ -109,14 +109,14 @@ namespace EventFly.Tests.UnitTests.Serialization
 
             domainEvent.SerializeDeserialize().Should().BeEquivalentTo(domainEvent);
         }
-        
+
         [Fact]
         [Category(Category)]
         public void CommittedSnapshot_AfterSerialization_IsValidAfterDeserialization()
         {
             var aggregateSequenceNumber = 3;
             var aggregateId = TestAggregateId.New;
-            var aggregateSnapshot = new TestAggregateSnapshot(Enumerable.Range(0,aggregateSequenceNumber-1).Select(x => new TestAggregateSnapshot.TestModel(Guid.NewGuid())).ToList());
+            var aggregateSnapshot = new TestAggregateSnapshot(Enumerable.Range(0, aggregateSequenceNumber - 1).Select(x => new TestAggregateSnapshot.TestModel(Guid.NewGuid())).ToList());
             var now = DateTimeOffset.UtcNow;
             var snapshotId = SnapshotId.NewDeterministic(
                 GuidFactories.Deterministic.Namespaces.Snapshots,
@@ -130,7 +130,7 @@ namespace EventFly.Tests.UnitTests.Serialization
             };
             var committedEvent =
                 new CommittedSnapshot<TestAggregate, TestAggregateId, TestAggregateSnapshot>(
-                    aggregateId, 
+                    aggregateId,
                     aggregateSnapshot,
                     snapshotMetadata,
                     now,
@@ -150,7 +150,7 @@ namespace EventFly.Tests.UnitTests.Serialization
 
             command.SerializeDeserialize().Should().BeEquivalentTo(command);
         }*/
-        
+
         [Fact]
         [Category(Category)]
         public void AddFourTestsCommand_AfterSerialization_IsValidAfterDeserialization()
@@ -161,20 +161,20 @@ namespace EventFly.Tests.UnitTests.Serialization
 
             command.SerializeDeserialize().Should().BeEquivalentTo(command);
         }
-        
+
         [Fact]
         [Category(Category)]
         public void FailedExecutionResult_AfterSerialization_IsValidAfterDeserialization()
         {
             var failureString = "this is a failed execution";
-            var executionResult = new FailedExecutionResult(new List<string>{failureString});
+            var executionResult = new FailedExecutionResult(new List<String> { failureString });
 
             var result = executionResult.SerializeDeserialize();
-            
+
             result.Should().BeEquivalentTo(executionResult);
             result.Errors.Should().Equal(failureString);
         }
-        
+
         [Fact]
         [Category(Category)]
         public void SuccessfulExecutionResult_AfterSerialization_IsValidAfterDeserialization()
@@ -182,7 +182,7 @@ namespace EventFly.Tests.UnitTests.Serialization
             var executionResult = new SuccessExecutionResult();
 
             var result = executionResult.SerializeDeserialize();
-            
+
             result.Should().BeEquivalentTo(executionResult);
         }
 

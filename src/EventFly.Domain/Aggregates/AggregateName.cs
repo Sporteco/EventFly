@@ -29,9 +29,9 @@ using EventFly.ValueObjects;
 
 namespace EventFly.Aggregates
 {
-    public class AggregateName : SingleValueObject<string>, IAggregateName
+    public class AggregateName : SingleValueObject<System.String>, IAggregateName
     {
-        public AggregateName(string value) 
+        public AggregateName(System.String value)
             : base(value)
         {
         }

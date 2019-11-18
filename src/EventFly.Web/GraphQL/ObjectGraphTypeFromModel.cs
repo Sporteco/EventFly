@@ -1,16 +1,16 @@
-﻿using System;
+﻿using EventFly.Definitions;
+using GraphQL.Types;
+using System;
 using System.ComponentModel;
 using System.Reflection;
-using EventFly.Definitions;
-using GraphQL.Types;
 using Type = System.Type;
 
 namespace EventFly.GraphQL
 {
-    internal sealed class ObjectGraphTypeFromModel : ObjectGraphType<object>
+    internal sealed class ObjectGraphTypeFromModel : ObjectGraphType<Object>
     {
 
-        public ObjectGraphTypeFromModel(Type modelType, IGraphQueryHandler graphQueryHandler, bool isInput) 
+        public ObjectGraphTypeFromModel(Type modelType, IGraphQueryHandler graphQueryHandler, Boolean isInput)
         {
             var modelType1 = modelType;
             IsTypeOf = type => type.GetType().IsAssignableFrom(modelType1);
@@ -18,14 +18,14 @@ namespace EventFly.GraphQL
             Name = !modelType1.Name.EndsWith("Model") ? modelType1.Name : modelType1.Name.Substring(0, modelType1.Name.Length - "Model".Length);
             Description = modelType1.GetCustomAttribute<DescriptionAttribute>()?.Description;
 
-            var fields = QueryParametersHelper.GetFields(modelType1,  graphQueryHandler, isInput);
+            var fields = QueryParametersHelper.GetFields(modelType1, graphQueryHandler, isInput);
             foreach (var field in fields)
             {
                 AddField(field);
             }
         }
     }
-    internal sealed class ObjectGraphTypeFromDomain : ObjectGraphType<object>
+    internal sealed class ObjectGraphTypeFromDomain : ObjectGraphType<Object>
     {
 
         public ObjectGraphTypeFromDomain(IContextDefinition domainDefinition, IServiceProvider provider)
@@ -39,7 +39,7 @@ namespace EventFly.GraphQL
             foreach (var query in domainDefinition.Queries)
             {
                 var gQueryType = typeof(IGraphQueryHandler<,>).MakeGenericType(query.Type, query.QueryResultType);
-                var handler = (IGraphQueryHandler) provider.GetService(gQueryType);
+                var handler = (IGraphQueryHandler)provider.GetService(gQueryType);
 
                 AddField(handler.GetFieldType(false));
             }
@@ -48,23 +48,23 @@ namespace EventFly.GraphQL
     }
 
 
-    internal sealed class InputObjectGraphTypeFromModel : InputObjectGraphType<object>
+    internal sealed class InputObjectGraphTypeFromModel : InputObjectGraphType<Object>
     {
 
-        public InputObjectGraphTypeFromModel(Type modelType, IGraphQueryHandler graphQueryHandler) 
+        public InputObjectGraphTypeFromModel(Type modelType, IGraphQueryHandler graphQueryHandler)
         {
             var modelType1 = modelType;
             //IsTypeOf = type => type.GetType().IsAssignableFrom(modelType1);
 
-            Name = "Input"+ (!modelType1.Name.EndsWith("Model") ? modelType1.Name : modelType1.Name.Substring(0, modelType1.Name.Length - "Model".Length));
+            Name = "Input" + (!modelType1.Name.EndsWith("Model") ? modelType1.Name : modelType1.Name.Substring(0, modelType1.Name.Length - "Model".Length));
             Description = modelType1.GetCustomAttribute<DescriptionAttribute>()?.Description;
 
-            var fields = QueryParametersHelper.GetFields(modelType1,  graphQueryHandler, true);
+            var fields = QueryParametersHelper.GetFields(modelType1, graphQueryHandler, true);
             foreach (var field in fields)
             {
                 AddField(field);
             }
         }
     }
-    
+
 }

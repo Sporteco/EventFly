@@ -40,10 +40,10 @@ namespace EventFly.TestHelpers.Aggregates.Events
     public class TestCreatedEventV2 : AggregateEvent<TestAggregateId>
     {
         public TestAggregateId TestAggregateId { get; }
-        public string Name { get; }
+        public System.String Name { get; }
         public TestCreatedEventV2(
             TestAggregateId testAggregateId,
-            string name)
+            System.String name)
         {
             TestAggregateId = testAggregateId;
             Name = name;

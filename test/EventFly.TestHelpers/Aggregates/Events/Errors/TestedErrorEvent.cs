@@ -28,9 +28,9 @@ namespace EventFly.TestHelpers.Aggregates.Events.Errors
     [EventVersion("TestedError", 1)]
     public class TestedErrorEvent : AggregateEvent<TestAggregateId>
     {
-        public int TestErrors { get; }
+        public System.Int32 TestErrors { get; }
 
-        public TestedErrorEvent(int testErrors)
+        public TestedErrorEvent(System.Int32 testErrors)
         {
             TestErrors = testErrors;
         }

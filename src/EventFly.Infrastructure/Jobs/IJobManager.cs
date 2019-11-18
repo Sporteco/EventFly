@@ -25,13 +25,13 @@ namespace EventFly.Jobs
 {
     public interface IJobManager
     {
-        
+
     }
 
     public interface IJobManager<TJob, TIdentity> : IJobManager
         where TJob : IJob<TIdentity>
         where TIdentity : IJobId
     {
-        
+
     }
 }

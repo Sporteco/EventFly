@@ -1,10 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Net;
-using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
-using EventFly.Commands;
+﻿using EventFly.Commands;
 using EventFly.Definitions;
 using EventFly.DependencyInjection;
 using EventFly.Queries;
@@ -12,17 +6,23 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using System;
+using System.IO;
+using System.Net;
+using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace EventFly
 {
     public sealed class EventFlyWebApiOptions
     {
-        public EventFlyWebApiOptions(string basePath)
+        public EventFlyWebApiOptions(String basePath)
         {
             BasePath = basePath;
         }
 
-        public string BasePath { get; set; }
+        public String BasePath { get; set; }
     }
 
     public sealed class EventFlyWebApiBuilder
@@ -83,7 +83,7 @@ namespace EventFly
                 var match = CommandPath.Match(path.Value);
                 if (match.Success)
                 {
-                    await PublishCommandAsync(match.Groups["name"].Value, int.Parse(match.Groups["version"].Value), context).ConfigureAwait(false);
+                    await PublishCommandAsync(match.Groups["name"].Value, Int32.Parse(match.Groups["version"].Value), context).ConfigureAwait(false);
                     return;
                 }
             }
@@ -99,10 +99,10 @@ namespace EventFly
             await _next(context);
         }
 
-        private async Task ExecuteQueryAsync(string name, HttpContext context)
+        private async Task ExecuteQueryAsync(String name, HttpContext context)
         {
             _log.LogTrace($"Execution query '{name}' from OWIN middleware");
-            string requestJson;
+            String requestJson;
             using (var streamReader = new StreamReader(context.Request.Body))
                 requestJson = await streamReader.ReadToEndAsync().ConfigureAwait(false);
             try
@@ -122,10 +122,10 @@ namespace EventFly
             }
         }
 
-        private async Task PublishCommandAsync(string name, int version, HttpContext context)
+        private async Task PublishCommandAsync(String name, Int32 version, HttpContext context)
         {
             _log.LogTrace($"Publishing command '{name}' v{version} from OWIN middleware");
-            string requestJson;
+            String requestJson;
             using (var streamReader = new StreamReader(context.Request.Body))
                 requestJson = await streamReader.ReadToEndAsync().ConfigureAwait(false);
             try
@@ -145,15 +145,15 @@ namespace EventFly
             }
         }
 
-        private async Task WriteAsync(object obj, HttpStatusCode statusCode, HttpContext context)
+        private async Task WriteAsync(Object obj, HttpStatusCode statusCode, HttpContext context)
         {
             var json = JsonConvert.SerializeObject(obj);
-            context.Response.StatusCode = (int)statusCode;
+            context.Response.StatusCode = (Int32)statusCode;
             await context.Response.WriteAsync(json).ConfigureAwait(false);
         }
 
         private Task WriteErrorAsync(
-          string errorMessage,
+          String errorMessage,
           HttpStatusCode statusCode,
           HttpContext context)
         {

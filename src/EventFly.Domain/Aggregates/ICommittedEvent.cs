@@ -25,20 +25,20 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System;
 using EventFly.Core;
+using System;
 
 namespace EventFly.Aggregates
 {
     public interface ICommittedEvent
     {
 
-	    long AggregateSequenceNumber { get; }
-	    EventMetadata EventMetadata { get; }
-	    DateTimeOffset Timestamp { get; }
+        Int64 AggregateSequenceNumber { get; }
+        EventMetadata EventMetadata { get; }
+        DateTimeOffset Timestamp { get; }
 
-	    IIdentity GetIdentity();
-	    IAggregateEvent GetAggregateEvent();
+        IIdentity GetIdentity();
+        IAggregateEvent GetAggregateEvent();
     }
 
     public interface ICommittedEvent<TAggregate, out TIdentity> : ICommittedEvent
@@ -47,7 +47,7 @@ namespace EventFly.Aggregates
     {
         TIdentity AggregateIdentity { get; }
     }
-    
+
     public interface ICommittedEvent<TAggregate, out TIdentity, out TAggregateEvent> : ICommittedEvent<TAggregate, TIdentity>
         where TAggregate : IAggregateRoot<TIdentity>
         where TIdentity : IIdentity

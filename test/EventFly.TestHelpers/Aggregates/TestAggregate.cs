@@ -21,10 +21,6 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Akka.Persistence;
 using EventFly.Aggregates;
 using EventFly.Aggregates.Snapshot;
@@ -38,25 +34,29 @@ using EventFly.TestHelpers.Aggregates.Events;
 using EventFly.TestHelpers.Aggregates.Events.Errors;
 using EventFly.TestHelpers.Aggregates.Events.Signals;
 using EventFly.TestHelpers.Aggregates.Snapshots;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace EventFly.TestHelpers.Aggregates
 {
     [AggregateName("Test")]
-    public sealed class TestAggregate : EventSourcedAggregateRoot<TestAggregate, TestAggregateId, TestAggregateState>, 
-        IExecute<CreateTestCommand,TestAggregateId>,
-        IExecute<CreateAndAddTwoTestsCommand,TestAggregateId>,
-        IExecute<AddTestCommand,TestAggregateId>,
-        IExecute<AddFourTestsCommand,TestAggregateId>,
-        IExecute<GiveTestCommand,TestAggregateId>,
-        IExecute<ReceiveTestCommand,TestAggregateId>,
-        IExecute<PoisonTestAggregateCommand,TestAggregateId>,
-        IExecute<PublishTestStateCommand,TestAggregateId>,
-        IExecute<TestDomainErrorCommand,TestAggregateId>,
-        IExecute<TestFailedExecutionResultCommand,TestAggregateId>,
-        IExecute<TestSuccessExecutionResultCommand,TestAggregateId>,
+    public sealed class TestAggregate : EventSourcedAggregateRoot<TestAggregate, TestAggregateId, TestAggregateState>,
+        IExecute<CreateTestCommand, TestAggregateId>,
+        IExecute<CreateAndAddTwoTestsCommand, TestAggregateId>,
+        IExecute<AddTestCommand, TestAggregateId>,
+        IExecute<AddFourTestsCommand, TestAggregateId>,
+        IExecute<GiveTestCommand, TestAggregateId>,
+        IExecute<ReceiveTestCommand, TestAggregateId>,
+        IExecute<PoisonTestAggregateCommand, TestAggregateId>,
+        IExecute<PublishTestStateCommand, TestAggregateId>,
+        IExecute<TestDomainErrorCommand, TestAggregateId>,
+        IExecute<TestFailedExecutionResultCommand, TestAggregateId>,
+        IExecute<TestSuccessExecutionResultCommand, TestAggregateId>,
         IExecute<BadCommand, TestAggregateId>
     {
-        public int TestErrors { get; private set; }
+        public Int32 TestErrors { get; private set; }
         public TestAggregate(TestAggregateId aggregateId)
             : base(aggregateId)
         {
@@ -71,7 +71,7 @@ namespace EventFly.TestHelpers.Aggregates
         {
             if (IsNew)
             {
-                Emit(new TestCreatedEvent(command.AggregateId), new EventMetadata {{"some-key","some-value"}});
+                Emit(new TestCreatedEvent(command.AggregateId), new EventMetadata { { "some-key", "some-value" } });
                 Reply(TestExecutionResult.SucceededWith(command.Metadata.SourceId));
             }
             else
@@ -81,9 +81,9 @@ namespace EventFly.TestHelpers.Aggregates
                 ReplyFailure(TestExecutionResult.FailedWith(command.Metadata.SourceId));
             }
 
-            return Task.FromResult((IExecutionResult) new SuccessTestExecutionResult(command.Metadata.SourceId));
+            return Task.FromResult((IExecutionResult)new SuccessTestExecutionResult(command.Metadata.SourceId));
         }
-        
+
 
         public Task<IExecutionResult> Execute(CreateAndAddTwoTestsCommand command)
         {
@@ -120,7 +120,7 @@ namespace EventFly.TestHelpers.Aggregates
                 Throw(new TestedErrorEvent(TestErrors));
                 ReplyFailure(TestExecutionResult.FailedWith(command.Metadata.SourceId));
             }
-            return Task.FromResult((IExecutionResult) new SuccessTestExecutionResult(command.Metadata.SourceId));
+            return Task.FromResult((IExecutionResult)new SuccessTestExecutionResult(command.Metadata.SourceId));
         }
 
         public Task<IExecutionResult> Execute(AddFourTestsCommand command)
@@ -151,7 +151,7 @@ namespace EventFly.TestHelpers.Aggregates
             {
                 if (State.TestCollection.Any(x => x.Id == command.TestToGive.Id))
                 {
-                    Emit(new TestSentEvent(command.TestToGive,command.ReceiverAggregateId));
+                    Emit(new TestSentEvent(command.TestToGive, command.ReceiverAggregateId));
                     Reply(TestExecutionResult.SucceededWith(command.Metadata.SourceId));
                 }
 
@@ -187,7 +187,7 @@ namespace EventFly.TestHelpers.Aggregates
             Sender.Tell(ExecutionResult.Failed(), Self);
             return Task.FromResult(ExecutionResult.Success());
         }
-        
+
         public Task<IExecutionResult> Execute(TestSuccessExecutionResultCommand command)
         {
             Sender.Tell(ExecutionResult.Success(), Self);
@@ -212,7 +212,7 @@ namespace EventFly.TestHelpers.Aggregates
 
         public Task<IExecutionResult> Execute(PublishTestStateCommand command)
         {
-            Signal(new TestStateSignalEvent(State,LastSequenceNr,Version));
+            Signal(new TestStateSignalEvent(State, LastSequenceNr, Version));
 
             return Task.FromResult(ExecutionResult.Success());
         }
@@ -226,7 +226,7 @@ namespace EventFly.TestHelpers.Aggregates
             return Task.FromResult(ExecutionResult.Success());
         }
 
-        protected override bool SnapshotStatus(SaveSnapshotSuccess snapshotSuccess)
+        protected override Boolean SnapshotStatus(SaveSnapshotSuccess snapshotSuccess)
         {
             Context.Stop(Self);
             Context.Parent.Tell(new PublishTestStateCommand(Id), Self);
@@ -280,7 +280,7 @@ namespace EventFly.TestHelpers.Aggregates
 
         public Task<IExecutionResult> Execute(BadCommand command)
         {
-            return Task.FromResult((IExecutionResult) new FailedTestExecutionResult(command.Metadata.SourceId, new List<string> { "Test cause"}));
+            return Task.FromResult((IExecutionResult)new FailedTestExecutionResult(command.Metadata.SourceId, new List<String> { "Test cause" }));
         }
     }
 }

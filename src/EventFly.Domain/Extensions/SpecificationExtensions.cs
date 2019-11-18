@@ -25,11 +25,11 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using EventFly.Specifications;
+using EventFly.Specifications.Provided;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using EventFly.Specifications;
-using EventFly.Specifications.Provided;
 
 namespace EventFly.Extensions
 {
@@ -43,7 +43,7 @@ namespace EventFly.Extensions
 
         public static ISpecification<T> AtLeast<T>(
             this IEnumerable<ISpecification<T>> specifications,
-            int requiredSpecifications)
+            Int32 requiredSpecifications)
         {
             return new AtLeastSpecification<T>(requiredSpecifications, specifications);
         }
@@ -57,7 +57,7 @@ namespace EventFly.Extensions
 
         public static ISpecification<T> And<T>(
             this ISpecification<T> specification,
-            Expression<Func<T, bool>> expression)
+            Expression<Func<T, Boolean>> expression)
         {
             return specification.And(new ExpressionSpecification<T>(expression));
         }
@@ -70,7 +70,7 @@ namespace EventFly.Extensions
         }
         public static ISpecification<T> Or<T>(
             this ISpecification<T> specification,
-            Expression<Func<T, bool>> expression)
+            Expression<Func<T, Boolean>> expression)
         {
             return specification.Or(new ExpressionSpecification<T>(expression));
         }
@@ -80,5 +80,5 @@ namespace EventFly.Extensions
         {
             return new NotSpecification<T>(specification);
         }
-}
+    }
 }

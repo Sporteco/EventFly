@@ -17,7 +17,7 @@ namespace EventFly.Tests.UnitTests.Subscribers
         {
             RegisterAggregate<TestAggregate, TestAggregateId>();
 
-            RegisterCommands(typeof(AddFourTestsCommand), typeof(AddTestCommand),typeof(CreateAndAddTwoTestsCommand),
+            RegisterCommands(typeof(AddFourTestsCommand), typeof(AddTestCommand), typeof(CreateAndAddTwoTestsCommand),
                 typeof(CreateTestCommand), typeof(GiveTestCommand), typeof(PoisonTestAggregateCommand), typeof(PublishTestStateCommand),
                 typeof(ReceiveTestCommand), typeof(TestDomainErrorCommand), typeof(TestFailedExecutionResultCommand),
                 typeof(PublishTestStateCommand));

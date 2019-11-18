@@ -21,12 +21,12 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using Akka.Actor;
+using EventFly.Extensions;
 using System;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using Akka.Actor;
-using EventFly.Extensions;
 
 namespace EventFly.Jobs
 {
@@ -79,11 +79,11 @@ namespace EventFly.Jobs
 
             foreach (var subscriptionType in subscriptionTypes)
             {
-                var funcType = typeof(Func<,>).MakeGenericType(subscriptionType, typeof(bool));
+                var funcType = typeof(Func<,>).MakeGenericType(subscriptionType, typeof(Boolean));
                 var subscriptionFunction = Delegate.CreateDelegate(funcType, this, methods[subscriptionType]);
                 var actorReceiveMethod = method.MakeGenericMethod(subscriptionType);
 
-                actorReceiveMethod.Invoke(this, new object[] { subscriptionFunction });
+                actorReceiveMethod.Invoke(this, new Object[] { subscriptionFunction });
             }
         }
 
@@ -134,7 +134,7 @@ namespace EventFly.Jobs
                 var subscriptionFunction = Delegate.CreateDelegate(funcType, this, methods[subscriptionType]);
                 var actorReceiveMethod = method.MakeGenericMethod(subscriptionType);
 
-                actorReceiveMethod.Invoke(this, new[] { subscriptionFunction, (object) null });
+                actorReceiveMethod.Invoke(this, new[] { subscriptionFunction, (Object)null });
             }
         }
     }

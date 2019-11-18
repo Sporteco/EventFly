@@ -32,16 +32,16 @@ namespace EventFly.Specifications
 {
     public abstract class Specification<T> : ISpecification<T>
     {
-        public bool IsSatisfiedBy(T obj)
+        public System.Boolean IsSatisfiedBy(T obj)
         {
             return !IsNotSatisfiedBecause(obj).Any();
         }
 
-        public IEnumerable<string> WhyIsNotSatisfiedBy(T obj)
+        public IEnumerable<System.String> WhyIsNotSatisfiedBy(T obj)
         {
             return IsNotSatisfiedBecause(obj);
-        } 
+        }
 
-        protected abstract IEnumerable<string> IsNotSatisfiedBecause(T obj);
+        protected abstract IEnumerable<System.String> IsNotSatisfiedBecause(T obj);
     }
 }

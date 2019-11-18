@@ -31,8 +31,8 @@ namespace EventFly.Specifications
 {
     public interface ISpecification<in T>
     {
-        bool IsSatisfiedBy(T obj);
+        System.Boolean IsSatisfiedBy(T obj);
 
-        IEnumerable<string> WhyIsNotSatisfiedBy(T obj);
+        IEnumerable<System.String> WhyIsNotSatisfiedBy(T obj);
     }
 }

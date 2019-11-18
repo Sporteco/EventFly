@@ -13,8 +13,8 @@ namespace EventFly.DomainService
             AutoReceive = domainServiceConfig.GetBoolean("auto-receive");
         }
 
-        public bool AutoReceive { get; }
+        public System.Boolean AutoReceive { get; }
 
-        private const string _section = "EventFly.domain-service";
+        private const System.String _section = "EventFly.domain-service";
     }
 }

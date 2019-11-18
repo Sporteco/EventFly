@@ -21,11 +21,11 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System;
-using System.Threading.Tasks;
 using Akka.Actor;
 using Akka.Event;
 using EventFly.Jobs;
+using System;
+using System.Threading.Tasks;
 
 namespace EventFly.TestHelpers.Jobs
 {
@@ -39,7 +39,7 @@ namespace EventFly.TestHelpers.Jobs
             _accessor = accessor;
         }
 
-        public bool Run(TestJob job)
+        public Boolean Run(TestJob job)
         {
             var time = Context.System.Settings.System.Scheduler.Now.DateTime;
             IActorRef probe = _accessor.Get(job.JobId);
@@ -59,7 +59,7 @@ namespace EventFly.TestHelpers.Jobs
             _accessor = accessor;
         }
 
-        public async Task<bool> RunAsync(AsyncTestJob job)
+        public async Task<Boolean> RunAsync(AsyncTestJob job)
         {
             var time = Context.System.Settings.System.Scheduler.Now.DateTime;
             IActorRef probe = _accessor.Get(job.JobId);
@@ -71,10 +71,10 @@ namespace EventFly.TestHelpers.Jobs
 
     public class TestJobDone
     {
-        public string Greeting { get; }
+        public String Greeting { get; }
         public DateTime At { get; }
         public TestJobDone(
-            string greeting,
+            String greeting,
             DateTime at)
         {
             Greeting = greeting;

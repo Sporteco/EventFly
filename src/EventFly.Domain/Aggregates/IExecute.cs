@@ -30,9 +30,9 @@ namespace EventFly.Aggregates
 {
     public interface IExecute
     {
-        
+
     }
-    
+
     public interface IExecute<in TCommand, TIdentity> : IExecute
         where TCommand : ICommand<TIdentity>
         where TIdentity : IIdentity

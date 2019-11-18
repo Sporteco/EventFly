@@ -1,5 +1,5 @@
-﻿using System;
-using GraphQL.Types;
+﻿using GraphQL.Types;
+using System;
 
 namespace EventFly.GraphQL
 {
@@ -9,11 +9,11 @@ namespace EventFly.GraphQL
         public GraphSchemaInternal(IServiceProvider provider) : base(type =>
 #pragma warning restore 618
         {
-            var result = (IGraphType) provider.GetService(type);
+            var result = (IGraphType)provider.GetService(type);
             if (result == null && type.GetGenericTypeDefinition() == typeof(EnumerationGraphType<>))
             {
                 //TODO: Refactoring
-                return (IGraphType) Activator.CreateInstance(type);
+                return (IGraphType)Activator.CreateInstance(type);
             }
 
             return null;

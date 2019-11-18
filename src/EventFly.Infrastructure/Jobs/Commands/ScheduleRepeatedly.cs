@@ -25,7 +25,7 @@ using System;
 
 namespace EventFly.Jobs.Commands
 {
-    
+
     public sealed class ScheduleRepeatedly<TJob, TIdentity> : Schedule<TJob, TIdentity>
         where TJob : IJob<TIdentity>
         where TIdentity : IJobId
@@ -36,23 +36,23 @@ namespace EventFly.Jobs.Commands
             TJob job,
             TimeSpan interval,
             DateTime triggerDate,
-            object ack = null,
-            object nack = null)
+            Object ack = null,
+            Object nack = null)
             : base(job, triggerDate, ack, nack)
         {
-            if(interval == default) throw new ArgumentException(nameof(interval));
-            
+            if (interval == default) throw new ArgumentException(nameof(interval));
+
             Interval = interval;
         }
-        
-        public override Schedule<TJob,TIdentity> WithNextTriggerDate(DateTime utcDate) => new ScheduleRepeatedly<TJob,TIdentity>(Job, Interval, TriggerDate + Interval);
-        
-        public override Schedule<TJob,TIdentity> WithAck(object ack)
+
+        public override Schedule<TJob, TIdentity> WithNextTriggerDate(DateTime utcDate) => new ScheduleRepeatedly<TJob, TIdentity>(Job, Interval, TriggerDate + Interval);
+
+        public override Schedule<TJob, TIdentity> WithAck(Object ack)
         {
             return new ScheduleRepeatedly<TJob, TIdentity>(Job, Interval, TriggerDate, ack, Nack);
         }
-        
-        public override Schedule<TJob,TIdentity> WithNack(object nack)
+
+        public override Schedule<TJob, TIdentity> WithNack(Object nack)
         {
             return new ScheduleRepeatedly<TJob, TIdentity>(Job, Interval, TriggerDate, Ack, nack);
         }

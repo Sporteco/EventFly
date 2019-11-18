@@ -2,9 +2,9 @@
 
 namespace Demo.ValueObjects
 {
-    public sealed class ProjectName : SingleValueObject<string>
+    public sealed class ProjectName : SingleValueObject<System.String>
     {
-        public ProjectName(string value) : base(value)
+        public ProjectName(System.String value) : base(value)
         {
         }
     }

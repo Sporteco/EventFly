@@ -21,15 +21,15 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using Akka.Actor;
+using Akka.Event;
+using EventFly.Extensions;
+using EventFly.Messages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using Akka.Actor;
-using Akka.Event;
-using EventFly.Extensions;
-using EventFly.Messages;
 
 namespace EventFly.Subscribers
 {
@@ -47,28 +47,28 @@ namespace EventFly.Subscribers
                 Settings = new DomainEventSubscriberSettings(Context.System.Settings.Config);
             else
                 Settings = settings;
-            
+
             SubscriptionTypes = new List<Type>();
-            
+
             if (Settings.AutoSubscribe)
             {
                 var type = GetType();
-                
+
                 var asyncDomainEventSubscriptionTypes =
                     type
                         .GetAsyncDomainEventSubscriberSubscriptionTypes();
-                
+
                 var domainEventsubscriptionTypes =
                     type
                         .GetDomainEventSubscriberSubscriptionTypes();
-                
+
                 var subscriptionTypes = new List<Type>();
-                
+
                 subscriptionTypes.AddRange(asyncDomainEventSubscriptionTypes);
                 subscriptionTypes.AddRange(domainEventsubscriptionTypes);
 
                 SubscriptionTypes = subscriptionTypes;
-                
+
                 foreach (var subscriptionType in SubscriptionTypes)
                 {
                     Context.System.EventStream.Subscribe(Self, subscriptionType);
@@ -80,14 +80,14 @@ namespace EventFly.Subscribers
                 InitReceives();
                 InitAsyncReceives();
             }
-            
+
             Receive<UnsubscribeFromAll>(Handle);
         }
 
         public void InitReceives()
         {
             var type = GetType();
-            
+
             var subscriptionTypes =
                 type
                     .GetDomainEventSubscriberSubscriptionTypes();
@@ -105,7 +105,7 @@ namespace EventFly.Subscribers
                 .ToDictionary(
                     mi => mi.GetParameters()[0].ParameterType,
                     mi => mi);
-            
+
             var method = type
                 .GetBaseType("ReceiveActor")
                 .GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
@@ -118,21 +118,21 @@ namespace EventFly.Subscribers
                         && parameters[0].ParameterType.Name.Contains("Func");
                 })
                 .First();
-            
+
             foreach (var subscriptionType in subscriptionTypes)
             {
-                var funcType = typeof(Func<,>).MakeGenericType(subscriptionType, typeof(bool));
+                var funcType = typeof(Func<,>).MakeGenericType(subscriptionType, typeof(Boolean));
                 var subscriptionFunction = Delegate.CreateDelegate(funcType, this, methods[subscriptionType]);
                 var actorReceiveMethod = method.MakeGenericMethod(subscriptionType);
 
-                actorReceiveMethod.Invoke(this, new object[]{subscriptionFunction});
+                actorReceiveMethod.Invoke(this, new Object[] { subscriptionFunction });
             }
         }
 
         public void InitAsyncReceives()
         {
             var type = GetType();
-            
+
             var subscriptionTypes =
                 type
                     .GetAsyncDomainEventSubscriberSubscriptionTypes();
@@ -171,17 +171,17 @@ namespace EventFly.Subscribers
                 var subscriptionFunction = Delegate.CreateDelegate(funcType, this, methods[subscriptionType]);
                 var actorReceiveMethod = method.MakeGenericMethod(subscriptionType);
 
-                actorReceiveMethod.Invoke(this, new []{subscriptionFunction,(object) null});
+                actorReceiveMethod.Invoke(this, new[] { subscriptionFunction, (Object)null });
             }
         }
-        
-        protected virtual bool Handle(UnsubscribeFromAll command)
+
+        protected virtual Boolean Handle(UnsubscribeFromAll command)
         {
             UnsubscribeFromAllTopics();
 
             return true;
         }
-        
+
         protected void UnsubscribeFromAllTopics()
         {
             foreach (var type in SubscriptionTypes)
@@ -189,6 +189,6 @@ namespace EventFly.Subscribers
                 Context.System.EventStream.Unsubscribe(Self, type);
             }
         }
-        
+
     }
 }

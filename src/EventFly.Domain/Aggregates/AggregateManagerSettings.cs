@@ -28,9 +28,9 @@ namespace EventFly.Aggregates
 {
     public class AggregateManagerSettings
     {
-        private static readonly string _section = "EventFly.aggregate-manager";
-        public readonly bool HandleDeadLetters;
-        public readonly bool AutoDispatchOnReceive;
+        private static readonly System.String _section = "EventFly.aggregate-manager";
+        public readonly System.Boolean HandleDeadLetters;
+        public readonly System.Boolean AutoDispatchOnReceive;
 
         public AggregateManagerSettings(Config config)
         {

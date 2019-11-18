@@ -29,7 +29,7 @@ namespace EventFly.Core
 {
     public interface IIdentity
     {
-        string Value { get; }
+        System.String Value { get; }
 
     }
 }

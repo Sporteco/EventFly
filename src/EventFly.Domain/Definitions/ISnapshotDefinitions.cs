@@ -9,7 +9,7 @@ using EventFly.Core.VersionedTypes;
 
 namespace EventFly.Definitions
 {
-  public interface ISnapshotDefinitions : IVersionedTypeDefinitions<SnapshotVersionAttribute, SnapshotDefinition>
-  {
-  }
+    public interface ISnapshotDefinitions : IVersionedTypeDefinitions<SnapshotVersionAttribute, SnapshotDefinition>
+    {
+    }
 }

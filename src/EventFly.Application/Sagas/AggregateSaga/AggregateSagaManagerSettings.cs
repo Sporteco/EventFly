@@ -28,9 +28,9 @@ namespace EventFly.Sagas.AggregateSaga
 {
     public class AggregateSagaManagerSettings
     {
-        private static readonly string _section = "EventFly.aggregate-saga-manager";
-        public readonly bool AutoSubscribe;
-        public readonly bool AutoSpawnOnReceive;
+        private static readonly System.String _section = "EventFly.aggregate-saga-manager";
+        public readonly System.Boolean AutoSubscribe;
+        public readonly System.Boolean AutoSpawnOnReceive;
         public AggregateSagaManagerSettings(Config config)
         {
             var aggregateSagaManagerConfig = config.WithFallback(EventFlyDefaultSettings.DefaultConfig());

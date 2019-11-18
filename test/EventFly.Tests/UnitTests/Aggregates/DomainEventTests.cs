@@ -21,7 +21,6 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System;
 using EventFly.Aggregates;
 using EventFly.Core;
 using EventFly.Extensions;
@@ -29,6 +28,7 @@ using EventFly.TestHelpers.Aggregates;
 using EventFly.TestHelpers.Aggregates.Entities;
 using EventFly.TestHelpers.Aggregates.Events;
 using FluentAssertions;
+using System;
 using Xunit;
 
 namespace EventFly.Tests.UnitTests.Aggregates
@@ -57,7 +57,7 @@ namespace EventFly.Tests.UnitTests.Aggregates
             };
             var committedEvent =
                 new DomainEvent<TestAggregate, TestAggregateId, TestAddedEvent>(
-                    aggregateId, 
+                    aggregateId,
                     aggregateEvent,
                     eventMetadata,
                     now,
@@ -65,7 +65,7 @@ namespace EventFly.Tests.UnitTests.Aggregates
 
             committedEvent.GetIdentity().Should().Be(aggregateId);
         }
-        
+
         [Fact]
         public void InstantiatingDomainEvent_WithNullAggregateEvent_ThrowsException()
         {
@@ -93,7 +93,7 @@ namespace EventFly.Tests.UnitTests.Aggregates
                         aggregateSequenceNumber))
                 .Should().Throw<ArgumentNullException>().And.Message.Contains("aggregateEvent").Should().BeTrue();
         }
-        
+
         [Fact]
         public void InstantiatingDomainEvent_WithNullMetadata_ThrowsException()
         {
@@ -113,7 +113,7 @@ namespace EventFly.Tests.UnitTests.Aggregates
                         aggregateSequenceNumber))
                 .Should().Throw<ArgumentNullException>().And.Message.Contains("metadata").Should().BeTrue();
         }
-        
+
         [Fact]
         public void InstantiatingDomainEvent_WithDefaultTimeOffset_ThrowsException()
         {
@@ -126,7 +126,7 @@ namespace EventFly.Tests.UnitTests.Aggregates
             var eventId = EventId.NewDeterministic(
                 GuidFactories.Deterministic.Namespaces.Events,
                 $"{aggregateId.Value}-v{aggregateSequenceNumber}");
-            
+
             var eventMetadata = new EventMetadata
             {
                 Timestamp = now,
@@ -145,7 +145,7 @@ namespace EventFly.Tests.UnitTests.Aggregates
                         aggregateSequenceNumber))
                 .Should().Throw<ArgumentNullException>().And.Message.Contains("timestamp").Should().BeTrue();
         }
-        
+
         [Fact]
         public void InstantiatingDomainEvent_WithNullId_ThrowsException()
         {
@@ -158,7 +158,7 @@ namespace EventFly.Tests.UnitTests.Aggregates
             var eventId = EventId.NewDeterministic(
                 GuidFactories.Deterministic.Namespaces.Events,
                 $"{aggregateId.Value}-v{aggregateSequenceNumber}");
-            
+
             var eventMetadata = new EventMetadata
             {
                 Timestamp = now,
@@ -177,7 +177,7 @@ namespace EventFly.Tests.UnitTests.Aggregates
                         aggregateSequenceNumber))
                 .Should().Throw<ArgumentNullException>().And.Message.Contains("aggregateIdentity").Should().BeTrue();
         }
-        
+
         [Fact]
         public void InstantiatingDomainEvent_WithNegativeSequenceNumber_ThrowsException()
         {
@@ -190,7 +190,7 @@ namespace EventFly.Tests.UnitTests.Aggregates
             var eventId = EventId.NewDeterministic(
                 GuidFactories.Deterministic.Namespaces.Events,
                 $"{aggregateId.Value}-v{aggregateSequenceNumber}");
-            
+
             var eventMetadata = new EventMetadata
             {
                 Timestamp = now,

@@ -30,7 +30,7 @@ namespace EventFly.TestHelpers.Aggregates.Commands
         public PoisonTestAggregateCommand(TestAggregateId aggregateId)
             : base(aggregateId)
         {
-            
+
         }
     }
 }

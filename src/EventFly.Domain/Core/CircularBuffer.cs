@@ -34,12 +34,12 @@ namespace EventFly.Core
     public class CircularBuffer<T> : IEnumerable<T>
     {
         private readonly T[] _buffer;
-        private int _start;
-        private int _end;
+        private Int32 _start;
+        private Int32 _end;
 
-        public int Capacity => _buffer.Length - 1;
+        public Int32 Capacity => _buffer.Length - 1;
 
-        public CircularBuffer(int capacity)
+        public CircularBuffer(Int32 capacity)
         {
             if (capacity <= 0) throw new ArgumentException(nameof(capacity));
 
@@ -49,7 +49,7 @@ namespace EventFly.Core
         }
 
         public CircularBuffer(
-            int capacity, 
+            Int32 capacity,
             params T[] items)
             : this(capacity)
         {

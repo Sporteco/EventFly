@@ -7,12 +7,12 @@ namespace EventFly.Schedulers
 {
     public interface ICommandsScheduler
     {
-        Task<bool> Schedule(PublishCommandJobId id, ICommand command, DateTime triggerDate);
+        Task<Boolean> Schedule(PublishCommandJobId id, ICommand command, DateTime triggerDate);
 
-        Task<bool> Schedule(PublishCommandJobId id, ICommand command, TimeSpan interval, DateTime triggerDate);
+        Task<Boolean> Schedule(PublishCommandJobId id, ICommand command, TimeSpan interval, DateTime triggerDate);
 
-        Task<bool> Schedule(PublishCommandJobId id, ICommand command, string cronExpression, DateTime triggerDate);
+        Task<Boolean> Schedule(PublishCommandJobId id, ICommand command, String cronExpression, DateTime triggerDate);
 
-        Task<bool> Cancel(PublishCommandJobId jobId);
+        Task<Boolean> Cancel(PublishCommandJobId jobId);
     }
 }

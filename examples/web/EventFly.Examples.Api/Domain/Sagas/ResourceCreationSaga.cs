@@ -21,14 +21,14 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System;
-using System.Threading.Tasks;
 using EventFly.Aggregates;
 using EventFly.Examples.Api.Domain.Aggregates.Resource;
 using EventFly.Examples.Api.Domain.Aggregates.Resource.Events;
 using EventFly.Examples.Api.Domain.Sagas.Events;
 using EventFly.Sagas;
 using EventFly.Sagas.AggregateSaga;
+using System;
+using System.Threading.Tasks;
 
 namespace EventFly.Examples.Api.Domain.Sagas
 {
@@ -42,24 +42,24 @@ namespace EventFly.Examples.Api.Domain.Sagas
             var startedEvent = new ResourceCreationStartedEvent(resourceId, DateTime.UtcNow);
             var started = DateTimeOffset.UtcNow;
             Emit(startedEvent);
-            
+
             var rng = new Random();
             var progress = 0;
-            
+
             while (progress < 100)
             {
                 var delay = rng.Next(1, 3);
-                
+
                 await Task.Delay(delay * 1000);
                 progress += rng.Next(5, 15);
                 var elapsed = DateTimeOffset.UtcNow - started;
-                var progressEvent = new ResourceCreationProgressEvent(resourceId,progress,(int)elapsed.TotalSeconds,DateTime.UtcNow);
+                var progressEvent = new ResourceCreationProgressEvent(resourceId, progress, (Int32)elapsed.TotalSeconds, DateTime.UtcNow);
                 Emit(progressEvent);
             }
 
             var elapsedTime = DateTimeOffset.UtcNow - started;
-            var endedEvent = new ResourceCreationEndedEvent(resourceId,100, (int)elapsedTime.TotalSeconds,DateTime.UtcNow);
-            
+            var endedEvent = new ResourceCreationEndedEvent(resourceId, 100, (Int32)elapsedTime.TotalSeconds, DateTime.UtcNow);
+
             Emit(endedEvent);
         }
     }

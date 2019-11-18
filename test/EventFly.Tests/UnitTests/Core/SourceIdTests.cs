@@ -1,6 +1,6 @@
-using System;
 using EventFly.Core;
 using FluentAssertions;
+using System;
 using Xunit;
 
 namespace EventFly.Tests.UnitTests.Core

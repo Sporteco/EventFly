@@ -6,26 +6,26 @@
 
 namespace EventFly.Swagger
 {
-  public static class HttpRouting
-  {
-    public const string AggregateIdRouteParam = "aggregateId";
-    public const string DomainRouteParam = "domainRouteParam";
-    public const string AggregateRouteParam = "aggregateRouteParam";
-    public const string ActionRouteParam = "actionRouteParam";
-    public const string ActionFormat = "api/{DomainName}/{AggregateName}/{AggregateId}/{ActionName}";
-    public const string SingletonActionFormat = "api/{DomainName}/{AggregateName}/{ActionName}";
-
-    public class Params
+    public static class HttpRouting
     {
-      public readonly string AggregateId = "{aggregateId}";
+        public const System.String AggregateIdRouteParam = "aggregateId";
+        public const System.String DomainRouteParam = "domainRouteParam";
+        public const System.String AggregateRouteParam = "aggregateRouteParam";
+        public const System.String ActionRouteParam = "actionRouteParam";
+        public const System.String ActionFormat = "api/{DomainName}/{AggregateName}/{AggregateId}/{ActionName}";
+        public const System.String SingletonActionFormat = "api/{DomainName}/{AggregateName}/{ActionName}";
 
-      public static Params ForController { get; } = new Params { DomainName = "{domainRouteParam}", AggregateName = "{aggregateRouteParam}", ActionName = "{actionRouteParam}" };
+        public class Params
+        {
+            public readonly System.String AggregateId = "{aggregateId}";
 
-      public string DomainName { get; set; }
+            public static Params ForController { get; } = new Params { DomainName = "{domainRouteParam}", AggregateName = "{aggregateRouteParam}", ActionName = "{actionRouteParam}" };
 
-      public string AggregateName { get; set; }
+            public System.String DomainName { get; set; }
 
-      public string ActionName { get; set; }
+            public System.String AggregateName { get; set; }
+
+            public System.String ActionName { get; set; }
+        }
     }
-  }
 }

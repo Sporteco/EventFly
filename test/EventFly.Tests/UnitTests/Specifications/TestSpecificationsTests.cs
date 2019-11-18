@@ -25,10 +25,10 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System.ComponentModel;
 using EventFly.TestHelpers;
 using EventFly.TestHelpers.Specifications;
 using FluentAssertions;
+using System.ComponentModel;
 using Xunit;
 
 namespace EventFly.Tests.UnitTests.Specifications
@@ -60,7 +60,7 @@ namespace EventFly.Tests.UnitTests.Specifications
         [InlineData(4, 3, false)]
         [InlineData(4, 4, false)]
         [InlineData(4, 5, true)]
-        public void IsAboveSpecification_Returns_Correct(int limit, int obj, bool expectedIsSatisfiedBy)
+        public void IsAboveSpecification_Returns_Correct(System.Int32 limit, System.Int32 obj, System.Boolean expectedIsSatisfiedBy)
         {
             var isAbove = new TestSpecifications.IsAboveSpecification(limit);
 

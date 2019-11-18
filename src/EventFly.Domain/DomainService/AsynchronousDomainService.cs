@@ -1,7 +1,3 @@
-using System;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
 using Akka.Actor;
 using Akka.Event;
 using EventFly.Aggregates;
@@ -12,6 +8,10 @@ using EventFly.DependencyInjection;
 using EventFly.Exceptions;
 using EventFly.Extensions;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Linq;
+using System.Reflection;
+using System.Threading.Tasks;
 
 namespace EventFly.DomainService
 {
@@ -89,11 +89,11 @@ namespace EventFly.DomainService
             foreach (var subscriptionType in subscriptionTypes)
             {
                 Context.System.EventStream.Subscribe(Self, subscriptionType);
-                var funcType = typeof(Func<,>).MakeGenericType(subscriptionType, typeof(bool));
+                var funcType = typeof(Func<,>).MakeGenericType(subscriptionType, typeof(Boolean));
                 var subscriptionFunction = Delegate.CreateDelegate(funcType, this, methods[subscriptionType]);
                 var actorReceiveMethod = method.MakeGenericMethod(subscriptionType);
 
-                actorReceiveMethod.Invoke(this, new object[] { subscriptionFunction });
+                actorReceiveMethod.Invoke(this, new Object[] { subscriptionFunction });
             }
         }
 
@@ -133,11 +133,11 @@ namespace EventFly.DomainService
                 var subscriptionFunction = Delegate.CreateDelegate(funcType, this, methods[subscriptionType]);
                 var actorReceiveMethod = method.MakeGenericMethod(subscriptionType);
 
-                actorReceiveMethod.Invoke(this, new[] { subscriptionFunction, (object)null });
+                actorReceiveMethod.Invoke(this, new[] { subscriptionFunction, (Object)null });
             }
         }
 
-        public bool HasSourceId(ISourceId sourceId)
+        public Boolean HasSourceId(ISourceId sourceId)
         {
             return !sourceId.IsNone() && _previousSourceIds.Any(s => s.Value == sourceId.Value);
         }
@@ -156,7 +156,7 @@ namespace EventFly.DomainService
             _scope.Dispose();
         }
 
-        protected void CommandInternal<T>(Func<T, bool> handler)
+        protected void CommandInternal<T>(Func<T, Boolean> handler)
         {
             Receive<T>(e =>
             {
@@ -168,7 +168,7 @@ namespace EventFly.DomainService
             });
         }
 
-        protected void CommandInternal<T>(Func<T, Task> handler, object _)
+        protected void CommandInternal<T>(Func<T, Task> handler, Object _)
         {
             ReceiveAsync<T>(e =>
             {
@@ -180,7 +180,7 @@ namespace EventFly.DomainService
             });
         }
 
-        protected void SetSourceIdHistory(int count)
+        protected void SetSourceIdHistory(Int32 count)
         {
             _previousSourceIds = new CircularBuffer<ISourceId>(count);
         }

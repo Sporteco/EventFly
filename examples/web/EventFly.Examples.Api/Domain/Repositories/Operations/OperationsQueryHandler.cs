@@ -21,11 +21,11 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using EventFly.Akka;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using EventFly.Akka;
 
 namespace EventFly.Examples.Api.Domain.Repositories.Operations
 {
@@ -40,31 +40,31 @@ namespace EventFly.Examples.Api.Domain.Repositories.Operations
         public async Task<OperationsProjection> Find(Guid operationId)
         {
             var query = new GetOperationsQuery();
-            
+
             var result = await _operationStorageHandler.Ask<List<OperationsProjection>>(query);
 
             var readModel = result.SingleOrDefault(x => x.Id == operationId);
-            
+
             return readModel;
         }
 
         public async Task<IReadOnlyCollection<OperationsProjection>> FindAll()
         {
             var query = new GetOperationsQuery();
-            
+
             var result = await _operationStorageHandler.Ask<List<OperationsProjection>>(query);
 
             var sortedResult = result
                 .OrderBy(x => x.Percentage)
                 .ThenBy(x => x.StartedAt)
                 .ToList();
-            
+
             return sortedResult;
         }
     }
 
     public class GetOperationsQuery
     {
-        
+
     }
 }

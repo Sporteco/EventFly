@@ -21,8 +21,8 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System;
 using Cronos;
+using System;
 
 namespace EventFly.Jobs.Commands
 {
@@ -31,18 +31,18 @@ namespace EventFly.Jobs.Commands
         where TJob : IJob<TIdentity>
         where TIdentity : IJobId
     {
-        public string CronExpression { get; }
+        public String CronExpression { get; }
         private readonly CronExpression _expression;
 
         public ScheduleCron(
             TJob job,
-            string cronExpression,
+            String cronExpression,
             DateTime triggerDate,
-            object ack = null,
-            object nack = null)
+            Object ack = null,
+            Object nack = null)
             : base(job, triggerDate, ack, nack)
         {
-            if (string.IsNullOrWhiteSpace(cronExpression)) throw new ArgumentNullException(nameof(cronExpression));
+            if (String.IsNullOrWhiteSpace(cronExpression)) throw new ArgumentNullException(nameof(cronExpression));
 
             CronExpression = cronExpression;
             _expression = Cronos.CronExpression.Parse(cronExpression);
@@ -57,12 +57,12 @@ namespace EventFly.Jobs.Commands
             return null;
         }
 
-        public override Schedule<TJob, TIdentity> WithAck(object ack)
+        public override Schedule<TJob, TIdentity> WithAck(Object ack)
         {
             return new ScheduleCron<TJob, TIdentity>(Job, CronExpression, TriggerDate, ack, Nack);
         }
 
-        public override Schedule<TJob, TIdentity> WithNack(object nack)
+        public override Schedule<TJob, TIdentity> WithNack(Object nack)
         {
             return new ScheduleCron<TJob, TIdentity>(Job, CronExpression, TriggerDate, Ack, nack);
         }

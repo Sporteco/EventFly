@@ -10,7 +10,7 @@ namespace EventFly.Definitions
 {
     public interface IQueryDefinition
     {
-        string Name { get; }
+        String Name { get; }
 
         Type Type { get; }
 

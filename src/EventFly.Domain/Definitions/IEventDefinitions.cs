@@ -3,7 +3,7 @@ using EventFly.Core.VersionedTypes;
 
 namespace EventFly.Definitions
 {
-  public interface IEventDefinitions : IVersionedTypeDefinitions<EventVersionAttribute, EventDefinition>
-  {
-  }
+    public interface IEventDefinitions : IVersionedTypeDefinitions<EventVersionAttribute, EventDefinition>
+    {
+    }
 }

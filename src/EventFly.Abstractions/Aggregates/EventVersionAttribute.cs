@@ -25,8 +25,8 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System;
 using EventFly.Core.VersionedTypes;
+using System;
 
 namespace EventFly.Aggregates
 {
@@ -34,12 +34,12 @@ namespace EventFly.Aggregates
         AttributeTargets.Class,
         AllowMultiple = true
     )]
-    
+
     public class EventVersionAttribute : VersionedTypeAttribute
     {
         public EventVersionAttribute(
-            string name, 
-            int version)
+            String name,
+            Int32 version)
             : base(name, version)
         {
         }

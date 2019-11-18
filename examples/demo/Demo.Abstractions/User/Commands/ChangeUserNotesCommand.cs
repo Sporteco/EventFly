@@ -1,14 +1,14 @@
-﻿using System.ComponentModel;
-using EventFly.Commands;
+﻿using EventFly.Commands;
+using System.ComponentModel;
 
 namespace Demo.User.Commands
 {
     [Description("Изменить заметки о пользователе")]
     public class ChangeUserNotesCommand : Command<UserId>
     {
-        public string NewValue { get; }
+        public System.String NewValue { get; }
 
-        public ChangeUserNotesCommand(UserId aggregateId, string newValue) : base(aggregateId)
+        public ChangeUserNotesCommand(UserId aggregateId, System.String newValue) : base(aggregateId)
         {
             NewValue = newValue;
         }

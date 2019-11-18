@@ -4,13 +4,13 @@
 // MVID: 61DF059E-E5F5-4992-B320-644C3E4F5C82
 // Assembly location: C:\Users\naych\source\repos\!!!!!\netcoreapp2.2\EventFly.dll
 
+using EventFly.Exceptions;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using EventFly.Exceptions;
 
 namespace EventFly.Core.VersionedTypes
 {
@@ -20,9 +20,9 @@ namespace EventFly.Core.VersionedTypes
     {
         // ReSharper disable once StaticMemberInGenericType
         private static readonly Regex NameRegex = new Regex("^(Old){0,1}(?<name>[\\p{L}\\p{Nd}]+?)(V(?<version>[0-9]+)){0,1}$", RegexOptions.Compiled);
-        private readonly object _syncRoot = new object();
+        private readonly Object _syncRoot = new Object();
         private readonly ConcurrentDictionary<Type, List<TDefinition>> _definitionsByType = new ConcurrentDictionary<Type, List<TDefinition>>();
-        private readonly ConcurrentDictionary<string, Dictionary<int, TDefinition>> _definitionByNameAndVersion = new ConcurrentDictionary<string, Dictionary<int, TDefinition>>();
+        private readonly ConcurrentDictionary<String, Dictionary<Int32, TDefinition>> _definitionByNameAndVersion = new ConcurrentDictionary<String, Dictionary<Int32, TDefinition>>();
 
         public void Load(params Type[] types)
         {
@@ -35,7 +35,7 @@ namespace EventFly.Core.VersionedTypes
                 return;
             var list1 = types.Where(t => !typeof(TTypeCheck).GetTypeInfo().IsAssignableFrom((TypeInfo)t)).ToList();
             if (list1.Any())
-                throw new ArgumentException("The following types are not of type '" + typeof(TTypeCheck).PrettyPrint() + "': " + string.Join(", ", list1.Select(t => t.PrettyPrint())));
+                throw new ArgumentException("The following types are not of type '" + typeof(TTypeCheck).PrettyPrint() + "': " + String.Join(", ", list1.Select(t => t.PrettyPrint())));
             lock (_syncRoot)
             {
                 var list2 = types.Distinct().Where(t => !_definitionsByType.ContainsKey(t)).SelectMany(CreateDefinitions).ToList();
@@ -44,10 +44,10 @@ namespace EventFly.Core.VersionedTypes
                 foreach (var definition in list2)
                 {
                     _definitionsByType.GetOrAdd(definition.Type, _ => new List<TDefinition>()).Add(definition);
-                    Dictionary<int, TDefinition> dictionary;
+                    Dictionary<Int32, TDefinition> dictionary;
                     if (!_definitionByNameAndVersion.TryGetValue(definition.Name, out dictionary))
                     {
-                        dictionary = new Dictionary<int, TDefinition>();
+                        dictionary = new Dictionary<Int32, TDefinition>();
                         _definitionByNameAndVersion.TryAdd(definition.Name, dictionary);
                     }
                     if (!dictionary.ContainsKey(definition.Version))
@@ -56,9 +56,9 @@ namespace EventFly.Core.VersionedTypes
             }
         }
 
-        public IEnumerable<TDefinition> GetDefinitions(string name)
+        public IEnumerable<TDefinition> GetDefinitions(String name)
         {
-            Dictionary<int, TDefinition> dictionary;
+            Dictionary<Int32, TDefinition> dictionary;
             return _definitionByNameAndVersion.TryGetValue(name, out dictionary) ? dictionary.Values.OrderBy(d => d.Version) : Enumerable.Empty<TDefinition>();
         }
 
@@ -67,21 +67,21 @@ namespace EventFly.Core.VersionedTypes
             return _definitionByNameAndVersion.SelectMany(kv => (IEnumerable<TDefinition>)kv.Value.Values);
         }
 
-        public bool TryGetDefinition(string name, int version, out TDefinition definition)
+        public Boolean TryGetDefinition(String name, Int32 version, out TDefinition definition)
         {
-            Dictionary<int, TDefinition> dictionary;
+            Dictionary<Int32, TDefinition> dictionary;
             if (_definitionByNameAndVersion.TryGetValue(name, out dictionary))
                 return dictionary.TryGetValue(version, out definition);
             definition = default;
             return false;
         }
 
-        public TDefinition GetDefinition(string name, int version)
+        public TDefinition GetDefinition(String name, Int32 version)
         {
             TDefinition definition;
             if (!TryGetDefinition(name, version, out definition))
                 throw new ArgumentException(
-                    $"No versioned type definition for '{(object)name}' with version {(object)version} in '{(object)GetType().PrettyPrint()}'");
+                    $"No versioned type definition for '{(Object)name}' with version {(Object)version} in '{(Object)GetType().PrettyPrint()}'");
             return definition;
         }
 
@@ -101,7 +101,7 @@ namespace EventFly.Core.VersionedTypes
             return definitions;
         }
 
-        public bool TryGetDefinition(Type type, out TDefinition definition)
+        public Boolean TryGetDefinition(Type type, out TDefinition definition)
         {
             IReadOnlyCollection<TDefinition> definitions;
             if (!TryGetDefinitions(type, out definitions))
@@ -110,12 +110,12 @@ namespace EventFly.Core.VersionedTypes
                 return false;
             }
             if (definitions.Count > 1)
-                throw new InvalidOperationException("Type '" + type.PrettyPrint() + "' has multiple definitions: " + string.Join(", ", definitions.Select(d => d.ToString())));
+                throw new InvalidOperationException("Type '" + type.PrettyPrint() + "' has multiple definitions: " + String.Join(", ", definitions.Select(d => d.ToString())));
             definition = definitions.Single();
             return true;
         }
 
-        public bool TryGetDefinitions(Type type, out IReadOnlyCollection<TDefinition> definitions)
+        public Boolean TryGetDefinitions(Type type, out IReadOnlyCollection<TDefinition> definitions)
         {
             if (type == null)
                 throw new ArgumentNullException(nameof(type));
@@ -129,7 +129,7 @@ namespace EventFly.Core.VersionedTypes
             return true;
         }
 
-        protected abstract TDefinition CreateDefinition(int version, Type type, string name);
+        protected abstract TDefinition CreateDefinition(Int32 version, Type type, String name);
 
         private IEnumerable<TDefinition> CreateDefinitions(Type versionedType)
         {
@@ -152,7 +152,7 @@ namespace EventFly.Core.VersionedTypes
             var version = 1;
             var group = match.Groups["version"];
             if (group.Success)
-                version = int.Parse(group.Value);
+                version = Int32.Parse(group.Value);
             var name = match.Groups["name"].Value;
             return CreateDefinition(version, versionedType, name);
         }

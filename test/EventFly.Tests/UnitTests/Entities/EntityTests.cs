@@ -1,6 +1,6 @@
-using System;
 using EventFly.TestHelpers.Aggregates.Entities;
 using FluentAssertions;
+using System;
 using Xunit;
 
 namespace EventFly.Tests.UnitTests.Entities
@@ -13,12 +13,12 @@ namespace EventFly.Tests.UnitTests.Entities
             this.Invoking(test => new Test(null))
                 .Should().Throw<ArgumentNullException>();
         }
-        
+
         [Fact]
         public void InstantiatingEntity_WithValidId_HasIdentity()
         {
             var testId = TestId.New;
-            
+
             var test = new Test(testId);
 
             test.GetIdentity().Should().Be(testId);

@@ -28,12 +28,12 @@ using Newtonsoft.Json;
 namespace EventFly.TestHelpers.Aggregates
 {
     [JsonConverter(typeof(SingleValueObjectConverter))]
-    public class TestAggregateId : Identity<TestAggregateId> 
+    public class TestAggregateId : Identity<TestAggregateId>
     {
-        public TestAggregateId(string value)
+        public TestAggregateId(System.String value)
             : base(value)
         {
-            
+
         }
     }
 }

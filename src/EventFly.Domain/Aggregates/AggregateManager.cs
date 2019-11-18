@@ -21,13 +21,13 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System;
-using System.Linq;
 using Akka.Actor;
 using Akka.Event;
 using EventFly.Commands;
 using EventFly.Core;
 using EventFly.Exceptions;
+using System;
+using System.Linq;
 
 namespace EventFly.Aggregates
 {
@@ -43,9 +43,9 @@ namespace EventFly.Aggregates
         where TIdentity : IIdentity
     {
         protected ILoggingAdapter Logger { get; set; }
-        protected Func<DeadLetter, bool> DeadLetterHandler => Handle;
+        protected Func<DeadLetter, Boolean> DeadLetterHandler => Handle;
         public AggregateManagerSettings Settings { get; }
-        public string Name { get; }
+        public String Name { get; }
 
         public AggregateManager()
         {
@@ -65,7 +65,7 @@ namespace EventFly.Aggregates
 
         }
 
-        protected virtual bool Dispatch(ICommand command)
+        protected virtual Boolean Dispatch(ICommand command)
         {
             Logger.Info("AggregateManager of Type={0}; has received a command of Type={1}", Name, command.GetType().PrettyPrint());
 
@@ -77,7 +77,7 @@ namespace EventFly.Aggregates
         }
 
 
-        protected virtual bool ReDispatch(ICommand command)
+        protected virtual Boolean ReDispatch(ICommand command)
         {
             Logger.Info("AggregateManager of Type={0}; is ReDispatching deadletter of Type={1}", Name, command.GetType().PrettyPrint());
 
@@ -88,7 +88,7 @@ namespace EventFly.Aggregates
             return true;
         }
 
-        protected bool Handle(DeadLetter deadLetter)
+        protected Boolean Handle(DeadLetter deadLetter)
         {
             if (deadLetter.Message is ICommand &&
                 (deadLetter.Message as dynamic).AggregateId.GetType() == typeof(TIdentity))
@@ -102,7 +102,7 @@ namespace EventFly.Aggregates
 
         }
 
-        protected virtual bool Terminate(Terminated message)
+        protected virtual Boolean Terminate(Terminated message)
         {
             Logger.Warning("Aggregate of Type={0}, and Id={1}; has terminated.", typeof(TAggregate).PrettyPrint(), message.ActorRef.Path.Name);
             Context.Unwatch(message.ActorRef);
@@ -112,7 +112,7 @@ namespace EventFly.Aggregates
         protected virtual IActorRef FindOrCreate(TIdentity aggregateId)
         {
             var assemblyName = typeof(TIdentity).Assembly.FullName.Split('.').FirstOrDefault() ?? "";
-            var realAggregateId = string.IsNullOrEmpty(assemblyName) ? aggregateId.Value : $"{assemblyName}-{aggregateId}";
+            var realAggregateId = String.IsNullOrEmpty(assemblyName) ? aggregateId.Value : $"{assemblyName}-{aggregateId}";
 
             var aggregate = Context.Child(realAggregateId);
 

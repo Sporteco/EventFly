@@ -1,18 +1,18 @@
 ﻿using EventFly.Core;
 using EventFly.Exceptions;
+using EventFly.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using EventFly.Extensions;
 
 namespace EventFly.Aggregates
 {
     public abstract class AggregateState<TAggregateState, TIdentity, TMessageApplier> : IAggregateState<TIdentity>, IMessageApplier<TIdentity>
-        where TAggregateState : IAggregateState<TIdentity>, IMessageApplier< TIdentity>
-        where TMessageApplier : class, IMessageApplier< TIdentity>
+        where TAggregateState : IAggregateState<TIdentity>, IMessageApplier<TIdentity>
+        where TMessageApplier : class, IMessageApplier<TIdentity>
         where TIdentity : IIdentity
     {
-        private static readonly IReadOnlyDictionary<Type, Action<TMessageApplier, IAggregateEvent>> ApplyMethods; 
+        private static readonly IReadOnlyDictionary<Type, Action<TMessageApplier, IAggregateEvent>> ApplyMethods;
 
         static AggregateState()
         {
@@ -37,7 +37,7 @@ namespace EventFly.Aggregates
             }
 
             await PreApplyAction(@event);
-            applyMethod.Invoke((TMessageApplier) (object) this, @event );
+            applyMethod.Invoke((TMessageApplier)(Object)this, @event);
             await PostApplyAction(@event);
         }
 
@@ -53,17 +53,17 @@ namespace EventFly.Aggregates
         protected void Apply(IAggregateEvent<TIdentity> @event)
         {
             var applier = GetApplierOfConcreteEvent(@event.GetType());
-            applier((TMessageApplier)(object)this,  @event );
+            applier((TMessageApplier)(Object)this, @event);
         }
 
         protected virtual Task PreApplyAction(IAggregateEvent<TIdentity> @event) => Task.CompletedTask;
         protected virtual Task PostApplyAction(IAggregateEvent<TIdentity> @event) => Task.CompletedTask;
 
-        private  Action<TMessageApplier, IAggregateEvent> GetApplierOfConcreteEvent(Type eventType) 
+        private Action<TMessageApplier, IAggregateEvent> GetApplierOfConcreteEvent(Type eventType)
             => !ApplyMethods.TryGetValue(eventType, out var applier) ? null : applier;
     }
 
-    public abstract class AggregateState<TAggregateState, TIdentity> : AggregateState<TAggregateState,  TIdentity, TAggregateState>
+    public abstract class AggregateState<TAggregateState, TIdentity> : AggregateState<TAggregateState, TIdentity, TAggregateState>
         where TIdentity : IIdentity
         where TAggregateState : class, IAggregateState<TIdentity>, IMessageApplier<TIdentity>
     { }

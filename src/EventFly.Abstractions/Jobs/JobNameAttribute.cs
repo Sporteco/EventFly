@@ -28,11 +28,11 @@ namespace EventFly.Jobs
     [AttributeUsage(AttributeTargets.Class, Inherited = false)]
     public class JobNameAttribute : Attribute
     {
-        public string Name { get; }
+        public String Name { get; }
 
-        public JobNameAttribute(string name)
+        public JobNameAttribute(String name)
         {
-            if (string.IsNullOrEmpty(name)) 
+            if (String.IsNullOrEmpty(name))
                 throw new ArgumentNullException(nameof(name));
 
             Name = name;

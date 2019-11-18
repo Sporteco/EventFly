@@ -25,9 +25,9 @@ using EventFly.ValueObjects;
 
 namespace EventFly.Jobs
 {
-    public class JobName: SingleValueObject<string>, IJobName
+    public class JobName : SingleValueObject<System.String>, IJobName
     {
-        public JobName(string value) 
+        public JobName(System.String value)
             : base(value)
         {
         }

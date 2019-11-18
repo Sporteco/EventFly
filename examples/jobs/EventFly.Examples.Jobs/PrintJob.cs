@@ -28,9 +28,9 @@ namespace EventFly.Examples.Jobs
     [JobName("test-job")]
     public class PrintJob : Job<PrintJobId>
     {
-        public string Content { get; }
+        public System.String Content { get; }
 
-        public PrintJob(PrintJobId jobId, string content) : base(jobId)
+        public PrintJob(PrintJobId jobId, System.String content) : base(jobId)
         {
             Content = content;
         }

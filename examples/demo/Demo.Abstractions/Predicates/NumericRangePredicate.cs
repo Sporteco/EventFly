@@ -1,32 +1,34 @@
-﻿namespace Demo.Predicates
+using System;
+
+namespace Demo.Predicates
 {
-    public sealed class DoubleRangePredicate : RangePredicate<double?, double>
+    public sealed class DoubleRangePredicate : RangePredicate<Double?, Double>
     {
-        public override bool Check(double value)
+        public override Boolean Check(Double value)
         {
             return value >= (From ?? value) && value <= (To ?? value);
         }
     }
 
-    public sealed class DecimalRangePredicate : RangePredicate<decimal?, decimal>
+    public sealed class DecimalRangePredicate : RangePredicate<Decimal?, Decimal>
     {
-        public override bool Check(decimal value)
+        public override Boolean Check(Decimal value)
         {
             return value >= (From ?? value) && value <= (To ?? value);
         }
     }
 
-    public sealed class IntegerRangePredicate : RangePredicate<int?, int>
+    public sealed class IntegerRangePredicate : RangePredicate<Int32?, Int32>
     {
-        public override bool Check(int value)
+        public override Boolean Check(Int32 value)
         {
             return value >= (From ?? value) && value <= (To ?? value);
         }
     }
 
-    public sealed class LongRangePredicate : RangePredicate<long?, long>
+    public sealed class LongRangePredicate : RangePredicate<Int64?, Int64>
     {
-        public override bool Check(long value)
+        public override Boolean Check(Int64 value)
         {
             return value >= (From ?? value) && value <= (To ?? value);
         }

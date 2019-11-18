@@ -1,6 +1,6 @@
-﻿using System;
+﻿using EventFly.Aggregates.Snapshot;
+using System;
 using System.Collections.Generic;
-using EventFly.Aggregates.Snapshot;
 
 namespace EventFly.TestHelpers.Aggregates.Snapshots
 {
@@ -12,10 +12,10 @@ namespace EventFly.TestHelpers.Aggregates.Snapshots
         {
             Tests = tests;
         }
-        
+
         public class TestModel
         {
-            public Guid Id { get;}
+            public Guid Id { get; }
 
             public TestModel(Guid id)
             {

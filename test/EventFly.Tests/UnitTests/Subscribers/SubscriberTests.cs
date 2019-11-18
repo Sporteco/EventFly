@@ -21,29 +21,29 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System.ComponentModel;
 using Akka.Actor;
 using Akka.TestKit.Xunit2;
 using EventFly.Commands;
+using EventFly.DependencyInjection;
 using EventFly.TestHelpers.Aggregates;
 using EventFly.TestHelpers.Aggregates.Commands;
 using EventFly.TestHelpers.Aggregates.Events;
+using EventFly.TestHelpers.Aggregates.Sagas.Test;
 using EventFly.TestHelpers.Subscribers;
-using EventFly.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
+using System.ComponentModel;
 using Xunit;
 using Xunit.Abstractions;
-using Microsoft.Extensions.DependencyInjection;
-using EventFly.TestHelpers.Aggregates.Sagas.Test;
 
 namespace EventFly.Tests.UnitTests.Subscribers
 {
     [Collection("SubsriberTests")]
     public class SubscriberTests : TestKit
     {
-        private const string Category = "Subscribers";
+        private const System.String Category = "Subscribers";
 
         public SubscriberTests(ITestOutputHelper testOutputHelper)
-            :base(TestHelpers.Akka.Configuration.Config, "subscriber-tests", testOutputHelper)
+            : base(TestHelpers.Akka.Configuration.Config, "subscriber-tests", testOutputHelper)
         {
             Sys.RegisterDependencyResolver(
                 new ServiceCollection()
@@ -62,7 +62,7 @@ namespace EventFly.Tests.UnitTests.Subscribers
         {
             var eventProbe = CreateTestProbe("event-probe");
             Sys.EventStream.Subscribe(eventProbe, typeof(TestSubscribedEventHandled<TestCreatedEvent>));
-            Sys.ActorOf(Props.Create(() => new TestAggregateSubscriber()), "test-subscriber");        
+            Sys.ActorOf(Props.Create(() => new TestAggregateSubscriber()), "test-subscriber");
             var bus = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<ICommandBus>();
 
             var aggregateId = TestAggregateId.New;
@@ -73,16 +73,16 @@ namespace EventFly.Tests.UnitTests.Subscribers
             eventProbe.
                 ExpectMsg<TestSubscribedEventHandled<TestCreatedEvent>>(x =>
                     x.AggregateEvent.TestAggregateId == command.AggregateId);
-            
+
         }
-        
+
         [Fact]
         [Category(Category)]
         public void Subscriber_ReceivedAsyncEvent_FromAggregatesEmit()
         {
             var eventProbe = CreateTestProbe("event-probe");
             Sys.EventStream.Subscribe(eventProbe, typeof(TestAsyncSubscribedEventHandled<TestCreatedEvent>));
-            Sys.ActorOf(Props.Create(() => new TestAsyncAggregateSubscriber()), "test-subscriber");        
+            Sys.ActorOf(Props.Create(() => new TestAsyncAggregateSubscriber()), "test-subscriber");
             var bus = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<ICommandBus>();
 
             var aggregateId = TestAggregateId.New;

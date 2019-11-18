@@ -29,7 +29,7 @@ namespace EventFly.Jobs
         where TJob : IJob<TIdentity>
         where TIdentity : IJobId
     {
-        public override string ToString()
+        public override System.String ToString()
         {
             return $"{typeof(TJob).PrettyPrint()}/{GetType().PrettyPrint()}";
         }

@@ -1,6 +1,6 @@
-﻿using System.ComponentModel;
-using Demo.ValueObjects;
+﻿using Demo.ValueObjects;
 using EventFly.Commands;
+using System.ComponentModel;
 
 namespace Demo.User.Commands
 {
@@ -13,7 +13,7 @@ namespace Demo.User.Commands
             Name = name;
         }
 
-        public ProjectId  ProjectId { get; }
+        public ProjectId ProjectId { get; }
         public ProjectName Name { get; }
     }
 }

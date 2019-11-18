@@ -21,8 +21,6 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System;
-using System.ComponentModel;
 using Akka.Persistence.Journal;
 using EventFly.Aggregates;
 using EventFly.Commands;
@@ -35,13 +33,15 @@ using EventFly.TestHelpers.Aggregates.Commands;
 using EventFly.TestHelpers.Aggregates.Entities;
 using EventFly.TestHelpers.Aggregates.Events;
 using FluentAssertions;
+using System;
+using System.ComponentModel;
 using Xunit;
 
 namespace EventFly.Tests.UnitTests.Mapping
 {
     public class AggregateEventTaggerTests
     {
-        private const string Category = "Mapping";
+        private const String Category = "Mapping";
 
         [Fact]
         [Category(Category)]
@@ -84,7 +84,7 @@ namespace EventFly.Tests.UnitTests.Mapping
                 false.Should().BeTrue();
             }
         }
-        
+
         [Fact]
         [Category(Category)]
         public void CommittedEvent_WhenTagged_ContainsAggregateEventAsTaggedElement()
@@ -133,9 +133,9 @@ namespace EventFly.Tests.UnitTests.Mapping
         {
             var aggregateEventTagger = new AggregateEventTagger(new EventDefinitions());
 
-            aggregateEventTagger.Manifest(null).Should().Be(string.Empty);
+            aggregateEventTagger.Manifest(null).Should().Be(String.Empty);
         }
-        
+
         [Fact]
         [Category(Category)]
         public void AggregateEventTagger_TaggingNonEvent_ShouldBeLeftAlone()

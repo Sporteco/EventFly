@@ -26,7 +26,7 @@ using EventFly.TestHelpers.Aggregates.Entities;
 
 namespace EventFly.TestHelpers.Aggregates.Commands
 {
-    public class AddFourTestsCommand: Command<TestAggregateId>
+    public class AddFourTestsCommand : Command<TestAggregateId>
     {
         public Test Test { get; }
         public AddFourTestsCommand(

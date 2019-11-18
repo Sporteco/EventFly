@@ -21,8 +21,8 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System;
 using EventFly.Core;
+using System;
 
 namespace EventFly.Aggregates.Snapshot
 {
@@ -34,7 +34,7 @@ namespace EventFly.Aggregates.Snapshot
         public TIdentity AggregateIdentity { get; }
         public TAggregateSnapshot AggregateSnapshot { get; }
         public SnapshotMetadata Metadata { get; }
-        public long AggregateSequenceNumber { get; }
+        public Int64 AggregateSequenceNumber { get; }
         public DateTimeOffset Timestamp { get; }
 
         public CommittedSnapshot(
@@ -42,12 +42,12 @@ namespace EventFly.Aggregates.Snapshot
             TAggregateSnapshot aggregateSnapshot,
             SnapshotMetadata metadata,
             DateTimeOffset timestamp,
-            long aggregateSequenceNumber)
+            Int64 aggregateSequenceNumber)
         {
             if (aggregateSnapshot == null) throw new ArgumentNullException(nameof(aggregateSnapshot));
             if (metadata == null) throw new ArgumentNullException(nameof(metadata));
             if (timestamp == default) throw new ArgumentNullException(nameof(timestamp));
-            if (aggregateIdentity == null || string.IsNullOrEmpty(aggregateIdentity.Value)) throw new ArgumentNullException(nameof(aggregateIdentity));
+            if (aggregateIdentity == null || String.IsNullOrEmpty(aggregateIdentity.Value)) throw new ArgumentNullException(nameof(aggregateIdentity));
             if (aggregateSequenceNumber <= 0) throw new ArgumentOutOfRangeException(nameof(aggregateSequenceNumber));
 
             AggregateIdentity = aggregateIdentity;

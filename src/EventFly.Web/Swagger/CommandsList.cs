@@ -9,7 +9,7 @@ using System.Collections.Generic;
 
 namespace EventFly.Swagger
 {
-  public class CommandsList : List<Type>
-  {
-  }
+    public class CommandsList : List<Type>
+    {
+    }
 }

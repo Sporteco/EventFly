@@ -21,9 +21,6 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System;
-using System.ComponentModel;
-using System.Linq;
 using EventFly.Aggregates;
 using EventFly.Commands;
 using EventFly.Core;
@@ -34,13 +31,16 @@ using EventFly.TestHelpers.Aggregates.Entities;
 using EventFly.TestHelpers.Aggregates.Events;
 using EventFly.TestHelpers.Aggregates.Events.Upcasters;
 using FluentAssertions;
+using System;
+using System.ComponentModel;
+using System.Linq;
 using Xunit;
 
 namespace EventFly.Tests.UnitTests.Mapping
 {
     public class AggregateEventUpcasterTests
     {
-        private const string Category = "Mapping";
+        private const String Category = "Mapping";
 
         [Fact]
         [Category(Category)]
@@ -70,7 +70,7 @@ namespace EventFly.Tests.UnitTests.Mapping
                     now,
                     aggregateSequenceNumber);
 
-            var eventSequence = aggregateEventUpcaster.FromJournal(committedEvent, string.Empty);
+            var eventSequence = aggregateEventUpcaster.FromJournal(committedEvent, String.Empty);
             var upcastedEvent = eventSequence.Events.Single();
 
             upcastedEvent
@@ -79,19 +79,19 @@ namespace EventFly.Tests.UnitTests.Mapping
                 .Should().Be("default upcasted string");
 
         }
-        
+
         [Fact]
         [Category(Category)]
         public void Upcasting_UnsupportedEvent_ThrowsException()
         {
             var aggregateEventUpcaster = new TestAggregateEventUpcaster();
             var aggregateEvent = new TestAddedEvent(Test.New);
-            
+
             this.Invoking(test => aggregateEventUpcaster.Upcast(aggregateEvent))
                 .Should().Throw<ArgumentException>();
 
         }
-        
+
         [Fact]
         [Category(Category)]
         public void Instantiating_UnInstantiableUpcaster_ThrowsException()
@@ -100,21 +100,21 @@ namespace EventFly.Tests.UnitTests.Mapping
                 .Should().Throw<InvalidOperationException>();
 
         }
-        
+
         [Fact]
         [Category(Category)]
         public void NonCommittedEvent_WhenRead_IsReturnedUnchanged()
         {
-            var message = new CreateTestCommand(TestAggregateId.New,CommandId.New);
+            var message = new CreateTestCommand(TestAggregateId.New, CommandId.New);
             var eventUpcaster = new TestAggregateEventUpcaster();
 
-            var unchanged = eventUpcaster.FromJournal(message, string.Empty);
+            var unchanged = eventUpcaster.FromJournal(message, String.Empty);
 
             unchanged.Events.Single().As<CreateTestCommand>().Metadata.SourceId.Should().Be(message.Metadata.SourceId);
             unchanged.Events.Single().As<CreateTestCommand>().AggregateId.Should().Be(message.AggregateId);
         }
-        
-        
+
+
 
     }
 }

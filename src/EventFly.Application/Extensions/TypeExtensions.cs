@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using EventFly.Aggregates;
+﻿using EventFly.Aggregates;
 using EventFly.Core;
 using EventFly.Exceptions;
 using EventFly.ReadModels;
 using EventFly.Sagas;
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 
 namespace EventFly.Extensions
 {

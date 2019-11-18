@@ -32,26 +32,26 @@ namespace EventFly.TestHelpers.Subscribers
         ISubscribeTo<TestAggregateId, TestCreatedEvent>,
         ISubscribeTo<TestAggregateId, TestAddedEvent>
     {
-        public bool Handle(IDomainEvent<TestAggregateId, TestCreatedEvent> domainEvent)
+        public System.Boolean Handle(IDomainEvent<TestAggregateId, TestCreatedEvent> domainEvent)
         {
             var handled = new TestSubscribedEventHandled<TestCreatedEvent>(domainEvent.AggregateEvent);
             Context.System.EventStream.Publish(handled);
             return true;
         }
-        
-        public bool Handle(IDomainEvent<TestAggregateId, TestAddedEvent> domainEvent)
+
+        public System.Boolean Handle(IDomainEvent<TestAggregateId, TestAddedEvent> domainEvent)
         {
             var handled = new TestSubscribedEventHandled<TestAddedEvent>(domainEvent.AggregateEvent);
             Context.System.EventStream.Publish(handled);
-            
+
             return true;
         }
     }
 
-    
-    public class TestSubscribedEventHandled<TAggregateEvent> 
+
+    public class TestSubscribedEventHandled<TAggregateEvent>
     {
-        public TAggregateEvent AggregateEvent { get;}
+        public TAggregateEvent AggregateEvent { get; }
 
         public TestSubscribedEventHandled(TAggregateEvent aggregateEvent)
         {

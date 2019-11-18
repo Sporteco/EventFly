@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel;
-using Akka.TestKit.Xunit2;
+﻿using Akka.TestKit.Xunit2;
 using EventFly.Commands;
 using EventFly.Commands.ExecutionResults;
 using EventFly.DependencyInjection;
@@ -9,6 +7,8 @@ using EventFly.TestFixture.Aggregates;
 using EventFly.TestFixture.Extensions;
 using EventFly.TestHelpers;
 using Microsoft.Extensions.DependencyInjection;
+using System.Collections.Generic;
+using System.ComponentModel;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -17,10 +17,10 @@ namespace EventFly.Tests.UnitTests.Permissions
     [Collection("PermissionsTests")]
     public class PermissionsTests : TestKit
     {
-        private const string Category = "Permissions";
-        private readonly CommandMetadata Metadata = new CommandMetadata(new List<KeyValuePair<string, string>>
+        private const System.String Category = "Permissions";
+        private readonly CommandMetadata Metadata = new CommandMetadata(new List<KeyValuePair<System.String, System.String>>
         {
-            new KeyValuePair<string, string>(MetadataKeys.UserId,"user-a381244e-b611-4a76-ace6-b50a4c5bb0f9")
+            new KeyValuePair<System.String, System.String>(MetadataKeys.UserId,"user-a381244e-b611-4a76-ace6-b50a4c5bb0f9")
         });
 
         public PermissionsTests(ITestOutputHelper testOutputHelper)

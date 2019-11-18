@@ -45,7 +45,7 @@ namespace EventFly.Specifications.Provided
             _specifications = specificationList;
         }
 
-        protected override IEnumerable<string> IsNotSatisfiedBecause(T aggregate)
+        protected override IEnumerable<String> IsNotSatisfiedBecause(T aggregate)
         {
             return _specifications.SelectMany(s => s.WhyIsNotSatisfiedBy(aggregate));
         }

@@ -10,7 +10,7 @@ namespace Demo.ValueObjects
     {
         public UserName(params StringLocalization[] locs) : base(locs) { }
 
-        public static implicit operator UserName((string value, LanguageCode lang) str)
+        public static implicit operator UserName((System.String value, LanguageCode lang) str)
         {
             return new UserName(str);
         }

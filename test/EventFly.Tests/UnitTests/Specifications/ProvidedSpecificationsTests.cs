@@ -45,7 +45,7 @@ namespace EventFly.Tests.UnitTests.Specifications
         [InlineData(3, 3, false)]
         [InlineData(3, 4, true)]
         [InlineData(3, 5, true)]
-        public void AtLeast_Returns_Correctly(int requiredSpecifications, int obj, bool expectedIsSatisfiedBy)
+        public void AtLeast_Returns_Correctly(System.Int32 requiredSpecifications, System.Int32 obj, System.Boolean expectedIsSatisfiedBy)
         {
             // Arrange
             var isAbove1 = new TestSpecifications.IsAboveSpecification(1);
@@ -58,7 +58,7 @@ namespace EventFly.Tests.UnitTests.Specifications
             var isSatisfiedBy = atLeast.IsSatisfiedBy(obj);
 
             // Assert
-            isSatisfiedBy.Should().Be(expectedIsSatisfiedBy, string.Join(", ", atLeast.WhyIsNotSatisfiedBy(obj)));
+            isSatisfiedBy.Should().Be(expectedIsSatisfiedBy, System.String.Join(", ", atLeast.WhyIsNotSatisfiedBy(obj)));
         }
     }
 }

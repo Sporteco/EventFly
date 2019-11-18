@@ -3,8 +3,8 @@ using Akka.DI.Core;
 using Akka.Event;
 using EventFly.Aggregates;
 using EventFly.Exceptions;
-using System;
 using EventFly.Extensions;
+using System;
 
 namespace EventFly.ReadModels
 {
@@ -13,7 +13,7 @@ namespace EventFly.ReadModels
     {
         protected ILoggingAdapter Logger { get; set; }
 
-        public string Name { get; }
+        public String Name { get; }
 
         public ReadModelManager()
         {
@@ -34,12 +34,12 @@ namespace EventFly.ReadModels
             {
                 var domainEventType = typeof(IDomainEvent<,>).MakeGenericType(subscriptionType.Item1, subscriptionType.Item2);
 
-                Context.System.EventStream.Subscribe(Self,domainEventType);
+                Context.System.EventStream.Subscribe(Self, domainEventType);
                 Receive(domainEventType, e => Dispatch((IDomainEvent)e));
             }
         }
 
-        protected virtual bool Dispatch(IDomainEvent domainEvent)
+        protected virtual Boolean Dispatch(IDomainEvent domainEvent)
         {
             Logger.Info("ReadModelManager of Type={0}; has received a domain event of Type={1}", Name, typeof(TReadModel).PrettyPrint());
 
@@ -51,10 +51,10 @@ namespace EventFly.ReadModels
             return true;
         }
 
-        protected abstract string GetReadModelId(IDomainEvent domainEvent);
+        protected abstract String GetReadModelId(IDomainEvent domainEvent);
 
 
-        protected virtual bool ReDispatch(IDomainEvent domainEvent)
+        protected virtual Boolean ReDispatch(IDomainEvent domainEvent)
         {
             Logger.Info("ReadModelManager of Type={0}; is ReDispatching deadletter of Type={1}", Name, typeof(TReadModel).PrettyPrint());
 
@@ -66,18 +66,18 @@ namespace EventFly.ReadModels
             return true;
         }
 
-        protected virtual bool Terminate(Terminated message)
+        protected virtual Boolean Terminate(Terminated message)
         {
-            Logger.Warning("Query of Type={0}, and Id={1}; has terminated.",typeof(TReadModel).PrettyPrint(), message.ActorRef.Path.Name);
+            Logger.Warning("Query of Type={0}, and Id={1}; has terminated.", typeof(TReadModel).PrettyPrint(), message.ActorRef.Path.Name);
             Context.Unwatch(message.ActorRef);
             return true;
         }
 
-        protected virtual IActorRef FindOrCreate(string readModelId)
+        protected virtual IActorRef FindOrCreate(String readModelId)
         {
             var aggregate = Context.Child(readModelId);
 
-            if(aggregate.IsNobody())
+            if (aggregate.IsNobody())
             {
                 aggregate = CreateReadModelHandler(readModelId);
             }
@@ -85,7 +85,7 @@ namespace EventFly.ReadModels
             return aggregate;
         }
 
-        protected virtual IActorRef CreateReadModelHandler(string readModelId)
+        protected virtual IActorRef CreateReadModelHandler(String readModelId)
         {
             Props props;
             try
@@ -112,7 +112,7 @@ namespace EventFly.ReadModels
                 localOnlyDecider: x =>
                 {
 
-                    logger.Warning("ReadModelManager of Type={0}; will supervise Exception={1} to be decided as {2}.",Name, x.ToString(), Directive.Restart);
+                    logger.Warning("ReadModelManager of Type={0}; will supervise Exception={1} to be decided as {2}.", Name, x.ToString(), Directive.Restart);
                     return Directive.Restart;
                 });
         }

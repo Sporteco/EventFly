@@ -25,14 +25,14 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System;
 using EventFly.Aggregates;
 using EventFly.Core;
 using EventFly.Exceptions;
+using System;
 
 namespace EventFly.Sagas
-{   
-    public abstract class SagaState<TSaga, TIdentity> 
+{
+    public abstract class SagaState<TSaga, TIdentity>
         where TSaga : IAggregateRoot<TIdentity>
         where TIdentity : IIdentity
     {
@@ -45,7 +45,7 @@ namespace EventFly.Sagas
         protected SagaState()
         {
             var me = this as TMessageApplier;
-            
+
             if (me == null)
                 throw new InvalidOperationException($"MessageApplier of Type={GetType().PrettyPrint()} has a wrong generic argument Type={typeof(TMessageApplier).PrettyPrint()}.");
         }

@@ -1,9 +1,9 @@
 using Akka.TestKit.Xunit2;
 using EventFly.DependencyInjection;
+using EventFly.DomainService;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using EventFly.DomainService;
 using Xunit;
 using Xunit.Abstractions;
 

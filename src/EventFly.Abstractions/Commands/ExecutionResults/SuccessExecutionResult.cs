@@ -29,9 +29,9 @@ namespace EventFly.Commands.ExecutionResults
 {
     public class SuccessExecutionResult : ExecutionResult
     {
-        public override bool IsSuccess { get; } = true;
+        public override System.Boolean IsSuccess { get; } = true;
 
-        public override string ToString()
+        public override System.String ToString()
         {
             return "Successful execution";
         }

@@ -5,9 +5,9 @@ namespace EventFly.Queries
 {
     public interface ISerializedQueryExecutor
     {
-        Task<object> ExecuteQueryAsync(
-            string name,
-            string json,
+        Task<System.Object> ExecuteQueryAsync(
+            System.String name,
+            System.String json,
             CancellationToken cancellationToken);
     }
 }

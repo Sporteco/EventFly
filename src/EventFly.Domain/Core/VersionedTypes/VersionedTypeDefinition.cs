@@ -4,42 +4,42 @@
 // MVID: 61DF059E-E5F5-4992-B320-644C3E4F5C82
 // Assembly location: C:\Users\naych\source\repos\!!!!!\netcoreapp2.2\EventFly.dll
 
+using EventFly.Exceptions;
+using EventFly.ValueObjects;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using EventFly.Exceptions;
-using EventFly.ValueObjects;
 
 namespace EventFly.Core.VersionedTypes
 {
-  public abstract class VersionedTypeDefinition : ValueObject
-  {
-    public int Version { get; }
-
-    public Type Type { get; }
-
-    public string Name { get; }
-
-    protected VersionedTypeDefinition(int version, Type type, string name)
+    public abstract class VersionedTypeDefinition : ValueObject
     {
-      Version = version;
-      Type = type;
-      Name = GetName(name);
-    }
-    private string GetName(string name) 
-        => name.EndsWith("command", StringComparison.InvariantCultureIgnoreCase) ? name.Substring(0, name.Length - "command".Length) : name;
+        public Int32 Version { get; }
+
+        public Type Type { get; }
+
+        public String Name { get; }
+
+        protected VersionedTypeDefinition(Int32 version, Type type, String name)
+        {
+            Version = version;
+            Type = type;
+            Name = GetName(name);
+        }
+        private String GetName(String name)
+            => name.EndsWith("command", StringComparison.InvariantCultureIgnoreCase) ? name.Substring(0, name.Length - "command".Length) : name;
 
 
-    public override string ToString()
-    {
-      return $"{ Name} v{(object) Version} ({(object) Type.GetTypeInfo().Assembly.GetName().Name} - {(object) Type.PrettyPrint()})";
-    }
+        public override String ToString()
+        {
+            return $"{ Name} v{(Object)Version} ({(Object)Type.GetTypeInfo().Assembly.GetName().Name} - {(Object)Type.PrettyPrint()})";
+        }
 
-    protected override IEnumerable<object> GetEqualityComponents()
-    {
-      yield return Version;
-      yield return Type;
-      yield return Name;
+        protected override IEnumerable<Object> GetEqualityComponents()
+        {
+            yield return Version;
+            yield return Type;
+            yield return Name;
+        }
     }
-  }
 }

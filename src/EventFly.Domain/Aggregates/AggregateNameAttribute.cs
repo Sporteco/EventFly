@@ -32,11 +32,11 @@ namespace EventFly.Aggregates
     [AttributeUsage(AttributeTargets.Class, Inherited = false)]
     public class AggregateNameAttribute : Attribute
     {
-        public string Name { get; }
+        public String Name { get; }
 
-        public AggregateNameAttribute(string name)
+        public AggregateNameAttribute(String name)
         {
-            if (string.IsNullOrEmpty(name)) 
+            if (String.IsNullOrEmpty(name))
                 throw new ArgumentNullException(nameof(name));
 
             Name = name;

@@ -1,11 +1,11 @@
-﻿using System;
+﻿using Demo.Infrastructure.ReadModels;
+using Demo.Queries;
+using EventFly.Queries;
+using EventFly.ReadModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using EventFly.Queries;
-using Demo.Queries;
-using EventFly.ReadModels;
 using System.Threading.Tasks;
-using Demo.Infrastructure.ReadModels;
 
 namespace Demo.Infrastructure.QueryHandlers
 {
@@ -21,7 +21,7 @@ namespace Demo.Infrastructure.QueryHandlers
         {
             var items = _storage?.Items
                 //.Where(i => query.NameFilter == null || i.UserName.StartsWith(query.NameFilter, StringComparison.InvariantCultureIgnoreCase))
-                .Select(i => new UserInfo {Id = i.Id, Name = i.UserName}).ToList();
+                .Select(i => new UserInfo { Id = i.Id, Name = i.UserName }).ToList();
 
             return Task.FromResult(new UsersResult(items, 100));
         }
@@ -31,7 +31,7 @@ namespace Demo.Infrastructure.QueryHandlers
     {
         public override Task<UsersResult> ExecuteQuery(User1Query query)
         {
-            var res =  new UsersResult(new List<UserInfo>
+            var res = new UsersResult(new List<UserInfo>
             {
                 new UserInfo
                 {
@@ -43,7 +43,7 @@ namespace Demo.Infrastructure.QueryHandlers
                     Id = Guid.NewGuid().ToString(),
                     Name = "Name2"
                 }
-            },100);
+            }, 100);
             return Task.FromResult(res);
         }
     }

@@ -275,7 +275,7 @@ namespace EventFly.Extensions
             return upcastableEventTypes;
         }
 
-        internal static Type GetBaseType(this Type type, string name)
+        internal static Type GetBaseType(this Type type, String name)
         {
             var currentType = type;
             while (currentType != null)

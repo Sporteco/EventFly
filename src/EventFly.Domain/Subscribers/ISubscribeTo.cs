@@ -26,9 +26,9 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-using System.Threading.Tasks;
 using EventFly.Aggregates;
 using EventFly.Core;
+using System.Threading.Tasks;
 
 namespace EventFly.Subscribers
 {
@@ -37,10 +37,10 @@ namespace EventFly.Subscribers
     {
         Task HandleAsync(IDomainEvent<TIdentity, TAggregateEvent> domainEvent);
     }
-    
+
     public interface ISubscribeTo<in TIdentity, in TAggregateEvent> where TIdentity : IIdentity
         where TAggregateEvent : class, IAggregateEvent<TIdentity>
     {
-        bool Handle(IDomainEvent<TIdentity, TAggregateEvent> domainEvent);
+        System.Boolean Handle(IDomainEvent<TIdentity, TAggregateEvent> domainEvent);
     }
 }

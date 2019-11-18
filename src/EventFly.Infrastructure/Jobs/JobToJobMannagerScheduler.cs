@@ -40,44 +40,44 @@ namespace EventFly.Jobs
             _definitionToManagerRegistry = definitionToManagerRegistry;
         }
 
-        public Task<bool> Schedule<TJob, TJobId>(TJob job, DateTime triggerDate) where TJob : IJob<TJobId> where TJobId : IJobId
+        public Task<Boolean> Schedule<TJob, TJobId>(TJob job, DateTime triggerDate) where TJob : IJob<TJobId> where TJobId : IJobId
         {
             var manager = GetJobManager(job.JobId.GetType());
 
-            return manager.Ask<bool>(
+            return manager.Ask<Boolean>(
                 new Schedule<TJob, TJobId>(job, triggerDate)
                     .WithAck(true)
                     .WithNack(false)
             );
         }
 
-        public Task<bool> Schedule<TJob, TJobId>(TJob job, TimeSpan interval, DateTime triggerDate) where TJob : IJob<TJobId> where TJobId : IJobId
+        public Task<Boolean> Schedule<TJob, TJobId>(TJob job, TimeSpan interval, DateTime triggerDate) where TJob : IJob<TJobId> where TJobId : IJobId
         {
             var manager = GetJobManager(job.JobId.GetType());
 
-            return manager.Ask<bool>(
+            return manager.Ask<Boolean>(
                 new ScheduleRepeatedly<TJob, TJobId>(job, interval, triggerDate)
                     .WithAck(true)
                     .WithNack(false)
             );
         }
 
-        public Task<bool> Schedule<TJob, TJobId>(TJob job, string cronExpression, DateTime triggerDate) where TJob : IJob<TJobId> where TJobId : IJobId
+        public Task<Boolean> Schedule<TJob, TJobId>(TJob job, String cronExpression, DateTime triggerDate) where TJob : IJob<TJobId> where TJobId : IJobId
         {
             var manager = GetJobManager(job.JobId.GetType());
 
-            return manager.Ask<bool>(
+            return manager.Ask<Boolean>(
                 new ScheduleCron<TJob, TJobId>(job, cronExpression, triggerDate)
                     .WithAck(true)
                     .WithNack(false)
             );
         }
 
-        public Task<bool> Cancel<TJob, TJobId>(TJobId jobId) where TJob : IJob<TJobId> where TJobId : IJobId
+        public Task<Boolean> Cancel<TJob, TJobId>(TJobId jobId) where TJob : IJob<TJobId> where TJobId : IJobId
         {
             var manager = GetJobManager(jobId.GetType());
 
-            return manager.Ask<bool>(
+            return manager.Ask<Boolean>(
                 new Cancel<TJob, TJobId>(jobId)
                     .WithAck(true)
                     .WithNack(false)

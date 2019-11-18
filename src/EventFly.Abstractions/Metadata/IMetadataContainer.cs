@@ -30,10 +30,10 @@ using System.Collections.Generic;
 
 namespace EventFly.Metadata
 {
-    public interface IMetadataContainer : IReadOnlyDictionary<string, string>
+    public interface IMetadataContainer : IReadOnlyDictionary<String, String>
     {
-        string UserId { get; }
-        string GetMetadataValue(string key);
-        T GetMetadataValue<T>(string key, Func<string, T> converter);
+        String UserId { get; }
+        String GetMetadataValue(String key);
+        T GetMetadataValue<T>(String key, Func<String, T> converter);
     }
 }

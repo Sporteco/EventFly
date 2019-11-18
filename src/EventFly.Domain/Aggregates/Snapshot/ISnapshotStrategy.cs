@@ -25,6 +25,6 @@ namespace EventFly.Aggregates.Snapshot
 {
     public interface ISnapshotStrategy
     {
-        bool ShouldCreateSnapshot(IAggregateRoot snapshotAggregateRoot);
+        System.Boolean ShouldCreateSnapshot(IAggregateRoot snapshotAggregateRoot);
     }
 }

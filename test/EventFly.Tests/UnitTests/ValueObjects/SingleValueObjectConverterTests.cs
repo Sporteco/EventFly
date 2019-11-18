@@ -25,11 +25,11 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System.ComponentModel;
 using EventFly.TestHelpers;
 using EventFly.ValueObjects;
 using FluentAssertions;
 using Newtonsoft.Json;
+using System.ComponentModel;
 using Xunit;
 
 namespace EventFly.Tests.UnitTests.ValueObjects
@@ -42,31 +42,31 @@ namespace EventFly.Tests.UnitTests.ValueObjects
         [InlineData("42", "\"42\"")]
         [InlineData("", "\"\"")]
         [InlineData(null, "null")]
-        public void String_Serilization_ShouldBeExpectedJson(string value, string expectedJson)
+        public void String_Serilization_ShouldBeExpectedJson(System.String value, System.String expectedJson)
         {
             var stringSvo = new StringSVO(value);
-            
+
             var json = JsonConvert.SerializeObject(stringSvo);
-            
+
             json.Should().Be(expectedJson);
         }
-        
+
 
         [Fact]
         public void String_Deserialization_EmptyShouldResultInNull()
         {
-            var stringSvo = JsonConvert.DeserializeObject<StringSVO>(string.Empty);
-            
+            var stringSvo = JsonConvert.DeserializeObject<StringSVO>(System.String.Empty);
+
             stringSvo.Should().BeNull();
         }
 
         [Theory]
         [InlineData("\"\"", "")]
         [InlineData("\"test\"", "test")]
-        public void String_Deserialization_ShouldBeExpectedValue(string json, string expectedValue)
+        public void String_Deserialization_ShouldBeExpectedValue(System.String json, System.String expectedValue)
         {
             var stringSvo = JsonConvert.DeserializeObject<StringSVO>(json);
-            
+
             stringSvo.Value.Should().Be(expectedValue);
         }
 
@@ -74,38 +74,38 @@ namespace EventFly.Tests.UnitTests.ValueObjects
         [InlineData(0, "0")]
         [InlineData(42, "42")]
         [InlineData(-1, "-1")]
-        public void Int_Serialization_ShouldBeExpectedJson(int value, string expectedJson)
+        public void Int_Serialization_ShouldBeExpectedJson(System.Int32 value, System.String expectedJson)
         {
             var intSvo = new IntSVO(value);
-            
+
             var json = JsonConvert.SerializeObject(intSvo);
-            
+
             json.Should().Be(expectedJson);
         }
-        
+
         [Theory]
         [InlineData("0", 0)]
         [InlineData("42", 42)]
         [InlineData("-1", -1)]
-        public void Int_Deserialization_ShouldBeExpectedValue(string json, int expectedValue)
+        public void Int_Deserialization_ShouldBeExpectedValue(System.String json, System.Int32 expectedValue)
         {
             var intSvo = JsonConvert.DeserializeObject<IntSVO>(json);
-            
+
             intSvo.Value.Should().Be(expectedValue);
         }
 
         [JsonConverter(typeof(SingleValueObjectConverter))]
         // ReSharper disable once InconsistentNaming
-        private class StringSVO : SingleValueObject<string>
+        private class StringSVO : SingleValueObject<System.String>
         {
-            public StringSVO(string value) : base(value) { }
+            public StringSVO(System.String value) : base(value) { }
         }
 
         [JsonConverter(typeof(SingleValueObjectConverter))]
         // ReSharper disable once InconsistentNaming
-        private class IntSVO : SingleValueObject<int>
+        private class IntSVO : SingleValueObject<System.Int32>
         {
-            public IntSVO(int value) : base(value) { }
+            public IntSVO(System.Int32 value) : base(value) { }
         }
     }
 }

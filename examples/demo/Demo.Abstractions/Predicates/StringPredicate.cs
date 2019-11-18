@@ -1,26 +1,27 @@
-﻿using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Demo.Predicates
 {
-    public sealed class StringPredicate : Predicate<string, IEnumerable<string>, StringOperator>
+    public sealed class StringPredicate : Predicate<String, IEnumerable<String>, StringOperator>
     {
         public StringPredicate()
         {
-            Register(StringOperator.Equals, (left, right) => 
-                right is null 
+            Register(StringOperator.Equals, (left, right) =>
+                right is null
                 || right.All(s => s is null || left.ToLowerInvariant().Equals(s.ToLowerInvariant())));
-            Register(StringOperator.Contains, (left, right) => 
+            Register(StringOperator.Contains, (left, right) =>
                 right is null ||
                 right.All(s => s is null || left.ToLowerInvariant().Contains(s.ToLowerInvariant())));
-            Register(StringOperator.StartsWith, (left, right) => 
-                right is null || 
+            Register(StringOperator.StartsWith, (left, right) =>
+                right is null ||
                 right.All(s => s is null || left.ToLowerInvariant().StartsWith(s.ToLowerInvariant())));
-            Register(StringOperator.EndsWith, (left, right) => 
+            Register(StringOperator.EndsWith, (left, right) =>
                 right is null
                 || right.All(s => s is null || left.ToLowerInvariant().EndsWith(s.ToLowerInvariant())));
-            Register(StringOperator.OneOf, (left, right) => 
-                right is null || 
+            Register(StringOperator.OneOf, (left, right) =>
+                right is null ||
                 right.Any(s => s is null || left.ToLowerInvariant().Equals(s.ToLowerInvariant())));
         }
     }

@@ -30,7 +30,7 @@ namespace EventFly.TestHelpers.Aggregates.Commands
         public PublishTestStateCommand(TestAggregateId aggregateId)
             : base(aggregateId)
         {
-            
+
         }
     }
 }

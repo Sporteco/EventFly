@@ -38,7 +38,7 @@ namespace EventFly.Jobs.Events
         {
             if (jobId == null) throw new ArgumentNullException(nameof(jobId));
             if (triggerDate == default) throw new ArgumentException(nameof(triggerDate));
-            
+
             JobId = jobId;
             TriggerDate = triggerDate;
 

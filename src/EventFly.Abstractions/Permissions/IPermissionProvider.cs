@@ -5,7 +5,7 @@ namespace EventFly.Permissions
 
     public class PermissionInfo
     {
-        public PermissionInfo(PermissionCode permissionCode, string targetObjectId)
+        public PermissionInfo(PermissionCode permissionCode, System.String targetObjectId)
         {
             PermissionCode = permissionCode;
             TargetObjectId = targetObjectId;
@@ -15,12 +15,12 @@ namespace EventFly.Permissions
             PermissionCode = permissionCode;
         }
 
-        public string TargetObjectId { get; }
+        public System.String TargetObjectId { get; }
         public PermissionCode PermissionCode { get; }
 
     }
     public interface IPermissionProvider
     {
-        IEnumerable<PermissionInfo> GetUserPermissions(string userId, string targetObjectId);
+        IEnumerable<PermissionInfo> GetUserPermissions(System.String userId, System.String targetObjectId);
     }
 }

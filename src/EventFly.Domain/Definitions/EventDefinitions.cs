@@ -1,17 +1,17 @@
-﻿using System;
-using EventFly.Aggregates;
+﻿using EventFly.Aggregates;
 using EventFly.Core.VersionedTypes;
+using System;
 
 namespace EventFly.Definitions
 {
-  public class EventDefinitions : VersionedTypeDefinitions<IAggregateEvent, EventVersionAttribute, EventDefinition>, IEventDefinitions
-  {
-    protected override EventDefinition CreateDefinition(
-      int version,
-      Type type,
-      string name)
+    public class EventDefinitions : VersionedTypeDefinitions<IAggregateEvent, EventVersionAttribute, EventDefinition>, IEventDefinitions
     {
-      return new EventDefinition(version, type, name);
+        protected override EventDefinition CreateDefinition(
+          Int32 version,
+          Type type,
+          String name)
+        {
+            return new EventDefinition(version, type, name);
+        }
     }
-  }
 }

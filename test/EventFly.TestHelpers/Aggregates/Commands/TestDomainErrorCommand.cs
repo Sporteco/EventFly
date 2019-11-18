@@ -32,6 +32,6 @@ namespace EventFly.TestHelpers.Aggregates.Commands
         {
 
         }
-        
+
     }
 }

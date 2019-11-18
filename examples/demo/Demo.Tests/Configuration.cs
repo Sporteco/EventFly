@@ -2,7 +2,7 @@ namespace Demo.Tests
 {
     public static class Configuration
     {
-        public static string Config =
+        public static System.String Config =
             @"  akka.loglevel = ""INFO""
                 akka.stdout-loglevel = ""INFO""
                 akka.actor.serialize-messages = off

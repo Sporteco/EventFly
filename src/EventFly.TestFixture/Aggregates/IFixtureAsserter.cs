@@ -21,11 +21,11 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System;
 using Akka.Actor;
 using EventFly.Aggregates;
 using EventFly.Commands;
 using EventFly.Core;
+using System;
 
 namespace EventFly.TestFixture.Aggregates
 {
@@ -38,7 +38,7 @@ namespace EventFly.TestFixture.Aggregates
             where TAggregateEvent : class, IAggregateEvent<TIdentity>;
 
         IFixtureAsserter<TAggregate, TIdentity> ThenExpectReply<TReply>(Predicate<TReply> aggregateReply = null);
-        
+
         IFixtureAsserter<TAggregate, TIdentity> ThenExpectDomainEvent<TAggregateEvent>(Predicate<IDomainEvent<TIdentity, TAggregateEvent>> domainEventPredicate = null)
             where TAggregateEvent : class, IAggregateEvent<TIdentity>;
     }

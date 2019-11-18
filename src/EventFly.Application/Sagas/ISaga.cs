@@ -38,6 +38,6 @@ namespace EventFly.Sagas
     public interface ISaga<TSagaId> : ISaga
         where TSagaId : IIdentity
     {
-        
+
     }
 }

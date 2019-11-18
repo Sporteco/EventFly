@@ -1,8 +1,8 @@
-﻿using System;
-using System.Linq;
-using FluentValidation;
+﻿using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Linq;
 
 namespace EventFly.Commands
 {
@@ -33,6 +33,6 @@ namespace EventFly.Commands
             return new ValidationResult();
         }
 
-        public int Priority => 100;
+        public Int32 Priority => 100;
     }
 }

@@ -25,10 +25,10 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System;
-using System.Linq;
 using EventFly.Core;
 using FluentAssertions;
+using System;
+using System.Linq;
 using Xunit;
 
 namespace EventFly.Tests.UnitTests.Core
@@ -41,44 +41,44 @@ namespace EventFly.Tests.UnitTests.Core
         [InlineData(1, 2, 3)] // Once above capacity
         [InlineData(1, 2, 3, 4)] // Loop twice over capacity
         [InlineData(1, 2, 3, 4, 5)] // One more than of capacity
-        public void CircularBuffer_Putting_ShouldContainCapacity(params int[] numbers)
+        public void CircularBuffer_Putting_ShouldContainCapacity(params Int32[] numbers)
         {
-            const int capacity = 2;
-            var sut = new CircularBuffer<int>(capacity);
+            const Int32 capacity = 2;
+            var sut = new CircularBuffer<Int32>(capacity);
 
             foreach (var number in numbers)
             {
                 sut.Put(number);
             }
-            
+
             var shouldContain = numbers.Reverse().Take(capacity).ToList();
             sut.Should().Contain(shouldContain);
         }
-        
+
         [Theory]
         [InlineData(1)] // Below capacity
         [InlineData(1, 2)] // At capacity
         [InlineData(1, 2, 3)] // Once above capacity
         [InlineData(1, 2, 3, 4)] // Loop twice over capacity
         [InlineData(1, 2, 3, 4, 5)] // One more than of capacity
-        public void CircularBuffer_PuttingArray_ShouldContainNumbers(params int[] numbers)
+        public void CircularBuffer_PuttingArray_ShouldContainNumbers(params Int32[] numbers)
         {
-            const int capacity = 10;
-            var circularBuffer = new CircularBuffer<int>(capacity, numbers);
+            const Int32 capacity = 10;
+            var circularBuffer = new CircularBuffer<Int32>(capacity, numbers);
 
-            
+
             var shouldContain = numbers.Reverse().Take(capacity).ToList();
             circularBuffer.Should().Contain(shouldContain);
         }
-        
+
         [Theory]
         [InlineData(1, 2, 6)] // At capacity
         [InlineData(1, 2, 3, 7)] // Once above capacity
         [InlineData(1, 2, 3, 4, 9)] // Loop twice over capacity
         [InlineData(1, 2, 3, 4, 5, 10)] // One more than of capacity
-        public void CircularBuffer_PuttingArrayWithSmallCapacity_ThrowsException(params int[] numbers)
+        public void CircularBuffer_PuttingArrayWithSmallCapacity_ThrowsException(params Int32[] numbers)
         {
-            this.Invoking(test => new CircularBuffer<int>(2, numbers))
+            this.Invoking(test => new CircularBuffer<Int32>(2, numbers))
                 .Should().Throw<ArgumentException>();
         }
     }

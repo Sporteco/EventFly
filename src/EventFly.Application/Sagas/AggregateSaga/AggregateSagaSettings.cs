@@ -28,10 +28,10 @@ namespace EventFly.Sagas.AggregateSaga
 {
     public class AggregateSagaSettings
     {
-        private static string _section = "EventFly.aggregate-saga";
-        public readonly bool AutoReceive;
-        public readonly bool UseDefaultEventRecover;
-        public readonly bool UseDefaultSnapshotRecover;
+        private static System.String _section = "EventFly.aggregate-saga";
+        public readonly System.Boolean AutoReceive;
+        public readonly System.Boolean UseDefaultEventRecover;
+        public readonly System.Boolean UseDefaultSnapshotRecover;
         public AggregateSagaSettings(Config config)
         {
             var aggregateSagaConfig = config.WithFallback(EventFlyDefaultSettings.DefaultConfig());

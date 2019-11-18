@@ -32,9 +32,9 @@ namespace EventFly.Extensions
 {
     public static class SourceIdExtensions
     {
-        public static bool IsNone(this ISourceId sourceId)
+        public static System.Boolean IsNone(this ISourceId sourceId)
         {
-            return string.IsNullOrEmpty(sourceId?.Value);
+            return System.String.IsNullOrEmpty(sourceId?.Value);
         }
     }
 }

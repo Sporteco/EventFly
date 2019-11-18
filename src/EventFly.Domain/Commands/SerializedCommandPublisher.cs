@@ -4,12 +4,12 @@
 // MVID: 61DF059E-E5F5-4992-B320-644C3E4F5C82
 // Assembly location: C:\Users\naych\source\repos\!!!!!\netcoreapp2.2\EventFly.dll
 
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 using EventFly.Commands.ExecutionResults;
 using EventFly.Definitions;
 using Newtonsoft.Json;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace EventFly.Commands
 {
@@ -25,16 +25,16 @@ namespace EventFly.Commands
         }
 
         public async Task<IExecutionResult> PublishSerilizedCommandAsync(
-          string name,
-          int version,
-          string json,
+          String name,
+          Int32 version,
+          String json,
           CancellationToken cancellationToken)
         {
-            if (string.IsNullOrEmpty(name))
+            if (String.IsNullOrEmpty(name))
                 throw new ArgumentNullException(nameof(name));
             if (version <= 0)
                 throw new ArgumentOutOfRangeException(nameof(version));
-            if (string.IsNullOrEmpty(json))
+            if (String.IsNullOrEmpty(json))
                 throw new ArgumentNullException(nameof(json));
 
             if (!_applicationDefinition.Commands.TryGetDefinition(name, version, out CommandDefinition commandDefinition))

@@ -25,14 +25,14 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System.Collections.Generic;
 using EventFly.Aggregates;
+using System.Collections.Generic;
 
 namespace EventFly.Specifications.Provided
 {
     public class AggregateIsNewSpecification : Specification<IAggregateRoot>
     {
-        protected override IEnumerable<string> IsNotSatisfiedBecause(IAggregateRoot aggregate)
+        protected override IEnumerable<System.String> IsNotSatisfiedBecause(IAggregateRoot aggregate)
         {
             if (!aggregate.IsNew)
             {

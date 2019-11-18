@@ -1,12 +1,12 @@
-﻿using System.Collections.Generic;
-using EventFly.Core;
+﻿using EventFly.Core;
+using System.Collections.Generic;
 
 namespace EventFly.Metadata
 {
     public interface ICommonMetadata : IMetadataContainer
     {
         ISourceId SourceId { get; }
-        string CorrelationId { get; }
-        IReadOnlyCollection<string> CorrelationIds { get; }
+        System.String CorrelationId { get; }
+        IReadOnlyCollection<System.String> CorrelationIds { get; }
     }
 }

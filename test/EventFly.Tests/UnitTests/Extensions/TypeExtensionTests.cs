@@ -25,15 +25,15 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using EventFly.Aggregates;
 using EventFly.Core;
 using EventFly.Exceptions;
 using EventFly.Extensions;
 using EventFly.TestHelpers;
 using FluentAssertions;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using Xunit;
 
 namespace EventFly.Tests.UnitTests.Extensions
@@ -42,28 +42,28 @@ namespace EventFly.Tests.UnitTests.Extensions
     public class TypeExtensionTests
     {
         [Theory]
-        [InlineData(typeof(string), "String")]
-        [InlineData(typeof(int), "Int32")]
+        [InlineData(typeof(String), "String")]
+        [InlineData(typeof(Int32), "Int32")]
         [InlineData(typeof(IEnumerable<>), "IEnumerable<>")]
         [InlineData(typeof(KeyValuePair<,>), "KeyValuePair<,>")]
-        [InlineData(typeof(IEnumerable<string>), "IEnumerable<String>")]
-        [InlineData(typeof(IEnumerable<IEnumerable<string>>), "IEnumerable<IEnumerable<String>>")]
-        [InlineData(typeof(KeyValuePair<bool, long>), "KeyValuePair<Boolean,Int64>")]
-        [InlineData(typeof(KeyValuePair<KeyValuePair<bool, long>, KeyValuePair<bool, long>>), "KeyValuePair<KeyValuePair<Boolean,Int64>,KeyValuePair<Boolean,Int64>>")]
-        public void PrettyPrint_Output_ShouldBeExpected(Type type, string expectedPrettyPrint)
+        [InlineData(typeof(IEnumerable<String>), "IEnumerable<String>")]
+        [InlineData(typeof(IEnumerable<IEnumerable<String>>), "IEnumerable<IEnumerable<String>>")]
+        [InlineData(typeof(KeyValuePair<Boolean, Int64>), "KeyValuePair<Boolean,Int64>")]
+        [InlineData(typeof(KeyValuePair<KeyValuePair<Boolean, Int64>, KeyValuePair<Boolean, Int64>>), "KeyValuePair<KeyValuePair<Boolean,Int64>,KeyValuePair<Boolean,Int64>>")]
+        public void PrettyPrint_Output_ShouldBeExpected(Type type, String expectedPrettyPrint)
         {
             var prettyPrint = type.PrettyPrint();
-            
+
             prettyPrint.Should().Be(expectedPrettyPrint);
         }
 
         [Theory]
         [InlineData(typeof(FooAggregateWithOutAttribute), "FooAggregateWithOutAttribute")]
         [InlineData(typeof(FooAggregateWithAttribute), "BetterNameForAggregate")]
-        public void AggregateName_FromType_ShouldBeExpected(Type aggregateType, string expectedAggregateName)
+        public void AggregateName_FromType_ShouldBeExpected(Type aggregateType, String expectedAggregateName)
         {
             var aggregateName = aggregateType.GetAggregateName();
-            
+
             aggregateName.Value.Should().Be(expectedAggregateName);
         }
 
@@ -75,7 +75,7 @@ namespace EventFly.Tests.UnitTests.Extensions
 
         public class FooId : Identity<FooId>
         {
-            public FooId(string value) : base(value)
+            public FooId(String value) : base(value)
             {
             }
         }

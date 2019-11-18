@@ -32,15 +32,15 @@ namespace EventFly.Sagas
     [AttributeUsage(AttributeTargets.Class, Inherited = false)]
     public class SagaNameAttribute : Attribute
     {
-        public string Name { get; }
+        public String Name { get; }
 
-        public SagaNameAttribute(string name)
+        public SagaNameAttribute(String name)
         {
-            if (string.IsNullOrEmpty(name)) 
+            if (String.IsNullOrEmpty(name))
                 throw new ArgumentNullException(nameof(name));
 
             Name = name;
         }
-        
+
     }
 }

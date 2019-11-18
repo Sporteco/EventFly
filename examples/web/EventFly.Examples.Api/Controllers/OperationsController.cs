@@ -21,23 +21,23 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System;
-using System.Threading.Tasks;
 using Akka.Actor;
 using EventFly.Examples.Api.Domain.Repositories.Operations;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Threading.Tasks;
 
 namespace EventFly.Examples.Api.Controllers
 {
     public class OperationsController : BaseController
     {
         private readonly IQueryOperations _operationQuery;
-        
+
         public OperationsController(ActorSystem system, IQueryOperations operationQuery) : base(system)
         {
-            _operationQuery = operationQuery; 
+            _operationQuery = operationQuery;
         }
-        
+
         [HttpGet("operations")]
         public async Task<IActionResult> GetResources()
         {
@@ -45,7 +45,7 @@ namespace EventFly.Examples.Api.Controllers
 
             return Ok(operations);
         }
-        
+
         [HttpGet("operations/{id:Guid}")]
         public async Task<IActionResult> GetResources([FromRoute]Guid id)
         {

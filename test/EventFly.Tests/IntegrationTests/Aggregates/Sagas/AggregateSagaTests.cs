@@ -21,7 +21,6 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System.ComponentModel;
 using Akka.TestKit.Xunit2;
 using EventFly.Aggregates;
 using EventFly.Commands;
@@ -34,6 +33,7 @@ using EventFly.TestHelpers.Aggregates.Sagas.Test;
 using EventFly.TestHelpers.Aggregates.Sagas.Test.Events;
 using EventFly.Tests.UnitTests.Subscribers;
 using Microsoft.Extensions.DependencyInjection;
+using System.ComponentModel;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -42,7 +42,7 @@ namespace EventFly.Tests.IntegrationTests.Aggregates.Sagas
     [Collection("AggregateSagaTests")]
     public class AggregateSagaTests : TestKit
     {
-        private const string Category = "Sagas";
+        private const System.String Category = "Sagas";
         public AggregateSagaTests(ITestOutputHelper testOutputHelper)
             : base(TestHelpers.Akka.Configuration.Config, "aggregate-saga-tests", testOutputHelper)
         {
@@ -89,7 +89,7 @@ namespace EventFly.Tests.IntegrationTests.Aggregates.Sagas
 
             eventProbe.
                 ExpectMsg<DomainEvent<TestSaga, TestSagaId, TestSagaStartedEvent>>(
-                    x => 
+                    x =>
                     x.AggregateEvent.Sender.Equals(senderAggregateId)
                          && x.AggregateEvent.Receiver.Equals(receiverAggregateId)
                          && x.AggregateEvent.SentTest.Equals(senderTest));

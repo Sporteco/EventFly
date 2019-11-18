@@ -31,7 +31,7 @@ namespace EventFly.Aggregates
 {
     public class EventId : Identity<EventId>, IEventId
     {
-        public EventId(string value) 
+        public EventId(System.String value)
             : base(value)
         {
         }

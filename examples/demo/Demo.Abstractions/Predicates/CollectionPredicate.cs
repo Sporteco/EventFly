@@ -4,7 +4,7 @@ using System.Linq;
 namespace Demo.Predicates
 {
     public abstract class CollectionPredicate<TObject, TObjectPredicate> : Predicate<IEnumerable<TObject>, TObjectPredicate, CollectionOperator>
-        where TObject: class
+        where TObject : class
         where TObjectPredicate : ObjectPredicate<TObject>
     {
         public CollectionPredicate()

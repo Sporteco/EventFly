@@ -1,5 +1,5 @@
-﻿using EventFly.Queries;
-using Demo.Queries;
+﻿using Demo.Queries;
+using EventFly.Queries;
 using System.Threading.Tasks;
 
 namespace Demo.Infrastructure.QueryHandlers

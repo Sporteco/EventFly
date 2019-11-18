@@ -25,7 +25,7 @@ using EventFly.Events;
 
 namespace EventFly.TestHelpers.Aggregates.Events.Upcasters
 {
-    public class UnInstantiableAggregateEventUpcaster : AggregateEventUpcaster<TestAggregate,TestAggregateId, TestAggregateEventUpcaster>,
+    public class UnInstantiableAggregateEventUpcaster : AggregateEventUpcaster<TestAggregate, TestAggregateId, TestAggregateEventUpcaster>,
         IUpcast<TestAddedEvent, TestAddedEventV2>
     {
         public TestAddedEventV2 Upcast(TestAddedEvent aggregateEvent)
@@ -33,8 +33,8 @@ namespace EventFly.TestHelpers.Aggregates.Events.Upcasters
             return new TestAddedEventV2(aggregateEvent.Test, "default upcasted string");
         }
     }
-    public class TestAggregateEventUpcaster : AggregateEventUpcaster<TestAggregate,TestAggregateId>,
-        IUpcast<TestCreatedEvent,TestCreatedEventV2>
+    public class TestAggregateEventUpcaster : AggregateEventUpcaster<TestAggregate, TestAggregateId>,
+        IUpcast<TestCreatedEvent, TestCreatedEventV2>
     {
         public TestCreatedEventV2 Upcast(TestCreatedEvent aggregateEvent)
         {

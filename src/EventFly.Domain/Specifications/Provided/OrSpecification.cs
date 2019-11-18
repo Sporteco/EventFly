@@ -44,14 +44,14 @@ namespace EventFly.Specifications.Provided
             _specification2 = specification2 ?? throw new ArgumentNullException(nameof(specification2));
         }
 
-        protected override IEnumerable<string> IsNotSatisfiedBecause(T aggregate)
+        protected override IEnumerable<String> IsNotSatisfiedBecause(T aggregate)
         {
             var reasons1 = _specification1.WhyIsNotSatisfiedBy(aggregate).ToList();
             var reasons2 = _specification2.WhyIsNotSatisfiedBy(aggregate).ToList();
 
             if (!reasons1.Any() || !reasons2.Any())
             {
-                return Enumerable.Empty<string>();
+                return Enumerable.Empty<String>();
             }
 
             return reasons1.Concat(reasons2);

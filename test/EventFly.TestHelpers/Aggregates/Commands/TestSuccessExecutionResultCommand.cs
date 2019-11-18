@@ -7,7 +7,7 @@ namespace EventFly.TestHelpers.Aggregates.Commands
         public TestSuccessExecutionResultCommand(
             TestAggregateId aggregateId,
             CommandId sourceId)
-            : base(aggregateId,  new CommandMetadata(sourceId))
+            : base(aggregateId, new CommandMetadata(sourceId))
         {
         }
     }

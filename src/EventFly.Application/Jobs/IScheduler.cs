@@ -28,19 +28,19 @@ namespace EventFly.Jobs
 {
     public interface IScheduler
     {
-        Task<bool> Schedule<TJob, TJobId>(TJob job, DateTime triggerDate)
+        Task<Boolean> Schedule<TJob, TJobId>(TJob job, DateTime triggerDate)
             where TJob : IJob<TJobId>
             where TJobId : IJobId;
 
-        Task<bool> Schedule<TJob, TJobId>(TJob job, TimeSpan interval, DateTime triggerDate)
+        Task<Boolean> Schedule<TJob, TJobId>(TJob job, TimeSpan interval, DateTime triggerDate)
             where TJob : IJob<TJobId>
             where TJobId : IJobId;
 
-        Task<bool> Schedule<TJob, TJobId>(TJob job, string cronExpression, DateTime triggerDate)
+        Task<Boolean> Schedule<TJob, TJobId>(TJob job, String cronExpression, DateTime triggerDate)
             where TJob : IJob<TJobId>
             where TJobId : IJobId;
 
-        Task<bool> Cancel<TJob, TJobId>(TJobId jobId)
+        Task<Boolean> Cancel<TJob, TJobId>(TJobId jobId)
             where TJob : IJob<TJobId>
             where TJobId : IJobId;
     }

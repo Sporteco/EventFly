@@ -9,10 +9,10 @@ namespace Demo.Domain.Project
 {
     public interface IProjectState : IAggregateState<ProjectId>
     {
-        bool IsDeleted { get; }
+        System.Boolean IsDeleted { get; }
         ProjectName ProjectName { get; }
 
-        int SaveTimings();
+        System.Int32 SaveTimings();
     }
 
     public sealed class ProjectAggregate : EventDrivenAggregateRoot<ProjectAggregate, ProjectId, IProjectState>,

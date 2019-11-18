@@ -36,7 +36,7 @@ namespace EventFly.TestHelpers.Aggregates.Commands
             CommandId sourceId,
             TestAggregateId senderAggregateId,
             Test testToReceive)
-            : base(aggregateId,  new CommandMetadata(sourceId))
+            : base(aggregateId, new CommandMetadata(sourceId))
         {
             SenderAggregateId = senderAggregateId;
             TestToReceive = testToReceive;

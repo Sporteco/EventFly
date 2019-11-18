@@ -1,8 +1,8 @@
-﻿using System;
-using System.Linq;
-using Demo.User.Events;
+﻿using Demo.User.Events;
 using EventFly.Aggregates;
 using EventFly.ReadModels;
+using System;
+using System.Linq;
 
 namespace Demo.Infrastructure.ReadModels
 {
@@ -10,8 +10,8 @@ namespace Demo.Infrastructure.ReadModels
         IAmReadModelFor<UserId, UserCreatedEvent>,
         IAmReadModelFor<UserId, UserRenamedEvent>
     {
-        public long Version { get; private set; }
-        public string UserName { get; private set; }
+        public Int64 Version { get; private set; }
+        public String UserName { get; private set; }
         public DateTime Birth { get; private set; }
 
         public void Apply(IDomainEvent<UserId, UserCreatedEvent> domainEvent)

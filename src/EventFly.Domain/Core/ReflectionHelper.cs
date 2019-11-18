@@ -36,7 +36,7 @@ namespace EventFly.Core
 {
     public static class ReflectionHelper
     {
-        public static TResult CompileMethodInvocation<TResult>(Type type, string methodName, params Type[] methodSignature)
+        public static TResult CompileMethodInvocation<TResult>(Type type, String methodName, params Type[] methodSignature)
         {
             var typeInfo = type.GetTypeInfo();
             var methods = typeInfo

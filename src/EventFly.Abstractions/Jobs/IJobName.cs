@@ -27,6 +27,6 @@ namespace EventFly.Jobs
 {
     public interface IJobName : IIdentity
     {
-        
+
     }
 }

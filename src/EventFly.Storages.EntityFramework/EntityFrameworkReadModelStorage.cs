@@ -1,7 +1,7 @@
-﻿using System;
-using System.Linq;
-using EventFly.ReadModels;
+﻿using EventFly.ReadModels;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
 
 namespace EventFly.Storages.EntityFramework
 {
@@ -22,18 +22,19 @@ namespace EventFly.Storages.EntityFramework
             _dbContext = null;
         }
 
-        public TReadModel Load(string id)
+        public TReadModel Load(String id)
         {
             var item = _dbContext.Find<TReadModel>(id);
             if (item == null)
             {
-                item = new TReadModel{Id = id};
+                item = new TReadModel { Id = id };
                 _dbContext.Add(item);
             }
 
-            return item;        }
+            return item;
+        }
 
-        public void Save(string id, TReadModel model)
+        public void Save(String id, TReadModel model)
         {
             if (_dbContext.Entry(model).State == EntityState.Detached)
             {

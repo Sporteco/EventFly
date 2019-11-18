@@ -2,7 +2,7 @@ namespace EventFly.TestHelpers
 {
     public static class Configuration
     {
-        public static string Default =
+        public static System.String Default =
             @"  akka.loglevel = ""INFO""
                 akka.stdout-loglevel = ""INFO""
                 akka.actor.serialize-messages = on

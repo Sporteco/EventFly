@@ -25,9 +25,9 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using EventFly.Exceptions;
 using System;
 using System.Collections.Generic;
-using EventFly.Exceptions;
 
 namespace EventFly.Specifications.Provided
 {
@@ -41,7 +41,7 @@ namespace EventFly.Specifications.Provided
             _specification = specification ?? throw new ArgumentNullException(nameof(specification));
         }
 
-        protected override IEnumerable<string> IsNotSatisfiedBecause(T aggregate)
+        protected override IEnumerable<String> IsNotSatisfiedBecause(T aggregate)
         {
             if (_specification.IsSatisfiedBy(aggregate))
             {

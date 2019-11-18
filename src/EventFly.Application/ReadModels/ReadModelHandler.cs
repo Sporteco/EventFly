@@ -1,8 +1,8 @@
-﻿using System.Reflection;
-using Akka.Actor;
+﻿using Akka.Actor;
 using EventFly.Aggregates;
 using EventFly.Core;
 using EventFly.Extensions;
+using System.Reflection;
 
 namespace EventFly.ReadModels
 {

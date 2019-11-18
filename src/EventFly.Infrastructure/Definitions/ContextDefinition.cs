@@ -3,6 +3,7 @@ using EventFly.Aggregates;
 using EventFly.Aggregates.Snapshot;
 using EventFly.Commands;
 using EventFly.Core;
+using EventFly.DomainService;
 using EventFly.Jobs;
 using EventFly.Permissions;
 using EventFly.Queries;
@@ -12,13 +13,12 @@ using EventFly.Sagas.AggregateSaga;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
-using EventFly.DomainService;
 
 namespace EventFly.Definitions
 {
     public abstract class ContextDefinition : IContextDefinition
     {
-        public string Name => GetType().Name;
+        public String Name => GetType().Name;
         public IReadOnlyCollection<IAggregateDefinition> Aggregates => _aggregates;
         public IReadOnlyCollection<ISagaDefinition> Sagas => _sagas;
         public IReadOnlyCollection<IDomainServiceDefinition> DomainServices => _services;
@@ -87,14 +87,14 @@ namespace EventFly.Definitions
             return this;
         }
 
-        protected IContextDefinition RegisterPermission(string permissionCode)
+        protected IContextDefinition RegisterPermission(String permissionCode)
         {
             var permissionDef = new PermissionDefinition(permissionCode);
             if (!_permissions.Contains(permissionDef)) _permissions.Add(permissionDef);
             return this;
         }
 
-        protected IContextDefinition RegisterPermission<TIdentity>(string permissionCode)
+        protected IContextDefinition RegisterPermission<TIdentity>(String permissionCode)
             where TIdentity : IIdentity
         {
             var permissionDef = new PermissionDefinition(typeof(TIdentity), permissionCode);

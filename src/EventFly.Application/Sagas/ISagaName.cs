@@ -31,6 +31,6 @@ namespace EventFly.Sagas
 {
     public interface ISagaName : IIdentity
     {
-        
+
     }
 }

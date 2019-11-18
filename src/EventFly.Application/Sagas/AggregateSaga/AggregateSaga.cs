@@ -25,11 +25,6 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
 using Akka.Event;
 using Akka.Persistence;
 using EventFly.Aggregates;
@@ -44,6 +39,11 @@ using EventFly.Exceptions;
 using EventFly.Extensions;
 using EventFly.Metadata;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Threading.Tasks;
 using SnapshotMetadata = EventFly.Aggregates.Snapshot.SnapshotMetadata;
 
 namespace EventFly.Sagas.AggregateSaga
@@ -76,7 +76,7 @@ namespace EventFly.Sagas.AggregateSaga
             _scope.Dispose();
         }
 
-        public async Task<IExecutionResult> PublishCommandAsync<TCommandIdentity>(ICommand<TCommandIdentity> command) where TCommandIdentity : IIdentity  
+        public async Task<IExecutionResult> PublishCommandAsync<TCommandIdentity>(ICommand<TCommandIdentity> command) where TCommandIdentity : IIdentity
         {
             if (PinnedEvent != null)
             {
@@ -85,7 +85,7 @@ namespace EventFly.Sagas.AggregateSaga
 
             if (!command.Metadata.CorrelationIds.Contains(Id.Value))
             {
-                command.Metadata.CorrelationIds = new List<string>(command.Metadata.CorrelationIds) { Id.Value };
+                command.Metadata.CorrelationIds = new List<String>(command.Metadata.CorrelationIds) { Id.Value };
             }
 
             var bus = _scope.ServiceProvider.GetRequiredService<ICommandBus>();
@@ -94,16 +94,16 @@ namespace EventFly.Sagas.AggregateSaga
         }
 
         public IAggregateName Name => SagaName;
-        public override string PersistenceId { get; }
+        public override String PersistenceId { get; }
         public TIdentity Id { get; }
-        public long Version { get; protected set; }
-        public bool IsNew => Version <= 0;
+        public Int64 Version { get; protected set; }
+        public Boolean IsNew => Version <= 0;
         public override Recovery Recovery => new Recovery(SnapshotSelectionCriteria.Latest);
 
         private readonly IServiceProvider _serviceProvider;
-        
+
         private IServiceScope _scope;
-        
+
         public AggregateSagaSettings Settings { get; }
 
         protected IDomainEvent PinnedEvent;
@@ -213,10 +213,10 @@ namespace EventFly.Sagas.AggregateSaga
                 var subscriptionFunction = Delegate.CreateDelegate(funcType, this, methods[subscriptionType]);
                 var actorReceiveMethod = method.MakeGenericMethod(subscriptionType);
 
-                actorReceiveMethod.Invoke(this, new[] { subscriptionFunction, (object)null });
+                actorReceiveMethod.Invoke(this, new[] { subscriptionFunction, (Object)null });
             }
         }
-        protected void CommandInternal<T>(Func<T, Task> handler, object item)
+        protected void CommandInternal<T>(Func<T, Task> handler, Object item)
         {
             CommandAsync<T>(e =>
             {
@@ -239,7 +239,7 @@ namespace EventFly.Sagas.AggregateSaga
         {
             var version = Version;
 
-            var committedEvents = new List<object>();
+            var committedEvents = new List<Object>();
             foreach (var aggregateEvent in aggregateEvents)
             {
                 var committedEvent = FromObject(aggregateEvent, version + 1);
@@ -250,7 +250,7 @@ namespace EventFly.Sagas.AggregateSaga
             PersistAll(committedEvents, ApplyObjectCommittedEvent);
         }
 
-        protected virtual object FromObject(object aggregateEvent, long version, IEventMetadata metadata = null)
+        protected virtual Object FromObject(Object aggregateEvent, Int64 version, IEventMetadata metadata = null)
         {
             if (aggregateEvent is IAggregateEvent)
             {
@@ -295,7 +295,7 @@ namespace EventFly.Sagas.AggregateSaga
 
         }
 
-        private void ApplyObjectCommittedEvent(object committedEvent)
+        private void ApplyObjectCommittedEvent(Object committedEvent)
         {
             try
             {
@@ -315,7 +315,7 @@ namespace EventFly.Sagas.AggregateSaga
         }
 
         public virtual CommittedEvent<TAggregateSaga, TIdentity, TAggregateEvent> From<TAggregateEvent>(TAggregateEvent aggregateEvent,
-            long version, IEventMetadata metadata = null)
+            Int64 version, IEventMetadata metadata = null)
             where TAggregateEvent : class, IAggregateEvent<TIdentity>
         {
             if (aggregateEvent == null)
@@ -426,7 +426,7 @@ namespace EventFly.Sagas.AggregateSaga
             Version++;
         }
 
-        protected virtual bool Recover(ICommittedEvent<TAggregateSaga, TIdentity, IAggregateEvent<TIdentity>> committedEvent)
+        protected virtual Boolean Recover(ICommittedEvent<TAggregateSaga, TIdentity, IAggregateEvent<TIdentity>> committedEvent)
         {
             try
             {
@@ -442,7 +442,7 @@ namespace EventFly.Sagas.AggregateSaga
             return true;
         }
 
-        protected virtual bool Recover(SnapshotOffer aggregateSnapshotOffer)
+        protected virtual Boolean Recover(SnapshotOffer aggregateSnapshotOffer)
         {
             try
             {
@@ -460,7 +460,7 @@ namespace EventFly.Sagas.AggregateSaga
             return true;
         }
 
-        protected virtual void HydrateSnapshot(IAggregateSnapshot<TAggregateSaga, TIdentity> aggregateSnapshot, long version)
+        protected virtual void HydrateSnapshot(IAggregateSnapshot<TAggregateSaga, TIdentity> aggregateSnapshot, Int64 version)
         {
             var snapshotHydrater = GetSnapshotHydrateMethods(aggregateSnapshot);
 
@@ -483,12 +483,12 @@ namespace EventFly.Sagas.AggregateSaga
             return snapshotHydrateMethod;
         }
 
-        protected void SetSourceIdHistory(int count)
+        protected void SetSourceIdHistory(Int32 count)
         {
             _previousSourceIds = new CircularBuffer<ISourceId>(count);
         }
 
-        public bool HasSourceId(ISourceId sourceId)
+        public Boolean HasSourceId(ISourceId sourceId)
         {
             return !sourceId.IsNone() && _previousSourceIds.Any(s => s.Value == sourceId.Value);
         }
@@ -505,21 +505,21 @@ namespace EventFly.Sagas.AggregateSaga
                 SnapshotStrategy = snapshotStrategy;
             }
         }
-        protected virtual bool SnapshotStatus(SaveSnapshotSuccess snapshotSuccess)
+        protected virtual Boolean SnapshotStatus(SaveSnapshotSuccess snapshotSuccess)
         {
             Log.Debug("Aggregate of Name={0}, and Id={1}; saved a snapshot at Version={2}.", Name, Id, snapshotSuccess.Metadata.SequenceNr);
             DeleteSnapshots(new SnapshotSelectionCriteria(snapshotSuccess.Metadata.SequenceNr - 1));
             return true;
         }
 
-        protected virtual bool SnapshotStatus(SaveSnapshotFailure snapshotFailure)
+        protected virtual Boolean SnapshotStatus(SaveSnapshotFailure snapshotFailure)
         {
             Log.Error(snapshotFailure.Cause, "Aggregate of Name={0}, and Id={1}; failed to save snapshot at Version={2}.", Name, Id, snapshotFailure.Metadata.SequenceNr);
             return true;
         }
 
 
-        protected virtual bool Recover(RecoveryCompleted recoveryCompleted)
+        protected virtual Boolean Recover(RecoveryCompleted recoveryCompleted)
         {
             Log.Debug("Aggregate of Name={0}, and Id={1}; has completed recovering from it's event journal at Version={2}.", Name, Id, Version);
             return true;

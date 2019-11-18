@@ -1,16 +1,16 @@
-﻿using System;
-using System.ComponentModel;
-using Demo.ValueObjects;
+﻿using Demo.ValueObjects;
 using EventFly.Commands;
 using EventFly.Localization;
 using EventFly.Security;
 using EventFly.Validation;
 using FluentValidation;
+using System;
+using System.ComponentModel;
 
 namespace Demo.User.Commands
 {
     [Description("Создание нового пользователя")]
-    [HasPermissions(DemoContext.CreateUser,DemoContext.ChangeUser)]
+    [HasPermissions(DemoContext.CreateUser, DemoContext.ChangeUser)]
     [Validator(typeof(CreateUserCommandValidator))]
     public class CreateUserCommand : Command<UserId>
     {
@@ -31,7 +31,7 @@ namespace Demo.User.Commands
             RuleFor(p => p.AggregateId).NotNull();
             //RuleFor(p => p.UserName).SetValidator(new UserNameValidator());
             RuleFor(p => p.Birth).ApplyRegisteredValidators(sp);
-          
+
         }
     }
 }

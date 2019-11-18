@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using EventFly.Core;
+﻿using EventFly.Core;
 using EventFly.Metadata;
 using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace EventFly.Commands
 {
@@ -16,18 +16,18 @@ namespace EventFly.Commands
             SourceId = sourceId ?? Core.SourceId.New;
         }
 
-        public CommandMetadata(IDictionary<string, string> keyValuePairs)
+        public CommandMetadata(IDictionary<System.String, System.String> keyValuePairs)
             : base(keyValuePairs)
         {
         }
 
-        public CommandMetadata(IEnumerable<KeyValuePair<string, string>> keyValuePairs)
+        public CommandMetadata(IEnumerable<KeyValuePair<System.String, System.String>> keyValuePairs)
             : base(keyValuePairs.ToDictionary(kv => kv.Key, kv => kv.Value))
         {
         }
 
-        public CommandMetadata(params KeyValuePair<string, string>[] keyValuePairs)
-            : this((IEnumerable<KeyValuePair<string, string>>)keyValuePairs)
+        public CommandMetadata(params KeyValuePair<System.String, System.String>[] keyValuePairs)
+            : this((IEnumerable<KeyValuePair<System.String, System.String>>)keyValuePairs)
         {
         }
 
@@ -38,19 +38,19 @@ namespace EventFly.Commands
         }
 
         [JsonIgnore]
-        public string CorrelationId
+        public System.String CorrelationId
         {
             get => GetMetadataValue(MetadataKeys.CorrelationId);
             set => AddOrUpdateValue(MetadataKeys.CorrelationId, value);
         }
 
         [JsonIgnore]
-        public IReadOnlyCollection<string> CorrelationIds
+        public IReadOnlyCollection<System.String> CorrelationIds
         {
-            get => ContainsKey(MetadataKeys.CorrelationIds) ? 
-                (IReadOnlyCollection<string>) GetMetadataValue(MetadataKeys.CorrelationIds)?.Split(',') : 
-                new List<string>().AsReadOnly();
-            set => AddOrUpdateValue(MetadataKeys.CorrelationIds, value == null ? "" : string.Join(",",value));
+            get => ContainsKey(MetadataKeys.CorrelationIds) ?
+                (IReadOnlyCollection<System.String>)GetMetadataValue(MetadataKeys.CorrelationIds)?.Split(',') :
+                new List<System.String>().AsReadOnly();
+            set => AddOrUpdateValue(MetadataKeys.CorrelationIds, value == null ? "" : System.String.Join(",", value));
         }
     }
 }

@@ -25,21 +25,21 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using EventFly.TestHelpers.Aggregates.Entities;
 using EventFly.ValueObjects;
 using FluentAssertions;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 
 namespace EventFly.Tests.UnitTests.ValueObjects
 {
     public class SingleValueObjectTests
     {
-         public class StringSingleValue : SingleValueObject<string>
+        public class StringSingleValue : SingleValueObject<String>
         {
-            public StringSingleValue(string value) 
+            public StringSingleValue(String value)
                 : base(value) { }
         }
 
@@ -53,14 +53,14 @@ namespace EventFly.Tests.UnitTests.ValueObjects
 
         public class MagicEnumSingleValue : SingleValueObject<MagicEnum>
         {
-            public MagicEnumSingleValue(MagicEnum value) 
+            public MagicEnumSingleValue(MagicEnum value)
                 : base(value) { }
         }
 
         [Fact]
         public void SVOWithEnumList_IsEquivalent_ExactlyOrderedEnumList()
         {
-            var values = Enumerable.Range(0,10).Select(x => TestId.New.Value).ToList();
+            var values = Enumerable.Range(0, 10).Select(x => TestId.New.Value).ToList();
             var orderedValues = values.OrderBy(s => s).ToList();
             values.Should().NotEqual(orderedValues); // Data test
             var singleValueObjects = values.Select(s => new StringSingleValue(s)).ToList();
@@ -82,7 +82,7 @@ namespace EventFly.Tests.UnitTests.ValueObjects
                 MagicEnum.Three
             };
             var orderedValues = values.OrderBy(s => s).ToList();
-            values.Should().NotEqual(orderedValues); 
+            values.Should().NotEqual(orderedValues);
             var singleValueObjects = values.Select(s => new MagicEnumSingleValue(s)).ToList();
 
             var orderedSingleValueObjects = singleValueObjects.OrderBy(v => v).ToList();
@@ -95,7 +95,7 @@ namespace EventFly.Tests.UnitTests.ValueObjects
         [Fact]
         public void SVOWithEnum_WhenInstantiated_ProtectsAgainsInvalidEnumValues()
         {
-            this.Invoking(test => new MagicEnumSingleValue((MagicEnum) 42))
+            this.Invoking(test => new MagicEnumSingleValue((MagicEnum)42))
                 .Should().Throw<ArgumentException>().And.Message.Should()
                 .Be("The value '42' isn't defined in enum 'MagicEnum'");
         }
@@ -105,19 +105,19 @@ namespace EventFly.Tests.UnitTests.ValueObjects
         {
             var values = new[]
                 {
-                    new MagicEnumSingleValue(MagicEnum.Zero), 
-                    new MagicEnumSingleValue(MagicEnum.Three), 
-                    new MagicEnumSingleValue(MagicEnum.One), 
-                    new MagicEnumSingleValue(MagicEnum.Two) 
+                    new MagicEnumSingleValue(MagicEnum.Zero),
+                    new MagicEnumSingleValue(MagicEnum.Three),
+                    new MagicEnumSingleValue(MagicEnum.One),
+                    new MagicEnumSingleValue(MagicEnum.Two)
                 };
-            
+
             var orderedValues = values
                 .OrderBy(v => v)
                 .Select(v => v.Value)
                 .ToList();
-            
+
             orderedValues.Should().BeEquivalentTo(
-                new []
+                new[]
                 {
                     MagicEnum.Zero,
                     MagicEnum.One,
@@ -159,7 +159,7 @@ namespace EventFly.Tests.UnitTests.ValueObjects
             (svo1 == svo2).Should().BeFalse();
             svo1.Equals(svo2).Should().BeFalse();
         }
-        
+
         [Fact]
         public void SVO_WhenComparedWithNull_ThrowsException()
         {
@@ -168,7 +168,7 @@ namespace EventFly.Tests.UnitTests.ValueObjects
 
             this.Invoking(test => svo.CompareTo(null)).Should().Throw<ArgumentNullException>();
         }
-        
+
         [Fact]
         public void SVO_WhenComparedWithOtherType_ThrowsException()
         {
@@ -178,7 +178,7 @@ namespace EventFly.Tests.UnitTests.ValueObjects
 
             this.Invoking(test => svo.CompareTo(invalidSvo)).Should().Throw<ArgumentException>();
         }
-        
+
         [Fact]
         public void SVO_WhenComparedSameValue_ThrowsException()
         {

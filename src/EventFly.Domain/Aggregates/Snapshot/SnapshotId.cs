@@ -27,7 +27,7 @@ namespace EventFly.Aggregates.Snapshot
 {
     public class SnapshotId : Identity<SnapshotId>, ISnapshotId
     {
-        public SnapshotId(string value) 
+        public SnapshotId(System.String value)
             : base(value)
         {
         }

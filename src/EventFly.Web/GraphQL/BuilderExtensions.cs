@@ -1,33 +1,33 @@
-﻿using System;
-using System.Collections.Concurrent;
-using EventFly.Definitions;
+﻿using EventFly.Definitions;
 using EventFly.DependencyInjection;
 using GraphQL;
 using GraphQL.Http;
 using GraphQL.Server;
 using GraphQL.Types;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Collections.Concurrent;
 
 namespace EventFly.GraphQL
 {
     public sealed class EventFlyGraphQlOptions
     {
-        public EventFlyGraphQlOptions(string basePath)
+        public EventFlyGraphQlOptions(String basePath)
         {
             BasePath = basePath;
         }
 
-        public string BasePath { get; set; }
+        public String BasePath { get; set; }
     }
 
     public sealed class EventFlyGraphQlConsoleOptions
     {
-        public EventFlyGraphQlConsoleOptions(string basePath)
+        public EventFlyGraphQlConsoleOptions(String basePath)
         {
             BasePath = basePath;
         }
 
-        public string BasePath { get; set; }
+        public String BasePath { get; set; }
     }
 
     public sealed class EventFlyGraphQlBuilder
@@ -44,8 +44,8 @@ namespace EventFly.GraphQL
 
     public static class BuilderExtensions
     {
-        private static ConcurrentDictionary<Type,object> _enumCache = new ConcurrentDictionary<Type,object>(); 
-        private static object GetRequiredServiceEx(this IServiceProvider provider, Type serviceType)
+        private static ConcurrentDictionary<Type, Object> _enumCache = new ConcurrentDictionary<Type, Object>();
+        private static Object GetRequiredServiceEx(this IServiceProvider provider, Type serviceType)
         {
             if (serviceType.IsGenericType && serviceType.GetGenericTypeDefinition() == typeof(EnumerationGraphType<>))
             {
@@ -75,7 +75,7 @@ namespace EventFly.GraphQL
             {
                 var handlerType = typeof(GraphQueryHandler<,>).MakeGenericType(query.Type, query.QueryResultType);
                 var handlerFullType = typeof(IGraphQueryHandler<,>).MakeGenericType(query.Type, query.QueryResultType);
-                services.AddSingleton(handlerFullType,handlerType);
+                services.AddSingleton(handlerFullType, handlerType);
                 //services.AddSingleton(provider => (IGraphQueryHandler) provider.GetService(handlerFullType));
             }
 

@@ -10,7 +10,7 @@ namespace EventFly.Definitions
 {
     public class ReadModelDefinition : IReadModelDefinition
     {
-        public string Name { get; }
+        public String Name { get; }
 
         public Type Type { get; }
 
@@ -23,7 +23,7 @@ namespace EventFly.Definitions
             ManagerDefinition = managerDefinition;
         }
 
-        public override string ToString()
+        public override String ToString()
         {
             return Name;
         }

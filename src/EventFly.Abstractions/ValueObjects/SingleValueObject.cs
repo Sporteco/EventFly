@@ -25,10 +25,10 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using EventFly.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using EventFly.Exceptions;
 
 namespace EventFly.ValueObjects
 {
@@ -45,7 +45,7 @@ namespace EventFly.ValueObjects
             {
                 throw new ArgumentException($"The value '{value}' isn't defined in enum '{Type.PrettyPrint()}'");
             }
-            
+
             Value = value;
         }
 
@@ -54,7 +54,7 @@ namespace EventFly.ValueObjects
             return singleValueObject.Value;
         }
 
-        public int CompareTo(object obj)
+        public Int32 CompareTo(Object obj)
         {
             if (ReferenceEquals(null, obj))
             {
@@ -70,19 +70,19 @@ namespace EventFly.ValueObjects
             return Value.CompareTo(other.Value);
         }
 
-        protected override IEnumerable<object> GetEqualityComponents()
+        protected override IEnumerable<Object> GetEqualityComponents()
         {
             yield return Value;
         }
 
-        public override string ToString()
+        public override String ToString()
         {
             return ReferenceEquals(Value, null)
-                ? string.Empty
+                ? String.Empty
                 : Value.ToString();
         }
 
-        public object GetValue()
+        public Object GetValue()
         {
             return Value;
         }

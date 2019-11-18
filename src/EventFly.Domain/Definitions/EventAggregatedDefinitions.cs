@@ -8,7 +8,7 @@ using EventFly.Aggregates;
 
 namespace EventFly.Definitions
 {
-  public class EventAggregatedDefinitions : AggregatedDefinitions<EventDefinitions, EventVersionAttribute, EventDefinition>, IEventDefinitions
-  {
-  }
+    public class EventAggregatedDefinitions : AggregatedDefinitions<EventDefinitions, EventVersionAttribute, EventDefinition>, IEventDefinitions
+    {
+    }
 }

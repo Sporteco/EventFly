@@ -27,7 +27,7 @@ namespace EventFly.Sagas.AggregateSaga
 {
     public interface IAggregateSagaManager
     {
-        
+
     }
 
     public interface IAggregateSagaManager<TAggregateSaga, TIdentity, TSagaLocator> : IAggregateSagaManager

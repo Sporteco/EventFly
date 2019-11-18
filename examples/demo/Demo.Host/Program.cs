@@ -1,11 +1,11 @@
-﻿using System;
-using System.Threading.Tasks;
-using EventFly.DependencyInjection;
-using Demo.ValueObjects;
-using Microsoft.Extensions.DependencyInjection;
-using EventFly.Commands;
-using Demo.Infrastructure;
+﻿using Demo.Infrastructure;
 using Demo.User.Commands;
+using Demo.ValueObjects;
+using EventFly.Commands;
+using EventFly.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Threading.Tasks;
 
 namespace Demo.Host
 {
@@ -14,7 +14,7 @@ namespace Demo.Host
         public static async Task Main()
         {
             var aggregateId = UserId.New;
-            var createUserAccountCommand = new CreateUserCommand(aggregateId, new UserName(("userName","ru")), new Birth(DateTime.Now));
+            var createUserAccountCommand = new CreateUserCommand(aggregateId, new UserName(("userName", "ru")), new Birth(DateTime.Now));
 
             var serviceProvider =
                  new ServiceCollection()
@@ -35,8 +35,8 @@ namespace Demo.Host
 
             await bus.Publish(createUserAccountCommand);
 
-            await bus.Publish(new RenameUserCommand(aggregateId, new UserName(("TEST","en"))));
-            await bus.Publish(new CreateUserCommand(UserId.New, new UserName(("userName2","ru")), new Birth(DateTime.Today)));
+            await bus.Publish(new RenameUserCommand(aggregateId, new UserName(("TEST", "en"))));
+            await bus.Publish(new CreateUserCommand(UserId.New, new UserName(("userName2", "ru")), new Birth(DateTime.Today)));
 
             var projectId1 = ProjectId.New;
             var projectId2 = ProjectId.New;

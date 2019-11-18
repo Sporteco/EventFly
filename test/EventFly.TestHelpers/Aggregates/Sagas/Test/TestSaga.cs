@@ -33,7 +33,7 @@ using System.Threading.Tasks;
 
 namespace EventFly.TestHelpers.Aggregates.Sagas.Test
 {
-    public class TestSaga : AggregateSaga<TestSaga,TestSagaId,TestSagaState>,
+    public class TestSaga : AggregateSaga<TestSaga, TestSagaId, TestSagaState>,
         ISagaIsStartedBy<TestAggregateId, TestSentEvent>,
         ISagaHandles<TestAggregateId, TestReceivedEvent>
     {
@@ -70,7 +70,7 @@ namespace EventFly.TestHelpers.Aggregates.Sagas.Test
             return Task.CompletedTask;
         }
 
-        private bool Handle(EmitTestSagaState testCommand)
+        private System.Boolean Handle(EmitTestSagaState testCommand)
         {
             Emit(new TestSagaCompletedEvent(State));
             return true;

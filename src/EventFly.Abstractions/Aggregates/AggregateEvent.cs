@@ -32,7 +32,7 @@ namespace EventFly.Aggregates
 {
     public abstract class AggregateEvent<TIdentity> : IAggregateEvent<TIdentity> where TIdentity : IIdentity
     {
-        public override string ToString()
+        public override System.String ToString()
         {
             return $"{typeof(TIdentity).PrettyPrint()}/{GetType().PrettyPrint()}";
         }

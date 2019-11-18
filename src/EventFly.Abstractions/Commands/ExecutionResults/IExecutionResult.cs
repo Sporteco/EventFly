@@ -29,6 +29,6 @@ namespace EventFly.Commands.ExecutionResults
 {
     public interface IExecutionResult
     {
-        bool IsSuccess { get; }        
+        System.Boolean IsSuccess { get; }
     }
 }

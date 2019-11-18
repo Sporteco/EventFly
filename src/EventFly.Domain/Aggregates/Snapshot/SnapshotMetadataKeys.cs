@@ -25,11 +25,11 @@ namespace EventFly.Aggregates.Snapshot
 {
     public sealed class SnapshotMetadataKeys
     {
-        public const string SnapshotId = "snapshot_id";
-        public const string AggregateName = "aggregate_name";
-        public const string AggregateId = "aggregate_id";
-        public const string AggregateSequenceNumber = "aggregate_sequence_number";
-        public const string SnapshotName = "snapshot_name";
-        public const string SnapshotVersion = "snapshot_version";
+        public const System.String SnapshotId = "snapshot_id";
+        public const System.String AggregateName = "aggregate_name";
+        public const System.String AggregateId = "aggregate_id";
+        public const System.String AggregateSequenceNumber = "aggregate_sequence_number";
+        public const System.String SnapshotName = "snapshot_name";
+        public const System.String SnapshotVersion = "snapshot_version";
     }
 }

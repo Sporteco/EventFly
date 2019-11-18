@@ -25,20 +25,20 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using EventFly.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using EventFly.Exceptions;
 
 namespace EventFly.Specifications.Provided
 {
     public class AtLeastSpecification<T> : Specification<T>
     {
-        private readonly int _requiredSpecifications;
+        private readonly Int32 _requiredSpecifications;
         private readonly IReadOnlyList<ISpecification<T>> _specifications;
 
         public AtLeastSpecification(
-            int requiredSpecifications,
+            Int32 requiredSpecifications,
             IEnumerable<ISpecification<T>> specifications)
         {
             var specificationList = (specifications ?? Enumerable.Empty<ISpecification<T>>()).ToList();
@@ -54,7 +54,7 @@ namespace EventFly.Specifications.Provided
             _specifications = specificationList;
         }
 
-        protected override IEnumerable<string> IsNotSatisfiedBecause(T aggregate)
+        protected override IEnumerable<String> IsNotSatisfiedBecause(T aggregate)
         {
             var notStatisfiedReasons = _specifications
                 .Select(s => new
@@ -63,11 +63,11 @@ namespace EventFly.Specifications.Provided
                     WhyIsNotStatisfied = s.WhyIsNotSatisfiedBy(aggregate).ToList()
                 })
                 .Where(a => a.WhyIsNotStatisfied.Any())
-                .Select(a => $"{a.Specification.GetType().PrettyPrint()}: {string.Join(", ", a.WhyIsNotStatisfied)}")
+                .Select(a => $"{a.Specification.GetType().PrettyPrint()}: {String.Join(", ", a.WhyIsNotStatisfied)}")
                 .ToList();
 
             return (_specifications.Count - notStatisfiedReasons.Count) >= _requiredSpecifications
-                ? Enumerable.Empty<string>()
+                ? Enumerable.Empty<String>()
                 : notStatisfiedReasons;
         }
     }

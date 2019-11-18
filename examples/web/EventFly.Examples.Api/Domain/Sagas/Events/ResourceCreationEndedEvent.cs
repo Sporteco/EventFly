@@ -21,23 +21,23 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System;
 using EventFly.Aggregates;
 using EventFly.Examples.Api.Domain.Aggregates.Resource;
+using System;
 
 namespace EventFly.Examples.Api.Domain.Sagas.Events
 {
     public class ResourceCreationEndedEvent : AggregateEvent<ResourceCreationSagaId>
     {
         public ResourceId ResourceId { get; }
-        public int Progress { get; }
-        public int Elapsed { get; }
+        public Int32 Progress { get; }
+        public Int32 Elapsed { get; }
         public DateTime EndedAt { get; }
 
         public ResourceCreationEndedEvent(
             ResourceId resourceId,
-            int progress,
-            int elapsed,
+            Int32 progress,
+            Int32 elapsed,
             DateTime endedAt)
         {
             ResourceId = resourceId;

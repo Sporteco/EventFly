@@ -4,8 +4,6 @@
 // MVID: 043A546D-C869-4CCE-8BB0-8D9655232ADF
 // Assembly location: C:\Users\naych\source\repos\!!!!!\netcoreapp2.2\EventFly.Web.dll
 
-using System.Collections.Generic;
-using System.Reflection;
 using EventFly.Commands;
 using EventFly.Commands.ExecutionResults;
 using EventFly.Definitions;
@@ -17,6 +15,8 @@ using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Internal;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System.Collections.Generic;
+using System.Reflection;
 
 namespace EventFly.Swagger
 {
@@ -58,7 +58,7 @@ namespace EventFly.Swagger
                 {
                     var type = query.Type;
                     var name = query.Name;
-                    var str = _options.BasePath.Trim('/')+ "/" + query.Name;
+                    var str = _options.BasePath.Trim('/') + "/" + query.Name;
                     var genericInterface = ReflectionExtensions.GetSubclassOfRawGenericInterface(typeof(IQuery<>), type);
                     if (!(genericInterface == null))
                     {
@@ -88,7 +88,7 @@ namespace EventFly.Swagger
 
                         actionDescriptor1.MethodInfo = new CustomMethodInfo(name, type);
                         actionDescriptor1.ControllerTypeInfo = type.GetTypeInfo();
-                        actionDescriptor1.RouteValues = new Dictionary<string, string>
+                        actionDescriptor1.RouteValues = new Dictionary<System.String, System.String>
                         {
                             {
                                 "controller",
@@ -158,7 +158,7 @@ namespace EventFly.Swagger
                         };
                         actionDescriptor1.MethodInfo = new CustomMethodInfo(name, type);
                         actionDescriptor1.ControllerTypeInfo = type.GetTypeInfo();
-                        actionDescriptor1.RouteValues = new Dictionary<string, string>
+                        actionDescriptor1.RouteValues = new Dictionary<System.String, System.String>
                         {
                             {
                                 "controller",

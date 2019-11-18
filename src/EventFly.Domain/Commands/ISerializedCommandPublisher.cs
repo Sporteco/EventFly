@@ -4,18 +4,18 @@
 // MVID: 61DF059E-E5F5-4992-B320-644C3E4F5C82
 // Assembly location: C:\Users\naych\source\repos\!!!!!\netcoreapp2.2\EventFly.dll
 
+using EventFly.Commands.ExecutionResults;
 using System.Threading;
 using System.Threading.Tasks;
-using EventFly.Commands.ExecutionResults;
 
 namespace EventFly.Commands
 {
-  public interface ISerializedCommandPublisher
-  {
-    Task<IExecutionResult> PublishSerilizedCommandAsync(
-      string name,
-      int version,
-      string json,
-      CancellationToken cancellationToken);
-  }
+    public interface ISerializedCommandPublisher
+    {
+        Task<IExecutionResult> PublishSerilizedCommandAsync(
+          System.String name,
+          System.Int32 version,
+          System.String json,
+          CancellationToken cancellationToken);
+    }
 }

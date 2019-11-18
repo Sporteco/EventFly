@@ -1,9 +1,9 @@
-﻿using System;
-using System.Threading.Tasks;
-using EventFly.Commands;
+﻿using EventFly.Commands;
 using EventFly.DependencyInjection;
 using EventFly.Jobs;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Threading.Tasks;
 
 namespace EventFly.Schedulers.Commands
 {
@@ -19,7 +19,7 @@ namespace EventFly.Schedulers.Commands
             _serviceProvider = Context.System.GetExtension<ServiceProviderHolder>().ServiceProvider;
         }
 
-        public async Task<bool> RunAsync(PublishCommandJob job)
+        public async Task<Boolean> RunAsync(PublishCommandJob job)
         {
             var bus = _scope.ServiceProvider.GetRequiredService<ICommandBus>();
 

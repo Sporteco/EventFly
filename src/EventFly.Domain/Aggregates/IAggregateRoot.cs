@@ -32,9 +32,9 @@ namespace EventFly.Aggregates
     public interface IAggregateRoot
     {
         IAggregateName Name { get; }
-        long Version { get; }
-        bool IsNew { get; }      
-        bool HasSourceId(ISourceId sourceId);
+        System.Int64 Version { get; }
+        System.Boolean IsNew { get; }
+        System.Boolean HasSourceId(ISourceId sourceId);
         IIdentity GetIdentity();
     }
 

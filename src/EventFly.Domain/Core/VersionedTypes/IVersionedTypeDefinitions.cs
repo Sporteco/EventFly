@@ -9,28 +9,28 @@ using System.Collections.Generic;
 
 namespace EventFly.Core.VersionedTypes
 {
-  public interface IVersionedTypeDefinitions<TAttribute, TDefinition>
+    public interface IVersionedTypeDefinitions<TAttribute, TDefinition>
     where TAttribute : VersionedTypeAttribute
     where TDefinition : VersionedTypeDefinition
-  {
-    void Load(IReadOnlyCollection<Type> types);
+    {
+        void Load(IReadOnlyCollection<Type> types);
 
-    IEnumerable<TDefinition> GetDefinitions(string name);
+        IEnumerable<TDefinition> GetDefinitions(String name);
 
-    bool TryGetDefinition(string name, int version, out TDefinition definition);
+        Boolean TryGetDefinition(String name, Int32 version, out TDefinition definition);
 
-    IEnumerable<TDefinition> GetAllDefinitions();
+        IEnumerable<TDefinition> GetAllDefinitions();
 
-    TDefinition GetDefinition(string name, int version);
+        TDefinition GetDefinition(String name, Int32 version);
 
-    TDefinition GetDefinition(Type type);
+        TDefinition GetDefinition(Type type);
 
-    IReadOnlyCollection<TDefinition> GetDefinitions(Type type);
+        IReadOnlyCollection<TDefinition> GetDefinitions(Type type);
 
-    bool TryGetDefinition(Type type, out TDefinition definition);
+        Boolean TryGetDefinition(Type type, out TDefinition definition);
 
-    bool TryGetDefinitions(Type type, out IReadOnlyCollection<TDefinition> definitions);
+        Boolean TryGetDefinitions(Type type, out IReadOnlyCollection<TDefinition> definitions);
 
-    void Load(params Type[] types);
-  }
+        void Load(params Type[] types);
+    }
 }

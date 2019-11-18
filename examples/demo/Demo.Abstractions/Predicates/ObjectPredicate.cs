@@ -1,8 +1,10 @@
-﻿namespace Demo.Predicates
+using System;
+
+namespace Demo.Predicates
 {
     public abstract class ObjectPredicate<TObject> : Predicate
         where TObject : class
     {
-        public abstract bool Check(TObject @object);
+        public abstract Boolean Check(TObject @object);
     }
 }

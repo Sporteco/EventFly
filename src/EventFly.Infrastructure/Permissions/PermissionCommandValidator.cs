@@ -1,8 +1,8 @@
-﻿using System;
-using System.Reflection;
-using EventFly.Commands;
+﻿using EventFly.Commands;
 using EventFly.Security;
 using FluentValidation.Results;
+using System;
+using System.Reflection;
 
 namespace EventFly.Permissions
 {
@@ -35,6 +35,6 @@ namespace EventFly.Permissions
 
         }
 
-        public int Priority => 0;
+        public Int32 Priority => 0;
     }
 }

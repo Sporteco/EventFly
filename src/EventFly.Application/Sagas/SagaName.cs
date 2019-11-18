@@ -29,9 +29,9 @@ using EventFly.ValueObjects;
 
 namespace EventFly.Sagas
 {
-    public class SagaName : SingleValueObject<string>, ISagaName
+    public class SagaName : SingleValueObject<System.String>, ISagaName
     {
-        public SagaName(string value) 
+        public SagaName(System.String value)
             : base(value)
         {
         }

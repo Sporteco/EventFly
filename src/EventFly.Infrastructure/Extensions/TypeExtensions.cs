@@ -1,10 +1,10 @@
-﻿using System;
+﻿using EventFly.Exceptions;
+using EventFly.Jobs;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using EventFly.Exceptions;
-using EventFly.Jobs;
 
 namespace EventFly.Extensions
 {

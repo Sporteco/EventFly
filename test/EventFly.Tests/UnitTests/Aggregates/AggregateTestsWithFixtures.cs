@@ -21,13 +21,10 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
 using Akka.TestKit.Xunit2;
 using EventFly.Commands;
 using EventFly.Commands.ExecutionResults;
+using EventFly.DependencyInjection;
 using EventFly.TestFixture.Aggregates;
 using EventFly.TestFixture.Extensions;
 using EventFly.TestHelpers.Aggregates;
@@ -35,21 +32,24 @@ using EventFly.TestHelpers.Aggregates.Commands;
 using EventFly.TestHelpers.Aggregates.Entities;
 using EventFly.TestHelpers.Aggregates.Events;
 using EventFly.TestHelpers.Aggregates.Events.Signals;
+using EventFly.TestHelpers.Aggregates.Sagas.Test;
 using EventFly.TestHelpers.Aggregates.Snapshots;
 using EventFly.Tests.UnitTests.Subscribers;
-using EventFly.DependencyInjection;
 using FluentAssertions;
+using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
-using Microsoft.Extensions.DependencyInjection;
-using EventFly.TestHelpers.Aggregates.Sagas.Test;
 
 namespace EventFly.Tests.UnitTests.Aggregates
 {
     [Collection("AggregateTests")]
     public class AggregateTestsWithFixtures : TestKit
     {
-        private const string Category = "AggregatesWithFixtures";
+        private const String Category = "AggregatesWithFixtures";
 
         public AggregateTestsWithFixtures(ITestOutputHelper testOutputHelper)
             : base(TestHelpers.Akka.Configuration.Config, "aggregate-fixture-tests", testOutputHelper)

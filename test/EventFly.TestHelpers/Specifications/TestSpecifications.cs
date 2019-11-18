@@ -21,23 +21,23 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System.Collections.Generic;
 using EventFly.Specifications;
+using System.Collections.Generic;
 
 namespace EventFly.TestHelpers.Specifications
 {
     public static class TestSpecifications
     {
-        public class IsAboveSpecification : Specification<int>
+        public class IsAboveSpecification : Specification<System.Int32>
         {
-            private readonly int _limit;
+            private readonly System.Int32 _limit;
 
-            public IsAboveSpecification(int limit)
+            public IsAboveSpecification(System.Int32 limit)
             {
                 _limit = limit;
             }
 
-            protected override IEnumerable<string> IsNotSatisfiedBecause(int account)
+            protected override IEnumerable<System.String> IsNotSatisfiedBecause(System.Int32 account)
             {
                 if (account <= _limit)
                 {
@@ -46,9 +46,9 @@ namespace EventFly.TestHelpers.Specifications
             }
         }
 
-        public class IsTrueSpecification : Specification<bool>
+        public class IsTrueSpecification : Specification<System.Boolean>
         {
-            protected override IEnumerable<string> IsNotSatisfiedBecause(bool account)
+            protected override IEnumerable<System.String> IsNotSatisfiedBecause(System.Boolean account)
             {
                 if (!account)
                 {

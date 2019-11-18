@@ -23,10 +23,10 @@
 
 namespace EventFly.Aggregates.Snapshot.Strategies
 {
-    public class SnapshotNeverStrategy: ISnapshotStrategy
+    public class SnapshotNeverStrategy : ISnapshotStrategy
     {
         public static ISnapshotStrategy Instance => new SnapshotNeverStrategy();
-        public bool ShouldCreateSnapshot(IAggregateRoot snapshotAggregateRoot)
+        public System.Boolean ShouldCreateSnapshot(IAggregateRoot snapshotAggregateRoot)
         {
             return false;
         }

@@ -32,7 +32,7 @@ namespace EventFly.Examples.Api.Domain.Sagas
         IApply<ResourceCreationProgressEvent>,
         IApply<ResourceCreationEndedEvent>
     {
-        public int Progress { get; private set; }
+        public System.Int32 Progress { get; private set; }
 
         public void Apply(ResourceCreationStartedEvent _)
         {

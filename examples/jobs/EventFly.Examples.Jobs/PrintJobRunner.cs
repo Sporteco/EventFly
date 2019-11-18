@@ -29,7 +29,7 @@ namespace EventFly.Examples.Jobs
     public class PrintJobRunner : JobRunner<PrintJob, PrintJobId>,
         IRun<PrintJob, PrintJobId>
     {
-        public bool Run(PrintJob job)
+        public System.Boolean Run(PrintJob job)
         {
             //Only thing that print runner does is it prints out the contents of the job message
             var time = Context.System.Scheduler.Now.DateTime;

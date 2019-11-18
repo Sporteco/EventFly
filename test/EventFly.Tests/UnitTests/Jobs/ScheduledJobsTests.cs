@@ -21,27 +21,27 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System;
 using Akka.TestKit;
 using Akka.TestKit.Xunit2;
+using EventFly.DependencyInjection;
+using EventFly.Jobs;
+using EventFly.TestFixture.Aggregates;
+using EventFly.TestHelpers.Aggregates.Sagas.Test;
 using EventFly.TestHelpers.Jobs;
 using EventFly.Tests.UnitTests.Subscribers;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
-using EventFly.DependencyInjection;
+using System;
+using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
-using EventFly.TestHelpers.Aggregates.Sagas.Test;
-using System.Threading.Tasks;
-using EventFly.Jobs;
-using EventFly.TestFixture.Aggregates;
 
 namespace EventFly.Tests.UnitTests.Jobs
 {
     [Collection("ScheduledJobsTests")]
     public class ScheduledJobsTests : TestKit
     {
-        private const string Category = "Jobs";
+        private const String Category = "Jobs";
 
         public ScheduledJobsTests(ITestOutputHelper testOutputHelper)
             : base(TestHelpers.Akka.Configuration.ConfigWithTestScheduler, "jobs-tests", testOutputHelper)
@@ -63,7 +63,7 @@ namespace EventFly.Tests.UnitTests.Jobs
         private async Task SchedulingJob_For5minutes_DispatchesJobMessage()
         {
             var probe = CreateTestProbe("job-probe");
-            var sysScheduler = (TestScheduler) Sys.Scheduler;
+            var sysScheduler = (TestScheduler)Sys.Scheduler;
             var jobId = TestJobId.New;
             var greeting = $"hi here here is a random guid {Guid.NewGuid()}";
             var job = new TestJob(jobId, greeting);

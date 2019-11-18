@@ -1,16 +1,16 @@
 ﻿
-using System;
 using EventFly.ValueObjects;
+using System;
 
 namespace EventFly.Permissions
 {
     public class PermissionDefinition : ValueObject, IPermissionDefinition
     {
-        public PermissionDefinition(string permissionCode)
+        public PermissionDefinition(String permissionCode)
         {
             PermissionCode = permissionCode;
         }
-        public PermissionDefinition(Type targetAggregateType, string permissionCode)
+        public PermissionDefinition(Type targetAggregateType, String permissionCode)
         {
             TargetAggregateType = targetAggregateType;
             PermissionCode = permissionCode;
@@ -18,7 +18,7 @@ namespace EventFly.Permissions
 
         public Type TargetAggregateType { get; }
 
-        public string PermissionCode { get; }
+        public String PermissionCode { get; }
 
     }
 }

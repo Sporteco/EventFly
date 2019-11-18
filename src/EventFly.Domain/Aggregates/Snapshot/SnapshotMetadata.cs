@@ -21,11 +21,11 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using EventFly.Metadata;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using EventFly.Metadata;
-using Newtonsoft.Json;
 
 namespace EventFly.Aggregates.Snapshot
 {
@@ -35,49 +35,49 @@ namespace EventFly.Aggregates.Snapshot
         {
         }
 
-        public SnapshotMetadata(IDictionary<string, string> keyValuePairs)
+        public SnapshotMetadata(IDictionary<System.String, System.String> keyValuePairs)
             : base(keyValuePairs)
         {
         }
 
-        public SnapshotMetadata(IEnumerable<KeyValuePair<string, string>> keyValuePairs)
+        public SnapshotMetadata(IEnumerable<KeyValuePair<System.String, System.String>> keyValuePairs)
             : base(keyValuePairs.ToDictionary(kv => kv.Key, kv => kv.Value))
         {
         }
 
-        public SnapshotMetadata(params KeyValuePair<string, string>[] keyValuePairs)
-            : this((IEnumerable<KeyValuePair<string, string>>)keyValuePairs)
+        public SnapshotMetadata(params KeyValuePair<System.String, System.String>[] keyValuePairs)
+            : this((IEnumerable<KeyValuePair<System.String, System.String>>)keyValuePairs)
         {
         }
 
         [JsonIgnore]
-        public string AggregateId
+        public System.String AggregateId
         {
             get => GetMetadataValue(SnapshotMetadataKeys.AggregateId);
             set => AddOrUpdateValue(SnapshotMetadataKeys.AggregateId, value);
         }
 
         [JsonIgnore]
-        public string AggregateName
+        public System.String AggregateName
         {
             get => GetMetadataValue(SnapshotMetadataKeys.AggregateName);
             set => AddOrUpdateValue(SnapshotMetadataKeys.AggregateName, value);
         }
 
         [JsonIgnore]
-        public long AggregateSequenceNumber
+        public System.Int64 AggregateSequenceNumber
         {
-            get => GetMetadataValue(SnapshotMetadataKeys.AggregateSequenceNumber, long.Parse);
+            get => GetMetadataValue(SnapshotMetadataKeys.AggregateSequenceNumber, System.Int64.Parse);
             set => AddOrUpdateValue(SnapshotMetadataKeys.AggregateSequenceNumber, value.ToString(CultureInfo.InvariantCulture));
         }
 
         [JsonIgnore]
-        public string SnapshotName
+        public System.String SnapshotName
         {
             get => GetMetadataValue(SnapshotMetadataKeys.SnapshotName);
             set => AddOrUpdateValue(SnapshotMetadataKeys.SnapshotName, value);
         }
-        
+
         [JsonIgnore]
         public ISnapshotId SnapshotId
         {
@@ -86,9 +86,9 @@ namespace EventFly.Aggregates.Snapshot
         }
 
         [JsonIgnore]
-        public int SnapshotVersion
+        public System.Int32 SnapshotVersion
         {
-            get => GetMetadataValue(SnapshotMetadataKeys.SnapshotVersion, int.Parse);
+            get => GetMetadataValue(SnapshotMetadataKeys.SnapshotVersion, System.Int32.Parse);
             set => AddOrUpdateValue(SnapshotMetadataKeys.SnapshotVersion, value.ToString(CultureInfo.InvariantCulture));
         }
     }

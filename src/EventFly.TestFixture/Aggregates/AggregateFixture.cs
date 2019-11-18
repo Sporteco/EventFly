@@ -21,7 +21,6 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System;
 using Akka.Actor;
 using Akka.Persistence;
 using Akka.TestKit;
@@ -32,6 +31,7 @@ using EventFly.Core;
 using EventFly.DependencyInjection;
 using EventFly.Exceptions;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 using AkkaSnapshotMetadata = Akka.Persistence.SnapshotMetadata;
 using SnapshotMetadata = EventFly.Aggregates.Snapshot.SnapshotMetadata;
 
@@ -97,7 +97,7 @@ namespace EventFly.TestFixture.Aggregates
             return this;
         }
 
-        public IFixtureExecutor<TAggregate, TIdentity> Given(IAggregateSnapshot<TAggregate, TIdentity> aggregateSnapshot, long snapshotSequenceNumber)
+        public IFixtureExecutor<TAggregate, TIdentity> Given(IAggregateSnapshot<TAggregate, TIdentity> aggregateSnapshot, Int64 snapshotSequenceNumber)
         {
             InitializeSnapshotStore(AggregateId, aggregateSnapshot, snapshotSequenceNumber);
 
@@ -133,7 +133,7 @@ namespace EventFly.TestFixture.Aggregates
                 if (command == null)
                     throw new NullReferenceException(nameof(command));
 
-                _commandBus.Publish(command).ContinueWith(t => 
+                _commandBus.Publish(command).ContinueWith(t =>
                     AggregateReplyTestProbe.Tell(t.Result)
                 );
             }
@@ -185,7 +185,7 @@ namespace EventFly.TestFixture.Aggregates
             for (var i = 0; i < events.Length; i++)
             {
                 var committedEvent = new CommittedEvent<TAggregate, TIdentity, IAggregateEvent<TIdentity>>(aggregateId, events[i], new EventMetadata(), DateTimeOffset.UtcNow, i + 1);
-                writes[i] = new AtomicWrite(new Persistent(committedEvent, i + 1, aggregateId.Value, string.Empty, false, ActorRefs.NoSender, writerGuid));
+                writes[i] = new AtomicWrite(new Persistent(committedEvent, i + 1, aggregateId.Value, String.Empty, false, ActorRefs.NoSender, writerGuid));
             }
             var journal = Persistence.Instance.Apply(_testKit.Sys).JournalFor(null);
             journal.Tell(new WriteMessages(writes, AggregateEventTestProbe.Ref, 1));
@@ -198,11 +198,11 @@ namespace EventFly.TestFixture.Aggregates
                 AggregateEventTestProbe.ExpectMsg<WriteMessageSuccess>(x =>
                     x.Persistent.PersistenceId == aggregateId.ToString() &&
                     x.Persistent.Payload is CommittedEvent<TAggregate, TIdentity, IAggregateEvent<TIdentity>> &&
-                    x.Persistent.SequenceNr == (long)seq + 1);
+                    x.Persistent.SequenceNr == (Int64)seq + 1);
             }
         }
 
-        private void InitializeSnapshotStore<TAggregateSnapshot>(TIdentity aggregateId, TAggregateSnapshot aggregateSnapshot, long sequenceNumber)
+        private void InitializeSnapshotStore<TAggregateSnapshot>(TIdentity aggregateId, TAggregateSnapshot aggregateSnapshot, Int64 sequenceNumber)
             where TAggregateSnapshot : IAggregateSnapshot<TAggregate, TIdentity>
         {
             var snapshotStore = Persistence.Instance.Apply(_testKit.Sys).SnapshotStoreFor(null);

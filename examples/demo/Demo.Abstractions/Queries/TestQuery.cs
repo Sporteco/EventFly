@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using EventFly.Queries;
+using System.Collections.Generic;
 using System.ComponentModel;
-using EventFly.Queries;
 
 namespace Demo.Queries
 {
@@ -14,13 +14,13 @@ namespace Demo.Queries
         public class NestedParams
         {
             [AllowNull]
-            public string param1 { get; set; }
-           
-            public string param2 { get; set; }
+            public System.String param1 { get; set; }
+
+            public System.String param2 { get; set; }
         }
     }
     public class TestResult
     {
-        public string Bla { get; set; }
+        public System.String Bla { get; set; }
     }
 }

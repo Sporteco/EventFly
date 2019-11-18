@@ -25,10 +25,10 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System;
-using System.Diagnostics.CodeAnalysis;
 using EventFly.Core;
 using FluentAssertions;
+using System;
+using System.Diagnostics.CodeAnalysis;
 using Xunit;
 
 namespace EventFly.Tests.UnitTests.Core
@@ -39,9 +39,9 @@ namespace EventFly.Tests.UnitTests.Core
         public void CompileMethodInvocation()
         {
             var caller =
-                ReflectionHelper.CompileMethodInvocation<Func<Calculator, int, int, int>>(typeof(Calculator), "Add",
-                    typeof(int), typeof(int));
-            
+                ReflectionHelper.CompileMethodInvocation<Func<Calculator, Int32, Int32, Int32>>(typeof(Calculator), "Add",
+                    typeof(Int32), typeof(Int32));
+
             var result = caller(new Calculator(), 1, 2);
 
             result.Should().Be(3);
@@ -50,45 +50,45 @@ namespace EventFly.Tests.UnitTests.Core
         [Fact]
         public void CompileMethodInvocation_CanUpcast()
         {
-            var a = (INumber) new Number {I = 1};
-            var b = (INumber) new Number {I = 2};
+            var a = (INumber)new Number { I = 1 };
+            var b = (INumber)new Number { I = 2 };
 
             var caller =
                 ReflectionHelper.CompileMethodInvocation<Func<Calculator, INumber, INumber, INumber>>(
                     typeof(Calculator), "Add", typeof(Number), typeof(Number));
             var result = caller(new Calculator(), a, b);
 
-            var c = (Number) result;
+            var c = (Number)result;
             c.I.Should().Be(3);
         }
 
         [Fact]
         public void CompileMethodInvocation_CanDoBothUpcastAndPass()
         {
-            var a = (INumber) new Number {I = 1};
-            const int b = 2;
+            var a = (INumber)new Number { I = 1 };
+            const Int32 b = 2;
 
             var caller =
-                ReflectionHelper.CompileMethodInvocation<Func<Calculator, INumber, int, INumber>>(typeof(Calculator),
-                    "Add", typeof(Number), typeof(int));
+                ReflectionHelper.CompileMethodInvocation<Func<Calculator, INumber, Int32, INumber>>(typeof(Calculator),
+                    "Add", typeof(Number), typeof(Int32));
             var result = caller(new Calculator(), a, b);
 
-            var c = (Number) result;
+            var c = (Number)result;
             c.I.Should().Be(3);
         }
-        
-        
+
+
         [Fact]
         public void CompileMethodInvocation_WithMissingMethod_ThrowsException()
         {
             var methodName = "ThisMethodDoesntExist";
 
-            this.Invoking(test => ReflectionHelper.CompileMethodInvocation<Func<Calculator, INumber, int, INumber>>(
+            this.Invoking(test => ReflectionHelper.CompileMethodInvocation<Func<Calculator, INumber, Int32, INumber>>(
                     typeof(Calculator),
-                    methodName, typeof(Number), typeof(int)))
+                    methodName, typeof(Number), typeof(Int32)))
                 .Should().Throw<ArgumentException>().And.Message.Should().Contain(methodName);
         }
-        
+
 
         public interface INumber
         {
@@ -96,25 +96,25 @@ namespace EventFly.Tests.UnitTests.Core
 
         public class Number : INumber
         {
-            public int I { get; set; }
+            public Int32 I { get; set; }
         }
 
         [SuppressMessage("ReSharper", "UnusedMember.Local")]
         public class Calculator
         {
-            public int Add(int a, int b)
+            public Int32 Add(Int32 a, Int32 b)
             {
                 return a + b;
             }
 
             private Number Add(Number a, Number b)
             {
-                return new Number {I = Add(a.I, b.I)};
+                return new Number { I = Add(a.I, b.I) };
             }
 
-            private Number Add(Number a, int b)
+            private Number Add(Number a, Int32 b)
             {
-                return new Number {I = Add(a.I, b)};
+                return new Number { I = Add(a.I, b) };
             }
         }
 

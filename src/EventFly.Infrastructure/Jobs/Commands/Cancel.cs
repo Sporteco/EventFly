@@ -29,18 +29,18 @@ namespace EventFly.Jobs.Commands
     {
         public Cancel(
             TIdentity jobId,
-            object ack = null,
-            object nack = null)
+            System.Object ack = null,
+            System.Object nack = null)
             : base(jobId, ack, nack)
         {
         }
 
-        public virtual Cancel<TJob, TIdentity> WithAck(object ack)
+        public virtual Cancel<TJob, TIdentity> WithAck(System.Object ack)
         {
             return new Cancel<TJob, TIdentity>(JobId, ack, Nack);
         }
 
-        public virtual Cancel<TJob, TIdentity> WithNack(object nack)
+        public virtual Cancel<TJob, TIdentity> WithNack(System.Object nack)
         {
             return new Cancel<TJob, TIdentity>(JobId, Ack, nack);
         }

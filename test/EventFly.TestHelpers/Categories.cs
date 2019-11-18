@@ -25,7 +25,7 @@ namespace EventFly.TestHelpers
 {
     public static class Categories
     {
-        public const string Integration = "integration";
-        public const string Unit = "unit";
+        public const System.String Integration = "integration";
+        public const System.String Unit = "unit";
     }
 }

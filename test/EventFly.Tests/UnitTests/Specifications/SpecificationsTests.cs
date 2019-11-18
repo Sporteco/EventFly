@@ -25,12 +25,12 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System.ComponentModel;
 using EventFly.Extensions;
 using EventFly.Specifications;
 using EventFly.TestHelpers;
 using EventFly.TestHelpers.Specifications;
 using FluentAssertions;
+using System.ComponentModel;
 using Xunit;
 
 namespace EventFly.Tests.UnitTests.Specifications
@@ -40,7 +40,7 @@ namespace EventFly.Tests.UnitTests.Specifications
     {
         [Fact]
         public void NotSpecification_ReturnsTrue_ForNotSatisfied()
-        { 
+        {
             var isTrue = new TestSpecifications.IsTrueSpecification();
 
             var isSatisfiedBy = isTrue.Not().IsSatisfiedBy(false);
@@ -63,10 +63,10 @@ namespace EventFly.Tests.UnitTests.Specifications
         [InlineData(true, false, true)]
         [InlineData(false, true, true)]
         [InlineData(false, false, true)]
-        public void OrSpeficication_ReturnsTrue_Correctly(bool notLeft, bool notRight, bool expectedResult)
+        public void OrSpeficication_ReturnsTrue_Correctly(System.Boolean notLeft, System.Boolean notRight, System.Boolean expectedResult)
         {
-            var leftIsTrue = (ISpecification<bool>) new TestSpecifications.IsTrueSpecification();
-            var rightIsTrue = (ISpecification<bool>)new TestSpecifications.IsTrueSpecification();
+            var leftIsTrue = (ISpecification<System.Boolean>)new TestSpecifications.IsTrueSpecification();
+            var rightIsTrue = (ISpecification<System.Boolean>)new TestSpecifications.IsTrueSpecification();
             if (notLeft) leftIsTrue = leftIsTrue.Not();
             if (notRight) rightIsTrue = rightIsTrue.Not();
             var orSpecification = leftIsTrue.Or(rightIsTrue);
@@ -81,10 +81,10 @@ namespace EventFly.Tests.UnitTests.Specifications
         [InlineData(true, false, false)]
         [InlineData(false, true, false)]
         [InlineData(false, false, true)]
-        public void AndSpeficication_ReturnsTrue_Correctly(bool notLeft, bool notRight, bool expectedResult)
+        public void AndSpeficication_ReturnsTrue_Correctly(System.Boolean notLeft, System.Boolean notRight, System.Boolean expectedResult)
         {
-            var leftIsTrue = (ISpecification<bool>)new TestSpecifications.IsTrueSpecification();
-            var rightIsTrue = (ISpecification<bool>)new TestSpecifications.IsTrueSpecification();
+            var leftIsTrue = (ISpecification<System.Boolean>)new TestSpecifications.IsTrueSpecification();
+            var rightIsTrue = (ISpecification<System.Boolean>)new TestSpecifications.IsTrueSpecification();
             if (notLeft) leftIsTrue = leftIsTrue.Not();
             if (notRight) rightIsTrue = rightIsTrue.Not();
             var andSpecification = leftIsTrue.And(rightIsTrue);

@@ -37,7 +37,7 @@ namespace EventFly.ValueObjects
     {
         private static readonly ConcurrentDictionary<Type, IReadOnlyCollection<PropertyInfo>> TypeProperties = new ConcurrentDictionary<Type, IReadOnlyCollection<PropertyInfo>>();
 
-        public override bool Equals(object obj)
+        public override Boolean Equals(Object obj)
         {
             if (ReferenceEquals(this, obj)) return true;
             if (ReferenceEquals(null, obj)) return false;
@@ -46,7 +46,7 @@ namespace EventFly.ValueObjects
             return other != null && GetEqualityComponents().SequenceEqual(other.GetEqualityComponents());
         }
 
-        public override int GetHashCode()
+        public override Int32 GetHashCode()
         {
             unchecked
             {
@@ -54,22 +54,22 @@ namespace EventFly.ValueObjects
             }
         }
 
-        public static bool operator ==(ValueObject left, ValueObject right)
+        public static Boolean operator ==(ValueObject left, ValueObject right)
         {
             return Equals(left, right);
         }
 
-        public static bool operator !=(ValueObject left, ValueObject right)
+        public static Boolean operator !=(ValueObject left, ValueObject right)
         {
             return !Equals(left, right);
         }
 
-        public override string ToString()
+        public override String ToString()
         {
-            return $"{{{string.Join(", ", GetProperties().Select(f => $"{f.Name}: {f.GetValue(this)}"))}}}";
+            return $"{{{String.Join(", ", GetProperties().Select(f => $"{f.Name}: {f.GetValue(this)}"))}}}";
         }
 
-        protected virtual IEnumerable<object> GetEqualityComponents()
+        protected virtual IEnumerable<Object> GetEqualityComponents()
         {
             return GetProperties().Select(x => x.GetValue(this));
         }

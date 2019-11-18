@@ -7,12 +7,12 @@ namespace EventFly.Schedulers
 {
     public interface IEventsScheduler
     {
-        Task<bool> Schedule(PublishEventJobId id, IDomainEvent @event, DateTime triggerDate);
+        Task<Boolean> Schedule(PublishEventJobId id, IDomainEvent @event, DateTime triggerDate);
 
-        Task<bool> Schedule(PublishEventJobId id, IDomainEvent @event, TimeSpan interval, DateTime triggerDate);
+        Task<Boolean> Schedule(PublishEventJobId id, IDomainEvent @event, TimeSpan interval, DateTime triggerDate);
 
-        Task<bool> Schedule(PublishEventJobId id, IDomainEvent @event, string cronExpression, DateTime triggerDate);
+        Task<Boolean> Schedule(PublishEventJobId id, IDomainEvent @event, String cronExpression, DateTime triggerDate);
 
-        Task<bool> Cancel(PublishEventJobId jobId);
+        Task<Boolean> Cancel(PublishEventJobId jobId);
     }
 }

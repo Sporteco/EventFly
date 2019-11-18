@@ -25,43 +25,43 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System.Collections.Generic;
-using System.Linq;
 using FluentValidation.Results;
 using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace EventFly.Commands.ExecutionResults
 {
     public class FailedExecutionResult : ExecutionResult
     {
-        public virtual IReadOnlyCollection<string> Errors { get; }
+        public virtual IReadOnlyCollection<System.String> Errors { get; }
 
         [JsonConstructor]
-        public FailedExecutionResult(IEnumerable<string> errors)
+        public FailedExecutionResult(IEnumerable<System.String> errors)
         {
-            Errors = (errors ?? Enumerable.Empty<string>()).ToList();
+            Errors = (errors ?? Enumerable.Empty<System.String>()).ToList();
         }
 
-        public FailedExecutionResult(string error) : this(new[] { error }) { }
+        public FailedExecutionResult(System.String error) : this(new[] { error }) { }
 
-        public override bool IsSuccess { get; } = false;
+        public override System.Boolean IsSuccess { get; } = false;
 
-        public override string ToString()
+        public override System.String ToString()
         {
             return Errors.Any()
-                ? $"Failed execution due to: {string.Join(", ", Errors)}"
+                ? $"Failed execution due to: {System.String.Join(", ", Errors)}"
                 : "Failed execution";
         }
     }
 
     public sealed class UnhandledExceptionCommandResult : FailedExecutionResult
     {
-        public UnhandledExceptionCommandResult(string message, string stackTrace) : base(message)
+        public UnhandledExceptionCommandResult(System.String message, System.String stackTrace) : base(message)
         {
             StackTrace = stackTrace;
         }
 
-        public string StackTrace { get; }
+        public System.String StackTrace { get; }
     }
 
     public sealed class UnauthorizedAccessResult : FailedExecutionResult

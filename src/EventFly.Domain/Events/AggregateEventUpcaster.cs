@@ -21,15 +21,15 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
 using Akka.Persistence.Journal;
 using EventFly.Aggregates;
 using EventFly.Core;
 using EventFly.Exceptions;
 using EventFly.Extensions;
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace EventFly.Events
 {
@@ -40,61 +40,61 @@ namespace EventFly.Events
 
     }
 
-    public abstract class AggregateEventUpcaster<TAggregate,TIdentity, TEventUpcaster> : IReadEventAdapter, IEventUpcaster<TAggregate, TIdentity>
+    public abstract class AggregateEventUpcaster<TAggregate, TIdentity, TEventUpcaster> : IReadEventAdapter, IEventUpcaster<TAggregate, TIdentity>
         where TEventUpcaster : class, IEventUpcaster<TAggregate, TIdentity>
         where TAggregate : IAggregateRoot<TIdentity>
         where TIdentity : IIdentity
     {
         // ReSharper disable once StaticMemberInGenericType
-        private static ConcurrentDictionary<Type, bool> _decisionCache = new ConcurrentDictionary<Type, bool>();
+        private static ConcurrentDictionary<Type, Boolean> _decisionCache = new ConcurrentDictionary<Type, Boolean>();
         private readonly IReadOnlyDictionary<Type, Func<TEventUpcaster, IAggregateEvent, IAggregateEvent>> _upcastFunctions;
 
 
         protected AggregateEventUpcaster()
         {
             var upcastTypes = GetType().GetAggregateEventUpcastTypes();
-            var dictionary = upcastTypes.ToDictionary(x => x, x=> true);
-            _decisionCache = new ConcurrentDictionary<Type, bool>(dictionary);
-            
+            var dictionary = upcastTypes.ToDictionary(x => x, x => true);
+            _decisionCache = new ConcurrentDictionary<Type, Boolean>(dictionary);
+
             var me = this as TEventUpcaster;
             if (me == null)
             {
                 throw new InvalidOperationException(
                     $"Event applier of type '{GetType().PrettyPrint()}' has a wrong generic argument '{typeof(TEventUpcaster).PrettyPrint()}'");
             }
-            _upcastFunctions  = GetType().GetAggregateEventUpcastMethods<TAggregate, TIdentity, TEventUpcaster>();
+            _upcastFunctions = GetType().GetAggregateEventUpcastMethods<TAggregate, TIdentity, TEventUpcaster>();
         }
-        
-        private bool ShouldUpcast(object potentialUpcast)
+
+        private Boolean ShouldUpcast(Object potentialUpcast)
         {
             var type = potentialUpcast.GetType();
-            
-            if (potentialUpcast is ICommittedEvent<TAggregate,TIdentity>)
+
+            if (potentialUpcast is ICommittedEvent<TAggregate, TIdentity>)
             {
                 var eventType = type.GenericTypeArguments[2];
 
                 if (_decisionCache.ContainsKey(eventType))
                 {
-                    
+
                     return true;
                 }
             }
-            
+
             return false;
         }
 
-        public IEventSequence FromJournal(object evt, string manifest)
+        public IEventSequence FromJournal(Object evt, String manifest)
         {
             if (ShouldUpcast(evt))
             {
                 //dynamic dispatch here to get AggregateEvent
                 var committedEvent = evt as dynamic;
-                    
+
                 var upcastedEvent = Upcast(committedEvent.AggregateEvent);
-                
+
                 var genericType = typeof(CommittedEvent<,,>)
                     .MakeGenericType(typeof(TAggregate), typeof(TIdentity), upcastedEvent.GetType());
-                
+
                 var upcastedCommittedEvent = Activator.CreateInstance(
                     genericType,
                     committedEvent.AggregateIdentity,
@@ -102,27 +102,27 @@ namespace EventFly.Events
                     committedEvent.EventMetadata,
                     committedEvent.Timestamp,
                     committedEvent.AggregateSequenceNumber);
-                
+
                 return EventSequence.Single(upcastedCommittedEvent);
             }
 
             return EventSequence.Single(evt);
         }
-        
-        
-        
+
+
+
         public IAggregateEvent<TIdentity> Upcast(
             IAggregateEvent<TIdentity> aggregateEvent)
         {
             var aggregateEventType = aggregateEvent.GetType();
-            Func<TEventUpcaster,IAggregateEvent, IAggregateEvent> upcaster;
+            Func<TEventUpcaster, IAggregateEvent, IAggregateEvent> upcaster;
 
             if (!_upcastFunctions.TryGetValue(aggregateEventType, out upcaster))
             {
                 throw new ArgumentException(nameof(aggregateEventType));
             }
 
-            var evt = upcaster((TEventUpcaster)(object)this, aggregateEvent) as IAggregateEvent<TIdentity>;
+            var evt = upcaster((TEventUpcaster)(Object)this, aggregateEvent) as IAggregateEvent<TIdentity>;
 
             return evt;
         }

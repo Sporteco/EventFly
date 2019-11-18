@@ -1,31 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using Akka.Actor;
+﻿using Akka.Actor;
 using Akka.Persistence;
 using Akka.TestKit.Xunit2;
 using EventFly.Aggregates;
 using EventFly.Aggregates.Snapshot;
+using EventFly.DependencyInjection;
 using EventFly.TestFixture.Aggregates;
 using EventFly.TestHelpers.Aggregates;
 using EventFly.TestHelpers.Aggregates.Entities;
 using EventFly.TestHelpers.Aggregates.Events;
+using EventFly.TestHelpers.Aggregates.Sagas.Test;
 using EventFly.TestHelpers.Aggregates.Snapshots;
 using EventFly.Tests.UnitTests.Subscribers;
 using FluentAssertions;
-using EventFly.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
 using Xunit;
-using EventFly.TestHelpers.Aggregates.Sagas.Test;
 
 namespace EventFly.Tests.UnitTests.Fixtures
 {
     [Collection("FixtureTests")]
     public class AggregateFixtureTests
     {
-        private const string Category = "AggregateFixture";
-        private readonly string _config = TestHelpers.Akka.Configuration.Config;
+        private const String Category = "AggregateFixture";
+        private readonly String _config = TestHelpers.Akka.Configuration.Config;
 
 
         [Fact]
@@ -91,7 +91,7 @@ namespace EventFly.Tests.UnitTests.Fixtures
                     .Given(events.ToArray());
 
 
-                journal.Tell(new ReplayMessages(1, long.MaxValue, long.MaxValue, aggregateIdentity.ToString(), receiverProbe.Ref));
+                journal.Tell(new ReplayMessages(1, Int64.MaxValue, Int64.MaxValue, aggregateIdentity.ToString(), receiverProbe.Ref));
 
 
                 var from = 1;
@@ -126,7 +126,7 @@ namespace EventFly.Tests.UnitTests.Fixtures
                     .For(aggregateIdentity)
                     .Given(snapshot, snapshotSequenceNumber);
 
-                snapshotStore.Tell(new LoadSnapshot(aggregateIdentity.Value, new SnapshotSelectionCriteria(long.MaxValue, DateTime.MaxValue), long.MaxValue), receiverProbe.Ref);
+                snapshotStore.Tell(new LoadSnapshot(aggregateIdentity.Value, new SnapshotSelectionCriteria(Int64.MaxValue, DateTime.MaxValue), Int64.MaxValue), receiverProbe.Ref);
 
                 receiverProbe.ExpectMsg<LoadSnapshotResult>(x =>
                     x.Snapshot.Snapshot is CommittedSnapshot<TestAggregate, TestAggregateId, IAggregateSnapshot<TestAggregate, TestAggregateId>> &&
@@ -135,7 +135,7 @@ namespace EventFly.Tests.UnitTests.Fixtures
                     x.Snapshot.Snapshot
                         .As<CommittedSnapshot<TestAggregate, TestAggregateId, IAggregateSnapshot<TestAggregate, TestAggregateId>>>().AggregateSnapshot
                         .As<TestAggregateSnapshot>().Tests.Count == snapshot.Tests.Count &&
-                    x.ToSequenceNr == long.MaxValue);
+                    x.ToSequenceNr == Int64.MaxValue);
 
             }
         }

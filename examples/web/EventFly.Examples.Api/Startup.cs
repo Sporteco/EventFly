@@ -38,7 +38,7 @@ namespace EventFly.Examples.Api
             var logger = loggerFactory.CreateLogger<Startup>();
             logger.LogInformation("EventFly.Examples.Api application is starting.");
         }
-        
+
         public void ConfigureServices(IServiceCollection services)
         {
             ActorSystem.Create("api-system");
@@ -46,8 +46,8 @@ namespace EventFly.Examples.Api
             // Add Actors to DI as ActorRefProvider<T>
             //services
             //    .AddEventFly(actorSystem, ib => { }, cb => { });
-            
-            
+
+
             services
                 .AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
@@ -72,8 +72,8 @@ namespace EventFly.Examples.Api
                         template: "{controller}/{action}");
                 });
             });
-            
-            
+
+
             var logger = loggerFactory.CreateLogger<Startup>();
             logger.LogInformation("EventFly.Examples.Api application has initialized.");
         }

@@ -21,27 +21,27 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System;
 using Akka.Persistence.Query;
 using EventFly.Aggregates;
+using System;
 
 namespace EventFly.Events
 {
     public static class DomainEventMapper
     {
-        internal static object FromCommittedEvent(object evt)
+        internal static Object FromCommittedEvent(Object evt)
         {
             var eventType = evt.GetType();
-            
+
             if (evt is ICommittedEvent && eventType.GenericTypeArguments.Length == 3)
             {
                 //dynamic dispatch here to get AggregateEvent
-                
+
                 var committedEvent = evt as dynamic;
 
                 var genericType = typeof(DomainEvent<,,>)
-                    .MakeGenericType(eventType.GetGenericArguments()[0], eventType.GetGenericArguments()[1],eventType.GetGenericArguments()[2]);
-                
+                    .MakeGenericType(eventType.GetGenericArguments()[0], eventType.GetGenericArguments()[1], eventType.GetGenericArguments()[2]);
+
                 var domainEvent = Activator.CreateInstance(
                     genericType,
                     committedEvent.AggregateIdentity,
@@ -59,7 +59,7 @@ namespace EventFly.Events
         public static EventEnvelope FromEnvelope(EventEnvelope eventEnvelope)
         {
             var domainEvent = FromCommittedEvent(eventEnvelope.Event);
-            
+
             var newEventEnvelope = new EventEnvelope(
                 eventEnvelope.Offset,
                 eventEnvelope.PersistenceId,
@@ -69,5 +69,5 @@ namespace EventFly.Events
             return newEventEnvelope;
         }
     }
-    
+
 }

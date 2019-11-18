@@ -35,26 +35,26 @@ namespace EventFly.Events
         {
             _eventDefinitions = eventDefinitions;
         }
-        public string Manifest(object evt) => string.Empty;
-        
-        public object ToJournal(object evt)
+        public System.String Manifest(System.Object evt) => System.String.Empty;
+
+        public System.Object ToJournal(System.Object evt)
         {
             try
             {
                 var aggregateName = evt
                     .GetType()
                     .GetCommittedEventAggregateRootName();
-                
+
                 var eventDefinitionService = _eventDefinitions;
-                
+
                 var aggregateEventType = evt
                     .GetType()
                     .GetCommittedEventAggregateEventType();
 
                 eventDefinitionService.Load(aggregateEventType);
                 var eventDefinition = eventDefinitionService.GetDefinition(aggregateEventType);
-                
-                return new Tagged(evt, new[] {aggregateName.Value, eventDefinition.Name});
+
+                return new Tagged(evt, new[] { aggregateName.Value, eventDefinition.Name });
             }
             catch
             {

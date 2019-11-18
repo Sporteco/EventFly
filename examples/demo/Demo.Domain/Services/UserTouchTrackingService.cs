@@ -1,8 +1,8 @@
-using EventFly.Aggregates;
-using System.Threading.Tasks;
 using Demo.User.Commands;
 using Demo.User.Events;
+using EventFly.Aggregates;
 using EventFly.DomainService;
+using System.Threading.Tasks;
 
 namespace Demo.Domain.Services
 {

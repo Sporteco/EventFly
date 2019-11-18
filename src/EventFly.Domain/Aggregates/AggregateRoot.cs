@@ -24,11 +24,11 @@ namespace EventFly.Aggregates
     {
         public TAggregateState State { get; private set; }
         public IAggregateName Name => _aggregateName;
-        public long Version => 1;
-        public bool IsNew => false;
+        public Int64 Version => 1;
+        public Boolean IsNew => false;
         public TIdentity Id { get; }
 
-        public bool HasSourceId(ISourceId sourceId)
+        public Boolean HasSourceId(ISourceId sourceId)
         {
             return !sourceId.IsNone() && _previousSourceIds.Any(s => s.Value == sourceId.Value);
         }
@@ -44,7 +44,7 @@ namespace EventFly.Aggregates
             return Task.CompletedTask;
         }
 
-        public virtual CommittedEvent<TAggregate, TIdentity, TAggregateEvent> From<TAggregateEvent>(TAggregateEvent aggregateEvent, long version, IEventMetadata metadata = null)
+        public virtual CommittedEvent<TAggregate, TIdentity, TAggregateEvent> From<TAggregateEvent>(TAggregateEvent aggregateEvent, Int64 version, IEventMetadata metadata = null)
             where TAggregateEvent : class, IAggregateEvent<TIdentity>
         {
             if (aggregateEvent == null) throw new ArgumentNullException(nameof(aggregateEvent));
@@ -70,20 +70,20 @@ namespace EventFly.Aggregates
             return new CommittedEvent<TAggregate, TIdentity, TAggregateEvent>(Id, aggregateEvent, eventMetadata, now, aggregateSequenceNumber);
         }
 
-        public bool Timeout(ReceiveTimeout _)
+        public Boolean Timeout(ReceiveTimeout _)
         {
             Log.Debug("Aggregate of Name={0}, and Id={1}; has received a timeout message and will stop.", Name, Id);
             Context.Stop(Self);
             return true;
         }
 
-        public override void AroundPreRestart(Exception cause, object message)
+        public override void AroundPreRestart(Exception cause, Object message)
         {
             Log.Error(cause, "Aggregate of Name={0}, and Id={1}; has experienced an error and will now restart", Name, Id);
             base.AroundPreRestart(cause, message);
         }
 
-        public override string ToString() => $"{GetType().PrettyPrint()} v{Version}";
+        public override String ToString() => $"{GetType().PrettyPrint()} v{Version}";
 
         #region Stuff
 
@@ -183,7 +183,7 @@ namespace EventFly.Aggregates
             }
         }
 
-        protected void SetSourceIdHistory(int count)
+        protected void SetSourceIdHistory(Int32 count)
         {
             _previousSourceIds = new CircularBuffer<ISourceId>(count);
         }
@@ -219,7 +219,7 @@ namespace EventFly.Aggregates
             Log.Info("Aggregate of Name={0}, and Id={1}; published DomainEvent of Type={2}.", Name, Id, typeof(TEvent).PrettyPrint());
         }
 
-        protected override bool AroundReceive(Receive receive, object message)
+        protected override Boolean AroundReceive(Receive receive, Object message)
         {
             if (message is Command<TIdentity> command)
             {
@@ -234,12 +234,12 @@ namespace EventFly.Aggregates
             return result;
         }
 
-        protected virtual void Reply(object replyMessage)
+        protected virtual void Reply(Object replyMessage)
         {
             if (!Sender.IsNobody()) _pinnedReply = replyMessage;
         }
 
-        protected virtual void ReplyFailure(object replyMessage)
+        protected virtual void ReplyFailure(Object replyMessage)
         {
             if (!Sender.IsNobody()) Context.Sender.Tell(replyMessage);
         }
@@ -250,7 +250,7 @@ namespace EventFly.Aggregates
             _pinnedReply = null;
         }
 
-        protected override void Unhandled(object message)
+        protected override void Unhandled(Object message)
         {
             Log.Warning("Aggregate of Name={0}, and Id={1}; has received an unhandled message of Type={2}.", Name, Id, message.GetType().PrettyPrint());
             base.Unhandled(message);
@@ -285,7 +285,7 @@ namespace EventFly.Aggregates
         private static readonly IAggregateName _aggregateName = typeof(TAggregate).GetAggregateName();
         private CircularBuffer<ISourceId> _previousSourceIds = new CircularBuffer<ISourceId>(100);
         private ICommand _pinnedCommand;
-        private object _pinnedReply;
+        private Object _pinnedReply;
 
         #endregion
     }

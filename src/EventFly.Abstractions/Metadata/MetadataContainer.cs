@@ -25,40 +25,40 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using EventFly.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using EventFly.Exceptions;
 
 namespace EventFly.Metadata
 {
-    public class MetadataContainer : Dictionary<string, string>
+    public class MetadataContainer : Dictionary<String, String>
     {
         public MetadataContainer()
         {
         }
 
-        public MetadataContainer(IDictionary<string, string> keyValuePairs)
+        public MetadataContainer(IDictionary<String, String> keyValuePairs)
             : base(keyValuePairs)
         {
         }
 
-        public MetadataContainer(IEnumerable<KeyValuePair<string, string>> keyValuePairs)
+        public MetadataContainer(IEnumerable<KeyValuePair<String, String>> keyValuePairs)
             : base(keyValuePairs.ToDictionary(kv => kv.Key, kv => kv.Value))
         {
         }
 
-        public MetadataContainer(params KeyValuePair<string, string>[] keyValuePairs)
-            : this((IEnumerable<KeyValuePair<string, string>>)keyValuePairs)
+        public MetadataContainer(params KeyValuePair<String, String>[] keyValuePairs)
+            : this((IEnumerable<KeyValuePair<String, String>>)keyValuePairs)
         {
         }
 
-        public void AddRange(params KeyValuePair<string, string>[] keyValuePairs)
+        public void AddRange(params KeyValuePair<String, String>[] keyValuePairs)
         {
-            AddRange((IEnumerable<KeyValuePair<string, string>>)keyValuePairs);
+            AddRange((IEnumerable<KeyValuePair<String, String>>)keyValuePairs);
         }
 
-        public void AddRange(IEnumerable<KeyValuePair<string, string>> keyValuePairs)
+        public void AddRange(IEnumerable<KeyValuePair<String, String>> keyValuePairs)
         {
             foreach (var keyValuePair in keyValuePairs)
             {
@@ -66,25 +66,25 @@ namespace EventFly.Metadata
             }
         }
 
-        public override string ToString()
+        public override String ToString()
         {
-            return string.Join(Environment.NewLine, this.Select(kv => $"{kv.Key}: {kv.Value}"));
+            return String.Join(Environment.NewLine, this.Select(kv => $"{kv.Key}: {kv.Value}"));
         }
 
-        public string GetMetadataValue(string key)
+        public String GetMetadataValue(String key)
         {
             return GetMetadataValue(key, s => s);
         }
 
-        public void AddOrUpdateValue(string key, string value)
+        public void AddOrUpdateValue(String key, String value)
         {
             if (ContainsKey(key)) this[key] = value;
-            else Add(key,value);
+            else Add(key, value);
         }
 
-        public T GetMetadataValue<T>(string key, Func<string, T> converter)
+        public T GetMetadataValue<T>(String key, Func<String, T> converter)
         {
-            string value;
+            String value;
 
             if (!TryGetValue(key, out value))
             {
@@ -105,17 +105,17 @@ namespace EventFly.Metadata
             foreach (var kv in metadata)
             {
                 if (!ContainsKey(kv.Key))
-                    Add(kv.Key,kv.Value);
+                    Add(kv.Key, kv.Value);
             }
         }
-        public string UserId
+        public String UserId
         {
             get => ContainsKey(MetadataKeys.UserId) ? GetMetadataValue(MetadataKeys.UserId) : null;
             set => AddOrUpdateValue(MetadataKeys.UserId, value);
         }
 
 #pragma warning disable 659
-        public override bool Equals(object obj)
+        public override Boolean Equals(Object obj)
 #pragma warning restore 659
         {
             if (obj is MetadataContainer c)

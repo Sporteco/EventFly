@@ -29,13 +29,13 @@ namespace EventFly.Jobs
         where TJob : IJob<TIdentity>
         where TIdentity : IJobId
     {
-        bool Run(TJob job);
+        System.Boolean Run(TJob job);
     }
 
     public interface IRunAsync<in TJob, TIdentity>
         where TJob : IJob<TIdentity>
         where TIdentity : IJobId
     {
-        Task<bool> RunAsync(TJob job);
+        Task<System.Boolean> RunAsync(TJob job);
     }
 }

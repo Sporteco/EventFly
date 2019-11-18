@@ -21,11 +21,11 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using EventFly.Commands;
 using EventFly.Commands.ExecutionResults;
 using EventFly.Examples.Api.Domain.Aggregates.Resource.Events;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace EventFly.Examples.Api.Domain.Aggregates.Resource.Commands
 {
@@ -34,7 +34,7 @@ namespace EventFly.Examples.Api.Domain.Aggregates.Resource.Commands
         public CreateResourceCommand(ResourceId aggregateId)
             : base(aggregateId)
         {
-            
+
         }
     }
 
@@ -52,7 +52,7 @@ namespace EventFly.Examples.Api.Domain.Aggregates.Resource.Commands
             }
             else
             {
-                var executionResult = new FailedExecutionResult(new List<string>{"aggregate is already created"});
+                var executionResult = new FailedExecutionResult(new List<System.String> { "aggregate is already created" });
                 return Task.FromResult<IExecutionResult>(executionResult);
             }
         }

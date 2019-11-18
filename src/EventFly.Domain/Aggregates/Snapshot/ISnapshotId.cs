@@ -27,6 +27,6 @@ namespace EventFly.Aggregates.Snapshot
 {
     public interface ISnapshotId : ISourceId
     {
-        
+
     }
 }

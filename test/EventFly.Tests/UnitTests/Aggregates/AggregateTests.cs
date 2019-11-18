@@ -21,31 +21,31 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System.ComponentModel;
-using System.Threading.Tasks;
 using Akka.TestKit.Xunit2;
 using EventFly.Aggregates;
 using EventFly.Commands;
+using EventFly.DependencyInjection;
+using EventFly.TestFixture.Aggregates;
 using EventFly.TestHelpers.Aggregates;
 using EventFly.TestHelpers.Aggregates.Commands;
 using EventFly.TestHelpers.Aggregates.Entities;
 using EventFly.TestHelpers.Aggregates.Events;
 using EventFly.TestHelpers.Aggregates.Events.Signals;
+using EventFly.TestHelpers.Aggregates.Sagas.Test;
 using EventFly.Tests.UnitTests.Subscribers;
 using FluentAssertions;
-using EventFly.DependencyInjection;
-using EventFly.TestFixture.Aggregates;
 using Microsoft.Extensions.DependencyInjection;
+using System.ComponentModel;
+using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
-using EventFly.TestHelpers.Aggregates.Sagas.Test;
 
 namespace EventFly.Tests.UnitTests.Aggregates
 {
     [Collection("AggregateTests")]
     public class AggregateTests : TestKit
     {
-        private const string Category = "Aggregates";
+        private const System.String Category = "Aggregates";
 
         public AggregateTests(ITestOutputHelper testOutputHelper)
             : base(TestHelpers.Akka.Configuration.Config, "aggregate-tests", testOutputHelper)

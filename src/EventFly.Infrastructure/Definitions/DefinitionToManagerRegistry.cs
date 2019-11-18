@@ -1,5 +1,6 @@
 ﻿using Akka.Actor;
 using EventFly.Aggregates;
+using EventFly.DomainService;
 using EventFly.Extensions;
 using EventFly.Jobs;
 using EventFly.Queries;
@@ -8,7 +9,6 @@ using EventFly.Schedulers.Commands;
 using EventFly.Schedulers.Events;
 using System.Collections.Generic;
 using System.Linq;
-using EventFly.DomainService;
 
 namespace EventFly.Definitions
 {
@@ -38,8 +38,8 @@ namespace EventFly.Definitions
             RegisterCommandsScheduler();
             RegisterEventsScheduler();
         }
-        
-        public IReadOnlyDictionary<IJobManagerDefinition, IActorRef> RegisterJobManagers(IReadOnlyCollection<IJobManagerDefinition> definitions, string contextName)
+
+        public IReadOnlyDictionary<IJobManagerDefinition, IActorRef> RegisterJobManagers(IReadOnlyCollection<IJobManagerDefinition> definitions, System.String contextName)
         {
             var dictionaryJob = new Dictionary<IJobManagerDefinition, IActorRef>();
             foreach (var managerDef in definitions)
@@ -64,7 +64,7 @@ namespace EventFly.Definitions
 
         private readonly ActorSystem _system;
 
-        private IReadOnlyDictionary<IAggregateManagerDefinition, IActorRef> RegisterAggregateManagers(IReadOnlyCollection<IAggregateManagerDefinition> definitions, string contextName)
+        private IReadOnlyDictionary<IAggregateManagerDefinition, IActorRef> RegisterAggregateManagers(IReadOnlyCollection<IAggregateManagerDefinition> definitions, System.String contextName)
         {
             var dictionaryAggregate = new Dictionary<IAggregateManagerDefinition, IActorRef>();
             foreach (var managerDef in definitions)
@@ -77,7 +77,7 @@ namespace EventFly.Definitions
             return dictionaryAggregate;
         }
 
-        private IReadOnlyDictionary<IQueryManagerDefinition, IActorRef> RegisterQueryManagers(IReadOnlyCollection<IQueryManagerDefinition> definitions, string contextName)
+        private IReadOnlyDictionary<IQueryManagerDefinition, IActorRef> RegisterQueryManagers(IReadOnlyCollection<IQueryManagerDefinition> definitions, System.String contextName)
         {
             var dictionaryQuery = new Dictionary<IQueryManagerDefinition, IActorRef>();
             foreach (var managerDef in definitions)
@@ -90,7 +90,7 @@ namespace EventFly.Definitions
             return dictionaryQuery;
         }
 
-        private IReadOnlyDictionary<ISagaManagerDefinition, IActorRef> RegisterSagaManagers(IReadOnlyCollection<ISagaManagerDefinition> definitions, string contextName)
+        private IReadOnlyDictionary<ISagaManagerDefinition, IActorRef> RegisterSagaManagers(IReadOnlyCollection<ISagaManagerDefinition> definitions, System.String contextName)
         {
             var dictionarySaga = new Dictionary<ISagaManagerDefinition, IActorRef>();
             foreach (var managerDef in definitions)
@@ -103,7 +103,7 @@ namespace EventFly.Definitions
             return dictionarySaga;
         }
 
-        private IReadOnlyDictionary<IDomainServiceManagerDefinition, IActorRef> RegisterDomainServiceManagers(IReadOnlyCollection<IDomainServiceManagerDefinition> definitions, string contextName)
+        private IReadOnlyDictionary<IDomainServiceManagerDefinition, IActorRef> RegisterDomainServiceManagers(IReadOnlyCollection<IDomainServiceManagerDefinition> definitions, System.String contextName)
         {
             var dictionary = new Dictionary<IDomainServiceManagerDefinition, IActorRef>();
             foreach (var definition in definitions)
@@ -115,7 +115,7 @@ namespace EventFly.Definitions
             return dictionary;
         }
 
-        private IReadOnlyDictionary<IReadModelManagerDefinition, IActorRef> RegisterReadModelManagers(IReadOnlyCollection<IReadModelManagerDefinition> definitions, string contextName)
+        private IReadOnlyDictionary<IReadModelManagerDefinition, IActorRef> RegisterReadModelManagers(IReadOnlyCollection<IReadModelManagerDefinition> definitions, System.String contextName)
         {
             var dictionaryReadModel = new Dictionary<IReadModelManagerDefinition, IActorRef>();
             foreach (var managerDef in definitions)

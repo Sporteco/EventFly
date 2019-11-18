@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Demo.Application;
 using Demo.Application.CreateProject;
 using Demo.Application.DeleteProject;
@@ -22,6 +21,7 @@ using EventFly.Permissions;
 using EventFly.Queries;
 using EventFly.ReadModels;
 using Microsoft.Extensions.DependencyInjection;
+using System.Collections.Generic;
 
 namespace Demo.Infrastructure
 {

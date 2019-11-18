@@ -27,7 +27,7 @@ namespace EventFly.TestHelpers.Akka
 {
     public static class Configuration
     {
-        public static string Config =
+        public static System.String Config =
             @"  akka.loglevel = ""INFO""
                 akka.stdout-loglevel = ""INFO""
                 akka.actor.serialize-messages = on
@@ -44,7 +44,7 @@ namespace EventFly.TestHelpers.Akka
                     plugin-dispatcher = ""akka.actor.default-dispatcher""
                 }
             ";
-        
+
         public static Config ConfigWithTestScheduler =
 
             ConfigurationFactory.ParseString(@"

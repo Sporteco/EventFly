@@ -21,13 +21,13 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System;
 using Akka.Actor;
 using Akka.DI.Core;
 using Akka.Event;
 using Akka.Pattern;
 using EventFly.Exceptions;
 using EventFly.Extensions;
+using System;
 
 namespace EventFly.Jobs
 {
@@ -66,14 +66,14 @@ namespace EventFly.Jobs
             Receive<SchedulerMessage<TJob, TIdentity>>(Forward);
         }
 
-        private bool Forward(TJob command)
+        private Boolean Forward(TJob command)
         {
             Log.Info("JobManager for Job of Name={0} is forwarding job command of Type={1} to JobRunner at ActorPath={2}", Name, typeof(TJob).PrettyPrint(), JobRunner.Path);
             JobRunner.Forward(command);
             return true;
         }
 
-        private bool Forward(SchedulerMessage<TJob, TIdentity> command)
+        private Boolean Forward(SchedulerMessage<TJob, TIdentity> command)
         {
             Log.Info("JobManager for Job of Name={0} is forwarding job command of Type={1} to JobScheduler at ActorPath={2}", Name, typeof(TJob).PrettyPrint(), JobScheduler.Path);
             JobScheduler.Forward(command);

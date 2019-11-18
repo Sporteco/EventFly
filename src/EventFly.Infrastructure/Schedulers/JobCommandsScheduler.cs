@@ -1,6 +1,6 @@
 ﻿using EventFly.Commands;
-using EventFly.Schedulers.Commands;
 using EventFly.Jobs;
+using EventFly.Schedulers.Commands;
 using System;
 using System.Threading.Tasks;
 
@@ -15,22 +15,22 @@ namespace EventFly.Schedulers
             _scheduler = scheduler;
         }
 
-        public Task<bool> Schedule(PublishCommandJobId id, ICommand command, DateTime triggerDate)
+        public Task<Boolean> Schedule(PublishCommandJobId id, ICommand command, DateTime triggerDate)
         {
             return _scheduler.Schedule<PublishCommandJob, PublishCommandJobId>(new PublishCommandJob(id, command), triggerDate);
         }
 
-        public Task<bool> Schedule(PublishCommandJobId id, ICommand command, TimeSpan interval, DateTime triggerDate)
+        public Task<Boolean> Schedule(PublishCommandJobId id, ICommand command, TimeSpan interval, DateTime triggerDate)
         {
             return _scheduler.Schedule<PublishCommandJob, PublishCommandJobId>(new PublishCommandJob(id, command), interval, triggerDate);
         }
 
-        public Task<bool> Schedule(PublishCommandJobId id, ICommand command, string cronExpression, DateTime triggerDate)
+        public Task<Boolean> Schedule(PublishCommandJobId id, ICommand command, String cronExpression, DateTime triggerDate)
         {
             return _scheduler.Schedule<PublishCommandJob, PublishCommandJobId>(new PublishCommandJob(id, command), cronExpression, triggerDate);
         }
 
-        public Task<bool> Cancel(PublishCommandJobId jobId)
+        public Task<Boolean> Cancel(PublishCommandJobId jobId)
         {
             return _scheduler.Cancel<PublishCommandJob, PublishCommandJobId>(jobId);
         }

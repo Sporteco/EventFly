@@ -25,26 +25,26 @@ namespace EventFly.Aggregates.Snapshot.Strategies
 {
     public class SnapshotEveryFewVersionsStrategy : ISnapshotStrategy
     {
-        public const int DefautSnapshotAfterVersions = 50;
-        public int SnapshotAfterVersions { get; }
+        public const System.Int32 DefautSnapshotAfterVersions = 50;
+        public System.Int32 SnapshotAfterVersions { get; }
 
         public static ISnapshotStrategy Default { get; } = With();
 
         public static SnapshotEveryFewVersionsStrategy With(
-            int snapshotAfterVersions = DefautSnapshotAfterVersions)
+            System.Int32 snapshotAfterVersions = DefautSnapshotAfterVersions)
         {
             return new SnapshotEveryFewVersionsStrategy(
                 snapshotAfterVersions);
         }
 
         public SnapshotEveryFewVersionsStrategy(
-            int snapshotAfterVersions)
+            System.Int32 snapshotAfterVersions)
         {
             SnapshotAfterVersions = snapshotAfterVersions;
         }
 
 
-        public bool ShouldCreateSnapshot(IAggregateRoot snapshotAggregateRoot)
+        public System.Boolean ShouldCreateSnapshot(IAggregateRoot snapshotAggregateRoot)
         {
             if (snapshotAggregateRoot.Version % SnapshotAfterVersions == 0 && !snapshotAggregateRoot.IsNew)
             {

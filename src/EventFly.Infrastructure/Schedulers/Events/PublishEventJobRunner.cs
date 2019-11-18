@@ -6,7 +6,7 @@ namespace EventFly.Schedulers.Events
         IRun<PublishEventJob, PublishEventJobId>
 
     {
-        public bool Run(PublishEventJob job)
+        public System.Boolean Run(PublishEventJob job)
         {
             Context.System.EventStream.Publish(job.DomainEvent);
 

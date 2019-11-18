@@ -31,7 +31,7 @@ using System.Linq;
 
 namespace EventFly.TestHelpers.Aggregates
 {
-    public class TestAggregateState : AggregateState<TestAggregateState,TestAggregateId>,
+    public class TestAggregateState : AggregateState<TestAggregateState, TestAggregateId>,
         IApply<TestAddedEvent>,
         IApply<TestReceivedEvent>,
         IApply<TestSentEvent>,
@@ -39,7 +39,7 @@ namespace EventFly.TestHelpers.Aggregates
         IHydrate<TestAggregateSnapshot>
     {
         public List<Test> TestCollection { get; private set; }
-        public bool FromHydration { get; private set; }
+        public System.Boolean FromHydration { get; private set; }
 
         public void Apply(TestCreatedEvent aggregateEvent)
         {

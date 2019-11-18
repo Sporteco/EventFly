@@ -28,12 +28,12 @@ namespace EventFly.Examples.Api.Domain.Repositories.Resources
     public class ResourcesProjection
     {
         public Guid Id { get; }
-        public double ElapsedTimeToCreation { get; }
+        public Double ElapsedTimeToCreation { get; }
         public DateTime CreatedAt { get; }
 
         public ResourcesProjection(
             Guid id,
-            double elapsedTimeToCreation,
+            Double elapsedTimeToCreation,
             DateTime createdAt)
         {
             Id = id;

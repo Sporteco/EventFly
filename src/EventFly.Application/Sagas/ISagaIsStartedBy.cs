@@ -35,5 +35,5 @@ namespace EventFly.Sagas
         where TIdentity : IIdentity
     {
     }
-    
+
 }

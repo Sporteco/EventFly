@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using EventFly.Specifications;
+using System.Collections.Generic;
 using System.Linq;
-using EventFly.Specifications;
 
 namespace Demo.Domain.User.Specifications
 {
@@ -13,7 +13,7 @@ namespace Demo.Domain.User.Specifications
             _userAggregate = userAggregate;
         }
 
-        protected override IEnumerable<string> IsNotSatisfiedBecause(ProjectId projectId)
+        protected override IEnumerable<System.String> IsNotSatisfiedBecause(ProjectId projectId)
         {
             if (_userAggregate.State.Projects.Any(p => p.Id == projectId) == false)
                 yield return $"Project with ID '{projectId}' not found or already deleted";

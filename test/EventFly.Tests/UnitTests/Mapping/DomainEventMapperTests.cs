@@ -21,9 +21,6 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System;
-using System.ComponentModel;
-using System.Linq;
 using EventFly.Aggregates;
 using EventFly.Commands;
 using EventFly.Core;
@@ -33,13 +30,16 @@ using EventFly.TestHelpers.Aggregates;
 using EventFly.TestHelpers.Aggregates.Commands;
 using EventFly.TestHelpers.Aggregates.Events;
 using FluentAssertions;
+using System;
+using System.ComponentModel;
+using System.Linq;
 using Xunit;
 
 namespace EventFly.Tests.UnitTests.Mapping
 {
     public class DomainEventMapperTests
     {
-        private const string Category = "Mapping";
+        private const String Category = "Mapping";
 
         [Fact]
         [Category(Category)]
@@ -69,7 +69,7 @@ namespace EventFly.Tests.UnitTests.Mapping
                     now,
                     aggregateSequenceNumber);
 
-            var eventSequence = domainEventReadAdapter.FromJournal(committedEvent, string.Empty);
+            var eventSequence = domainEventReadAdapter.FromJournal(committedEvent, String.Empty);
             var upcastedEvent = eventSequence.Events.Single();
 
             if (upcastedEvent is IDomainEvent<TestAggregateId, TestCreatedEvent> e)
@@ -82,15 +82,15 @@ namespace EventFly.Tests.UnitTests.Mapping
             }
 
         }
-        
+
         [Fact]
         [Category(Category)]
         public void NonCommittedEvent_WhenRead_IsReturnedUnchanged()
         {
-            var message = new CreateTestCommand(TestAggregateId.New,CommandId.New);
+            var message = new CreateTestCommand(TestAggregateId.New, CommandId.New);
             var domainEventReadAdapter = new DomainEventReadAdapter();
 
-            var unchanged = domainEventReadAdapter.FromJournal(message, string.Empty);
+            var unchanged = domainEventReadAdapter.FromJournal(message, String.Empty);
 
             unchanged.Events.Single().As<CreateTestCommand>().Metadata.SourceId.Should().Be(message.Metadata.SourceId);
             unchanged.Events.Single().As<CreateTestCommand>().AggregateId.Should().Be(message.AggregateId);

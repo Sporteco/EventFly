@@ -28,13 +28,13 @@ namespace EventFly.TestHelpers.Aggregates.Events.Signals
     public class TestStateSignalEvent : AggregateEvent<TestAggregateId>
     {
         public TestAggregateState AggregateState { get; }
-        public long LastSequenceNr { get; }
-        public long Version { get; }
+        public System.Int64 LastSequenceNr { get; }
+        public System.Int64 Version { get; }
 
         public TestStateSignalEvent(
             TestAggregateState aggregateState,
-            long lastSequenceNr,
-            long version)
+            System.Int64 lastSequenceNr,
+            System.Int64 version)
         {
             AggregateState = aggregateState;
             LastSequenceNr = lastSequenceNr;

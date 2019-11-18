@@ -27,7 +27,7 @@ namespace EventFly.Examples.Api.Domain.Aggregates.Resource
 {
     public class ResourceId : Identity<ResourceId>
     {
-        public ResourceId(string value) 
+        public ResourceId(System.String value)
             : base(value)
         {
         }

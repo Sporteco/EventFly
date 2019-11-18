@@ -10,67 +10,67 @@ using System.Reflection;
 
 namespace EventFly.Swagger
 {
-  public class CustomMethodInfo : MethodInfo
-  {
-    private readonly string _name;
-    private readonly Type _parameterType;
-
-    public CustomMethodInfo(string name, Type parameterType)
+    public class CustomMethodInfo : MethodInfo
     {
-      _name = name;
-      _parameterType = parameterType;
+        private readonly String _name;
+        private readonly Type _parameterType;
+
+        public CustomMethodInfo(String name, Type parameterType)
+        {
+            _name = name;
+            _parameterType = parameterType;
+        }
+
+        public override Object[] GetCustomAttributes(Boolean inherit)
+        {
+            return new Object[0];
+        }
+
+        public override Object[] GetCustomAttributes(Type attributeType, Boolean inherit)
+        {
+            return new Object[0];
+        }
+
+        public override Boolean IsDefined(Type attributeType, Boolean inherit)
+        {
+            return false;
+        }
+
+        public override Type DeclaringType => typeof(Object);
+
+        public override String Name => _name;
+
+        public override Type ReflectedType => typeof(Object);
+
+        public override MethodImplAttributes GetMethodImplementationFlags()
+        {
+            return MethodImplAttributes.IL;
+        }
+
+        public override ParameterInfo[] GetParameters()
+        {
+            return new ParameterInfo[] { new CustomParameterInfo("item", _parameterType) };
+        }
+
+        public override Object Invoke(
+          Object obj,
+          BindingFlags invokeAttr,
+          Binder binder,
+          Object[] parameters,
+          CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override MethodAttributes Attributes => MethodAttributes.Public;
+
+        public override RuntimeMethodHandle MethodHandle => new RuntimeMethodHandle();
+
+        public override MethodInfo GetBaseDefinition()
+        {
+            return null;
+        }
+
+        public override ICustomAttributeProvider ReturnTypeCustomAttributes => throw new InvalidOperationException();
     }
-
-    public override object[] GetCustomAttributes(bool inherit)
-    {
-      return new object[0];
-    }
-
-    public override object[] GetCustomAttributes(Type attributeType, bool inherit)
-    {
-      return new object[0];
-    }
-
-    public override bool IsDefined(Type attributeType, bool inherit)
-    {
-      return false;
-    }
-
-    public override Type DeclaringType => typeof (object);
-
-    public override string Name => _name;
-
-    public override Type ReflectedType => typeof (object);
-
-    public override MethodImplAttributes GetMethodImplementationFlags()
-    {
-      return MethodImplAttributes.IL;
-    }
-
-    public override ParameterInfo[] GetParameters()
-    {
-      return new ParameterInfo[]{ new CustomParameterInfo("item", _parameterType) };
-    }
-
-    public override object Invoke(
-      object obj,
-      BindingFlags invokeAttr,
-      Binder binder,
-      object[] parameters,
-      CultureInfo culture)
-    {
-      throw new NotImplementedException();
-    }
-
-    public override MethodAttributes Attributes => MethodAttributes.Public;
-
-    public override RuntimeMethodHandle MethodHandle => new RuntimeMethodHandle();
-
-    public override MethodInfo GetBaseDefinition()
-    {
-      return null;
-    }
-
-    public override ICustomAttributeProvider ReturnTypeCustomAttributes => throw new InvalidOperationException();
-  }
 }

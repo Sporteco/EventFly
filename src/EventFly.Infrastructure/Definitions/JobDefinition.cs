@@ -1,6 +1,6 @@
-﻿using System;
-using EventFly.Extensions;
+﻿using EventFly.Extensions;
 using EventFly.Jobs;
+using System;
 
 namespace EventFly.Definitions
 {

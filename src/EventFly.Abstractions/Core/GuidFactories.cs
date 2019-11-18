@@ -47,7 +47,7 @@ namespace EventFly.Core
                 var span = new TimeSpan(now.Ticks - time.Ticks);
                 var timeOfDay = now.TimeOfDay;
                 var bytes = BitConverter.GetBytes(span.Days);
-                var array = BitConverter.GetBytes((long)(timeOfDay.TotalMilliseconds / 3.333333));
+                var array = BitConverter.GetBytes((Int64)(timeOfDay.TotalMilliseconds / 3.333333));
 
                 Array.Reverse(bytes);
                 Array.Reverse(array);
@@ -94,9 +94,9 @@ namespace EventFly.Core
             // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
             // SOFTWARE.
 
-            public static Guid Create(Guid namespaceId, string name)
+            public static Guid Create(Guid namespaceId, String name)
             {
-                if (string.IsNullOrEmpty(name)) throw new ArgumentNullException(nameof(name));
+                if (String.IsNullOrEmpty(name)) throw new ArgumentNullException(nameof(name));
 
                 // Convert the name to a sequence of octets (as defined by the standard or conventions of its namespace) (step 3)
                 // ASSUME: UTF-8 encoding is always appropriate
@@ -105,10 +105,10 @@ namespace EventFly.Core
                 return Create(namespaceId, nameBytes);
             }
 
-            public static Guid Create(Guid namespaceId, byte[] nameBytes)
+            public static Guid Create(Guid namespaceId, Byte[] nameBytes)
             {
                 // Always use version 5 (version 3 is MD5, version 5 is SHA1)
-                const int version = 5;
+                const Int32 version = 5;
 
                 if (namespaceId == default) throw new ArgumentNullException(nameof(namespaceId));
                 if (nameBytes.Length == 0) throw new ArgumentNullException(nameof(nameBytes));
@@ -118,10 +118,10 @@ namespace EventFly.Core
                 SwapByteOrder(namespaceBytes);
 
                 // Comput the hash of the name space ID concatenated with the name (step 4)
-                byte[] hash;
+                Byte[] hash;
                 using (var algorithm = SHA1.Create())
                 {
-                    var combinedBytes = new byte[namespaceBytes.Length + nameBytes.Length];
+                    var combinedBytes = new Byte[namespaceBytes.Length + nameBytes.Length];
                     Buffer.BlockCopy(namespaceBytes, 0, combinedBytes, 0, namespaceBytes.Length);
                     Buffer.BlockCopy(nameBytes, 0, combinedBytes, namespaceBytes.Length, nameBytes.Length);
 
@@ -130,23 +130,23 @@ namespace EventFly.Core
 
                 // Most bytes from the hash are copied straight to the bytes of the new
                 // GUID (steps 5-7, 9, 11-12)
-                var newGuid = new byte[16];
+                var newGuid = new Byte[16];
                 Array.Copy(hash, 0, newGuid, 0, 16);
 
                 // Set the four most significant bits (bits 12 through 15) of the time_hi_and_version
                 // field to the appropriate 4-bit version number from Section 4.1.3 (step 8)
-                newGuid[6] = (byte)((newGuid[6] & 0x0F) | (version << 4));
+                newGuid[6] = (Byte)((newGuid[6] & 0x0F) | (version << 4));
 
                 // Set the two most significant bits (bits 6 and 7) of the clock_seq_hi_and_reserved
                 // to zero and one, respectively (step 10)
-                newGuid[8] = (byte)((newGuid[8] & 0x3F) | 0x80);
+                newGuid[8] = (Byte)((newGuid[8] & 0x3F) | 0x80);
 
                 // Convert the resulting UUID to local byte order (step 13)
                 SwapByteOrder(newGuid);
                 return new Guid(newGuid);
             }
 
-            internal static void SwapByteOrder(byte[] guid)
+            internal static void SwapByteOrder(Byte[] guid)
             {
                 SwapBytes(guid, 0, 3);
                 SwapBytes(guid, 1, 2);
@@ -154,7 +154,7 @@ namespace EventFly.Core
                 SwapBytes(guid, 6, 7);
             }
 
-            internal static void SwapBytes(byte[] guid, int left, int right)
+            internal static void SwapBytes(Byte[] guid, Int32 left, Int32 right)
             {
                 var temp = guid[left];
                 guid[left] = guid[right];

@@ -21,8 +21,6 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System;
-using System.Collections.Generic;
 using Akka.Actor;
 using Akka.DI.Core;
 using Akka.Event;
@@ -31,6 +29,8 @@ using EventFly.Core;
 using EventFly.Exceptions;
 using EventFly.Extensions;
 using EventFly.Messages;
+using System;
+using System.Collections.Generic;
 
 namespace EventFly.Sagas.AggregateSaga
 {
@@ -62,11 +62,11 @@ namespace EventFly.Sagas.AggregateSaga
                         .GetSagaEventSubscriptionTypes();
 
                 var subscriptionTypes = new List<Type>();
-                
+
                 subscriptionTypes.AddRange(sagaEventSubscriptionTypes);
 
                 _subscriptionTypes = subscriptionTypes.AsReadOnly();
-                
+
                 foreach (var type in _subscriptionTypes)
                 {
                     Context.System.EventStream.Subscribe(Self, type);
@@ -81,7 +81,7 @@ namespace EventFly.Sagas.AggregateSaga
             Receive<UnsubscribeFromAll>(Handle);
         }
 
-        protected virtual bool Handle(UnsubscribeFromAll command)
+        protected virtual Boolean Handle(UnsubscribeFromAll command)
         {
             UnsubscribeFromAllTopics();
 
@@ -95,22 +95,22 @@ namespace EventFly.Sagas.AggregateSaga
                 Context.System.EventStream.Unsubscribe(Self, type);
             }
         }
-        
-        protected virtual bool Handle(IDomainEvent domainEvent)
+
+        protected virtual Boolean Handle(IDomainEvent domainEvent)
         {
             var sagaId = SagaLocator.LocateSaga(domainEvent);
             var saga = FindOrSpawn(sagaId);
-            saga.Tell(domainEvent,Sender);
+            saga.Tell(domainEvent, Sender);
             return true;
         }
 
-        protected virtual bool Terminate(Terminated message)
+        protected virtual Boolean Terminate(Terminated message)
         {
-            Logger.Warning("AggregateSaga of Type={0}, and Id={1}; has terminated.",typeof(TAggregateSaga).PrettyPrint(), message.ActorRef.Path.Name);
+            Logger.Warning("AggregateSaga of Type={0}, and Id={1}; has terminated.", typeof(TAggregateSaga).PrettyPrint(), message.ActorRef.Path.Name);
             Context.Unwatch(message.ActorRef);
             return true;
         }
-        
+
         protected override SupervisorStrategy SupervisorStrategy()
         {
             return new OneForOneStrategy(
@@ -119,7 +119,7 @@ namespace EventFly.Sagas.AggregateSaga
                 localOnlyDecider: x =>
                 {
 
-                    Logger.Warning("{0} will supervise Exception={1} to be decided as {2}.",GetType().PrettyPrint(), x.ToString(),Directive.Restart);
+                    Logger.Warning("{0} will supervise Exception={1} to be decided as {2}.", GetType().PrettyPrint(), x.ToString(), Directive.Restart);
                     return Directive.Restart;
                 });
         }
@@ -141,7 +141,7 @@ namespace EventFly.Sagas.AggregateSaga
             {
                 props = Context.DI().Props<TAggregateSaga>();
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 Logger.Error(ex, "No DI available at the moment, falling back to default props creation.");
                 props = Props.Create<TAggregateSaga>();
@@ -152,5 +152,5 @@ namespace EventFly.Sagas.AggregateSaga
             return saga;
         }
     }
-    
+
 }

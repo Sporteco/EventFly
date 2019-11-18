@@ -2,9 +2,9 @@
 
 namespace EventFly.ReadModels
 {
-    public interface IAggregateReadModel<out TIdentity> 
+    public interface IAggregateReadModel<out TIdentity>
     where TIdentity : IIdentity
     {
-        long Version { get; }
+        System.Int64 Version { get; }
     }
 }

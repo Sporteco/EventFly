@@ -29,19 +29,19 @@ namespace EventFly.Metadata
 {
     public static class MetadataKeys
     {
-        public const string UserId = "user_id";
-        public const string EventId = "event_id";
-        public const string BatchId = "batch_id";
-        public const string EventName = "event_name";
-        public const string EventVersion = "event_version";
-        public const string Timestamp = "timestamp";
-        public const string TimestampEpoch = "timestamp_epoch";
-        public const string AggregateSequenceNumber = "aggregate_sequence_number";
-        public const string AggregateName = "aggregate_name";
-        public const string AggregateId = "aggregate_id";
-        public const string SourceId = "source_id";
-        public const string CorrelationId = "correlation_id";
-        public const string CorrelationIds = "correlation_ids";
-        public const string CausationId = "causation_id";
+        public const System.String UserId = "user_id";
+        public const System.String EventId = "event_id";
+        public const System.String BatchId = "batch_id";
+        public const System.String EventName = "event_name";
+        public const System.String EventVersion = "event_version";
+        public const System.String Timestamp = "timestamp";
+        public const System.String TimestampEpoch = "timestamp_epoch";
+        public const System.String AggregateSequenceNumber = "aggregate_sequence_number";
+        public const System.String AggregateName = "aggregate_name";
+        public const System.String AggregateId = "aggregate_id";
+        public const System.String SourceId = "source_id";
+        public const System.String CorrelationId = "correlation_id";
+        public const System.String CorrelationIds = "correlation_ids";
+        public const System.String CausationId = "causation_id";
     }
 }

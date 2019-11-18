@@ -10,7 +10,7 @@ namespace EventFly.Definitions
 {
     public class QueryDefinition : IQueryDefinition
     {
-        public string Name { get; }
+        public String Name { get; }
 
         public Type Type { get; }
         public Type QueryResultType { get; }
@@ -24,10 +24,10 @@ namespace EventFly.Definitions
             Name = GetQueryName(queryType.Name);
             ManagerDefinition = managerDefinition;
         }
-        private string GetQueryName(string name) 
+        private String GetQueryName(String name)
             => name.EndsWith("query", StringComparison.InvariantCultureIgnoreCase) ? name.Substring(0, name.Length - "query".Length) : name;
 
-        public override string ToString()
+        public override String ToString()
         {
             return Name;
         }

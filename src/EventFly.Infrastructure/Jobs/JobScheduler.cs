@@ -24,14 +24,14 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System;
-using System.Linq;
 using Akka.Actor;
 using Akka.Persistence;
 using EventFly.Exceptions;
 using EventFly.Extensions;
 using EventFly.Jobs.Commands;
 using EventFly.Jobs.Events;
+using System;
+using System.Linq;
 
 namespace EventFly.Jobs
 {
@@ -45,7 +45,7 @@ namespace EventFly.Jobs
         public IJobName Name => JobName;
         protected SchedulerState<TJob, TIdentity> State { get; private set; }
         protected JobSchedulerSettings Settings { get; }
-        public override string PersistenceId { get; }
+        public override String PersistenceId { get; }
 
         public JobScheduler()
         {
@@ -86,7 +86,7 @@ namespace EventFly.Jobs
 
         }
 
-        private bool Execute(Tick<TJob, TIdentity> tick)
+        private Boolean Execute(Tick<TJob, TIdentity> tick)
         {
             var now = Context.System.Scheduler.Now.UtcDateTime;
 
@@ -109,7 +109,7 @@ namespace EventFly.Jobs
             return true;
         }
 
-        protected bool Execute(Schedule<TJob, TIdentity> command)
+        protected Boolean Execute(Schedule<TJob, TIdentity> command)
         {
             var sender = Sender;
             try
@@ -139,7 +139,7 @@ namespace EventFly.Jobs
             return true;
         }
 
-        protected bool Execute(Cancel<TJob, TIdentity> command)
+        protected Boolean Execute(Cancel<TJob, TIdentity> command)
         {
             var sender = Sender;
             var jobId = command.JobId;
@@ -169,7 +169,7 @@ namespace EventFly.Jobs
             return true;
         }
 
-        private bool Execute(SaveSnapshotSuccess command)
+        private Boolean Execute(SaveSnapshotSuccess command)
         {
             Log.Debug("JobScheduler for Job of Name={0}; Successfully saved its scheduler snapshot. Removing all events before SequenceNr={1}.", Name, command.Metadata.SequenceNr);
             DeleteMessages(command.Metadata.SequenceNr - 1);
@@ -177,28 +177,28 @@ namespace EventFly.Jobs
             return true;
         }
 
-        private bool Execute(SaveSnapshotFailure command)
+        private Boolean Execute(SaveSnapshotFailure command)
         {
             Log.Error(command.Cause, "JobScheduler for Job of Name={0}, at SequenceNr={1}; Failed to save scheduler snapshot.", Name, command.Metadata.SequenceNr);
 
             return true;
         }
 
-        private bool Execute(DeleteMessagesSuccess command)
+        private Boolean Execute(DeleteMessagesSuccess command)
         {
             Log.Debug("Job of Name={0} at SequenceNr={1}; deleted scheduler messages to SequenceNr={2}.", Name, LastSequenceNr, command.ToSequenceNr);
 
             return true;
         }
 
-        private bool Execute(DeleteMessagesFailure command)
+        private Boolean Execute(DeleteMessagesFailure command)
         {
             Log.Error(command.Cause, "Job of Name={0} at SequenceNr={1}; Failed to delete scheduler messages to SequenceNr={2}.", Name, LastSequenceNr, command.ToSequenceNr);
 
             return true;
         }
 
-        private bool Recover(SnapshotOffer offer)
+        private Boolean Recover(SnapshotOffer offer)
         {
             if (offer.Snapshot is SchedulerState<TJob, TIdentity> state)
             {
@@ -207,7 +207,7 @@ namespace EventFly.Jobs
             return true;
         }
 
-        protected virtual bool ShouldTriggerSchedule(Schedule<TJob, TIdentity> schedule, DateTime now)
+        protected virtual Boolean ShouldTriggerSchedule(Schedule<TJob, TIdentity> schedule, DateTime now)
         {
             var shouldTrigger = schedule.TriggerDate <= now;
             return shouldTrigger;

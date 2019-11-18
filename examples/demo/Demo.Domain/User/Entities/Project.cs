@@ -10,6 +10,6 @@ namespace Demo.Domain.User.Entities
             Name = name;
         }
 
-        public ProjectName Name { get; } 
+        public ProjectName Name { get; }
     }
 }

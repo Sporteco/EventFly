@@ -29,6 +29,6 @@ namespace EventFly.ValueObjects
 {
     public interface ISingleValueObject
     {
-        object GetValue();
+        System.Object GetValue();
     }
 }

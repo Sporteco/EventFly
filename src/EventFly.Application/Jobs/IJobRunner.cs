@@ -25,6 +25,6 @@ namespace EventFly.Jobs
 {
     public interface IJobRunner
     {
-        
+
     }
 }

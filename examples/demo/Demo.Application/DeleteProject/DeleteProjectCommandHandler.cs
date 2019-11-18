@@ -1,10 +1,10 @@
-﻿using System;
-using System.Threading.Tasks;
-using Demo.Domain.User;
+﻿using Demo.Domain.User;
 using Demo.Domain.User.Services;
 using Demo.User.Commands;
 using EventFly.Commands;
 using EventFly.Commands.ExecutionResults;
+using System;
+using System.Threading.Tasks;
 
 namespace Demo.Application.DeleteProject
 {

@@ -12,7 +12,7 @@ namespace EventFly.DependencyInjection
     /// </summary>
     public class MicrosoftDependencyResolver : IDependencyResolver
     {
-        private readonly ConcurrentDictionary<string, Type> _typeCache;
+        private readonly ConcurrentDictionary<String, Type> _typeCache;
         private readonly ConditionalWeakTable<ActorBase, IServiceScope> _references;
         private readonly ActorSystem _system;
         private readonly IServiceScopeFactory _scopeFactory;
@@ -31,7 +31,7 @@ namespace EventFly.DependencyInjection
             _system = system ?? throw new ArgumentNullException(nameof(system));
             _scopeFactory = scopeFactory ?? throw new ArgumentNullException(nameof(scopeFactory));
 
-            _typeCache = new ConcurrentDictionary<string, Type>(StringComparer.OrdinalIgnoreCase);
+            _typeCache = new ConcurrentDictionary<String, Type>(StringComparer.OrdinalIgnoreCase);
             _references = new ConditionalWeakTable<ActorBase, IServiceScope>();
         }
 
@@ -40,9 +40,9 @@ namespace EventFly.DependencyInjection
         /// </summary>
         /// <param name="actorName">The name of the actor to retrieve</param>
         /// <returns> The type with the specified actor name <see cref="T:System.Type" />.</returns>
-        public Type GetType(string actorName)
+        public Type GetType(String actorName)
         {
-            if (string.IsNullOrWhiteSpace(actorName))
+            if (String.IsNullOrWhiteSpace(actorName))
                 throw new ArgumentException("Argument cannot be null, empty, or entirely composed of whitespace: 'actorName'.", nameof(actorName));
 
             var typeValue = actorName.GetTypeValue();

@@ -25,7 +25,7 @@ using EventFly.Core;
 
 namespace EventFly.Aggregates.Snapshot
 {
-    public interface ISnapshotHydrater<TIdentity> 
+    public interface ISnapshotHydrater<TIdentity>
         where TIdentity : IIdentity
     {
     }

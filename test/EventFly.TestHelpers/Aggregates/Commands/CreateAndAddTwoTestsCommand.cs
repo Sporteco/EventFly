@@ -3,11 +3,11 @@ using EventFly.TestHelpers.Aggregates.Entities;
 
 namespace EventFly.TestHelpers.Aggregates.Commands
 {
-    public class CreateAndAddTwoTestsCommand: Command<TestAggregateId>
+    public class CreateAndAddTwoTestsCommand : Command<TestAggregateId>
     {
         public Test FirstTest { get; }
         public Test SecondTest { get; }
-        
+
         public CreateAndAddTwoTestsCommand(
             TestAggregateId aggregateId,
             CommandId sourceId,

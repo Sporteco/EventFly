@@ -12,13 +12,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove=".editorconfig" />
     <None Remove="Configuration\defaults.conf" />
     <None Remove="Configuration\reference.conf" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <AdditionalFiles Include=".editorconfig" />
   </ItemGroup>
 
   <ItemGroup>

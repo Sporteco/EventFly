@@ -25,36 +25,36 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using EventFly.Exceptions;
+using EventFly.ValueObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using EventFly.Exceptions;
-using EventFly.ValueObjects;
 
 namespace EventFly.Core
 {
-    public abstract class Identity<T> : SingleValueObject<string>, IIdentity
+    public abstract class Identity<T> : SingleValueObject<String>, IIdentity
         where T : Identity<T>
     {
         // ReSharper disable StaticMemberInGenericType
         private static readonly Regex NameReplace = new Regex("Id$");
-        public static string IdentityPrefix => NameReplace.Replace(typeof(T).Name, string.Empty).ToLowerInvariant();
-        private static readonly Regex ValueValidation= new Regex(
+        public static String IdentityPrefix => NameReplace.Replace(typeof(T).Name, String.Empty).ToLowerInvariant();
+        private static readonly Regex ValueValidation = new Regex(
             @"^[a-z0-9]+\-(?<guid>[a-f0-9]{8}\-[a-f0-9]{4}\-[a-f0-9]{4}\-[a-f0-9]{4}\-[a-f0-9]{12})$",
             RegexOptions.Compiled);
         // ReSharper enable StaticMemberInGenericType
 
         public static T New => With(Guid.NewGuid());
 
-        public static T NewDeterministic(Guid namespaceId, string name)
+        public static T NewDeterministic(Guid namespaceId, String name)
         {
             var guid = GuidFactories.Deterministic.Create(namespaceId, name);
             return With(guid);
         }
 
-        public static T NewDeterministic(Guid namespaceId, byte[] nameBytes)
+        public static T NewDeterministic(Guid namespaceId, Byte[] nameBytes)
         {
             var guid = GuidFactories.Deterministic.Create(namespaceId, nameBytes);
             return With(guid);
@@ -66,7 +66,7 @@ namespace EventFly.Core
             return With(guid);
         }
 
-        public static T With(string value)
+        public static T With(String value)
         {
             try
             {
@@ -88,20 +88,20 @@ namespace EventFly.Core
             return With(value);
         }
 
-        public static bool IsValid(string value)
+        public static Boolean IsValid(String value)
         {
             return !Validate(value).Any();
         }
 
-        public static IEnumerable<string> Validate(string value)
+        public static IEnumerable<String> Validate(String value)
         {
-            if (string.IsNullOrEmpty(value))
+            if (String.IsNullOrEmpty(value))
             {
                 yield return $"Identity of type '{typeof(T).PrettyPrint()}' is null or empty";
                 yield break;
             }
 
-            if (!string.Equals(value.Trim(), value, StringComparison.OrdinalIgnoreCase))
+            if (!String.Equals(value.Trim(), value, StringComparison.OrdinalIgnoreCase))
                 yield return $"Identity '{value}' of type '{typeof(T).PrettyPrint()}' contains leading and/or traling spaces";
             if (!value.StartsWith(IdentityPrefix))
                 yield return $"Identity '{value}' of type '{typeof(T).PrettyPrint()}' does not start with '{IdentityPrefix}'";
@@ -109,13 +109,13 @@ namespace EventFly.Core
                 yield return $"Identity '{value}' of type '{typeof(T).PrettyPrint()}' does not follow the syntax '[NAME]-[GUID]' in lower case";
         }
 
-        protected Identity(string value) 
+        protected Identity(String value)
             : base(value)
         {
             var validationErrors = Validate(value).ToList();
             if (validationErrors.Any())
             {
-                throw new ArgumentException($"Identity is invalid: {string.Join(", ", validationErrors)}");
+                throw new ArgumentException($"Identity is invalid: {String.Join(", ", validationErrors)}");
             }
 
             _lazyGuid = new Lazy<Guid>(() => Guid.Parse(ValueValidation.Match(Value).Groups["guid"].Value));

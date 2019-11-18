@@ -1,8 +1,4 @@
-﻿using System;
-using System.ComponentModel;
-using System.IO;
-using System.Reflection;
-using Akka.Util;
+﻿using Akka.Util;
 using EventFly.Commands;
 using EventFly.DependencyInjection;
 using EventFly.Queries;
@@ -12,19 +8,23 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using System;
+using System.ComponentModel;
+using System.IO;
+using System.Reflection;
 
 namespace EventFly.Swagger
 {
     public sealed class EventFlySwaggerOptions
     {
-        public EventFlySwaggerOptions(string url, string name)
+        public EventFlySwaggerOptions(String url, String name)
         {
             Url = url;
             Name = name;
         }
 
-        public string Url { get; set; }
-        public string Name { get; set; }
+        public String Url { get; set; }
+        public String Name { get; set; }
     }
 
     public static class BuilderExtensions
@@ -34,7 +34,7 @@ namespace EventFly.Swagger
             var options = new EventFlySwaggerOptions("swagger", Assembly.GetEntryAssembly()?.GetName().Name);
             optionsBuilder(options);
             builder.Services.AddSingleton(options);
-        
+
             var services = builder.Services;
             services.TryAdd(ServiceDescriptor.Transient<IApiDescriptionGroupCollectionProvider, CommandsApiDescriptionGroupCollectionProvider>());
 
@@ -51,7 +51,7 @@ namespace EventFly.Swagger
             });
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new Info {Title = options.Name + " API", Version = "v1"});
+                c.SwaggerDoc("v1", new Info { Title = options.Name + " API", Version = "v1" });
 
 
                 c.OperationFilter<DescriptionFilter>();

@@ -1,5 +1,8 @@
 using Akka.TestKit.Xunit2;
+using Demo.Domain.User;
 using Demo.Infrastructure;
+using Demo.User.Commands;
+using Demo.User.Events;
 using Demo.ValueObjects;
 using EventFly.Commands.ExecutionResults;
 using EventFly.DependencyInjection;
@@ -7,9 +10,6 @@ using EventFly.TestFixture.Aggregates;
 using EventFly.TestFixture.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using Demo.Domain.User;
-using Demo.User.Commands;
-using Demo.User.Events;
 using Xunit;
 using Xunit.Abstractions;
 

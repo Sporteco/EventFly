@@ -21,7 +21,7 @@ namespace EventFly.Queries
             return GetQueryManager(query.GetType()).Ask<TResult>(query, new TimeSpan?());
         }
 
-        public Task<object> Process(IQuery query)
+        public Task<Object> Process(IQuery query)
         {
             return GetQueryManager(query.GetType()).Ask(query, new TimeSpan?());
         }

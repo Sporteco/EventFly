@@ -1,6 +1,6 @@
-﻿using System;
+﻿using EventFly.Permissions;
+using System;
 using System.Linq;
-using EventFly.Permissions;
 
 namespace EventFly.Security
 {
@@ -8,10 +8,10 @@ namespace EventFly.Security
     public class HasPermissionsAttribute : Attribute
     {
         public PermissionCode[] Permissions { get; }
-        
-        public HasPermissionsAttribute(params string[] permissionCodes)
+
+        public HasPermissionsAttribute(params String[] permissionCodes)
         {
-            Permissions = permissionCodes.Select(i=>new PermissionCode(i)).ToArray();
+            Permissions = permissionCodes.Select(i => new PermissionCode(i)).ToArray();
         }
     }
 

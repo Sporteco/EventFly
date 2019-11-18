@@ -28,7 +28,7 @@ namespace EventFly.Examples.Api.Domain.Sagas
 {
     public class ResourceCreationSagaId : Identity<ResourceCreationSagaId>
     {
-        public ResourceCreationSagaId(string value) 
+        public ResourceCreationSagaId(System.String value)
             : base(value)
         {
         }

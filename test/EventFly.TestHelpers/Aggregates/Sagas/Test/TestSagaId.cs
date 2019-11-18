@@ -27,7 +27,7 @@ namespace EventFly.TestHelpers.Aggregates.Sagas.Test
 {
     public class TestSagaId : Identity<TestSagaId>
     {
-        public TestSagaId(string value) 
+        public TestSagaId(System.String value)
             : base(value)
         {
         }

@@ -28,15 +28,15 @@ namespace EventFly.Examples.Api.Domain.Repositories.Operations
     public class OperationsProjection
     {
         public Guid Id { get; }
-        public int Percentage { get; }
-        public int Elapsed { get; }
-        public string Status => Percentage < 100 ? "Running" : "Finished";
+        public Int32 Percentage { get; }
+        public Int32 Elapsed { get; }
+        public String Status => Percentage < 100 ? "Running" : "Finished";
         public DateTime StartedAt { get; }
 
         public OperationsProjection(
             Guid id,
-            int percentage,
-            int elapsed,
+            Int32 percentage,
+            Int32 elapsed,
             DateTime startedAt)
         {
             Id = id;
@@ -45,6 +45,6 @@ namespace EventFly.Examples.Api.Domain.Repositories.Operations
             StartedAt = startedAt;
         }
     }
-    
-    
+
+
 }

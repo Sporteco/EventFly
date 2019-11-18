@@ -25,8 +25,8 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System;
 using EventFly.Core;
+using System;
 
 namespace EventFly.Aggregates
 {
@@ -35,7 +35,7 @@ namespace EventFly.Aggregates
         Type AggregateType { get; }
         Type IdentityType { get; }
         Type EventType { get; }
-        long AggregateSequenceNumber { get; }
+        Int64 AggregateSequenceNumber { get; }
         EventMetadata Metadata { get; }
         DateTimeOffset Timestamp { get; }
 

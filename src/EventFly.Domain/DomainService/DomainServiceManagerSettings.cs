@@ -14,9 +14,9 @@ namespace EventFly.DomainService
             AutoSubscribe = domainServiceManagerConfig.GetBoolean("auto-subscribe");
         }
 
-        public bool AutoSubscribe { get; }
-        public bool AutoSpawnOnReceive { get; }
+        public System.Boolean AutoSubscribe { get; }
+        public System.Boolean AutoSpawnOnReceive { get; }
 
-        private const string _section = "EventFly.domain-service-manager";
+        private const System.String _section = "EventFly.domain-service-manager";
     }
 }

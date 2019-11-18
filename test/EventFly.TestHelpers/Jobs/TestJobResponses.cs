@@ -27,7 +27,7 @@ namespace EventFly.TestHelpers.Jobs
     {
         public static TestJobAck Instance => new TestJobAck();
     }
-    
+
     public class TestJobNack
     {
         public static TestJobNack Instance => new TestJobNack();
