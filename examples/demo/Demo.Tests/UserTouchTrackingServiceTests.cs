@@ -1,5 +1,4 @@
-﻿using Akka.TestKit.Xunit2;
-using Demo.Domain.User;
+using Akka.TestKit.Xunit2;
 using Demo.Infrastructure;
 using Demo.User.Commands;
 using Demo.User.Events;
@@ -31,13 +30,13 @@ namespace Demo.Tests
         {
             var events = CreateTestProbe();
             //Sys.EventStream.Subscribe(events, typeof(DomainEvent<UserAggregate, UserId, UserNotesChangedEvent>));
-            Sys.EventStream.Subscribe(events, typeof(DomainEvent<UserAggregate, UserId, UserTouchedEvent>));
+            Sys.EventStream.Subscribe(events, typeof(DomainEvent<UserId, UserTouchedEvent>));
             var bus = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<ICommandBus>();
 
             var changeUserNotes = new ChangeUserNotesCommand(UserId.New, "Such a nice user...");
             bus.Publish(changeUserNotes).GetAwaiter().GetResult();
 
-            events.ExpectMsg<DomainEvent<UserAggregate, UserId, UserTouchedEvent>>();
+            events.ExpectMsg<DomainEvent<UserId, UserTouchedEvent>>();
         }
     }
 }

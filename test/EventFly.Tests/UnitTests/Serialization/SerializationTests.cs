@@ -68,7 +68,7 @@ namespace EventFly.Tests.UnitTests.Serialization
                 EventId = eventId
             };
             var committedEvent =
-                new CommittedEvent<TestAggregate, TestAggregateId, TestAddedEvent>(
+                new CommittedEvent<TestAggregateId, TestAddedEvent>(
                     aggregateId,
                     aggregateEvent,
                     eventMetadata,
@@ -100,7 +100,7 @@ namespace EventFly.Tests.UnitTests.Serialization
                 EventId = eventId
             };
             var domainEvent =
-                new DomainEvent<TestAggregate, TestAggregateId, TestAddedEvent>(
+                new DomainEvent<TestAggregateId, TestAddedEvent>(
                     aggregateId,
                     aggregateEvent,
                     eventMetadata,

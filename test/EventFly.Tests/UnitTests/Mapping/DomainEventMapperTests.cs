@@ -62,7 +62,7 @@ namespace EventFly.Tests.UnitTests.Mapping
                 EventId = eventId
             };
             var committedEvent =
-                new CommittedEvent<TestAggregate, TestAggregateId, TestCreatedEvent>(
+                new CommittedEvent<TestAggregateId, TestCreatedEvent>(
                     aggregateId,
                     aggregateEvent,
                     eventMetadata,

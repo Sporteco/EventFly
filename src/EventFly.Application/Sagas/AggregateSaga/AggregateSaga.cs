@@ -1,4 +1,4 @@
-﻿// The MIT License (MIT)
+// The MIT License (MIT)
 //
 // Copyright (c) 2015-2019 Rasmus Mikkelsen
 // Copyright (c) 2015-2019 eBay Software Foundation
@@ -150,7 +150,7 @@ namespace EventFly.Sagas.AggregateSaga
 
             if (Settings.UseDefaultEventRecover)
             {
-                Recover<ICommittedEvent<TAggregateSaga, TIdentity, IAggregateEvent<TIdentity>>>(Recover);
+                Recover<ICommittedEvent<TIdentity, IAggregateEvent<TIdentity>>>(Recover);
                 Recover<RecoveryCompleted>(Recover);
             }
 
@@ -276,8 +276,8 @@ namespace EventFly.Sagas.AggregateSaga
                 {
                     eventMetadata.AddRange(metadata);
                 }
-                var genericType = typeof(CommittedEvent<,,>)
-                    .MakeGenericType(typeof(TAggregateSaga), typeof(TIdentity), aggregateEvent.GetType());
+                var genericType = typeof(CommittedEvent<,>)
+                    .MakeGenericType(typeof(TIdentity), aggregateEvent.GetType());
 
 
                 var committedEvent = Activator.CreateInstance(
@@ -314,7 +314,7 @@ namespace EventFly.Sagas.AggregateSaga
             }
         }
 
-        public virtual CommittedEvent<TAggregateSaga, TIdentity, TAggregateEvent> From<TAggregateEvent>(TAggregateEvent aggregateEvent,
+        public virtual CommittedEvent<TIdentity, TAggregateEvent> From<TAggregateEvent>(TAggregateEvent aggregateEvent,
             Int64 version, IEventMetadata metadata = null)
             where TAggregateEvent : class, IAggregateEvent<TIdentity>
         {
@@ -344,7 +344,7 @@ namespace EventFly.Sagas.AggregateSaga
                 eventMetadata.AddRange(metadata);
             }
 
-            var committedEvent = new CommittedEvent<TAggregateSaga, TIdentity, TAggregateEvent>(Id, aggregateEvent, eventMetadata, now, aggregateSequenceNumber);
+            var committedEvent = new CommittedEvent<TIdentity, TAggregateEvent>(Id, aggregateEvent, eventMetadata, now, aggregateSequenceNumber);
             return committedEvent;
         }
 
@@ -355,7 +355,7 @@ namespace EventFly.Sagas.AggregateSaga
             return null;
         }
 
-        protected void ApplyCommittedEvent<TAggregateEvent>(ICommittedEvent<TAggregateSaga, TIdentity, TAggregateEvent> committedEvent)
+        protected void ApplyCommittedEvent<TAggregateEvent>(ICommittedEvent<TIdentity, TAggregateEvent> committedEvent)
             where TAggregateEvent : class, IAggregateEvent<TIdentity>
         {
             var applyMethods = GetEventApplyMethods(committedEvent.AggregateEvent);
@@ -365,7 +365,7 @@ namespace EventFly.Sagas.AggregateSaga
 
             Version++;
 
-            var domainEvent = new DomainEvent<TAggregateSaga, TIdentity, TAggregateEvent>(Id, committedEvent.AggregateEvent, committedEvent.EventMetadata, committedEvent.Timestamp, Version);
+            var domainEvent = new DomainEvent<TIdentity, TAggregateEvent>(Id, committedEvent.AggregateEvent, committedEvent.EventMetadata, committedEvent.Timestamp, Version);
 
             Publish(domainEvent);
 
@@ -426,7 +426,7 @@ namespace EventFly.Sagas.AggregateSaga
             Version++;
         }
 
-        protected virtual Boolean Recover(ICommittedEvent<TAggregateSaga, TIdentity, IAggregateEvent<TIdentity>> committedEvent)
+        protected virtual Boolean Recover(ICommittedEvent<TIdentity, IAggregateEvent<TIdentity>> committedEvent)
         {
             try
             {

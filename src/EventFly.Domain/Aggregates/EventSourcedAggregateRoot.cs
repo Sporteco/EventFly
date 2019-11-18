@@ -1,4 +1,4 @@
-﻿// The MIT License (MIT)
+// The MIT License (MIT)
 //
 // Copyright (c) 2015-2019 Rasmus Mikkelsen
 // Copyright (c) 2015-2019 eBay Software Foundation
@@ -87,7 +87,7 @@ namespace EventFly.Aggregates
             PersistAll(committedEvents, ApplyObjectCommittedEvent);
         }
 
-        public virtual CommittedEvent<TAggregate, TIdentity, TAggregateEvent> From<TAggregateEvent>(TAggregateEvent aggregateEvent, Int64 version, IEventMetadata metadata = null)
+        public virtual CommittedEvent<TIdentity, TAggregateEvent> From<TAggregateEvent>(TAggregateEvent aggregateEvent, Int64 version, IEventMetadata metadata = null)
             where TAggregateEvent : class, IAggregateEvent<TIdentity>
         {
             if (aggregateEvent == null) throw new ArgumentNullException(nameof(aggregateEvent));
@@ -110,7 +110,7 @@ namespace EventFly.Aggregates
             eventMetadata.AddOrUpdateValue(MetadataKeys.TimestampEpoch, now.ToUnixTime().ToString());
             if (metadata != null) eventMetadata.AddRange(metadata);
 
-            return new CommittedEvent<TAggregate, TIdentity, TAggregateEvent>(Id, aggregateEvent, eventMetadata, now, aggregateSequenceNumber);
+            return new CommittedEvent<TIdentity, TAggregateEvent>(Id, aggregateEvent, eventMetadata, now, aggregateSequenceNumber);
         }
 
         public Boolean Timeout(ReceiveTimeout message)
@@ -173,7 +173,7 @@ namespace EventFly.Aggregates
 
             if (settings.UseDefaultEventRecover)
             {
-                Recover<ICommittedEvent<TAggregate, TIdentity, IAggregateEvent<TIdentity>>>(Recover);
+                Recover<ICommittedEvent<TIdentity, IAggregateEvent<TIdentity>>>(Recover);
                 Recover<RecoveryCompleted>(Recover);
             }
 
@@ -221,7 +221,7 @@ namespace EventFly.Aggregates
 
                 eventMetadata.AddOrUpdateValue(MetadataKeys.TimestampEpoch, now.ToUnixTime().ToString());
                 if (metadata != null) eventMetadata.AddRange(metadata);
-                var genericType = typeof(CommittedEvent<,,>).MakeGenericType(typeof(TAggregate), typeof(TIdentity), aggregateEvent.GetType());
+                var genericType = typeof(CommittedEvent<,>).MakeGenericType(typeof(TIdentity), aggregateEvent.GetType());
                 var committedEvent = Activator.CreateInstance(
                     genericType,
                     Id,
@@ -242,14 +242,14 @@ namespace EventFly.Aggregates
             return null;
         }
 
-        protected void ApplyCommittedEvent<TAggregateEvent>(ICommittedEvent<TAggregate, TIdentity, TAggregateEvent> committedEvent)
+        protected void ApplyCommittedEvent<TAggregateEvent>(ICommittedEvent<TIdentity, TAggregateEvent> committedEvent)
             where TAggregateEvent : class, IAggregateEvent<TIdentity>
         {
             State.UpdateAndSaveState(committedEvent.AggregateEvent).GetAwaiter().GetResult();
             Log.Info("Aggregate of Name={0}, and Id={1}; committed and applied an AggregateEvent of Type={2}.", Name, Id, typeof(TAggregateEvent).PrettyPrint());
             Version++;
 
-            var domainEvent = new DomainEvent<TAggregate, TIdentity, TAggregateEvent>(Id, committedEvent.AggregateEvent, committedEvent.EventMetadata, committedEvent.Timestamp, Version);
+            var domainEvent = new DomainEvent<TIdentity, TAggregateEvent>(Id, committedEvent.AggregateEvent, committedEvent.EventMetadata, committedEvent.Timestamp, Version);
 
             Publish(domainEvent);
             ReplyIfAvailable();
@@ -345,7 +345,7 @@ namespace EventFly.Aggregates
             Version = version;
         }
 
-        protected virtual Boolean Recover(ICommittedEvent<TAggregate, TIdentity, IAggregateEvent<TIdentity>> committedEvent)
+        protected virtual Boolean Recover(ICommittedEvent<TIdentity, IAggregateEvent<TIdentity>> committedEvent)
         {
             try
             {
@@ -471,7 +471,7 @@ namespace EventFly.Aggregates
                     .Where(m => m.IsFamily || m.IsPublic)
                     .Single(m => m.Name.Equals("ApplyCommittedEvent"));
 
-                var genericMethod = method.MakeGenericMethod(committedEvent.GetType().GenericTypeArguments[2]);
+                var genericMethod = method.MakeGenericMethod(committedEvent.GetType().GenericTypeArguments[1]);
 
                 genericMethod.Invoke(this, new[] { committedEvent });
             }

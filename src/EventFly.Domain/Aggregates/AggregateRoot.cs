@@ -1,4 +1,4 @@
-﻿using Akka.Actor;
+using Akka.Actor;
 using Akka.Event;
 using EventFly.Commands;
 using EventFly.Commands.ExecutionResults;
@@ -44,7 +44,7 @@ namespace EventFly.Aggregates
             return Task.CompletedTask;
         }
 
-        public virtual CommittedEvent<TAggregate, TIdentity, TAggregateEvent> From<TAggregateEvent>(TAggregateEvent aggregateEvent, Int64 version, IEventMetadata metadata = null)
+        public virtual CommittedEvent<TIdentity, TAggregateEvent> From<TAggregateEvent>(TAggregateEvent aggregateEvent, Int64 version, IEventMetadata metadata = null)
             where TAggregateEvent : class, IAggregateEvent<TIdentity>
         {
             if (aggregateEvent == null) throw new ArgumentNullException(nameof(aggregateEvent));
@@ -67,7 +67,7 @@ namespace EventFly.Aggregates
             eventMetadata.AddOrUpdateValue(MetadataKeys.TimestampEpoch, now.ToUnixTime().ToString());
             if (metadata != null) eventMetadata.AddRange(metadata);
 
-            return new CommittedEvent<TAggregate, TIdentity, TAggregateEvent>(Id, aggregateEvent, eventMetadata, now, aggregateSequenceNumber);
+            return new CommittedEvent<TIdentity, TAggregateEvent>(Id, aggregateEvent, eventMetadata, now, aggregateSequenceNumber);
         }
 
         public Boolean Timeout(ReceiveTimeout _)
@@ -190,7 +190,7 @@ namespace EventFly.Aggregates
 
         private List<IDomainEvent> _committedEvents = new List<IDomainEvent>();
 
-        protected void ApplyCommittedEvent<TAggregateEvent>(ICommittedEvent<TAggregate, TIdentity, TAggregateEvent> committedEvent)
+        protected void ApplyCommittedEvent<TAggregateEvent>(ICommittedEvent<TIdentity, TAggregateEvent> committedEvent)
             where TAggregateEvent : class, IAggregateEvent<TIdentity>
         {
             Log.Info("Aggregate of Name={0}, and Id={1}; committed and applied an AggregateEvent of Type={2}.", Name, Id, typeof(TAggregateEvent).PrettyPrint());
@@ -198,7 +198,7 @@ namespace EventFly.Aggregates
             var aggEvent = committedEvent.AggregateEvent;
             var meta = committedEvent.EventMetadata;
             var timestamp = committedEvent.Timestamp;
-            var domainEvent = new DomainEvent<TAggregate, TIdentity, TAggregateEvent>(Id, aggEvent, meta, timestamp, Version);
+            var domainEvent = new DomainEvent<TIdentity, TAggregateEvent>(Id, aggEvent, meta, timestamp, Version);
 
             if (State != null && State is ITransactionState)
             {

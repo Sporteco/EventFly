@@ -69,9 +69,9 @@ namespace EventFly.Events
         {
             var type = potentialUpcast.GetType();
 
-            if (potentialUpcast is ICommittedEvent<TAggregate, TIdentity>)
+            if (potentialUpcast is ICommittedEvent<TIdentity>)
             {
-                var eventType = type.GenericTypeArguments[2];
+                var eventType = type.GenericTypeArguments[1];
 
                 if (_decisionCache.ContainsKey(eventType))
                 {
@@ -92,8 +92,8 @@ namespace EventFly.Events
 
                 var upcastedEvent = Upcast(committedEvent.AggregateEvent);
 
-                var genericType = typeof(CommittedEvent<,,>)
-                    .MakeGenericType(typeof(TAggregate), typeof(TIdentity), upcastedEvent.GetType());
+                var genericType = typeof(CommittedEvent<,>)
+                    .MakeGenericType(typeof(TIdentity), upcastedEvent.GetType());
 
                 var upcastedCommittedEvent = Activator.CreateInstance(
                     genericType,

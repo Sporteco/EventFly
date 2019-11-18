@@ -1,4 +1,4 @@
-﻿// The MIT License (MIT)
+// The MIT License (MIT)
 //
 // Copyright (c) 2018 - 2019 Lutando Ngqakaza
 // https://github.com/Lutando/EventFly
@@ -41,7 +41,6 @@ using System.Threading.Tasks;
 
 namespace EventFly.TestHelpers.Aggregates
 {
-    [AggregateName("Test")]
     public sealed class TestAggregate : EventSourcedAggregateRoot<TestAggregate, TestAggregateId, TestAggregateState>,
         IExecute<CreateTestCommand, TestAggregateId>,
         IExecute<CreateAndAddTwoTestsCommand, TestAggregateId>,
@@ -267,7 +266,7 @@ namespace EventFly.TestHelpers.Aggregates
                 eventMetadata.AddRange(metadata);
             }
 
-            var domainEvent = new DomainEvent<TestAggregate, TestAggregateId, TAggregateEvent>(Id, aggregateEvent, eventMetadata, now, Version);
+            var domainEvent = new DomainEvent<TestAggregateId, TAggregateEvent>(Id, aggregateEvent, eventMetadata, now, Version);
 
             Publish(domainEvent);
         }

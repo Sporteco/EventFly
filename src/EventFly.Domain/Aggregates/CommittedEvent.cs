@@ -1,4 +1,4 @@
-﻿// The MIT License (MIT)
+// The MIT License (MIT)
 //
 // Copyright (c) 2015-2019 Rasmus Mikkelsen
 // Copyright (c) 2015-2019 eBay Software Foundation
@@ -31,8 +31,7 @@ using System;
 
 namespace EventFly.Aggregates
 {
-    public class CommittedEvent<TAggregate, TIdentity, TAggregateEvent> : ICommittedEvent<TAggregate, TIdentity, TAggregateEvent>
-        where TAggregate : IAggregateRoot<TIdentity>
+    public class CommittedEvent<TIdentity, TAggregateEvent> : ICommittedEvent<TIdentity, TAggregateEvent>
         where TIdentity : IIdentity
         where TAggregateEvent : class, IAggregateEvent<TIdentity>
     {
@@ -74,7 +73,7 @@ namespace EventFly.Aggregates
 
         public override String ToString()
         {
-            return $"{typeof(TAggregate).PrettyPrint()} v{AggregateSequenceNumber}/{typeof(TAggregateEvent).PrettyPrint()}:{AggregateIdentity}";
+            return $"{typeof(TIdentity).PrettyPrint()} v{AggregateSequenceNumber}/{typeof(TAggregateEvent).PrettyPrint()}:{AggregateIdentity}";
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Akka.Actor;
+using Akka.Actor;
 using Akka.Persistence;
 using Akka.TestKit.Xunit2;
 using EventFly.Aggregates;
@@ -100,7 +100,7 @@ namespace EventFly.Tests.UnitTests.Fixtures
                     var index = from;
                     receiverProbe.ExpectMsg<ReplayedMessage>(x =>
                         x.Persistent.SequenceNr == index &&
-                        x.Persistent.Payload is ICommittedEvent<TestAggregate, TestAggregateId, IAggregateEvent<TestAggregateId>>);
+                        x.Persistent.Payload is ICommittedEvent<TestAggregateId, IAggregateEvent<TestAggregateId>>);
 
                     from++;
                 }

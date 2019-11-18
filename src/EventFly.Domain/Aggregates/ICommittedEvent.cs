@@ -1,4 +1,4 @@
-﻿// The MIT License (MIT)
+// The MIT License (MIT)
 //
 // Copyright (c) 2015-2019 Rasmus Mikkelsen
 // Copyright (c) 2015-2019 eBay Software Foundation
@@ -41,15 +41,13 @@ namespace EventFly.Aggregates
         IAggregateEvent GetAggregateEvent();
     }
 
-    public interface ICommittedEvent<TAggregate, out TIdentity> : ICommittedEvent
-        where TAggregate : IAggregateRoot<TIdentity>
+    public interface ICommittedEvent<out TIdentity> : ICommittedEvent
         where TIdentity : IIdentity
     {
         TIdentity AggregateIdentity { get; }
     }
 
-    public interface ICommittedEvent<TAggregate, out TIdentity, out TAggregateEvent> : ICommittedEvent<TAggregate, TIdentity>
-        where TAggregate : IAggregateRoot<TIdentity>
+    public interface ICommittedEvent<out TIdentity, out TAggregateEvent> : ICommittedEvent<TIdentity>
         where TIdentity : IIdentity
         where TAggregateEvent : class, IAggregateEvent<TIdentity>
     {

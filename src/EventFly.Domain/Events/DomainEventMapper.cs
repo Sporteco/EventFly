@@ -33,14 +33,14 @@ namespace EventFly.Events
         {
             var eventType = evt.GetType();
 
-            if (evt is ICommittedEvent && eventType.GenericTypeArguments.Length == 3)
+            if (evt is ICommittedEvent && eventType.GenericTypeArguments.Length == 2)
             {
                 //dynamic dispatch here to get AggregateEvent
 
                 var committedEvent = evt as dynamic;
 
-                var genericType = typeof(DomainEvent<,,>)
-                    .MakeGenericType(eventType.GetGenericArguments()[0], eventType.GetGenericArguments()[1], eventType.GetGenericArguments()[2]);
+                var genericType = typeof(DomainEvent<,>)
+                    .MakeGenericType(eventType.GetGenericArguments()[0], eventType.GetGenericArguments()[1]);
 
                 var domainEvent = Activator.CreateInstance(
                     genericType,

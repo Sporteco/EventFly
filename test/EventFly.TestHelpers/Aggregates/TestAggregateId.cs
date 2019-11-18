@@ -1,4 +1,4 @@
-﻿// The MIT License (MIT)
+// The MIT License (MIT)
 //
 // Copyright (c) 2018 - 2019 Lutando Ngqakaza
 // https://github.com/Lutando/EventFly 
@@ -21,6 +21,7 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using EventFly.Aggregates;
 using EventFly.Core;
 using EventFly.ValueObjects;
 using Newtonsoft.Json;
@@ -28,6 +29,8 @@ using Newtonsoft.Json;
 namespace EventFly.TestHelpers.Aggregates
 {
     [JsonConverter(typeof(SingleValueObjectConverter))]
+    [AggregateName("Test")]
+
     public class TestAggregateId : Identity<TestAggregateId>
     {
         public TestAggregateId(System.String value)

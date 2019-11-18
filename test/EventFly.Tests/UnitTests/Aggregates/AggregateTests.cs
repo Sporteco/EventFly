@@ -1,4 +1,4 @@
-﻿// The MIT License (MIT)
+// The MIT License (MIT)
 //
 // Copyright (c) 2018 - 2019 Lutando Ngqakaza
 // https://github.com/Lutando/EventFly 
@@ -115,7 +115,6 @@ namespace EventFly.Tests.UnitTests.Aggregates
                 .ExpectMsg<IDomainEvent<TestAggregateId, TestCreatedEvent>>(
                 x => x.AggregateIdentity.Equals(aggregateId)
                     && x.IdentityType == typeof(TestAggregateId)
-                    && x.AggregateType == typeof(TestAggregate)
                     && x.EventType == typeof(TestCreatedEvent)
                     && x.Metadata.EventName == "TestCreated"
                     && x.Metadata.AggregateId == aggregateId.Value

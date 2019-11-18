@@ -1,4 +1,4 @@
-﻿// The MIT License (MIT)
+// The MIT License (MIT)
 //
 // Copyright (c) 2015-2019 Rasmus Mikkelsen
 // Copyright (c) 2015-2019 eBay Software Foundation
@@ -48,9 +48,10 @@ namespace EventFly.Extensions
                 aggregateType,
                 t =>
                 {
-                    if (!typeof(IAggregateRoot).GetTypeInfo().IsAssignableFrom(aggregateType))
+                    if (!typeof(IAggregateRoot).GetTypeInfo().IsAssignableFrom(aggregateType) 
+                        && !typeof(IIdentity).GetTypeInfo().IsAssignableFrom(aggregateType))
                     {
-                        throw new ArgumentException($"Type '{aggregateType.PrettyPrint()}' is not an aggregate root");
+                        throw new ArgumentException($"Type '{aggregateType.PrettyPrint()}' is not an aggregate root or identity");
                     }
 
                     return new AggregateName(
@@ -204,8 +205,8 @@ namespace EventFly.Extensions
                         .ToList();
 
                     var aggregateEvent = interfaces
-                        .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ICommittedEvent<,,>))
-                        .Select(i => i.GetGenericArguments()[2]).SingleOrDefault();
+                        .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ICommittedEvent<,>))
+                        .Select(i => i.GetGenericArguments()[1]).SingleOrDefault();
 
                     if (aggregateEvent != null) return aggregateEvent;
                     throw new ArgumentException(nameof(type));

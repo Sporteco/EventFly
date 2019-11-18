@@ -56,7 +56,7 @@ namespace EventFly.Tests.UnitTests.Aggregates
                 EventId = eventId
             };
             var committedEvent =
-                new CommittedEvent<TestAggregate, TestAggregateId, TestAddedEvent>(
+                new CommittedEvent<TestAggregateId, TestAddedEvent>(
                     aggregateId,
                     aggregateEvent,
                     eventMetadata,
@@ -86,7 +86,7 @@ namespace EventFly.Tests.UnitTests.Aggregates
             };
 
             this.Invoking(test =>
-                    new DomainEvent<TestAggregate, TestAggregateId, TestAddedEvent>(
+                    new DomainEvent<TestAggregateId, TestAddedEvent>(
                         aggregateId,
                         null,
                         eventMetadata,
@@ -119,7 +119,7 @@ namespace EventFly.Tests.UnitTests.Aggregates
             };
 
             this.Invoking(test =>
-                    new CommittedEvent<TestAggregate, TestAggregateId, TestAddedEvent>(
+                    new CommittedEvent<TestAggregateId, TestAddedEvent>(
                         aggregateId,
                         aggregateEvent,
                         eventMetadata,
@@ -151,7 +151,7 @@ namespace EventFly.Tests.UnitTests.Aggregates
             };
 
             this.Invoking(test =>
-                    new CommittedEvent<TestAggregate, TestAggregateId, TestAddedEvent>(
+                    new CommittedEvent<TestAggregateId, TestAddedEvent>(
                         null,
                         aggregateEvent,
                         eventMetadata,
@@ -183,7 +183,7 @@ namespace EventFly.Tests.UnitTests.Aggregates
             };
 
             this.Invoking(test =>
-                    new CommittedEvent<TestAggregate, TestAggregateId, TestAddedEvent>(
+                    new CommittedEvent<TestAggregateId, TestAddedEvent>(
                         aggregateId,
                         aggregateEvent,
                         eventMetadata,

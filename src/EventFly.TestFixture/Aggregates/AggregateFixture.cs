@@ -1,4 +1,4 @@
-﻿// The MIT License (MIT)
+// The MIT License (MIT)
 //
 // Copyright (c) 2018 - 2019 Lutando Ngqakaza
 // https://github.com/Lutando/EventFly 
@@ -152,9 +152,9 @@ namespace EventFly.TestFixture.Aggregates
             _testKit.Sys.EventStream.Subscribe(AggregateEventTestProbe, typeof(IDomainEvent<TIdentity, TAggregateEvent>));
 
             if (aggregateEventPredicate == null)
-                AggregateEventTestProbe.ExpectMsg<DomainEvent<TAggregate, TIdentity, TAggregateEvent>>();
+                AggregateEventTestProbe.ExpectMsg<DomainEvent<TIdentity, TAggregateEvent>>();
             else
-                AggregateEventTestProbe.ExpectMsg<DomainEvent<TAggregate, TIdentity, TAggregateEvent>>(x => aggregateEventPredicate(x.AggregateEvent));
+                AggregateEventTestProbe.ExpectMsg<DomainEvent<TIdentity, TAggregateEvent>>(x => aggregateEventPredicate(x.AggregateEvent));
 
             return this;
         }
@@ -171,9 +171,9 @@ namespace EventFly.TestFixture.Aggregates
             _testKit.Sys.EventStream.Subscribe(AggregateEventTestProbe, typeof(IDomainEvent<TIdentity, TAggregateEvent>));
 
             if (domainEventPredicate == null)
-                AggregateEventTestProbe.ExpectMsg<DomainEvent<TAggregate, TIdentity, TAggregateEvent>>();
+                AggregateEventTestProbe.ExpectMsg<DomainEvent<TIdentity, TAggregateEvent>>();
             else
-                AggregateEventTestProbe.ExpectMsg<DomainEvent<TAggregate, TIdentity, TAggregateEvent>>(domainEventPredicate);
+                AggregateEventTestProbe.ExpectMsg<DomainEvent<TIdentity, TAggregateEvent>>(domainEventPredicate);
 
             return this;
         }
@@ -184,7 +184,7 @@ namespace EventFly.TestFixture.Aggregates
             var writes = new AtomicWrite[events.Length];
             for (var i = 0; i < events.Length; i++)
             {
-                var committedEvent = new CommittedEvent<TAggregate, TIdentity, IAggregateEvent<TIdentity>>(aggregateId, events[i], new EventMetadata(), DateTimeOffset.UtcNow, i + 1);
+                var committedEvent = new CommittedEvent<TIdentity, IAggregateEvent<TIdentity>>(aggregateId, events[i], new EventMetadata(), DateTimeOffset.UtcNow, i + 1);
                 writes[i] = new AtomicWrite(new Persistent(committedEvent, i + 1, aggregateId.Value, String.Empty, false, ActorRefs.NoSender, writerGuid));
             }
             var journal = Persistence.Instance.Apply(_testKit.Sys).JournalFor(null);
@@ -197,7 +197,7 @@ namespace EventFly.TestFixture.Aggregates
                 var seq = i;
                 AggregateEventTestProbe.ExpectMsg<WriteMessageSuccess>(x =>
                     x.Persistent.PersistenceId == aggregateId.ToString() &&
-                    x.Persistent.Payload is CommittedEvent<TAggregate, TIdentity, IAggregateEvent<TIdentity>> &&
+                    x.Persistent.Payload is CommittedEvent<TIdentity, IAggregateEvent<TIdentity>> &&
                     x.Persistent.SequenceNr == (Int64)seq + 1);
             }
         }

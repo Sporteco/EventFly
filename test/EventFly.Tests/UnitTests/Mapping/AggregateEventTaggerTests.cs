@@ -66,7 +66,7 @@ namespace EventFly.Tests.UnitTests.Mapping
                 EventId = eventId
             };
             var committedEvent =
-                new CommittedEvent<TestAggregate, TestAggregateId, TestAddedEvent>(
+                new CommittedEvent<TestAggregateId, TestAddedEvent>(
                     aggregateId,
                     aggregateEvent,
                     eventMetadata,
@@ -77,7 +77,7 @@ namespace EventFly.Tests.UnitTests.Mapping
 
             if (taggedEvent is Tagged a)
             {
-                a.Tags.Should().Contain(typeof(TestAggregate).GetAggregateName().Value);
+                a.Tags.Should().Contain(typeof(TestAggregateId).GetAggregateName().Value);
             }
             else
             {
@@ -108,7 +108,7 @@ namespace EventFly.Tests.UnitTests.Mapping
                 EventId = eventId
             };
             var committedEvent =
-                new CommittedEvent<TestAggregate, TestAggregateId, TestAddedEvent>(
+                new CommittedEvent<TestAggregateId, TestAddedEvent>(
                     aggregateId,
                     aggregateEvent,
                     eventMetadata,

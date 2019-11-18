@@ -224,7 +224,6 @@ namespace EventFly.Tests.UnitTests.Aggregates
                 .ThenExpectDomainEvent<TestCreatedEvent>(
                     x => x.AggregateIdentity.Equals(aggregateId)
                          && x.IdentityType == typeof(TestAggregateId)
-                         && x.AggregateType == typeof(TestAggregate)
                          && x.EventType == typeof(TestCreatedEvent)
                          && x.Metadata.EventName == "TestCreated"
                          && x.Metadata.AggregateId == aggregateId.Value

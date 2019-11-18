@@ -1,4 +1,4 @@
-﻿// The MIT License (MIT)
+// The MIT License (MIT)
 //
 // Copyright (c) 2018 - 2019 Lutando Ngqakaza
 // https://github.com/Lutando/EventFly 
@@ -65,9 +65,9 @@ namespace EventFly.Tests.IntegrationTests.Aggregates.Sagas
 
             var eventProbe = CreateTestProbe("event-probe");
 
-            Sys.EventStream.Subscribe(eventProbe, typeof(DomainEvent<TestSaga, TestSagaId, TestSagaStartedEvent>));
-            Sys.EventStream.Subscribe(eventProbe, typeof(DomainEvent<TestSaga, TestSagaId, TestSagaCompletedEvent>));
-            Sys.EventStream.Subscribe(eventProbe, typeof(DomainEvent<TestSaga, TestSagaId, TestSagaTransactionCompletedEvent>));
+            Sys.EventStream.Subscribe(eventProbe, typeof(DomainEvent<TestSagaId, TestSagaStartedEvent>));
+            Sys.EventStream.Subscribe(eventProbe, typeof(DomainEvent<TestSagaId, TestSagaCompletedEvent>));
+            Sys.EventStream.Subscribe(eventProbe, typeof(DomainEvent<TestSagaId, TestSagaTransactionCompletedEvent>));
             var bus = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<ICommandBus>();
 
 
@@ -88,17 +88,17 @@ namespace EventFly.Tests.IntegrationTests.Aggregates.Sagas
             bus.Publish(sagaStartingCommand).GetAwaiter().GetResult();
 
             eventProbe.
-                ExpectMsg<DomainEvent<TestSaga, TestSagaId, TestSagaStartedEvent>>(
+                ExpectMsg<DomainEvent<TestSagaId, TestSagaStartedEvent>>(
                     x =>
                     x.AggregateEvent.Sender.Equals(senderAggregateId)
                          && x.AggregateEvent.Receiver.Equals(receiverAggregateId)
                          && x.AggregateEvent.SentTest.Equals(senderTest));
 
             eventProbe.
-                ExpectMsg<DomainEvent<TestSaga, TestSagaId, TestSagaTransactionCompletedEvent>>();
+                ExpectMsg<DomainEvent<TestSagaId, TestSagaTransactionCompletedEvent>>();
 
             eventProbe.
-                ExpectMsg<DomainEvent<TestSaga, TestSagaId, TestSagaCompletedEvent>>();
+                ExpectMsg<DomainEvent<TestSagaId, TestSagaCompletedEvent>>();
         }
     }
 }

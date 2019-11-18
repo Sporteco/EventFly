@@ -1,4 +1,4 @@
-﻿// The MIT License (MIT)
+// The MIT License (MIT)
 //
 // Copyright (c) 2015-2019 Rasmus Mikkelsen
 // Copyright (c) 2015-2019 eBay Software Foundation
@@ -58,8 +58,8 @@ namespace EventFly.Tests.UnitTests.Extensions
         }
 
         [Theory]
-        [InlineData(typeof(FooAggregateWithOutAttribute), "FooAggregateWithOutAttribute")]
-        [InlineData(typeof(FooAggregateWithAttribute), "BetterNameForAggregate")]
+        //[InlineData(typeof(FooId), "FooAggregateWithOutAttribute")]
+        [InlineData(typeof(FooId), "BetterNameForAggregate")]
         public void AggregateName_FromType_ShouldBeExpected(Type aggregateType, String expectedAggregateName)
         {
             var aggregateName = aggregateType.GetAggregateName();
@@ -73,6 +73,7 @@ namespace EventFly.Tests.UnitTests.Extensions
             this.Invoking(test => new AggregateNameAttribute(null)).Should().Throw<ArgumentNullException>();
         }
 
+        [AggregateName("BetterNameForAggregate")]
         public class FooId : Identity<FooId>
         {
             public FooId(String value) : base(value)
@@ -87,7 +88,6 @@ namespace EventFly.Tests.UnitTests.Extensions
             }
         }
 
-        [AggregateName("BetterNameForAggregate")]
         public class FooAggregateWithAttribute : EventSourcedAggregateRoot<FooAggregateWithAttribute, FooId, FooStateWithAttribute>
         {
             public FooAggregateWithAttribute(FooId id) : base(id)

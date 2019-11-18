@@ -63,7 +63,7 @@ namespace EventFly.Tests.UnitTests.Mapping
                 EventId = eventId
             };
             var committedEvent =
-                new CommittedEvent<TestAggregate, TestAggregateId, TestCreatedEvent>(
+                new CommittedEvent<TestAggregateId, TestCreatedEvent>(
                     aggregateId,
                     aggregateEvent,
                     eventMetadata,
@@ -74,7 +74,7 @@ namespace EventFly.Tests.UnitTests.Mapping
             var upcastedEvent = eventSequence.Events.Single();
 
             upcastedEvent
-                .As<ICommittedEvent<TestAggregate, TestAggregateId, TestCreatedEventV2>>()
+                .As<ICommittedEvent<TestAggregateId, TestCreatedEventV2>>()
                 .AggregateEvent.Name
                 .Should().Be("default upcasted string");
 
