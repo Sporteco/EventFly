@@ -1,31 +1,19 @@
-using Akka.TestKit.Xunit2;
 using Demo.Domain.User;
 using Demo.Infrastructure;
 using Demo.User.Commands;
 using Demo.User.Events;
 using Demo.ValueObjects;
 using EventFly.Commands.ExecutionResults;
-using EventFly.DependencyInjection;
-using EventFly.TestFixture.Aggregates;
-using EventFly.TestFixture.Extensions;
-using Microsoft.Extensions.DependencyInjection;
+using EventFly.TestFixture;
 using System;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace Demo.Tests
 {
-    public class DemoAggregateTests : TestKit
+    public class DemoAggregateTests : AggregateTestKit<UserContext>
     {
-        public DemoAggregateTests(ITestOutputHelper testOutputHelper) : base(Configuration.Config, "dem-aggregate-tests", testOutputHelper)
-        {
-            new ServiceCollection()
-                .AddTestEventFly(Sys)
-                .WithContext<UserContext>()
-                .Services
-                .BuildServiceProvider()
-                .UseEventFly();
-        }
+        public DemoAggregateTests(ITestOutputHelper testOutputHelper) : base(testOutputHelper) { }
 
         [Fact]
         public void CreateEventCommandTest()
@@ -33,7 +21,7 @@ namespace Demo.Tests
             var aggregateId = UserId.New;
             var cmd = new CreateUserCommand(aggregateId, new UserName(("Test", "ru")), new Birth(DateTime.Today));
 
-            this.FixtureFor<UserAggregate, UserId>(aggregateId)
+            FixtureFor<UserAggregate, UserId>(aggregateId)
                 .GivenNothing()
                 .When(cmd)
                 .ThenExpectReply<UnauthorizedAccessResult>(x => !x.IsSuccess);
@@ -46,9 +34,7 @@ namespace Demo.Tests
             var projectId = ProjectId.New;
             var projectName = new ProjectName("TestProject");
 
-            //var cmd = new CreateProjectCommand(aggregateId, projectId, projectName);
-
-            this.FixtureFor<UserAggregate, UserId>(aggregateId)
+            FixtureFor<UserAggregate, UserId>(aggregateId)
                 .GivenNothing()
                 .When(new CreateProjectCommand(aggregateId, projectId, projectName))
                 .ThenExpectDomainEvent<ProjectCreatedEvent>(x =>

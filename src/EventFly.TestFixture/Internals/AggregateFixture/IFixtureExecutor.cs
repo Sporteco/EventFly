@@ -26,7 +26,7 @@ using EventFly.Aggregates;
 using EventFly.Commands;
 using EventFly.Core;
 
-namespace EventFly.TestFixture.Aggregates
+namespace EventFly.TestFixture
 {
     public interface IFixtureExecutor<TAggregate, TIdentity>
         where TAggregate : ActorBase, IAggregateRoot<TIdentity>

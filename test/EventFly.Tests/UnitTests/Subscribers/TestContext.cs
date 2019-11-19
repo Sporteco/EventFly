@@ -1,4 +1,4 @@
-﻿using EventFly.Definitions;
+using EventFly.Definitions;
 using EventFly.TestHelpers.Aggregates;
 using EventFly.TestHelpers.Aggregates.Commands;
 using EventFly.TestHelpers.Aggregates.Events;
@@ -16,7 +16,6 @@ namespace EventFly.Tests.UnitTests.Subscribers
         public TestContext()
         {
             RegisterAggregate<TestAggregate, TestAggregateId>();
-
             RegisterCommands(typeof(AddFourTestsCommand), typeof(AddTestCommand), typeof(CreateAndAddTwoTestsCommand),
                 typeof(CreateTestCommand), typeof(GiveTestCommand), typeof(PoisonTestAggregateCommand), typeof(PublishTestStateCommand),
                 typeof(ReceiveTestCommand), typeof(TestDomainErrorCommand), typeof(TestFailedExecutionResultCommand),
@@ -31,9 +30,6 @@ namespace EventFly.Tests.UnitTests.Subscribers
             RegisterSaga<TestSaga, TestSagaId>();
         }
 
-        public override IServiceCollection DI(IServiceCollection serviceDescriptors)
-        {
-            return serviceDescriptors;
-        }
+        public override IServiceCollection DI(IServiceCollection serviceDescriptors) => serviceDescriptors;
     }
 }

@@ -21,11 +21,10 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using Akka.TestKit.Xunit2;
 using EventFly.Aggregates;
 using EventFly.Commands;
 using EventFly.DependencyInjection;
-using EventFly.TestFixture.Aggregates;
+using EventFly.TestFixture;
 using EventFly.TestHelpers.Aggregates;
 using EventFly.TestHelpers.Aggregates.Commands;
 using EventFly.TestHelpers.Aggregates.Entities;
@@ -40,29 +39,14 @@ using Xunit.Abstractions;
 namespace EventFly.Tests.IntegrationTests.Aggregates.Sagas
 {
     [Collection("AggregateSagaTests")]
-    public class AggregateSagaTests : TestKit
+    public class AggregateSagaTests : AggregateTestKit<TestContext>
     {
-        private const System.String Category = "Sagas";
-        public AggregateSagaTests(ITestOutputHelper testOutputHelper)
-            : base(TestHelpers.Akka.Configuration.Config, "aggregate-saga-tests", testOutputHelper)
-        {
-
-        }
+        public AggregateSagaTests(ITestOutputHelper testOutputHelper) : base(testOutputHelper) { }
 
         [Fact]
         [Category(Category)]
         public void SendingTest_FromTestAggregate_CompletesSaga()
         {
-            Sys.RegisterDependencyResolver(
-                new ServiceCollection()
-                .AddTestEventFly(Sys)
-                    .WithContext<TestContext>()
-                    .Services
-                .AddScoped<TestSaga>()
-                .BuildServiceProvider()
-                .UseEventFly()
-            );
-
             var eventProbe = CreateTestProbe("event-probe");
 
             Sys.EventStream.Subscribe(eventProbe, typeof(DomainEvent<TestSagaId, TestSagaStartedEvent>));
@@ -100,5 +84,7 @@ namespace EventFly.Tests.IntegrationTests.Aggregates.Sagas
             eventProbe.
                 ExpectMsg<DomainEvent<TestSagaId, TestSagaCompletedEvent>>();
         }
+
+        private const System.String Category = "Sagas";
     }
 }

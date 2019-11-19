@@ -1,4 +1,18 @@
 <Project Sdk="Microsoft.NET.Sdk">
+    
+  <PropertyGroup>
+    <Description>
+        bdd style test fixtures for EventFly
+    </Description>
+    <PackageTags>
+      tdd;bdd;testing;akka;cqrs;es;eventsourcing;actors;actor-model
+    </PackageTags>
+    <Version>0.8.8</Version>
+    <Authors>Sporteco</Authors>
+    <Company>Sporteco</Company>
+    <RepositoryUrl>https://github.com/Sporteco/EventFly</RepositoryUrl>
+    <Copyright>Copyright (c) Sporteco 2018 - 2019</Copyright>
+  </PropertyGroup>
 
   <PropertyGroup>
     <ProjectGuid>{0CB7A8CC-E3CD-481C-81C9-BA830DC32361}</ProjectGuid>
@@ -14,20 +28,6 @@
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <Title>EventFly.TestFixture</Title>
   </PropertyGroup>
-    
-  <PropertyGroup>
-    <Description>
-        bdd style test fixtures for EventFly
-    </Description>
-    <PackageTags>
-      tdd;bdd;testing;akka;cqrs;es;eventsourcing;actors;actor-model
-    </PackageTags>
-    <Version>0.8.7</Version>
-    <Authors>Sporteco</Authors>
-    <Company>Sporteco</Company>
-    <RepositoryUrl>https://github.com/Sporteco/EventFly</RepositoryUrl>
-    <Copyright>Copyright (c) Sporteco 2018 - 2019</Copyright>
-  </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\EventFly.Abstractions\EventFly.Abstractions.csproj" />
@@ -35,8 +35,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Akka.TestKit" Version="$(AkkaTestKitVersion)" />
+    <PackageReference Include="Akka.TestKit.Xunit2" Version="1.3.16" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.0.0" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="$(SourceLinkGithubVersion)" PrivateAssets="All" />
+    <PackageReference Include="xunit.abstractions" Version="2.0.3" />
   </ItemGroup>
 
 </Project>

@@ -25,10 +25,7 @@ using Akka.TestKit;
 using Akka.TestKit.Xunit2;
 using EventFly.DependencyInjection;
 using EventFly.Jobs;
-using EventFly.TestFixture.Aggregates;
-using EventFly.TestHelpers.Aggregates.Sagas.Test;
 using EventFly.TestHelpers.Jobs;
-using EventFly.Tests.UnitTests.Subscribers;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -46,16 +43,16 @@ namespace EventFly.Tests.UnitTests.Jobs
         public ScheduledJobsTests(ITestOutputHelper testOutputHelper)
             : base(TestHelpers.Akka.Configuration.ConfigWithTestScheduler, "jobs-tests", testOutputHelper)
         {
-            new ServiceCollection()
-            .AddScoped<TestSaga>()
-            .AddScoped<TestJobRunner>()
-            .AddScoped<AsyncTestJobRunner>()
-            .AddSingleton<TestJobRunnerProbeAccessor>()
-            .AddTestEventFly(Sys)
-                .WithContext<TestContext>()
-                .Services
-            .BuildServiceProvider()
-            .UseEventFly();
+            //new ServiceCollection()
+            //.AddScoped<TestSaga>()
+            //.AddScoped<TestJobRunner>()
+            //.AddScoped<AsyncTestJobRunner>()
+            //.AddSingleton<TestJobRunnerProbeAccessor>()
+            //.AddTestEventFly(Sys)
+            //    .WithContext<TestContext>()
+            //    .Services
+            //.BuildServiceProvider()
+            //.UseEventFly();
         }
 
         //[Fact]

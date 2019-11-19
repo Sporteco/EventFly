@@ -23,23 +23,21 @@
 
 using Akka.Actor;
 using EventFly.Aggregates;
+using EventFly.Aggregates.Snapshot;
 using EventFly.Commands;
 using EventFly.Core;
 using System;
 
-namespace EventFly.TestFixture.Aggregates
+namespace EventFly.TestFixture
 {
-    public interface IFixtureAsserter<TAggregate, TIdentity>
+    public interface IFixtureArranger<TAggregate, TIdentity>
         where TAggregate : ActorBase, IAggregateRoot<TIdentity>
         where TIdentity : IIdentity
     {
-        IFixtureAsserter<TAggregate, TIdentity> AndWhen(params ICommand[] commands);
-        IFixtureAsserter<TAggregate, TIdentity> ThenExpect<TAggregateEvent>(Predicate<TAggregateEvent> aggregateEventPredicate = null)
-            where TAggregateEvent : class, IAggregateEvent<TIdentity>;
-
-        IFixtureAsserter<TAggregate, TIdentity> ThenExpectReply<TReply>(Predicate<TReply> aggregateReply = null);
-
-        IFixtureAsserter<TAggregate, TIdentity> ThenExpectDomainEvent<TAggregateEvent>(Predicate<IDomainEvent<TIdentity, TAggregateEvent>> domainEventPredicate = null)
-            where TAggregateEvent : class, IAggregateEvent<TIdentity>;
+        IFixtureArranger<TAggregate, TIdentity> For(TIdentity aggregateId);
+        IFixtureExecutor<TAggregate, TIdentity> GivenNothing();
+        IFixtureExecutor<TAggregate, TIdentity> Given(params IAggregateEvent<TIdentity>[] aggregateEvents);
+        IFixtureExecutor<TAggregate, TIdentity> Given(IAggregateSnapshot<TAggregate, TIdentity> aggregateSnapshot, Int64 snapshotSequenceNumber);
+        IFixtureExecutor<TAggregate, TIdentity> Given(params ICommand[] commands);
     }
 }

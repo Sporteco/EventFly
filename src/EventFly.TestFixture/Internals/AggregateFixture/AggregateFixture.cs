@@ -35,32 +35,26 @@ using System;
 using AkkaSnapshotMetadata = Akka.Persistence.SnapshotMetadata;
 using SnapshotMetadata = EventFly.Aggregates.Snapshot.SnapshotMetadata;
 
-namespace EventFly.TestFixture.Aggregates
+namespace EventFly.TestFixture
 {
     public class AggregateFixture<TAggregate, TIdentity> : IFixtureArranger<TAggregate, TIdentity>, IFixtureExecutor<TAggregate, TIdentity>, IFixtureAsserter<TAggregate, TIdentity>
         where TAggregate : ActorBase, IAggregateRoot<TIdentity>
         where TIdentity : IIdentity
     {
-        private readonly TestKitBase _testKit;
         public TIdentity AggregateId { get; private set; }
         public TestProbe AggregateEventTestProbe { get; private set; }
         public TestProbe AggregateReplyTestProbe { get; private set; }
-        public AggregateFixture(
-            TestKitBase testKit)
+
+        public AggregateFixture(TestKitBase testKit)
         {
             _testKit = testKit;
             _commandBus = testKit.Sys.GetExtension<ServiceProviderHolder>()?.ServiceProvider?.GetService<ICommandBus>();
         }
 
-        private ICommandBus _commandBus;
-
         public IFixtureArranger<TAggregate, TIdentity> For(TIdentity aggregateId)
         {
-            if (aggregateId == null)
-                throw new ArgumentNullException(nameof(aggregateId));
-
-            if (!AggregateEventTestProbe.IsNobody())
-                throw new InvalidOperationException(nameof(AggregateEventTestProbe));
+            if (aggregateId == null) throw new ArgumentNullException(nameof(aggregateId));
+            if (!AggregateEventTestProbe.IsNobody()) throw new InvalidOperationException(nameof(AggregateEventTestProbe));
 
             AggregateId = aggregateId;
             AggregateEventTestProbe = _testKit.CreateTestProbe("aggregate-event-test-probe");
@@ -71,12 +65,9 @@ namespace EventFly.TestFixture.Aggregates
 
         public IFixtureArranger<TAggregate, TIdentity> Using(TIdentity aggregateId)
         {
-            if (aggregateId == null)
-                throw new ArgumentNullException(nameof(aggregateId));
-            if (!AggregateEventTestProbe.IsNobody())
-                throw new InvalidOperationException(nameof(AggregateEventTestProbe));
-            if (!AggregateReplyTestProbe.IsNobody())
-                throw new InvalidOperationException(nameof(AggregateReplyTestProbe));
+            if (aggregateId == null) throw new ArgumentNullException(nameof(aggregateId));
+            if (!AggregateEventTestProbe.IsNobody()) throw new InvalidOperationException(nameof(AggregateEventTestProbe));
+            if (!AggregateReplyTestProbe.IsNobody()) throw new InvalidOperationException(nameof(AggregateReplyTestProbe));
 
             AggregateId = aggregateId;
             AggregateEventTestProbe = _testKit.CreateTestProbe("aggregate-event-test-probe");
@@ -85,39 +76,29 @@ namespace EventFly.TestFixture.Aggregates
             return this;
         }
 
-        public IFixtureExecutor<TAggregate, TIdentity> GivenNothing()
-        {
-            return this;
-        }
+        public IFixtureExecutor<TAggregate, TIdentity> GivenNothing() => this;
 
         public IFixtureExecutor<TAggregate, TIdentity> Given(params IAggregateEvent<TIdentity>[] aggregateEvents)
         {
             InitializeEventJournal(AggregateId, aggregateEvents);
-
             return this;
         }
 
         public IFixtureExecutor<TAggregate, TIdentity> Given(IAggregateSnapshot<TAggregate, TIdentity> aggregateSnapshot, Int64 snapshotSequenceNumber)
         {
             InitializeSnapshotStore(AggregateId, aggregateSnapshot, snapshotSequenceNumber);
-
             return this;
         }
 
         public IFixtureExecutor<TAggregate, TIdentity> Given(params ICommand[] commands)
         {
-            if (commands == null)
-                throw new ArgumentNullException(nameof(commands));
+            if (commands == null) throw new ArgumentNullException(nameof(commands));
 
             foreach (var command in commands)
             {
-                if (command == null)
-                    throw new NullReferenceException(nameof(command));
-
+                if (command == null) throw new NullReferenceException(nameof(command));
                 var result = _commandBus.Publish(command).GetAwaiter().GetResult();
-                if (!result.IsSuccess)
-                    throw new InvalidOperationException($"Given Command {command.GetType().PrettyPrint()} failed.");
-
+                if (!result.IsSuccess) throw new InvalidOperationException($"Given Command {command.GetType().PrettyPrint()} failed.");
             }
 
             return this;
@@ -125,26 +106,18 @@ namespace EventFly.TestFixture.Aggregates
 
         public IFixtureAsserter<TAggregate, TIdentity> When(params ICommand[] commands)
         {
-            if (commands == null)
-                throw new ArgumentNullException(nameof(commands));
+            if (commands == null) throw new ArgumentNullException(nameof(commands));
 
             foreach (var command in commands)
             {
-                if (command == null)
-                    throw new NullReferenceException(nameof(command));
-
-                _commandBus.Publish(command).ContinueWith(t =>
-                    AggregateReplyTestProbe.Tell(t.Result)
-                );
+                if (command == null) throw new NullReferenceException(nameof(command));
+                _commandBus.Publish(command).ContinueWith(t => AggregateReplyTestProbe.Tell(t.Result));
             }
 
             return this;
         }
 
-        public IFixtureAsserter<TAggregate, TIdentity> AndWhen(params ICommand[] commands)
-        {
-            return When(commands);
-        }
+        public IFixtureAsserter<TAggregate, TIdentity> AndWhen(params ICommand[] commands) => When(commands);
 
         public IFixtureAsserter<TAggregate, TIdentity> ThenExpect<TAggregateEvent>(Predicate<TAggregateEvent> aggregateEventPredicate = null)
             where TAggregateEvent : class, IAggregateEvent<TIdentity>
@@ -177,6 +150,9 @@ namespace EventFly.TestFixture.Aggregates
 
             return this;
         }
+
+        private readonly TestKitBase _testKit;
+        private readonly ICommandBus _commandBus;
 
         private void InitializeEventJournal(TIdentity aggregateId, params IAggregateEvent<TIdentity>[] events)
         {

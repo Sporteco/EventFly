@@ -1,42 +1,27 @@
-using Akka.TestKit.Xunit2;
 using Demo.Infrastructure;
 using Demo.User.Commands;
 using Demo.User.Events;
-using EventFly.Aggregates;
-using EventFly.Commands;
-using EventFly.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection;
+using EventFly.TestFixture;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace Demo.Tests
 {
-    public class UserTouchTrackingServiceTests : TestKit
+    public class UserTouchTrackingServiceTests : ContextTestKit<UserContext>
     {
-        public UserTouchTrackingServiceTests(ITestOutputHelper testOutputHelper) : base(Configuration.Config, "TestDomainServiceTests", testOutputHelper)
-        {
-            Sys.RegisterDependencyResolver(
-                new ServiceCollection()
-                .AddEventFly(Sys)
-                .WithContext<UserContext>()
-                .Services
-                .BuildServiceProvider()
-                .UseEventFly()
-            );
-        }
+        public UserTouchTrackingServiceTests(ITestOutputHelper testOutputHelper) : base(testOutputHelper) { }
 
         [Fact]
         public void RegisteredDomainServiceWorking()
         {
-            var events = CreateTestProbe();
-            //Sys.EventStream.Subscribe(events, typeof(DomainEvent<UserAggregate, UserId, UserNotesChangedEvent>));
-            Sys.EventStream.Subscribe(events, typeof(DomainEvent<UserId, UserTouchedEvent>));
-            var bus = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<ICommandBus>();
+            "When I send command to aggregate"
+                .Do(new ChangeUserNotesCommand(UserId.New, "Such a nice user..."));
 
-            var changeUserNotes = new ChangeUserNotesCommand(UserId.New, "Such a nice user...");
-            bus.Publish(changeUserNotes).GetAwaiter().GetResult();
+            "And there is a service reacting on event from this command"
+                .EmptyStep();
 
-            events.ExpectMsg<DomainEvent<UserId, UserTouchedEvent>>();
+            "Then I see event produced by command from service"
+                .Expect<UserTouchedEvent>();
         }
     }
 }

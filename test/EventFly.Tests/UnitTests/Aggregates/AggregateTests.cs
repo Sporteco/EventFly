@@ -21,20 +21,19 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using Akka.TestKit.Xunit2;
 using EventFly.Aggregates;
 using EventFly.Commands;
 using EventFly.DependencyInjection;
-using EventFly.TestFixture.Aggregates;
+using EventFly.TestFixture;
 using EventFly.TestHelpers.Aggregates;
 using EventFly.TestHelpers.Aggregates.Commands;
 using EventFly.TestHelpers.Aggregates.Entities;
 using EventFly.TestHelpers.Aggregates.Events;
 using EventFly.TestHelpers.Aggregates.Events.Signals;
-using EventFly.TestHelpers.Aggregates.Sagas.Test;
 using EventFly.Tests.UnitTests.Subscribers;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using Xunit;
@@ -43,23 +42,9 @@ using Xunit.Abstractions;
 namespace EventFly.Tests.UnitTests.Aggregates
 {
     [Collection("AggregateTests")]
-    public class AggregateTests : TestKit
+    public class AggregateTests : AggregateTestKit<TestContext>
     {
-        private const System.String Category = "Aggregates";
-
-        public AggregateTests(ITestOutputHelper testOutputHelper)
-            : base(TestHelpers.Akka.Configuration.Config, "aggregate-tests", testOutputHelper)
-        {
-            Sys.RegisterDependencyResolver(
-                new ServiceCollection()
-                .AddTestEventFly(Sys)
-                    .WithContext<TestContext>()
-                    .Services
-                .AddScoped<TestSaga>()
-                .BuildServiceProvider()
-                .UseEventFly()
-            );
-        }
+        public AggregateTests(ITestOutputHelper testOutputHelper) : base(testOutputHelper) { }
 
         [Fact]
         [Category(Category)]
@@ -79,7 +64,6 @@ namespace EventFly.Tests.UnitTests.Aggregates
                 x => x.AggregateEvent.TestAggregateId.Equals(aggregateId) &&
                      x.Metadata.ContainsKey("some-key"));
         }
-
 
         [Fact]
         [Category(Category)]
@@ -176,7 +160,6 @@ namespace EventFly.Tests.UnitTests.Aggregates
             Sys.EventStream.Subscribe(eventProbe, typeof(IDomainEvent<TestAggregateId, TestAddedEvent>));
             var bus = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<ICommandBus>();
 
-
             var aggregateId = TestAggregateId.New;
             var commandId = CommandId.New;
             var command = new CreateTestCommand(aggregateId, commandId);
@@ -191,7 +174,6 @@ namespace EventFly.Tests.UnitTests.Aggregates
             bus.Publish(command).GetAwaiter().GetResult();
             bus.Publish(nextCommand).GetAwaiter().GetResult();
             bus.Publish(nextCommand2).GetAwaiter().GetResult();
-
 
             eventProbe
                 .ExpectMsg<IDomainEvent<TestAggregateId, TestAddedEvent>>(
@@ -208,7 +190,6 @@ namespace EventFly.Tests.UnitTests.Aggregates
         [Category(Category)]
         public void TestEventSourcing_AfterManyTests_TestStateSignalled()
         {
-
             var eventProbe = CreateTestProbe("event-probe");
             Sys.EventStream.Subscribe(eventProbe, typeof(IDomainEvent<TestAggregateId, TestStateSignalEvent>));
             var aggregateId = TestAggregateId.New;
@@ -231,7 +212,6 @@ namespace EventFly.Tests.UnitTests.Aggregates
 
             var reviveCommand = new PublishTestStateCommand(aggregateId);
             bus.Publish(reviveCommand).GetAwaiter().GetResult();
-
 
             eventProbe
                 .ExpectMsg<IDomainEvent<TestAggregateId, TestStateSignalEvent>>(
@@ -260,21 +240,18 @@ namespace EventFly.Tests.UnitTests.Aggregates
             eventProbe.ExpectMsg<IDomainEvent<TestAggregateId, TestCreatedEvent>>();
             eventProbe.ExpectMsg<IDomainEvent<TestAggregateId, TestAddedEvent>>();
             eventProbe.ExpectMsg<IDomainEvent<TestAggregateId, TestAddedEvent>>();
-
         }
 
         [Fact]
         [Category(Category)]
         public void TestEventMultipleEmitSourcing_AfterManyMultiCommand_TestStateSignalled()
         {
-
             var eventProbe = CreateTestProbe("event-probe");
             Sys.EventStream.Subscribe(eventProbe, typeof(IDomainEvent<TestAggregateId, TestAddedEvent>));
             Sys.EventStream.Subscribe(eventProbe, typeof(IDomainEvent<TestAggregateId, TestStateSignalEvent>));
             var aggregateId = TestAggregateId.New;
             var commandId = CommandId.New;
             var bus = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<ICommandBus>();
-
 
             var command = new CreateTestCommand(aggregateId, commandId);
             bus.Publish(command).GetAwaiter().GetResult();
@@ -304,7 +281,6 @@ namespace EventFly.Tests.UnitTests.Aggregates
                 x => x.AggregateEvent.LastSequenceNr == 5
                      && x.AggregateEvent.Version == 5
                      && x.AggregateEvent.AggregateState.TestCollection.Count == 4);
-
         }
 
         [Fact]
@@ -337,7 +313,6 @@ namespace EventFly.Tests.UnitTests.Aggregates
                      && x.AggregateEvent.AggregateState.FromHydration);
         }
 
-
         [Fact]
         [Category(Category)]
         public async Task InitialState_TestingSuccessCommand_SuccessResultReplied()
@@ -361,6 +336,7 @@ namespace EventFly.Tests.UnitTests.Aggregates
 
             await bus.Publish(command);
         }
+
         [Fact]
         [Category(Category)]
         public void TestDistinctCommand_AfterTwoHandles_CommandFails()
@@ -384,5 +360,7 @@ namespace EventFly.Tests.UnitTests.Aggregates
              probe.ExpectMsg<FailedExecutionResult>(TimeSpan.FromHours(1));
              */
         }
+
+        private const String Category = "Aggregates";
     }
 }
