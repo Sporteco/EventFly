@@ -19,8 +19,8 @@ namespace EventFly.Aggregates
 {
     public abstract class AggregateRoot<TAggregate, TIdentity, TAggregateState> : ReceiveActor, IAggregateRoot<TIdentity>
         where TAggregate : AggregateRoot<TAggregate, TIdentity, TAggregateState>
-        where TAggregateState : IAggregateState<TIdentity>
         where TIdentity : IIdentity
+        where TAggregateState : IAggregateState<TIdentity>
     {
         public TAggregateState State { get; private set; }
         public IAggregateName Name => _aggregateName;
@@ -88,7 +88,7 @@ namespace EventFly.Aggregates
         #region Stuff
 
         protected SecurityContext SecurityContext { get; private set; }
-        protected readonly ILoggingAdapter Log = Context.GetLogger();
+        protected ILoggingAdapter Log { get; } = Context.GetLogger();
 
         protected AggregateRoot(TIdentity id)
         {
@@ -172,8 +172,6 @@ namespace EventFly.Aggregates
                         if (trans != null) await trans.RollbackTransaction();
                         throw;
                     }
-
-
                 });
             }
             catch (Exception exception)
@@ -187,8 +185,6 @@ namespace EventFly.Aggregates
         {
             _previousSourceIds = new CircularBuffer<ISourceId>(count);
         }
-
-        private List<IDomainEvent> _committedEvents = new List<IDomainEvent>();
 
         protected void ApplyCommittedEvent<TAggregateEvent>(ICommittedEvent<TIdentity, TAggregateEvent> committedEvent)
             where TAggregateEvent : class, IAggregateEvent<TIdentity>
@@ -209,9 +205,7 @@ namespace EventFly.Aggregates
                 Publish(domainEvent);
                 ReplyIfAvailable();
             }
-
         }
-
 
         protected virtual void Publish<TEvent>(TEvent aggregateEvent)
         {
@@ -230,8 +224,7 @@ namespace EventFly.Aggregates
                 SecurityContext = new SecurityContext(userId, _serviceProvider.GetService<ISecurityService>());
             }
 
-            var result = base.AroundReceive(receive, message);
-            return result;
+            return base.AroundReceive(receive, message);
         }
 
         protected virtual void Reply(Object replyMessage)
@@ -263,22 +256,20 @@ namespace EventFly.Aggregates
             where TResult : IExecutionResult
         {
             ReceiveAsync(async x =>
+            {
+                try
                 {
-                    try
-                    {
-                        var result = await handler(x);
-                        Context.Sender.Tell(result);
-                    }
-                    catch (UnauthorizedAccessException)
-                    {
-                        Context.Sender.Tell(new UnauthorizedAccessResult());
-                    }
-
-                }, (Predicate<TCommand>)null);
+                    var result = await handler(x);
+                    Context.Sender.Tell(result);
+                }
+                catch (UnauthorizedAccessException)
+                {
+                    Context.Sender.Tell(new UnauthorizedAccessResult());
+                }
+            }, (Predicate<TCommand>)null);
         }
 
-        private Task LoadState() => State.LoadState(Id);
-
+        private readonly List<IDomainEvent> _committedEvents = new List<IDomainEvent>();
         private IServiceScope _scope;
         private readonly IServiceProvider _serviceProvider;
         private readonly IEventDefinitions _eventDefinitionService;
@@ -286,6 +277,8 @@ namespace EventFly.Aggregates
         private CircularBuffer<ISourceId> _previousSourceIds = new CircularBuffer<ISourceId>(100);
         private ICommand _pinnedCommand;
         private Object _pinnedReply;
+
+        private Task LoadState() => State.LoadState(Id);
 
         #endregion
     }

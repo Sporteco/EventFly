@@ -1,4 +1,4 @@
-﻿// The MIT License (MIT)
+// The MIT License (MIT)
 //
 // Copyright (c) 2018 - 2019 Lutando Ngqakaza
 // https://github.com/Lutando/EventFly 
@@ -23,14 +23,14 @@
 
 using Akka.Configuration;
 using EventFly.Configuration;
+using System;
 
 namespace EventFly.Aggregates
 {
     public class AggregateManagerSettings
     {
-        private static readonly System.String _section = "EventFly.aggregate-manager";
-        public readonly System.Boolean HandleDeadLetters;
-        public readonly System.Boolean AutoDispatchOnReceive;
+        public Boolean HandleDeadLetters { get; }
+        public Boolean AutoDispatchOnReceive { get; }
 
         public AggregateManagerSettings(Config config)
         {
@@ -39,7 +39,8 @@ namespace EventFly.Aggregates
 
             HandleDeadLetters = aggregateManagerConfig.GetBoolean("handle-deadletters");
             AutoDispatchOnReceive = aggregateManagerConfig.GetBoolean("auto-dispatch-on-receive");
-
         }
+
+        private const String _section = "EventFly.aggregate-manager";
     }
 }

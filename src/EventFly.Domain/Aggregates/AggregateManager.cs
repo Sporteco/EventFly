@@ -1,4 +1,4 @@
-﻿// The MIT License (MIT)
+// The MIT License (MIT)
 //
 // Copyright (c) 2018 - 2019 Lutando Ngqakaza
 // https://github.com/Lutando/EventFly 
@@ -34,7 +34,6 @@ namespace EventFly.Aggregates
     public sealed class ResolveServiceForMe
     {
         public ResolveServiceForMe(Type type) => Type = type;
-
         public Type Type { get; }
     }
 
@@ -42,8 +41,6 @@ namespace EventFly.Aggregates
         where TAggregate : ActorBase, IAggregateRoot<TIdentity>
         where TIdentity : IIdentity
     {
-        protected ILoggingAdapter Logger { get; set; }
-        protected Func<DeadLetter, Boolean> DeadLetterHandler => Handle;
         public AggregateManagerSettings Settings { get; }
         public String Name { get; }
 
@@ -54,35 +51,31 @@ namespace EventFly.Aggregates
             Name = GetType().PrettyPrint();
             Receive<Terminated>(Terminate);
 
-            if (Settings.AutoDispatchOnReceive)
-                Receive<ICommand>(Dispatch);
+            if (Settings.AutoDispatchOnReceive) Receive<ICommand>(Dispatch);
 
             if (Settings.HandleDeadLetters)
             {
                 Context.System.EventStream.Subscribe(Self, typeof(DeadLetter));
                 Receive(DeadLetterHandler);
             }
-
         }
+
+        protected ILoggingAdapter Logger { get; set; }
+        protected Func<DeadLetter, Boolean> DeadLetterHandler => Handle;
 
         protected virtual Boolean Dispatch(ICommand command)
         {
             Logger.Info("AggregateManager of Type={0}; has received a command of Type={1}", Name, command.GetType().PrettyPrint());
-
             var aggregateRef = FindOrCreate((TIdentity)command.GetAggregateId());
-
             aggregateRef.Forward(command);
 
             return true;
         }
 
-
         protected virtual Boolean ReDispatch(ICommand command)
         {
             Logger.Info("AggregateManager of Type={0}; is ReDispatching deadletter of Type={1}", Name, command.GetType().PrettyPrint());
-
             var aggregateRef = FindOrCreate((TIdentity)command.GetAggregateId());
-
             aggregateRef.Forward(command);
 
             return true;
@@ -90,22 +83,20 @@ namespace EventFly.Aggregates
 
         protected Boolean Handle(DeadLetter deadLetter)
         {
-            if (deadLetter.Message is ICommand &&
-                (deadLetter.Message as dynamic).AggregateId.GetType() == typeof(TIdentity))
+            if (deadLetter.Message is ICommand && (deadLetter.Message as dynamic).AggregateId.GetType() == typeof(TIdentity))
             {
                 var command = deadLetter.Message as dynamic;
-
                 ReDispatch(command);
             }
 
             return true;
-
         }
 
         protected virtual Boolean Terminate(Terminated message)
         {
             Logger.Warning("Aggregate of Type={0}, and Id={1}; has terminated.", typeof(TAggregate).PrettyPrint(), message.ActorRef.Path.Name);
             Context.Unwatch(message.ActorRef);
+
             return true;
         }
 
@@ -113,14 +104,12 @@ namespace EventFly.Aggregates
         {
             var assemblyName = typeof(TIdentity).Assembly.FullName.Split('.').FirstOrDefault() ?? "";
             var realAggregateId = String.IsNullOrEmpty(assemblyName) ? aggregateId.Value : $"{assemblyName}-{aggregateId}";
-
             var aggregate = Context.Child(realAggregateId);
 
             if (aggregate.IsNobody())
             {
-                var aggregateRef = Context.ActorOf(Props.Create<TAggregate>(args: aggregateId), realAggregateId);
-                Context.Watch(aggregateRef);
-                aggregate = aggregateRef;
+                aggregate = Context.ActorOf(Props.Create<TAggregate>(args: aggregateId), realAggregateId);
+                Context.Watch(aggregate);
             }
 
             return aggregate;
@@ -128,17 +117,14 @@ namespace EventFly.Aggregates
 
         protected override SupervisorStrategy SupervisorStrategy()
         {
-            var logger = Logger;
             return new OneForOneStrategy(
                 maxNrOfRetries: 3,
                 withinTimeMilliseconds: 3000,
                 localOnlyDecider: x =>
                 {
-
-                    logger.Warning("AggregateManager of Type={0}; will supervise Exception={1} to be decided as {2}.", Name, x.ToString(), Directive.Restart);
+                    Logger.Warning("AggregateManager of Type={0}; will supervise Exception={1} to be decided as {2}.", Name, x.ToString(), Directive.Restart);
                     return Directive.Restart;
                 });
         }
-
     }
 }

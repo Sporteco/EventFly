@@ -1,4 +1,4 @@
-﻿// The MIT License (MIT)
+// The MIT License (MIT)
 //
 // Copyright (c) 2015-2019 Rasmus Mikkelsen
 // Copyright (c) 2015-2019 eBay Software Foundation
@@ -27,14 +27,12 @@
 
 using EventFly.Core;
 using EventFly.Exceptions;
+using System;
 
 namespace EventFly.Aggregates
 {
     public abstract class AggregateEvent<TIdentity> : IAggregateEvent<TIdentity> where TIdentity : IIdentity
     {
-        public override System.String ToString()
-        {
-            return $"{typeof(TIdentity).PrettyPrint()}/{GetType().PrettyPrint()}";
-        }
+        public override String ToString() => $"{typeof(TIdentity).PrettyPrint()}/{GetType().PrettyPrint()}";
     }
 }

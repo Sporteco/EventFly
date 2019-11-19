@@ -1,4 +1,4 @@
-﻿using Akka.Actor;
+using Akka.Actor;
 using EventFly.Aggregates;
 using EventFly.Commands;
 using EventFly.Core;
@@ -18,26 +18,21 @@ namespace EventFly.DependencyInjection
         {
             var actorSystem = serviceProvider.GetService<ActorSystem>();
             actorSystem.RegisterDependencyResolver(serviceProvider);
-            var wow = serviceProvider.GetService<IDefinitionToManagerRegistry>() as DefinitionToManagerRegistry;
-
-            if (wow == null) throw new InvalidOperationException("");
-
+            if (!(serviceProvider.GetService<IDefinitionToManagerRegistry>() is DefinitionToManagerRegistry))
+            {
+                throw new InvalidOperationException("");
+            }
             return serviceProvider;
         }
 
-        public static EventFlyBuilder AddEventFly(
-            this IServiceCollection services, String systemName)
+        public static EventFlyBuilder AddEventFly(this IServiceCollection services, String systemName)
         {
             var actorSystem = ActorSystem.Create(systemName);
-
             return services.AddEventFly(actorSystem);
         }
 
-        public static EventFlyBuilder AddEventFly(
-            this IServiceCollection services,
-            ActorSystem actorSystem)
+        public static EventFlyBuilder AddEventFly(this IServiceCollection services, ActorSystem actorSystem)
         {
-
             services.AddSingleton(actorSystem);
 
             services.AddTransient<ISerializedCommandPublisher, SerializedCommandPublisher>();

@@ -1,4 +1,4 @@
-﻿// The MIT License (MIT)
+// The MIT License (MIT)
 //
 // Copyright (c) 2015-2019 Rasmus Mikkelsen
 // Copyright (c) 2015-2019 eBay Software Foundation
@@ -26,15 +26,16 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using EventFly.Core;
+using System;
 
 namespace EventFly.Aggregates
 {
     public interface IAggregateRoot
     {
         IAggregateName Name { get; }
-        System.Int64 Version { get; }
-        System.Boolean IsNew { get; }
-        System.Boolean HasSourceId(ISourceId sourceId);
+        Int64 Version { get; }
+        Boolean IsNew { get; }
+        Boolean HasSourceId(ISourceId sourceId);
         IIdentity GetIdentity();
     }
 

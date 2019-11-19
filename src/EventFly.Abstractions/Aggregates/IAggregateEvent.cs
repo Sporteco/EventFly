@@ -1,4 +1,4 @@
-﻿// The MIT License (MIT)
+// The MIT License (MIT)
 //
 // Copyright (c) 2015-2019 Rasmus Mikkelsen
 // Copyright (c) 2015-2019 eBay Software Foundation
@@ -30,11 +30,9 @@ using EventFly.Core.VersionedTypes;
 
 namespace EventFly.Aggregates
 {
-    public interface IAggregateEvent : IVersionedType
-    {
-    }
+    public interface IAggregateEvent : IVersionedType { }
 
-    public interface IAggregateEvent<TIdentity> : IAggregateEvent where TIdentity : IIdentity
-    {
-    }
+    public interface IAggregateEvent<TIdentity> : IAggregateEvent
+        where TIdentity : IIdentity
+    { }
 }

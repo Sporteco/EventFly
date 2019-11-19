@@ -1,4 +1,4 @@
-﻿using EventFly.Core;
+using EventFly.Core;
 using EventFly.Exceptions;
 using EventFly.Extensions;
 using System;
@@ -12,12 +12,6 @@ namespace EventFly.Aggregates
         where TMessageApplier : class, IMessageApplier<TIdentity>
         where TIdentity : IIdentity
     {
-        private static readonly IReadOnlyDictionary<Type, Action<TMessageApplier, IAggregateEvent>> ApplyMethods;
-
-        static AggregateState()
-        {
-            ApplyMethods = typeof(TMessageApplier).GetAggregateEventApplyMethods<TIdentity, TMessageApplier>();
-        }
         public TIdentity Id { get; set; }
 
         public virtual Task LoadState(TIdentity id)
@@ -59,8 +53,13 @@ namespace EventFly.Aggregates
         protected virtual Task PreApplyAction(IAggregateEvent<TIdentity> @event) => Task.CompletedTask;
         protected virtual Task PostApplyAction(IAggregateEvent<TIdentity> @event) => Task.CompletedTask;
 
+        private static readonly IReadOnlyDictionary<Type, Action<TMessageApplier, IAggregateEvent>> ApplyMethods =
+            typeof(TMessageApplier).GetAggregateEventApplyMethods<TIdentity, TMessageApplier>();
+
         private Action<TMessageApplier, IAggregateEvent> GetApplierOfConcreteEvent(Type eventType)
-            => !ApplyMethods.TryGetValue(eventType, out var applier) ? null : applier;
+        {
+            return !ApplyMethods.TryGetValue(eventType, out var applier) ? null : applier;
+        }
     }
 
     public abstract class AggregateState<TAggregateState, TIdentity> : AggregateState<TAggregateState, TIdentity, TAggregateState>

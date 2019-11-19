@@ -1,11 +1,9 @@
-﻿using Akka.Actor;
+using Akka.Actor;
 
 namespace EventFly.DependencyInjection
 {
     public class ServiceProviderExtension : ExtensionIdProvider<ServiceProviderHolder>
     {
-        private readonly ServiceProviderHolder _serviceProviderHolder;
-
         public ServiceProviderExtension(ServiceProviderHolder serviceProviderHolder)
         {
             _serviceProviderHolder = serviceProviderHolder;
@@ -15,5 +13,7 @@ namespace EventFly.DependencyInjection
         {
             return _serviceProviderHolder;
         }
+
+        private readonly ServiceProviderHolder _serviceProviderHolder;
     }
 }
