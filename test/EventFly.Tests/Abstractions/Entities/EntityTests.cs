@@ -1,0 +1,26 @@
+using FluentAssertions;
+using System;
+using Xunit;
+
+namespace EventFly.Tests.Abstractions
+{
+    public class EntityTests
+    {
+        [Fact]
+        public void InstantiatingEntity_WithNullId_ThrowsException()
+        {
+            this.Invoking(test => new Test(null))
+                .Should().Throw<ArgumentNullException>();
+        }
+
+        [Fact]
+        public void InstantiatingEntity_WithValidId_HasIdentity()
+        {
+            var testId = TestId.New;
+
+            var test = new Test(testId);
+
+            test.GetIdentity().Should().Be(testId);
+        }
+    }
+}

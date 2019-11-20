@@ -21,13 +21,38 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using EventFly.Specifications;
 using System;
+using System.Collections.Generic;
 
-namespace EventFly.Tests
+namespace EventFly.Tests.Domain
 {
-    public static class Categories
+    public static class TestSpecifications
     {
-        public const String Integration = "integration";
-        public const String Unit = "unit";
+        public class IsAboveSpecification : Specification<Int32>
+        {
+            public IsAboveSpecification(Int32 limit)
+            {
+                _limit = limit;
+            }
+
+            protected override IEnumerable<String> IsNotSatisfiedBecause(Int32 account)
+            {
+                if (account <= _limit)
+                {
+                    yield return $"{account} is less or equal than {_limit}";
+                }
+            }
+
+            private readonly Int32 _limit;
+        }
+
+        public class IsTrueSpecification : Specification<Boolean>
+        {
+            protected override IEnumerable<String> IsNotSatisfiedBecause(Boolean account)
+            {
+                if (!account) yield return "Its false!";
+            }
+        }
     }
 }

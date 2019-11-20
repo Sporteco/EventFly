@@ -21,13 +21,39 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using EventFly.Aggregates;
+using EventFly.Subscribers;
+using EventFly.Tests.Abstractions;
 using System;
 
-namespace EventFly.Tests
+namespace EventFly.Tests.Domain
 {
-    public static class Categories
+    public class TestAggregateSubscriber : DomainEventSubscriber,
+        ISubscribeTo<TestAggregateId, TestCreatedEvent>,
+        ISubscribeTo<TestAggregateId, TestAddedEvent>
     {
-        public const String Integration = "integration";
-        public const String Unit = "unit";
+        public Boolean Handle(IDomainEvent<TestAggregateId, TestCreatedEvent> domainEvent)
+        {
+            var handled = new TestSubscribedEventHandled<TestCreatedEvent>(domainEvent.AggregateEvent);
+            Context.System.EventStream.Publish(handled);
+            return true;
+        }
+
+        public Boolean Handle(IDomainEvent<TestAggregateId, TestAddedEvent> domainEvent)
+        {
+            var handled = new TestSubscribedEventHandled<TestAddedEvent>(domainEvent.AggregateEvent);
+            Context.System.EventStream.Publish(handled);
+            return true;
+        }
+    }
+
+    public class TestSubscribedEventHandled<TAggregateEvent>
+    {
+        public TAggregateEvent AggregateEvent { get; }
+
+        public TestSubscribedEventHandled(TAggregateEvent aggregateEvent)
+        {
+            AggregateEvent = aggregateEvent;
+        }
     }
 }

@@ -21,13 +21,26 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System;
+using Akka.Actor;
+using EventFly.Jobs;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 
-namespace EventFly.Tests
+namespace EventFly.Tests.Application
 {
-    public static class Categories
+    public sealed class TestJobRunnerProbeAccessor
     {
-        public const String Integration = "integration";
-        public const String Unit = "unit";
+        public void Put(IJobId jobId, IActorRef probeRef)
+        {
+            _results.Add(jobId, probeRef);
+        }
+
+        public IActorRef Get(IJobId jobId)
+        {
+            if (_results.ContainsKey(jobId)) return _results[jobId];
+            return null;
+        }
+
+        private readonly IDictionary<IJobId, IActorRef> _results = new ConcurrentDictionary<IJobId, IActorRef>();
     }
 }

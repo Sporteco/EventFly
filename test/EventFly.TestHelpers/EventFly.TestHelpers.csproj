@@ -18,6 +18,8 @@
         EventFly.TestHelpers project holds all the necassary helper classes and
         methods to make the actual tests easier to maintain and read.
     </Description>
+    <AssemblyName>EventFly.TestHelpers</AssemblyName>
+    <RootNamespace>EventFly.Tests</RootNamespace>
   </PropertyGroup>
   
   <ItemGroup>

@@ -21,13 +21,30 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using EventFly.Jobs;
 using System;
 
-namespace EventFly.Tests
+namespace EventFly.Tests.Application
 {
-    public static class Categories
+    [JobName("test-job")]
+    public class TestJob : Job<TestJobId>
     {
-        public const String Integration = "integration";
-        public const String Unit = "unit";
+        public String Greeting { get; }
+
+        public TestJob(TestJobId jobId, String greeting) : base(jobId)
+        {
+            Greeting = greeting;
+        }
+    }
+
+    [JobName("async-test-job")]
+    public class AsyncTestJob : Job<AsyncTestJobId>
+    {
+        public String Greeting { get; }
+
+        public AsyncTestJob(AsyncTestJobId jobId, String greeting) : base(jobId)
+        {
+            Greeting = greeting;
+        }
     }
 }

@@ -1,5 +1,9 @@
 // The MIT License (MIT)
 //
+// Copyright (c) 2015-2019 Rasmus Mikkelsen
+// Copyright (c) 2015-2019 eBay Software Foundation
+// Modified from original source https://github.com/eventflow/EventFlow
+//
 // Copyright (c) 2018 - 2019 Lutando Ngqakaza
 // https://github.com/Lutando/EventFly 
 // 
@@ -21,13 +25,37 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using EventFly.Specifications.Provided;
+using FluentAssertions;
 using System;
+using System.ComponentModel;
+using Xunit;
 
-namespace EventFly.Tests
+namespace EventFly.Tests.Domain
 {
-    public static class Categories
+    [Category(Categories.Unit)]
+    public class ExpressionSpecificationTests
     {
-        public const String Integration = "integration";
-        public const String Unit = "unit";
+        [Fact]
+        public void StringIsRight()
+        {
+            var specification = new ExpressionSpecification<Int32>(i => (i > 1 && i < 10) || i == 42);
+
+            var str = specification.ToString();
+
+            str.Should().Be("i => (((i > 1) && (i < 10)) || (i == 42))");
+        }
+
+        [Theory]
+        [InlineData(42, true)]
+        [InlineData(-42, false)]
+        public void ExpressionIsEvaluated(Int32 value, Boolean expectedIsSatisfied)
+        {
+            var is42 = new ExpressionSpecification<Int32>(i => i == 42);
+
+            var result = is42.IsSatisfiedBy(value);
+
+            result.Should().Be(expectedIsSatisfied);
+        }
     }
 }

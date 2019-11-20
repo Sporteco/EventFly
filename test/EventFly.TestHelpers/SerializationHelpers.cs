@@ -23,7 +23,7 @@
 
 using Newtonsoft.Json;
 
-namespace EventFly.TestHelpers
+namespace EventFly.Tests
 {
     public static class SerializationHelpers
     {

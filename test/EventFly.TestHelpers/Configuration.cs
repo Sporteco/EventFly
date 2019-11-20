@@ -1,6 +1,7 @@
+using Akka.Configuration;
 using System;
 
-namespace EventFly.TestHelpers
+namespace EventFly.Tests
 {
     public static class Configuration
     {
@@ -21,5 +22,11 @@ namespace EventFly.TestHelpers
                     plugin-dispatcher = ""akka.actor.default-dispatcher""
                 }
             ";
+
+        public static Config WithTestScheduler =
+            ConfigurationFactory.ParseString(
+                @"EventFly.job-scheduler.tick-interval = 500ms
+                akka.scheduler.implementation = ""Akka.TestKit.TestScheduler, Akka.TestKit""")
+            .WithFallback(ConfigurationFactory.ParseString(Default));
     }
 }

@@ -21,13 +21,32 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using EventFly.Aggregates;
 using System;
 
-namespace EventFly.Tests
+namespace EventFly.Tests.Abstractions
 {
-    public static class Categories
+    [EventVersion("TestAdded", 1)]
+    public class TestAddedEvent : AggregateEvent<TestAggregateId>
     {
-        public const String Integration = "integration";
-        public const String Unit = "unit";
+        public Test Test { get; }
+
+        public TestAddedEvent(Test test)
+        {
+            Test = test;
+        }
+    }
+
+    [EventVersion("TestAdded", 2)]
+    public class TestAddedEventV2 : AggregateEvent<TestAggregateId>
+    {
+        public Test Test { get; }
+        public String Name { get; }
+
+        public TestAddedEventV2(Test test, String name)
+        {
+            Test = test;
+            Name = name;
+        }
     }
 }

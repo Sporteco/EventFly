@@ -21,13 +21,22 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System;
+using EventFly.Configuration;
+using FluentAssertions;
+using Xunit;
 
-namespace EventFly.Tests
+namespace EventFly.Tests.Domain
 {
-    public static class Categories
+    public class DefaultSettingsTests
     {
-        public const String Integration = "integration";
-        public const String Unit = "unit";
+        [Fact]
+        public void ClusteringDefaultSettings_IsNotEmpty()
+        {
+            var config = EventFlyDefaultSettings.DefaultConfig();
+
+            var value = config.GetBoolean("EventFly.aggregate-manager.handle-deadletters");
+
+            value.Should().BeTrue();
+        }
     }
 }

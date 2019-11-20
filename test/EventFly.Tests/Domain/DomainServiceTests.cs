@@ -7,13 +7,13 @@ using System;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace EventFly.Domain.Tests
+namespace EventFly.Tests.Domain
 {
     public class Service : AsynchronousDomainService<Service> { }
 
     public class DomainServiceTests : TestKit
     {
-        public DomainServiceTests(ITestOutputHelper testOutputHelper) : base(TestHelpers.Configuration.Default, "DomainServiceTests", testOutputHelper)
+        public DomainServiceTests(ITestOutputHelper testOutputHelper) : base(Configuration.Default, "DomainServiceTests", testOutputHelper)
         {
             Sys.RegisterDependencyResolver(new ServiceCollection().BuildServiceProvider());
         }
