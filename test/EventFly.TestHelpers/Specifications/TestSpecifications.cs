@@ -1,4 +1,4 @@
-﻿// The MIT License (MIT)
+// The MIT License (MIT)
 //
 // Copyright (c) 2018 - 2019 Lutando Ngqakaza
 // https://github.com/Lutando/EventFly 
@@ -22,38 +22,36 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using EventFly.Specifications;
+using System;
 using System.Collections.Generic;
 
 namespace EventFly.TestHelpers.Specifications
 {
     public static class TestSpecifications
     {
-        public class IsAboveSpecification : Specification<System.Int32>
+        public class IsAboveSpecification : Specification<Int32>
         {
-            private readonly System.Int32 _limit;
-
-            public IsAboveSpecification(System.Int32 limit)
+            public IsAboveSpecification(Int32 limit)
             {
                 _limit = limit;
             }
 
-            protected override IEnumerable<System.String> IsNotSatisfiedBecause(System.Int32 account)
+            protected override IEnumerable<String> IsNotSatisfiedBecause(Int32 account)
             {
                 if (account <= _limit)
                 {
                     yield return $"{account} is less or equal than {_limit}";
                 }
             }
+
+            private readonly Int32 _limit;
         }
 
-        public class IsTrueSpecification : Specification<System.Boolean>
+        public class IsTrueSpecification : Specification<Boolean>
         {
-            protected override IEnumerable<System.String> IsNotSatisfiedBecause(System.Boolean account)
+            protected override IEnumerable<String> IsNotSatisfiedBecause(Boolean account)
             {
-                if (!account)
-                {
-                    yield return "Its false!";
-                }
+                if (!account) yield return "Its false!";
             }
         }
     }

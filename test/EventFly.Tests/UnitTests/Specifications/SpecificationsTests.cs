@@ -1,4 +1,4 @@
-﻿// The MIT License (MIT)
+// The MIT License (MIT)
 //
 // Copyright (c) 2015-2019 Rasmus Mikkelsen
 // Copyright (c) 2015-2019 eBay Software Foundation
@@ -30,6 +30,7 @@ using EventFly.Specifications;
 using EventFly.TestHelpers;
 using EventFly.TestHelpers.Specifications;
 using FluentAssertions;
+using System;
 using System.ComponentModel;
 using Xunit;
 
@@ -63,10 +64,10 @@ namespace EventFly.Tests.UnitTests.Specifications
         [InlineData(true, false, true)]
         [InlineData(false, true, true)]
         [InlineData(false, false, true)]
-        public void OrSpeficication_ReturnsTrue_Correctly(System.Boolean notLeft, System.Boolean notRight, System.Boolean expectedResult)
+        public void OrSpeficication_ReturnsTrue_Correctly(Boolean notLeft, Boolean notRight, Boolean expectedResult)
         {
-            var leftIsTrue = (ISpecification<System.Boolean>)new TestSpecifications.IsTrueSpecification();
-            var rightIsTrue = (ISpecification<System.Boolean>)new TestSpecifications.IsTrueSpecification();
+            var leftIsTrue = (ISpecification<Boolean>)new TestSpecifications.IsTrueSpecification();
+            var rightIsTrue = (ISpecification<Boolean>)new TestSpecifications.IsTrueSpecification();
             if (notLeft) leftIsTrue = leftIsTrue.Not();
             if (notRight) rightIsTrue = rightIsTrue.Not();
             var orSpecification = leftIsTrue.Or(rightIsTrue);
@@ -81,10 +82,10 @@ namespace EventFly.Tests.UnitTests.Specifications
         [InlineData(true, false, false)]
         [InlineData(false, true, false)]
         [InlineData(false, false, true)]
-        public void AndSpeficication_ReturnsTrue_Correctly(System.Boolean notLeft, System.Boolean notRight, System.Boolean expectedResult)
+        public void AndSpeficication_ReturnsTrue_Correctly(Boolean notLeft, Boolean notRight, Boolean expectedResult)
         {
-            var leftIsTrue = (ISpecification<System.Boolean>)new TestSpecifications.IsTrueSpecification();
-            var rightIsTrue = (ISpecification<System.Boolean>)new TestSpecifications.IsTrueSpecification();
+            var leftIsTrue = (ISpecification<Boolean>)new TestSpecifications.IsTrueSpecification();
+            var rightIsTrue = (ISpecification<Boolean>)new TestSpecifications.IsTrueSpecification();
             if (notLeft) leftIsTrue = leftIsTrue.Not();
             if (notRight) rightIsTrue = rightIsTrue.Not();
             var andSpecification = leftIsTrue.And(rightIsTrue);

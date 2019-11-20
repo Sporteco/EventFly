@@ -1,4 +1,4 @@
-﻿// The MIT License (MIT)
+// The MIT License (MIT)
 //
 // Copyright (c) 2018 - 2019 Lutando Ngqakaza
 // https://github.com/Lutando/EventFly 
@@ -22,12 +22,13 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using Akka.Configuration;
+using System;
 
 namespace EventFly.TestHelpers.Akka
 {
     public static class Configuration
     {
-        public static System.String Config =
+        public static String Config =
             @"  akka.loglevel = ""INFO""
                 akka.stdout-loglevel = ""INFO""
                 akka.actor.serialize-messages = on

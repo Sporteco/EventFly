@@ -1,4 +1,4 @@
-﻿// The MIT License (MIT)
+// The MIT License (MIT)
 //
 // Copyright (c) 2018 - 2019 Lutando Ngqakaza
 // https://github.com/Lutando/EventFly 
@@ -25,8 +25,5 @@ using EventFly.Aggregates;
 
 namespace EventFly.TestHelpers.Aggregates.Sagas.Test.Events
 {
-    public class TestSagaTransactionCompletedEvent : AggregateEvent<TestSagaId>
-    {
-
-    }
+    public class TestSagaTransactionCompletedEvent : AggregateEvent<TestSagaId> { }
 }

@@ -56,13 +56,11 @@ namespace EventFly.TestHelpers.Aggregates
         IExecute<BadCommand, TestAggregateId>
     {
         public Int32 TestErrors { get; private set; }
-        public TestAggregate(TestAggregateId aggregateId)
-            : base(aggregateId)
+
+        public TestAggregate(TestAggregateId aggregateId) : base(aggregateId)
         {
             TestErrors = 0;
-
             Command<SaveSnapshotSuccess>(SnapshotStatus);
-
             SetSnapshotStrategy(new SnapshotEveryFewVersionsStrategy(10));
         }
 
@@ -82,7 +80,6 @@ namespace EventFly.TestHelpers.Aggregates
 
             return Task.FromResult((IExecutionResult)new SuccessTestExecutionResult(command.Metadata.SourceId));
         }
-
 
         public Task<IExecutionResult> Execute(CreateAndAddTwoTestsCommand command)
         {
@@ -108,10 +105,8 @@ namespace EventFly.TestHelpers.Aggregates
         {
             if (!IsNew)
             {
-
                 Emit(new TestAddedEvent(command.Test));
                 Reply(TestExecutionResult.SucceededWith(command.Metadata.SourceId));
-
             }
             else
             {
@@ -119,6 +114,7 @@ namespace EventFly.TestHelpers.Aggregates
                 Throw(new TestedErrorEvent(TestErrors));
                 ReplyFailure(TestExecutionResult.FailedWith(command.Metadata.SourceId));
             }
+
             return Task.FromResult((IExecutionResult)new SuccessTestExecutionResult(command.Metadata.SourceId));
         }
 
@@ -126,14 +122,10 @@ namespace EventFly.TestHelpers.Aggregates
         {
             if (!IsNew)
             {
-                var events = Enumerable
-                    .Range(0, 4)
-                    .Select(x => new TestAddedEvent(command.Test));
+                var events = Enumerable.Range(0, 4).Select(x => new TestAddedEvent(command.Test));
 
-                // ReSharper disable once CoVariantArrayConversion
                 EmitAll(events.ToArray());
                 Reply(TestExecutionResult.SucceededWith(command.Metadata.SourceId));
-
             }
             else
             {
@@ -141,6 +133,7 @@ namespace EventFly.TestHelpers.Aggregates
                 Throw(new TestedErrorEvent(TestErrors));
                 ReplyFailure(TestExecutionResult.FailedWith(command.Metadata.SourceId));
             }
+
             return Task.FromResult(ExecutionResult.Success());
         }
 
@@ -153,7 +146,6 @@ namespace EventFly.TestHelpers.Aggregates
                     Emit(new TestSentEvent(command.TestToGive, command.ReceiverAggregateId));
                     Reply(TestExecutionResult.SucceededWith(command.Metadata.SourceId));
                 }
-
             }
             else
             {
@@ -181,6 +173,7 @@ namespace EventFly.TestHelpers.Aggregates
 
             return Task.FromResult(ExecutionResult.Success());
         }
+
         public Task<IExecutionResult> Execute(TestFailedExecutionResultCommand command)
         {
             Sender.Tell(ExecutionResult.Failed(), Self);
@@ -225,6 +218,11 @@ namespace EventFly.TestHelpers.Aggregates
             return Task.FromResult(ExecutionResult.Success());
         }
 
+        public Task<IExecutionResult> Execute(BadCommand command)
+        {
+            return Task.FromResult((IExecutionResult)new FailedTestExecutionResult(command.Metadata.SourceId, new List<String> { "Test cause" }));
+        }
+
         protected override Boolean SnapshotStatus(SaveSnapshotSuccess snapshotSuccess)
         {
             Context.Stop(Self);
@@ -234,22 +232,16 @@ namespace EventFly.TestHelpers.Aggregates
 
         protected override IAggregateSnapshot<TestAggregate, TestAggregateId> CreateSnapshot()
         {
-            return new TestAggregateSnapshot(State.TestCollection
-                .Select(x => new TestAggregateSnapshot.TestModel(x.Id.GetGuid())).ToList());
+            return new TestAggregateSnapshot(State.TestCollection.Select(x => new TestAggregateSnapshot.TestModel(x.Id.GetGuid())).ToList());
         }
 
         private void Signal<TAggregateEvent>(TAggregateEvent aggregateEvent, IEventMetadata metadata = null)
             where TAggregateEvent : class, IAggregateEvent<TestAggregateId>
         {
-            if (aggregateEvent == null)
-            {
-                throw new ArgumentNullException(nameof(aggregateEvent));
-            }
+            if (aggregateEvent == null) throw new ArgumentNullException(nameof(aggregateEvent));
 
             var aggregateSequenceNumber = Version;
-            var eventId = EventId.NewDeterministic(
-                GuidFactories.Deterministic.Namespaces.Events,
-                $"{Id.Value}-v{aggregateSequenceNumber}");
+            var eventId = EventId.NewDeterministic(GuidFactories.Deterministic.Namespaces.Events, $"{Id.Value}-v{aggregateSequenceNumber}");
             var now = DateTimeOffset.UtcNow;
             var eventMetadata = new EventMetadata
             {
@@ -261,10 +253,7 @@ namespace EventFly.TestHelpers.Aggregates
             };
 
             eventMetadata.Add(MetadataKeys.TimestampEpoch, now.ToUnixTime().ToString());
-            if (metadata != null)
-            {
-                eventMetadata.AddRange(metadata);
-            }
+            if (metadata != null) eventMetadata.AddRange(metadata);
 
             var domainEvent = new DomainEvent<TestAggregateId, TAggregateEvent>(Id, aggregateEvent, eventMetadata, now, Version);
 
@@ -275,11 +264,6 @@ namespace EventFly.TestHelpers.Aggregates
             where TAggregateEvent : class, IAggregateEvent<TestAggregateId>
         {
             Signal(aggregateEvent, metadata);
-        }
-
-        public Task<IExecutionResult> Execute(BadCommand command)
-        {
-            return Task.FromResult((IExecutionResult)new FailedTestExecutionResult(command.Metadata.SourceId, new List<String> { "Test cause" }));
         }
     }
 }

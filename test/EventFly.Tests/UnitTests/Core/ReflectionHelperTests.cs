@@ -28,7 +28,6 @@
 using EventFly.Core;
 using FluentAssertions;
 using System;
-using System.Diagnostics.CodeAnalysis;
 using Xunit;
 
 namespace EventFly.Tests.UnitTests.Core
@@ -38,9 +37,7 @@ namespace EventFly.Tests.UnitTests.Core
         [Fact]
         public void CompileMethodInvocation()
         {
-            var caller =
-                ReflectionHelper.CompileMethodInvocation<Func<Calculator, Int32, Int32, Int32>>(typeof(Calculator), "Add",
-                    typeof(Int32), typeof(Int32));
+            var caller = ReflectionHelper.CompileMethodInvocation<Func<Calculator, Int32, Int32, Int32>>(typeof(Calculator), "Add", typeof(Int32), typeof(Int32));
 
             var result = caller(new Calculator(), 1, 2);
 
@@ -53,9 +50,7 @@ namespace EventFly.Tests.UnitTests.Core
             var a = (INumber)new Number { I = 1 };
             var b = (INumber)new Number { I = 2 };
 
-            var caller =
-                ReflectionHelper.CompileMethodInvocation<Func<Calculator, INumber, INumber, INumber>>(
-                    typeof(Calculator), "Add", typeof(Number), typeof(Number));
+            var caller = ReflectionHelper.CompileMethodInvocation<Func<Calculator, INumber, INumber, INumber>>(typeof(Calculator), "Add", typeof(Number), typeof(Number));
             var result = caller(new Calculator(), a, b);
 
             var c = (Number)result;
@@ -68,55 +63,34 @@ namespace EventFly.Tests.UnitTests.Core
             var a = (INumber)new Number { I = 1 };
             const Int32 b = 2;
 
-            var caller =
-                ReflectionHelper.CompileMethodInvocation<Func<Calculator, INumber, Int32, INumber>>(typeof(Calculator),
-                    "Add", typeof(Number), typeof(Int32));
+            var caller = ReflectionHelper.CompileMethodInvocation<Func<Calculator, INumber, Int32, INumber>>(typeof(Calculator), "Add", typeof(Number), typeof(Int32));
             var result = caller(new Calculator(), a, b);
 
             var c = (Number)result;
             c.I.Should().Be(3);
         }
 
-
         [Fact]
         public void CompileMethodInvocation_WithMissingMethod_ThrowsException()
         {
             var methodName = "ThisMethodDoesntExist";
 
-            this.Invoking(test => ReflectionHelper.CompileMethodInvocation<Func<Calculator, INumber, Int32, INumber>>(
-                    typeof(Calculator),
-                    methodName, typeof(Number), typeof(Int32)))
+            this.Invoking(test => ReflectionHelper.CompileMethodInvocation<Func<Calculator, INumber, Int32, INumber>>(typeof(Calculator), methodName, typeof(Number), typeof(Int32)))
                 .Should().Throw<ArgumentException>().And.Message.Should().Contain(methodName);
         }
 
-
-        public interface INumber
-        {
-        }
+        public interface INumber { }
 
         public class Number : INumber
         {
             public Int32 I { get; set; }
         }
 
-        [SuppressMessage("ReSharper", "UnusedMember.Local")]
         public class Calculator
         {
-            public Int32 Add(Int32 a, Int32 b)
-            {
-                return a + b;
-            }
-
-            private Number Add(Number a, Number b)
-            {
-                return new Number { I = Add(a.I, b.I) };
-            }
-
-            private Number Add(Number a, Int32 b)
-            {
-                return new Number { I = Add(a.I, b) };
-            }
+            public Int32 Add(Int32 a, Int32 b) => a + b;
+            private Number Add(Number a, Number b) => new Number { I = Add(a.I, b.I) };
+            private Number Add(Number a, Int32 b) => new Number { I = Add(a.I, b) };
         }
-
     }
 }

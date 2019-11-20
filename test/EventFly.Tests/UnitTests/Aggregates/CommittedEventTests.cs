@@ -44,9 +44,7 @@ namespace EventFly.Tests.UnitTests.Aggregates
             var entity = new Test(entityId);
             var aggregateEvent = new TestAddedEvent(entity);
             var now = DateTimeOffset.UtcNow;
-            var eventId = EventId.NewDeterministic(
-                GuidFactories.Deterministic.Namespaces.Events,
-                $"{aggregateId.Value}-v{aggregateSequenceNumber}");
+            var eventId = EventId.NewDeterministic(GuidFactories.Deterministic.Namespaces.Events, $"{aggregateId.Value}-v{aggregateSequenceNumber}");
             var eventMetadata = new EventMetadata
             {
                 Timestamp = now,
@@ -55,13 +53,12 @@ namespace EventFly.Tests.UnitTests.Aggregates
                 AggregateId = aggregateId.Value,
                 EventId = eventId
             };
-            var committedEvent =
-                new CommittedEvent<TestAggregateId, TestAddedEvent>(
-                    aggregateId,
-                    aggregateEvent,
-                    eventMetadata,
-                    now,
-                    aggregateSequenceNumber);
+            var committedEvent = new CommittedEvent<TestAggregateId, TestAddedEvent>(
+                aggregateId,
+                aggregateEvent,
+                eventMetadata,
+                now,
+                aggregateSequenceNumber);
 
             committedEvent.GetIdentity().Should().Be(aggregateId);
             committedEvent.GetAggregateEvent().Should().Be(aggregateEvent);
@@ -73,9 +70,7 @@ namespace EventFly.Tests.UnitTests.Aggregates
             var aggregateSequenceNumber = 3;
             var aggregateId = TestAggregateId.New;
             var now = DateTimeOffset.UtcNow;
-            var eventId = EventId.NewDeterministic(
-                GuidFactories.Deterministic.Namespaces.Events,
-                $"{aggregateId.Value}-v{aggregateSequenceNumber}");
+            var eventId = EventId.NewDeterministic(GuidFactories.Deterministic.Namespaces.Events, $"{aggregateId.Value}-v{aggregateSequenceNumber}");
             var eventMetadata = new EventMetadata
             {
                 Timestamp = now,
@@ -85,13 +80,12 @@ namespace EventFly.Tests.UnitTests.Aggregates
                 EventId = eventId
             };
 
-            this.Invoking(test =>
-                    new DomainEvent<TestAggregateId, TestAddedEvent>(
-                        aggregateId,
-                        null,
-                        eventMetadata,
-                        now,
-                        aggregateSequenceNumber))
+            this.Invoking(test => new DomainEvent<TestAggregateId, TestAddedEvent>(
+                aggregateId,
+                null,
+                eventMetadata,
+                now,
+                aggregateSequenceNumber))
                 .Should().Throw<ArgumentNullException>().And.Message.Contains("aggregateEvent").Should().BeTrue();
         }
 
@@ -105,9 +99,7 @@ namespace EventFly.Tests.UnitTests.Aggregates
             var entity = new Test(entityId);
             var aggregateEvent = new TestAddedEvent(entity);
             var now = DateTimeOffset.UtcNow;
-            var eventId = EventId.NewDeterministic(
-                GuidFactories.Deterministic.Namespaces.Events,
-                $"{aggregateId.Value}-v{aggregateSequenceNumber}");
+            var eventId = EventId.NewDeterministic(GuidFactories.Deterministic.Namespaces.Events, $"{aggregateId.Value}-v{aggregateSequenceNumber}");
 
             var eventMetadata = new EventMetadata
             {
@@ -118,13 +110,12 @@ namespace EventFly.Tests.UnitTests.Aggregates
                 EventId = eventId
             };
 
-            this.Invoking(test =>
-                    new CommittedEvent<TestAggregateId, TestAddedEvent>(
-                        aggregateId,
-                        aggregateEvent,
-                        eventMetadata,
-                        default,
-                        aggregateSequenceNumber))
+            this.Invoking(test => new CommittedEvent<TestAggregateId, TestAddedEvent>(
+                aggregateId,
+                aggregateEvent,
+                eventMetadata,
+                default,
+                aggregateSequenceNumber))
                 .Should().Throw<ArgumentNullException>().And.Message.Contains("timestamp").Should().BeTrue();
         }
 
@@ -137,9 +128,7 @@ namespace EventFly.Tests.UnitTests.Aggregates
             var entity = new Test(entityId);
             var aggregateEvent = new TestAddedEvent(entity);
             var now = DateTimeOffset.UtcNow;
-            var eventId = EventId.NewDeterministic(
-                GuidFactories.Deterministic.Namespaces.Events,
-                $"{aggregateId.Value}-v{aggregateSequenceNumber}");
+            var eventId = EventId.NewDeterministic(GuidFactories.Deterministic.Namespaces.Events, $"{aggregateId.Value}-v{aggregateSequenceNumber}");
 
             var eventMetadata = new EventMetadata
             {
@@ -150,13 +139,12 @@ namespace EventFly.Tests.UnitTests.Aggregates
                 EventId = eventId
             };
 
-            this.Invoking(test =>
-                    new CommittedEvent<TestAggregateId, TestAddedEvent>(
-                        null,
-                        aggregateEvent,
-                        eventMetadata,
-                        now,
-                        aggregateSequenceNumber))
+            this.Invoking(test => new CommittedEvent<TestAggregateId, TestAddedEvent>(
+                null,
+                aggregateEvent,
+                eventMetadata,
+                now,
+                aggregateSequenceNumber))
                 .Should().Throw<ArgumentNullException>().And.Message.Contains("aggregateIdentity").Should().BeTrue();
         }
 
@@ -169,9 +157,7 @@ namespace EventFly.Tests.UnitTests.Aggregates
             var entity = new Test(entityId);
             var aggregateEvent = new TestAddedEvent(entity);
             var now = DateTimeOffset.UtcNow;
-            var eventId = EventId.NewDeterministic(
-                GuidFactories.Deterministic.Namespaces.Events,
-                $"{aggregateId.Value}-v{aggregateSequenceNumber}");
+            var eventId = EventId.NewDeterministic(GuidFactories.Deterministic.Namespaces.Events, $"{aggregateId.Value}-v{aggregateSequenceNumber}");
 
             var eventMetadata = new EventMetadata
             {
@@ -182,13 +168,12 @@ namespace EventFly.Tests.UnitTests.Aggregates
                 EventId = eventId
             };
 
-            this.Invoking(test =>
-                    new CommittedEvent<TestAggregateId, TestAddedEvent>(
-                        aggregateId,
-                        aggregateEvent,
-                        eventMetadata,
-                        now,
-                        -4))
+            this.Invoking(test => new CommittedEvent<TestAggregateId, TestAddedEvent>(
+                aggregateId,
+                aggregateEvent,
+                eventMetadata,
+                now,
+                -4))
                 .Should().Throw<ArgumentOutOfRangeException>().And.Message.Contains("aggregateSequenceNumber").Should().BeTrue();
         }
     }

@@ -1,4 +1,4 @@
-﻿// The MIT License (MIT)
+// The MIT License (MIT)
 //
 // Copyright (c) 2015-2019 Rasmus Mikkelsen
 // Copyright (c) 2015-2019 eBay Software Foundation
@@ -28,6 +28,7 @@
 using EventFly.TestHelpers;
 using EventFly.TestHelpers.Specifications;
 using FluentAssertions;
+using System;
 using System.ComponentModel;
 using Xunit;
 
@@ -60,7 +61,7 @@ namespace EventFly.Tests.UnitTests.Specifications
         [InlineData(4, 3, false)]
         [InlineData(4, 4, false)]
         [InlineData(4, 5, true)]
-        public void IsAboveSpecification_Returns_Correct(System.Int32 limit, System.Int32 obj, System.Boolean expectedIsSatisfiedBy)
+        public void IsAboveSpecification_Returns_Correct(Int32 limit, Int32 obj, Boolean expectedIsSatisfiedBy)
         {
             var isAbove = new TestSpecifications.IsAboveSpecification(limit);
 

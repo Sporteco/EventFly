@@ -1,4 +1,4 @@
-﻿// The MIT License (MIT)
+// The MIT License (MIT)
 //
 // Copyright (c) 2018 - 2019 Lutando Ngqakaza
 // https://github.com/Lutando/EventFly 
@@ -29,6 +29,7 @@ using EventFly.Sagas.AggregateSaga;
 using EventFly.TestHelpers.Aggregates.Commands;
 using EventFly.TestHelpers.Aggregates.Events;
 using EventFly.TestHelpers.Aggregates.Sagas.Test.Events;
+using System;
 using System.Threading.Tasks;
 
 namespace EventFly.TestHelpers.Aggregates.Sagas.Test
@@ -56,7 +57,6 @@ namespace EventFly.TestHelpers.Aggregates.Sagas.Test
 
                 await PublishCommandAsync(command);
             }
-
         }
 
         public Task Handle(IDomainEvent<TestAggregateId, TestReceivedEvent> domainEvent)
@@ -70,14 +70,12 @@ namespace EventFly.TestHelpers.Aggregates.Sagas.Test
             return Task.CompletedTask;
         }
 
-        private System.Boolean Handle(EmitTestSagaState testCommand)
+        private Boolean Handle(EmitTestSagaState testCommand)
         {
             Emit(new TestSagaCompletedEvent(State));
             return true;
         }
 
-        private class EmitTestSagaState
-        {
-        }
+        private class EmitTestSagaState { }
     }
 }

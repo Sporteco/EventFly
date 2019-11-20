@@ -1,4 +1,4 @@
-﻿// The MIT License (MIT)
+// The MIT License (MIT)
 //
 // Copyright (c) 2018 - 2019 Lutando Ngqakaza
 // https://github.com/Lutando/EventFly 
@@ -23,6 +23,7 @@
 
 using EventFly.Aggregates;
 using EventFly.TestHelpers.Aggregates.Entities;
+using System;
 
 namespace EventFly.TestHelpers.Aggregates.Events
 {
@@ -41,13 +42,12 @@ namespace EventFly.TestHelpers.Aggregates.Events
     public class TestAddedEventV2 : AggregateEvent<TestAggregateId>
     {
         public Test Test { get; }
-        public System.String Name { get; }
+        public String Name { get; }
 
-        public TestAddedEventV2(Test test, System.String name)
+        public TestAddedEventV2(Test test, String name)
         {
             Test = test;
             Name = name;
-
         }
     }
 }

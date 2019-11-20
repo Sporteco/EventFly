@@ -1,4 +1,4 @@
-﻿// The MIT License (MIT)
+// The MIT License (MIT)
 //
 // Copyright (c) 2015-2019 Rasmus Mikkelsen
 // Copyright (c) 2015-2019 eBay Software Foundation
@@ -46,10 +46,7 @@ namespace EventFly.Tests.UnitTests.Core
             const Int32 capacity = 2;
             var sut = new CircularBuffer<Int32>(capacity);
 
-            foreach (var number in numbers)
-            {
-                sut.Put(number);
-            }
+            foreach (var number in numbers) sut.Put(number);
 
             var shouldContain = numbers.Reverse().Take(capacity).ToList();
             sut.Should().Contain(shouldContain);
@@ -65,7 +62,6 @@ namespace EventFly.Tests.UnitTests.Core
         {
             const Int32 capacity = 10;
             var circularBuffer = new CircularBuffer<Int32>(capacity, numbers);
-
 
             var shouldContain = numbers.Reverse().Take(capacity).ToList();
             circularBuffer.Should().Contain(shouldContain);

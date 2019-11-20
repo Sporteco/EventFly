@@ -1,4 +1,4 @@
-﻿// The MIT License (MIT)
+// The MIT License (MIT)
 //
 // Copyright (c) 2015-2019 Rasmus Mikkelsen
 // Copyright (c) 2015-2019 eBay Software Foundation
@@ -28,6 +28,7 @@
 using EventFly.Specifications.Provided;
 using EventFly.TestHelpers;
 using FluentAssertions;
+using System;
 using System.ComponentModel;
 using Xunit;
 
@@ -39,7 +40,7 @@ namespace EventFly.Tests.UnitTests.Specifications
         [Fact]
         public void StringIsRight()
         {
-            var specification = new ExpressionSpecification<System.Int32>(i => (i > 1 && i < 10) || i == 42);
+            var specification = new ExpressionSpecification<Int32>(i => (i > 1 && i < 10) || i == 42);
 
             var str = specification.ToString();
 
@@ -49,9 +50,9 @@ namespace EventFly.Tests.UnitTests.Specifications
         [Theory]
         [InlineData(42, true)]
         [InlineData(-42, false)]
-        public void ExpressionIsEvaluated(System.Int32 value, System.Boolean expectedIsSatisfied)
+        public void ExpressionIsEvaluated(Int32 value, Boolean expectedIsSatisfied)
         {
-            var is42 = new ExpressionSpecification<System.Int32>(i => i == 42);
+            var is42 = new ExpressionSpecification<Int32>(i => i == 42);
 
             var result = is42.IsSatisfiedBy(value);
 

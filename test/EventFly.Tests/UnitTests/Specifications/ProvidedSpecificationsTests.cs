@@ -1,4 +1,4 @@
-﻿// The MIT License (MIT)
+// The MIT License (MIT)
 //
 // Copyright (c) 2015-2019 Rasmus Mikkelsen
 // Copyright (c) 2015-2019 eBay Software Foundation
@@ -28,6 +28,7 @@
 using EventFly.Extensions;
 using EventFly.TestHelpers.Specifications;
 using FluentAssertions;
+using System;
 using Xunit;
 
 namespace EventFly.Tests.UnitTests.Specifications
@@ -45,20 +46,17 @@ namespace EventFly.Tests.UnitTests.Specifications
         [InlineData(3, 3, false)]
         [InlineData(3, 4, true)]
         [InlineData(3, 5, true)]
-        public void AtLeast_Returns_Correctly(System.Int32 requiredSpecifications, System.Int32 obj, System.Boolean expectedIsSatisfiedBy)
+        public void AtLeast_Returns_Correctly(Int32 requiredSpecifications, Int32 obj, Boolean expectedIsSatisfiedBy)
         {
-            // Arrange
             var isAbove1 = new TestSpecifications.IsAboveSpecification(1);
             var isAbove2 = new TestSpecifications.IsAboveSpecification(2);
             var isAbove3 = new TestSpecifications.IsAboveSpecification(3);
             var isAbove4 = new TestSpecifications.IsAboveSpecification(4);
             var atLeast = new[] { isAbove1, isAbove2, isAbove3, isAbove4 }.AtLeast(requiredSpecifications);
 
-            // Act
             var isSatisfiedBy = atLeast.IsSatisfiedBy(obj);
 
-            // Assert
-            isSatisfiedBy.Should().Be(expectedIsSatisfiedBy, System.String.Join(", ", atLeast.WhyIsNotSatisfiedBy(obj)));
+            isSatisfiedBy.Should().Be(expectedIsSatisfiedBy, String.Join(", ", atLeast.WhyIsNotSatisfiedBy(obj)));
         }
     }
 }

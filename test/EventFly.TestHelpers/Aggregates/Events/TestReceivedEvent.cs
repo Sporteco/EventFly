@@ -1,4 +1,4 @@
-﻿// The MIT License (MIT)
+// The MIT License (MIT)
 //
 // Copyright (c) 2018 - 2019 Lutando Ngqakaza
 // https://github.com/Lutando/EventFly 
@@ -31,9 +31,8 @@ namespace EventFly.TestHelpers.Aggregates.Events
     {
         public Test Test { get; }
         public TestAggregateId SenderAggregateId { get; }
-        public TestReceivedEvent(
-            TestAggregateId senderAggregateId,
-            Test test)
+
+        public TestReceivedEvent(TestAggregateId senderAggregateId, Test test)
         {
             Test = test;
             SenderAggregateId = senderAggregateId;

@@ -29,11 +29,8 @@ using System.Threading.Tasks;
 
 namespace EventFly.TestHelpers.Jobs
 {
-    public class TestJobRunner : JobRunner<TestJob, TestJobId>,
-        IRun<TestJob, TestJobId>
+    public class TestJobRunner : JobRunner<TestJob, TestJobId>, IRun<TestJob, TestJobId>
     {
-        private readonly TestJobRunnerProbeAccessor _accessor;
-
         public TestJobRunner(TestJobRunnerProbeAccessor accessor)
         {
             _accessor = accessor;
@@ -42,18 +39,17 @@ namespace EventFly.TestHelpers.Jobs
         public Boolean Run(TestJob job)
         {
             var time = Context.System.Settings.System.Scheduler.Now.DateTime;
-            IActorRef probe = _accessor.Get(job.JobId);
+            var probe = _accessor.Get(job.JobId);
             probe.Tell(new TestJobDone(job.Greeting, time));
             Context.GetLogger().Info("JobRunner has processed TestJob.");
             return true;
         }
+
+        private readonly TestJobRunnerProbeAccessor _accessor;
     }
 
-    public class AsyncTestJobRunner : JobRunner<AsyncTestJob, AsyncTestJobId>,
-        IRunAsync<AsyncTestJob, AsyncTestJobId>
+    public class AsyncTestJobRunner : JobRunner<AsyncTestJob, AsyncTestJobId>, IRunAsync<AsyncTestJob, AsyncTestJobId>
     {
-        private readonly TestJobRunnerProbeAccessor _accessor;
-
         public AsyncTestJobRunner(TestJobRunnerProbeAccessor accessor)
         {
             _accessor = accessor;
@@ -62,20 +58,20 @@ namespace EventFly.TestHelpers.Jobs
         public async Task<Boolean> RunAsync(AsyncTestJob job)
         {
             var time = Context.System.Settings.System.Scheduler.Now.DateTime;
-            IActorRef probe = _accessor.Get(job.JobId);
+            var probe = _accessor.Get(job.JobId);
             probe.Tell(new TestJobDone(job.Greeting, time));
             Context.GetLogger().Info("AsyncJobRunner has processed TestJob.");
             return await Task.FromResult(true);
         }
+
+        private readonly TestJobRunnerProbeAccessor _accessor;
     }
 
     public class TestJobDone
     {
         public String Greeting { get; }
         public DateTime At { get; }
-        public TestJobDone(
-            String greeting,
-            DateTime at)
+        public TestJobDone(String greeting, DateTime at)
         {
             Greeting = greeting;
             At = at;

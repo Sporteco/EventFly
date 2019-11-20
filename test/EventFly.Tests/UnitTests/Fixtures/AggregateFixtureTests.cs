@@ -101,8 +101,7 @@ namespace EventFly.Tests.UnitTests.Fixtures
             using var testKit = new TestKit(_config, "fixture-tests-4");
             var fixture = new AggregateFixture<TestAggregate, TestAggregateId>(testKit);
             var aggregateIdentity = TestAggregateId.New;
-            var snapshot = new TestAggregateSnapshot(Enumerable.Range(0, 10)
-                .Select(x => new TestAggregateSnapshot.TestModel(Guid.NewGuid())).ToList());
+            var snapshot = new TestAggregateSnapshot(Enumerable.Range(0, 10).Select(x => new TestAggregateSnapshot.TestModel(Guid.NewGuid())).ToList());
             var snapshotStore = Persistence.Instance.Apply(testKit.Sys).SnapshotStoreFor(null);
             var receiverProbe = testKit.CreateTestProbe("snapshot-probe");
             var snapshotSequenceNumber = 1L;

@@ -1,4 +1,4 @@
-﻿// The MIT License (MIT)
+// The MIT License (MIT)
 //
 // Copyright (c) 2018 - 2019 Lutando Ngqakaza
 // https://github.com/Lutando/EventFly 
@@ -31,11 +31,7 @@ namespace EventFly.TestHelpers.Aggregates.Commands
         public TestAggregateId SenderAggregateId { get; }
         public Test TestToReceive { get; }
 
-        public ReceiveTestCommand(
-            TestAggregateId aggregateId,
-            CommandId sourceId,
-            TestAggregateId senderAggregateId,
-            Test testToReceive)
+        public ReceiveTestCommand(TestAggregateId aggregateId, CommandId sourceId, TestAggregateId senderAggregateId, Test testToReceive)
             : base(aggregateId, new CommandMetadata(sourceId))
         {
             SenderAggregateId = senderAggregateId;

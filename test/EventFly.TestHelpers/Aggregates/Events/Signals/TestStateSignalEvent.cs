@@ -1,4 +1,4 @@
-﻿// The MIT License (MIT)
+// The MIT License (MIT)
 //
 // Copyright (c) 2018 - 2019 Lutando Ngqakaza
 // https://github.com/Lutando/EventFly 
@@ -22,19 +22,17 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using EventFly.Aggregates;
+using System;
 
 namespace EventFly.TestHelpers.Aggregates.Events.Signals
 {
     public class TestStateSignalEvent : AggregateEvent<TestAggregateId>
     {
         public TestAggregateState AggregateState { get; }
-        public System.Int64 LastSequenceNr { get; }
-        public System.Int64 Version { get; }
+        public Int64 LastSequenceNr { get; }
+        public Int64 Version { get; }
 
-        public TestStateSignalEvent(
-            TestAggregateState aggregateState,
-            System.Int64 lastSequenceNr,
-            System.Int64 version)
+        public TestStateSignalEvent(TestAggregateState aggregateState, Int64 lastSequenceNr, Int64 version)
         {
             AggregateState = aggregateState;
             LastSequenceNr = lastSequenceNr;

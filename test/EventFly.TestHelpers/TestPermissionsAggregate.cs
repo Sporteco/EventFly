@@ -1,4 +1,4 @@
-﻿using EventFly.Aggregates;
+using EventFly.Aggregates;
 using EventFly.Commands;
 using EventFly.Commands.ExecutionResults;
 using EventFly.Core;
@@ -19,16 +19,16 @@ namespace EventFly.TestHelpers
     public class TestPermissionsState : AggregateState<TestPermissionsState, TestPermissionsId> { }
 
     public class TestPermissionsAggregate : EventSourcedAggregateRoot<TestPermissionsAggregate, TestPermissionsId, TestPermissionsState>,
-    IExecute<TestPermissionsAuthorizedAttributeCommand, TestPermissionsId>,
-    IExecute<TestPermissionsAuthorizedInAggregateCommand, TestPermissionsId>,
-    IExecute<TestHasPermissionAttributeSuccessCommand, TestPermissionsId>,
-    IExecute<TestHasPermissionsAttributeSuccessCommand, TestPermissionsId>,
-    IExecute<TestHasPermissionAttributeFailedCommand, TestPermissionsId>,
-    IExecute<TestHasObjectPermissionAttributeSuccessCommand, TestPermissionsId>,
-    IExecute<TestHasPermissionsAttributeFailedCommand, TestPermissionsId>
-
+        IExecute<TestPermissionsAuthorizedAttributeCommand, TestPermissionsId>,
+        IExecute<TestPermissionsAuthorizedInAggregateCommand, TestPermissionsId>,
+        IExecute<TestHasPermissionAttributeSuccessCommand, TestPermissionsId>,
+        IExecute<TestHasPermissionsAttributeSuccessCommand, TestPermissionsId>,
+        IExecute<TestHasPermissionAttributeFailedCommand, TestPermissionsId>,
+        IExecute<TestHasObjectPermissionAttributeSuccessCommand, TestPermissionsId>,
+        IExecute<TestHasPermissionsAttributeFailedCommand, TestPermissionsId>
     {
         public TestPermissionsAggregate(TestPermissionsId id) : base(id) { }
+
         public Task<IExecutionResult> Execute(TestPermissionsAuthorizedInAggregateCommand command)
         {
             SecurityContext.Authorized();
@@ -42,7 +42,9 @@ namespace EventFly.TestHelpers
         public Task<IExecutionResult> Execute(TestHasPermissionAttributeFailedCommand command) => Task.FromResult((IExecutionResult)new SuccessExecutionResult());
 
         public Task<IExecutionResult> Execute(TestHasPermissionsAttributeFailedCommand command) => Task.FromResult((IExecutionResult)new SuccessExecutionResult());
+
         public Task<IExecutionResult> Execute(TestPermissionsAuthorizedAttributeCommand command) => Task.FromResult((IExecutionResult)new SuccessExecutionResult());
+
         public Task<IExecutionResult> Execute(TestHasObjectPermissionAttributeSuccessCommand command) => Task.FromResult((IExecutionResult)new SuccessExecutionResult());
     }
 
@@ -60,11 +62,13 @@ namespace EventFly.TestHelpers
     {
         public TestHasPermissionAttributeFailedCommand(TestPermissionsId aggregateId, CommandMetadata metadata = null) : base(aggregateId, metadata) { }
     }
+
     [HasPermissions(TestPermissions.PermissionSuccess1)]
     public class TestHasPermissionAttributeSuccessCommand : Command<TestPermissionsId>
     {
         public TestHasPermissionAttributeSuccessCommand(TestPermissionsId aggregateId, CommandMetadata metadata = null) : base(aggregateId, metadata) { }
     }
+
     [HasPermissions(TestPermissions.PermissionSuccess1, TestPermissions.PermissionFailed1)]
     public class TestHasPermissionsAttributeFailedCommand : Command<TestPermissionsId>
     {
@@ -83,17 +87,16 @@ namespace EventFly.TestHelpers
         public TestHasObjectPermissionAttributeSuccessCommand(TestPermissionsId aggregateId, CommandMetadata metadata = null) : base(aggregateId, metadata) { }
     }
 
-
     [Authorized]
     public class TestPermissionsAuthorizedAttributeCommand : Command<TestPermissionsId>
     {
         public TestPermissionsAuthorizedAttributeCommand(TestPermissionsId aggregateId, CommandMetadata metadata = null) : base(aggregateId, metadata) { }
     }
+
     public class TestPermissionsAuthorizedInAggregateCommand : Command<TestPermissionsId>
     {
         public TestPermissionsAuthorizedInAggregateCommand(TestPermissionsId aggregateId, CommandMetadata metadata = null) : base(aggregateId, metadata) { }
     }
-
 
     public class PermissionProvider : IPermissionProvider
     {
@@ -124,10 +127,6 @@ namespace EventFly.TestHelpers
             RegisterCommand<TestHasObjectPermissionAttributeSuccessCommand>();
         }
 
-        public override IServiceCollection DI(IServiceCollection services)
-            => services
-                .AddSingleton<IPermissionProvider, PermissionProvider>();
-
-
+        public override IServiceCollection DI(IServiceCollection services) => services.AddSingleton<IPermissionProvider, PermissionProvider>();
     }
 }

@@ -39,8 +39,6 @@ namespace EventFly.Tests.UnitTests.Mapping
 {
     public class DomainEventMapperTests
     {
-        private const String Category = "Mapping";
-
         [Fact]
         [Category(Category)]
         public void CommittedEvent_MappedToDomainEvent_IsValid()
@@ -50,9 +48,7 @@ namespace EventFly.Tests.UnitTests.Mapping
             var aggregateId = TestAggregateId.New;
             var aggregateEvent = new TestCreatedEvent(aggregateId);
             var now = DateTimeOffset.UtcNow;
-            var eventId = EventId.NewDeterministic(
-                GuidFactories.Deterministic.Namespaces.Events,
-                $"{aggregateId.Value}-v{3}");
+            var eventId = EventId.NewDeterministic(GuidFactories.Deterministic.Namespaces.Events, $"{aggregateId.Value}-v{3}");
             var eventMetadata = new EventMetadata
             {
                 Timestamp = now,
@@ -61,13 +57,12 @@ namespace EventFly.Tests.UnitTests.Mapping
                 AggregateId = aggregateId.Value,
                 EventId = eventId
             };
-            var committedEvent =
-                new CommittedEvent<TestAggregateId, TestCreatedEvent>(
-                    aggregateId,
-                    aggregateEvent,
-                    eventMetadata,
-                    now,
-                    aggregateSequenceNumber);
+            var committedEvent = new CommittedEvent<TestAggregateId, TestCreatedEvent>(
+                aggregateId,
+                aggregateEvent,
+                eventMetadata,
+                now,
+                aggregateSequenceNumber);
 
             var eventSequence = domainEventReadAdapter.FromJournal(committedEvent, String.Empty);
             var upcastedEvent = eventSequence.Events.Single();
@@ -76,11 +71,7 @@ namespace EventFly.Tests.UnitTests.Mapping
             {
                 e.AggregateEvent.GetType().Should().Be<TestCreatedEvent>();
             }
-            else
-            {
-                false.Should().BeTrue();
-            }
-
+            else false.Should().BeTrue();
         }
 
         [Fact]
@@ -95,5 +86,7 @@ namespace EventFly.Tests.UnitTests.Mapping
             unchanged.Events.Single().As<CreateTestCommand>().Metadata.SourceId.Should().Be(message.Metadata.SourceId);
             unchanged.Events.Single().As<CreateTestCommand>().AggregateId.Should().Be(message.AggregateId);
         }
+
+        private const String Category = "Mapping";
     }
 }

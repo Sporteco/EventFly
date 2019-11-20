@@ -38,10 +38,7 @@ namespace EventFly.Tests.UnitTests.Jobs
     [Collection("ScheduledJobsTests")]
     public class ScheduledJobsTests : TestKit
     {
-        private const String Category = "Jobs";
-
-        public ScheduledJobsTests(ITestOutputHelper testOutputHelper)
-            : base(TestHelpers.Akka.Configuration.ConfigWithTestScheduler, "jobs-tests", testOutputHelper)
+        public ScheduledJobsTests(ITestOutputHelper testOutputHelper) : base(TestHelpers.Akka.Configuration.ConfigWithTestScheduler, "jobs-tests", testOutputHelper)
         {
             //new ServiceCollection()
             //.AddScoped<TestSaga>()
@@ -129,7 +126,6 @@ namespace EventFly.Tests.UnitTests.Jobs
             //probe.ExpectNoMsg();
         }
 
-
         //[Fact]
         //[Category(Category)]
         private async Task SchedulingJob_ForEvery5minutes_DispatchesJobMessage()
@@ -214,7 +210,6 @@ namespace EventFly.Tests.UnitTests.Jobs
             });
         }
 
-
         //[Fact]
         //[Category(Category)]
         private async Task SchedulingJob_AndThenCancellingJob_CeasesDispatching()
@@ -254,6 +249,5 @@ namespace EventFly.Tests.UnitTests.Jobs
 
             probe.ExpectNoMsg();
         }
-
     }
 }

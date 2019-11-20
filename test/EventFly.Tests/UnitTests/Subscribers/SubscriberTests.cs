@@ -1,4 +1,4 @@
-﻿// The MIT License (MIT)
+// The MIT License (MIT)
 //
 // Copyright (c) 2018 - 2019 Lutando Ngqakaza
 // https://github.com/Lutando/EventFly 
@@ -31,6 +31,7 @@ using EventFly.TestHelpers.Aggregates.Events;
 using EventFly.TestHelpers.Aggregates.Sagas.Test;
 using EventFly.TestHelpers.Subscribers;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.ComponentModel;
 using Xunit;
 using Xunit.Abstractions;
@@ -40,16 +41,13 @@ namespace EventFly.Tests.UnitTests.Subscribers
     [Collection("SubsriberTests")]
     public class SubscriberTests : TestKit
     {
-        private const System.String Category = "Subscribers";
-
-        public SubscriberTests(ITestOutputHelper testOutputHelper)
-            : base(TestHelpers.Akka.Configuration.Config, "subscriber-tests", testOutputHelper)
+        public SubscriberTests(ITestOutputHelper testOutputHelper) : base(TestHelpers.Akka.Configuration.Config, "subscriber-tests", testOutputHelper)
         {
             Sys.RegisterDependencyResolver(
                 new ServiceCollection()
                 .AddEventFly(Sys)
-                    .WithContext<TestContext>()
-                    .Services
+                .WithContext<TestContext>()
+                .Services
                 .AddScoped<TestSaga>()
                 .BuildServiceProvider()
                 .UseEventFly()
@@ -70,10 +68,7 @@ namespace EventFly.Tests.UnitTests.Subscribers
             var command = new CreateTestCommand(aggregateId, commandId);
             bus.Publish(command).GetAwaiter().GetResult();
 
-            eventProbe.
-                ExpectMsg<TestSubscribedEventHandled<TestCreatedEvent>>(x =>
-                    x.AggregateEvent.TestAggregateId == command.AggregateId);
-
+            eventProbe.ExpectMsg<TestSubscribedEventHandled<TestCreatedEvent>>(x => x.AggregateEvent.TestAggregateId == command.AggregateId);
         }
 
         [Fact]
@@ -90,9 +85,9 @@ namespace EventFly.Tests.UnitTests.Subscribers
             var command = new CreateTestCommand(aggregateId, commandId);
             bus.Publish(command).GetAwaiter().GetResult();
 
-            eventProbe
-                .ExpectMsg<TestAsyncSubscribedEventHandled<TestCreatedEvent>>(x =>
-                    x.AggregateEvent.TestAggregateId == command.AggregateId);
+            eventProbe.ExpectMsg<TestAsyncSubscribedEventHandled<TestCreatedEvent>>(x => x.AggregateEvent.TestAggregateId == command.AggregateId);
         }
+
+        private const String Category = "Subscribers";
     }
 }

@@ -58,7 +58,6 @@ namespace EventFly.Tests.UnitTests.Extensions
         }
 
         [Theory]
-        //[InlineData(typeof(FooId), "FooAggregateWithOutAttribute")]
         [InlineData(typeof(FooId), "BetterNameForAggregate")]
         public void AggregateName_FromType_ShouldBeExpected(Type aggregateType, String expectedAggregateName)
         {
@@ -76,34 +75,21 @@ namespace EventFly.Tests.UnitTests.Extensions
         [AggregateName("BetterNameForAggregate")]
         public class FooId : Identity<FooId>
         {
-            public FooId(String value) : base(value)
-            {
-            }
+            public FooId(String value) : base(value) { }
         }
 
         public class FooAggregateWithOutAttribute : EventSourcedAggregateRoot<FooAggregateWithOutAttribute, FooId, FooStateWithOutAttribute>
         {
-            public FooAggregateWithOutAttribute(FooId id) : base(id)
-            {
-            }
+            public FooAggregateWithOutAttribute(FooId id) : base(id) { }
         }
 
         public class FooAggregateWithAttribute : EventSourcedAggregateRoot<FooAggregateWithAttribute, FooId, FooStateWithAttribute>
         {
-            public FooAggregateWithAttribute(FooId id) : base(id)
-            {
-            }
+            public FooAggregateWithAttribute(FooId id) : base(id) { }
         }
 
-        public class FooStateWithAttribute : AggregateState<FooStateWithAttribute, FooId,
-            IMessageApplier<FooId>>
-        {
+        public class FooStateWithAttribute : AggregateState<FooStateWithAttribute, FooId, IMessageApplier<FooId>> { }
 
-        }
-
-        public class FooStateWithOutAttribute : AggregateState<FooStateWithOutAttribute, FooId,
-            IMessageApplier<FooId>>
-        {
-        }
+        public class FooStateWithOutAttribute : AggregateState<FooStateWithOutAttribute, FooId, IMessageApplier<FooId>> { }
     }
 }

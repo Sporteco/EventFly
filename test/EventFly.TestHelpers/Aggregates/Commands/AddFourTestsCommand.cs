@@ -29,11 +29,8 @@ namespace EventFly.TestHelpers.Aggregates.Commands
     public class AddFourTestsCommand : Command<TestAggregateId>
     {
         public Test Test { get; }
-        public AddFourTestsCommand(
-            TestAggregateId aggregateId,
-            CommandId sourceId,
-            Test test)
-            : base(aggregateId, new CommandMetadata(sourceId))
+
+        public AddFourTestsCommand(TestAggregateId aggregateId, CommandId sourceId, Test test) : base(aggregateId, new CommandMetadata(sourceId))
         {
             Test = test;
         }

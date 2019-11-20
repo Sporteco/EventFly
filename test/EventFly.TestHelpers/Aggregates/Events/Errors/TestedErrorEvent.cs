@@ -1,4 +1,4 @@
-﻿// The MIT License (MIT)
+// The MIT License (MIT)
 //
 // Copyright (c) 2018 - 2019 Lutando Ngqakaza
 // https://github.com/Lutando/EventFly 
@@ -22,15 +22,16 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using EventFly.Aggregates;
+using System;
 
 namespace EventFly.TestHelpers.Aggregates.Events.Errors
 {
     [EventVersion("TestedError", 1)]
     public class TestedErrorEvent : AggregateEvent<TestAggregateId>
     {
-        public System.Int32 TestErrors { get; }
+        public Int32 TestErrors { get; }
 
-        public TestedErrorEvent(System.Int32 testErrors)
+        public TestedErrorEvent(Int32 testErrors)
         {
             TestErrors = testErrors;
         }

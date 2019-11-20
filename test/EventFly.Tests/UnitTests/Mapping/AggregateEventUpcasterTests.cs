@@ -40,8 +40,6 @@ namespace EventFly.Tests.UnitTests.Mapping
 {
     public class AggregateEventUpcasterTests
     {
-        private const String Category = "Mapping";
-
         [Fact]
         [Category(Category)]
         public void CommittedEvent_WithUpgradableEvent_GetsUpgrades()
@@ -51,9 +49,7 @@ namespace EventFly.Tests.UnitTests.Mapping
             var aggregateId = TestAggregateId.New;
             var aggregateEvent = new TestCreatedEvent(aggregateId);
             var now = DateTimeOffset.UtcNow;
-            var eventId = EventId.NewDeterministic(
-                GuidFactories.Deterministic.Namespaces.Events,
-                $"{aggregateId.Value}-v{3}");
+            var eventId = EventId.NewDeterministic(GuidFactories.Deterministic.Namespaces.Events, $"{aggregateId.Value}-v{3}");
             var eventMetadata = new EventMetadata
             {
                 Timestamp = now,
@@ -62,13 +58,12 @@ namespace EventFly.Tests.UnitTests.Mapping
                 AggregateId = aggregateId.Value,
                 EventId = eventId
             };
-            var committedEvent =
-                new CommittedEvent<TestAggregateId, TestCreatedEvent>(
-                    aggregateId,
-                    aggregateEvent,
-                    eventMetadata,
-                    now,
-                    aggregateSequenceNumber);
+            var committedEvent = new CommittedEvent<TestAggregateId, TestCreatedEvent>(
+                aggregateId,
+                aggregateEvent,
+                eventMetadata,
+                now,
+                aggregateSequenceNumber);
 
             var eventSequence = aggregateEventUpcaster.FromJournal(committedEvent, String.Empty);
             var upcastedEvent = eventSequence.Events.Single();
@@ -77,7 +72,6 @@ namespace EventFly.Tests.UnitTests.Mapping
                 .As<ICommittedEvent<TestAggregateId, TestCreatedEventV2>>()
                 .AggregateEvent.Name
                 .Should().Be("default upcasted string");
-
         }
 
         [Fact]
@@ -89,7 +83,6 @@ namespace EventFly.Tests.UnitTests.Mapping
 
             this.Invoking(test => aggregateEventUpcaster.Upcast(aggregateEvent))
                 .Should().Throw<ArgumentException>();
-
         }
 
         [Fact]
@@ -98,7 +91,6 @@ namespace EventFly.Tests.UnitTests.Mapping
         {
             this.Invoking(test => new UnInstantiableAggregateEventUpcaster())
                 .Should().Throw<InvalidOperationException>();
-
         }
 
         [Fact]
@@ -114,7 +106,6 @@ namespace EventFly.Tests.UnitTests.Mapping
             unchanged.Events.Single().As<CreateTestCommand>().AggregateId.Should().Be(message.AggregateId);
         }
 
-
-
+        private const String Category = "Mapping";
     }
 }

@@ -1,4 +1,4 @@
-﻿// The MIT License (MIT)
+// The MIT License (MIT)
 //
 // Copyright (c) 2018 - 2019 Lutando Ngqakaza
 // https://github.com/Lutando/EventFly 
@@ -27,8 +27,6 @@ namespace EventFly.TestHelpers.Aggregates.Commands
 {
     public sealed class BadCommand : Command<TestAggregateId>
     {
-        public BadCommand(TestAggregateId aggregateId, CommandId sourceId) : base(aggregateId, new CommandMetadata(sourceId))
-        {
-        }
+        public BadCommand(TestAggregateId aggregateId, CommandId sourceId) : base(aggregateId, new CommandMetadata(sourceId)) { }
     }
 }

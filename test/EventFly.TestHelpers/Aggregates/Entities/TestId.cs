@@ -1,4 +1,4 @@
-﻿// The MIT License (MIT)
+// The MIT License (MIT)
 //
 // Copyright (c) 2018 - 2019 Lutando Ngqakaza
 // https://github.com/Lutando/EventFly 
@@ -24,16 +24,14 @@
 using EventFly.Core;
 using EventFly.ValueObjects;
 using Newtonsoft.Json;
+using System;
 
 namespace EventFly.TestHelpers.Aggregates.Entities
 {
     [JsonConverter(typeof(SingleValueObjectConverter))]
     public class TestId : Identity<TestId>
     {
-        public TestId(System.String entityId)
-            : base(entityId)
-        {
-
-        }
+        public TestId(String entityId) : base(entityId)
+        { }
     }
 }

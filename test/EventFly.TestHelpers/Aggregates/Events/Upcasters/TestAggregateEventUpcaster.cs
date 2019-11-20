@@ -1,4 +1,4 @@
-﻿// The MIT License (MIT)
+// The MIT License (MIT)
 //
 // Copyright (c) 2018 - 2019 Lutando Ngqakaza
 // https://github.com/Lutando/EventFly 
@@ -25,16 +25,15 @@ using EventFly.Events;
 
 namespace EventFly.TestHelpers.Aggregates.Events.Upcasters
 {
-    public class UnInstantiableAggregateEventUpcaster : AggregateEventUpcaster<TestAggregate, TestAggregateId, TestAggregateEventUpcaster>,
-        IUpcast<TestAddedEvent, TestAddedEventV2>
+    public class UnInstantiableAggregateEventUpcaster : AggregateEventUpcaster<TestAggregate, TestAggregateId, TestAggregateEventUpcaster>, IUpcast<TestAddedEvent, TestAddedEventV2>
     {
         public TestAddedEventV2 Upcast(TestAddedEvent aggregateEvent)
         {
             return new TestAddedEventV2(aggregateEvent.Test, "default upcasted string");
         }
     }
-    public class TestAggregateEventUpcaster : AggregateEventUpcaster<TestAggregate, TestAggregateId>,
-        IUpcast<TestCreatedEvent, TestCreatedEventV2>
+
+    public class TestAggregateEventUpcaster : AggregateEventUpcaster<TestAggregate, TestAggregateId>, IUpcast<TestCreatedEvent, TestCreatedEventV2>
     {
         public TestCreatedEventV2 Upcast(TestCreatedEvent aggregateEvent)
         {

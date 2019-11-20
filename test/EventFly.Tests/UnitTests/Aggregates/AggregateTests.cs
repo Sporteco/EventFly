@@ -59,10 +59,9 @@ namespace EventFly.Tests.UnitTests.Aggregates
             var command = new CreateTestCommand(aggregateId, commandId);
             bus.Publish(command).GetAwaiter().GetResult();
 
-            eventProbe
-                .ExpectMsg<IDomainEvent<TestAggregateId, TestCreatedEvent>>(
+            eventProbe.ExpectMsg<IDomainEvent<TestAggregateId, TestCreatedEvent>>(
                 x => x.AggregateEvent.TestAggregateId.Equals(aggregateId) &&
-                     x.Metadata.ContainsKey("some-key"));
+                x.Metadata.ContainsKey("some-key"));
         }
 
         [Fact]
@@ -95,16 +94,15 @@ namespace EventFly.Tests.UnitTests.Aggregates
             var command = new CreateTestCommand(aggregateId, commandId);
             bus.Publish(command).GetAwaiter().GetResult();
 
-            eventProbe
-                .ExpectMsg<IDomainEvent<TestAggregateId, TestCreatedEvent>>(
+            eventProbe.ExpectMsg<IDomainEvent<TestAggregateId, TestCreatedEvent>>(
                 x => x.AggregateIdentity.Equals(aggregateId)
-                    && x.IdentityType == typeof(TestAggregateId)
-                    && x.EventType == typeof(TestCreatedEvent)
-                    && x.Metadata.EventName == "TestCreated"
-                    && x.Metadata.AggregateId == aggregateId.Value
-                    && x.Metadata.EventVersion == 1
-                    && x.Metadata.SourceId.Value == commandId.Value
-                    && x.Metadata.AggregateSequenceNumber == 1);
+                && x.IdentityType == typeof(TestAggregateId)
+                && x.EventType == typeof(TestCreatedEvent)
+                && x.Metadata.EventName == "TestCreated"
+                && x.Metadata.AggregateId == aggregateId.Value
+                && x.Metadata.EventVersion == 1
+                && x.Metadata.SourceId.Value == commandId.Value
+                && x.Metadata.AggregateSequenceNumber == 1);
         }
 
         [Fact]
@@ -122,11 +120,10 @@ namespace EventFly.Tests.UnitTests.Aggregates
             bus.Publish(command).GetAwaiter().GetResult();
             bus.Publish(nextCommand).GetAwaiter().GetResult();
 
-            eventProbe
-                .ExpectMsg<IDomainEvent<TestAggregateId, TestStateSignalEvent>>(
+            eventProbe.ExpectMsg<IDomainEvent<TestAggregateId, TestStateSignalEvent>>(
                 x => x.AggregateEvent.LastSequenceNr == 1
-                     && x.AggregateEvent.Version == 1
-                     && x.AggregateEvent.AggregateState.TestCollection.Count == 0);
+                && x.AggregateEvent.Version == 1
+                && x.AggregateEvent.AggregateState.TestCollection.Count == 0);
         }
 
         [Fact]
@@ -147,8 +144,7 @@ namespace EventFly.Tests.UnitTests.Aggregates
             bus.Publish(command).GetAwaiter().GetResult();
             bus.Publish(nextCommand).GetAwaiter().GetResult();
 
-            eventProbe
-                .ExpectMsg<IDomainEvent<TestAggregateId, TestAddedEvent>>(
+            eventProbe.ExpectMsg<IDomainEvent<TestAggregateId, TestAddedEvent>>(
                 x => x.AggregateEvent.Test.Equals(test));
         }
 
@@ -175,15 +171,9 @@ namespace EventFly.Tests.UnitTests.Aggregates
             bus.Publish(nextCommand).GetAwaiter().GetResult();
             bus.Publish(nextCommand2).GetAwaiter().GetResult();
 
-            eventProbe
-                .ExpectMsg<IDomainEvent<TestAggregateId, TestAddedEvent>>(
-                x => x.AggregateEvent.Test.Equals(test)
-                     && x.AggregateSequenceNumber == 2);
+            eventProbe.ExpectMsg<IDomainEvent<TestAggregateId, TestAddedEvent>>(x => x.AggregateEvent.Test.Equals(test) && x.AggregateSequenceNumber == 2);
 
-            eventProbe
-                .ExpectMsg<IDomainEvent<TestAggregateId, TestAddedEvent>>(
-                x => x.AggregateEvent.Test.Equals(test2)
-                     && x.AggregateSequenceNumber == 3);
+            eventProbe.ExpectMsg<IDomainEvent<TestAggregateId, TestAddedEvent>>(x => x.AggregateEvent.Test.Equals(test2) && x.AggregateSequenceNumber == 3);
         }
 
         [Fact]
@@ -213,11 +203,10 @@ namespace EventFly.Tests.UnitTests.Aggregates
             var reviveCommand = new PublishTestStateCommand(aggregateId);
             bus.Publish(reviveCommand).GetAwaiter().GetResult();
 
-            eventProbe
-                .ExpectMsg<IDomainEvent<TestAggregateId, TestStateSignalEvent>>(
+            eventProbe.ExpectMsg<IDomainEvent<TestAggregateId, TestStateSignalEvent>>(
                 x => x.AggregateEvent.LastSequenceNr == 6
-                     && x.AggregateEvent.Version == 6
-                     && x.AggregateEvent.AggregateState.TestCollection.Count == 5);
+                && x.AggregateEvent.Version == 6
+                && x.AggregateEvent.AggregateState.TestCollection.Count == 5);
         }
 
         [Fact]
@@ -267,20 +256,15 @@ namespace EventFly.Tests.UnitTests.Aggregates
             var reviveCommand = new PublishTestStateCommand(aggregateId);
             bus.Publish(reviveCommand).GetAwaiter().GetResult();
 
-            eventProbe
-                .ExpectMsg<IDomainEvent<TestAggregateId, TestAddedEvent>>();
-            eventProbe
-                .ExpectMsg<IDomainEvent<TestAggregateId, TestAddedEvent>>();
-            eventProbe
-                .ExpectMsg<IDomainEvent<TestAggregateId, TestAddedEvent>>();
-            eventProbe
-                .ExpectMsg<IDomainEvent<TestAggregateId, TestAddedEvent>>();
+            eventProbe.ExpectMsg<IDomainEvent<TestAggregateId, TestAddedEvent>>();
+            eventProbe.ExpectMsg<IDomainEvent<TestAggregateId, TestAddedEvent>>();
+            eventProbe.ExpectMsg<IDomainEvent<TestAggregateId, TestAddedEvent>>();
+            eventProbe.ExpectMsg<IDomainEvent<TestAggregateId, TestAddedEvent>>();
 
-            eventProbe
-                .ExpectMsg<IDomainEvent<TestAggregateId, TestStateSignalEvent>>(
+            eventProbe.ExpectMsg<IDomainEvent<TestAggregateId, TestStateSignalEvent>>(
                 x => x.AggregateEvent.LastSequenceNr == 5
-                     && x.AggregateEvent.Version == 5
-                     && x.AggregateEvent.AggregateState.TestCollection.Count == 4);
+                && x.AggregateEvent.Version == 5
+                && x.AggregateEvent.AggregateState.TestCollection.Count == 4);
         }
 
         [Fact]
@@ -305,12 +289,11 @@ namespace EventFly.Tests.UnitTests.Aggregates
                 bus.Publish(testCommand).GetAwaiter().GetResult();
             }
 
-            eventProbe
-                .ExpectMsg<IDomainEvent<TestAggregateId, TestStateSignalEvent>>(
+            eventProbe.ExpectMsg<IDomainEvent<TestAggregateId, TestStateSignalEvent>>(
                 x => x.AggregateEvent.LastSequenceNr == 11
-                     && x.AggregateEvent.Version == 11
-                     && x.AggregateEvent.AggregateState.TestCollection.Count == 10
-                     && x.AggregateEvent.AggregateState.FromHydration);
+                && x.AggregateEvent.Version == 11
+                && x.AggregateEvent.AggregateState.TestCollection.Count == 10
+                && x.AggregateEvent.AggregateState.FromHydration);
         }
 
         [Fact]

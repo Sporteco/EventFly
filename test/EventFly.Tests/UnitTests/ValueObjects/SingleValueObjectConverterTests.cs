@@ -1,4 +1,4 @@
-﻿// The MIT License (MIT)
+// The MIT License (MIT)
 //
 // Copyright (c) 2015-2019 Rasmus Mikkelsen
 // Copyright (c) 2015-2019 eBay Software Foundation
@@ -29,6 +29,7 @@ using EventFly.TestHelpers;
 using EventFly.ValueObjects;
 using FluentAssertions;
 using Newtonsoft.Json;
+using System;
 using System.ComponentModel;
 using Xunit;
 
@@ -42,7 +43,7 @@ namespace EventFly.Tests.UnitTests.ValueObjects
         [InlineData("42", "\"42\"")]
         [InlineData("", "\"\"")]
         [InlineData(null, "null")]
-        public void String_Serilization_ShouldBeExpectedJson(System.String value, System.String expectedJson)
+        public void String_Serilization_ShouldBeExpectedJson(String value, String expectedJson)
         {
             var stringSvo = new StringSVO(value);
 
@@ -50,7 +51,6 @@ namespace EventFly.Tests.UnitTests.ValueObjects
 
             json.Should().Be(expectedJson);
         }
-
 
         [Fact]
         public void String_Deserialization_EmptyShouldResultInNull()
@@ -63,7 +63,7 @@ namespace EventFly.Tests.UnitTests.ValueObjects
         [Theory]
         [InlineData("\"\"", "")]
         [InlineData("\"test\"", "test")]
-        public void String_Deserialization_ShouldBeExpectedValue(System.String json, System.String expectedValue)
+        public void String_Deserialization_ShouldBeExpectedValue(String json, String expectedValue)
         {
             var stringSvo = JsonConvert.DeserializeObject<StringSVO>(json);
 
@@ -74,7 +74,7 @@ namespace EventFly.Tests.UnitTests.ValueObjects
         [InlineData(0, "0")]
         [InlineData(42, "42")]
         [InlineData(-1, "-1")]
-        public void Int_Serialization_ShouldBeExpectedJson(System.Int32 value, System.String expectedJson)
+        public void Int_Serialization_ShouldBeExpectedJson(Int32 value, String expectedJson)
         {
             var intSvo = new IntSVO(value);
 
@@ -87,7 +87,7 @@ namespace EventFly.Tests.UnitTests.ValueObjects
         [InlineData("0", 0)]
         [InlineData("42", 42)]
         [InlineData("-1", -1)]
-        public void Int_Deserialization_ShouldBeExpectedValue(System.String json, System.Int32 expectedValue)
+        public void Int_Deserialization_ShouldBeExpectedValue(String json, Int32 expectedValue)
         {
             var intSvo = JsonConvert.DeserializeObject<IntSVO>(json);
 
@@ -95,17 +95,15 @@ namespace EventFly.Tests.UnitTests.ValueObjects
         }
 
         [JsonConverter(typeof(SingleValueObjectConverter))]
-        // ReSharper disable once InconsistentNaming
-        private class StringSVO : SingleValueObject<System.String>
+        private class StringSVO : SingleValueObject<String>
         {
-            public StringSVO(System.String value) : base(value) { }
+            public StringSVO(String value) : base(value) { }
         }
 
         [JsonConverter(typeof(SingleValueObjectConverter))]
-        // ReSharper disable once InconsistentNaming
-        private class IntSVO : SingleValueObject<System.Int32>
+        private class IntSVO : SingleValueObject<Int32>
         {
-            public IntSVO(System.Int32 value) : base(value) { }
+            public IntSVO(Int32 value) : base(value) { }
         }
     }
 }

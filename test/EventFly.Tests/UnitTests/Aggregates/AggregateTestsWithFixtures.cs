@@ -198,12 +198,12 @@ namespace EventFly.Tests.UnitTests.Aggregates
                 .When(new CreateTestCommand(aggregateId, commandId))
                 .ThenExpectDomainEvent<TestCreatedEvent>(
                     x => x.AggregateIdentity.Equals(aggregateId)
-                         && x.IdentityType == typeof(TestAggregateId)
-                         && x.EventType == typeof(TestCreatedEvent)
-                         && x.Metadata.EventName == "TestCreated"
-                         && x.Metadata.AggregateId == aggregateId.Value
-                         && x.Metadata.EventVersion == 1
-                         && x.Metadata.AggregateSequenceNumber == 1);
+                    && x.IdentityType == typeof(TestAggregateId)
+                    && x.EventType == typeof(TestCreatedEvent)
+                    && x.Metadata.EventName == "TestCreated"
+                    && x.Metadata.AggregateId == aggregateId.Value
+                    && x.Metadata.EventVersion == 1
+                    && x.Metadata.AggregateSequenceNumber == 1);
         }
 
         [Fact]
@@ -220,8 +220,8 @@ namespace EventFly.Tests.UnitTests.Aggregates
                 .When(new CreateTestCommand(aggregateId, commandId), new PublishTestStateCommand(aggregateId))
                 .ThenExpectDomainEvent<TestStateSignalEvent>(
                     x => x.AggregateEvent.LastSequenceNr == 1
-                         && x.AggregateEvent.Version == 1
-                         && x.AggregateEvent.AggregateState.TestCollection.Count == 0);
+                    && x.AggregateEvent.Version == 1
+                    && x.AggregateEvent.AggregateState.TestCollection.Count == 0);
         }
 
         [Fact]
@@ -277,8 +277,8 @@ namespace EventFly.Tests.UnitTests.Aggregates
                 .AndWhen(new PublishTestStateCommand(aggregateId))
                 .ThenExpectDomainEvent<TestStateSignalEvent>(
                     x => x.AggregateEvent.LastSequenceNr == 6
-                         && x.AggregateEvent.Version == 6
-                         && x.AggregateEvent.AggregateState.TestCollection.Count == 5);
+                    && x.AggregateEvent.Version == 6
+                    && x.AggregateEvent.AggregateState.TestCollection.Count == 5);
         }
 
         [Fact]
@@ -311,8 +311,8 @@ namespace EventFly.Tests.UnitTests.Aggregates
                 .AndWhen(new PublishTestStateCommand(aggregateId))
                 .ThenExpectDomainEvent<TestStateSignalEvent>(
                     x => x.AggregateEvent.LastSequenceNr == 5
-                         && x.AggregateEvent.Version == 5
-                         && x.AggregateEvent.AggregateState.TestCollection.Count == 4);
+                    && x.AggregateEvent.Version == 5
+                    && x.AggregateEvent.AggregateState.TestCollection.Count == 4);
         }
 
         [Fact]
@@ -330,9 +330,9 @@ namespace EventFly.Tests.UnitTests.Aggregates
                 .AndWhen(new PublishTestStateCommand(aggregateId))
                 .ThenExpectDomainEvent<TestStateSignalEvent>(
                     x => x.AggregateEvent.LastSequenceNr == 11
-                         && x.AggregateEvent.Version == 11
-                         && x.AggregateEvent.AggregateState.TestCollection.Count == 10
-                         && x.AggregateEvent.AggregateState.FromHydration);
+                    && x.AggregateEvent.Version == 11
+                    && x.AggregateEvent.AggregateState.TestCollection.Count == 10
+                    && x.AggregateEvent.AggregateState.FromHydration);
         }
 
         private const String Category = "AggregatesWithFixtures";

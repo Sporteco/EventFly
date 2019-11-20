@@ -1,4 +1,4 @@
-﻿// The MIT License (MIT)
+// The MIT License (MIT)
 //
 // Copyright (c) 2018 - 2019 Lutando Ngqakaza
 // https://github.com/Lutando/EventFly 
@@ -22,14 +22,12 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using EventFly.Core;
+using System;
 
 namespace EventFly.TestHelpers.Aggregates.Sagas.Test
 {
     public class TestSagaId : Identity<TestSagaId>
     {
-        public TestSagaId(System.String value)
-            : base(value)
-        {
-        }
+        public TestSagaId(String value) : base(value) { }
     }
 }

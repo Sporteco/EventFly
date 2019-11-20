@@ -41,8 +41,6 @@ namespace EventFly.Tests.UnitTests.Mapping
 {
     public class AggregateEventTaggerTests
     {
-        private const String Category = "Mapping";
-
         [Fact]
         [Category(Category)]
         public void CommittedEvent_WhenTagged_ContainsAggregateNameAsTaggedElement()
@@ -54,9 +52,7 @@ namespace EventFly.Tests.UnitTests.Mapping
             var entity = new Test(entityId);
             var aggregateEvent = new TestAddedEvent(entity);
             var now = DateTimeOffset.UtcNow;
-            var eventId = EventId.NewDeterministic(
-                GuidFactories.Deterministic.Namespaces.Events,
-                $"{aggregateId.Value}-v{3}");
+            var eventId = EventId.NewDeterministic(GuidFactories.Deterministic.Namespaces.Events, $"{aggregateId.Value}-v{3}");
             var eventMetadata = new EventMetadata
             {
                 Timestamp = now,
@@ -65,24 +61,17 @@ namespace EventFly.Tests.UnitTests.Mapping
                 AggregateId = aggregateId.Value,
                 EventId = eventId
             };
-            var committedEvent =
-                new CommittedEvent<TestAggregateId, TestAddedEvent>(
-                    aggregateId,
-                    aggregateEvent,
-                    eventMetadata,
-                    now,
-                    aggregateSequenceNumber);
+            var committedEvent = new CommittedEvent<TestAggregateId, TestAddedEvent>(
+                aggregateId,
+                aggregateEvent,
+                eventMetadata,
+                now,
+                aggregateSequenceNumber);
 
             var taggedEvent = aggregateEventTagger.ToJournal(committedEvent);
 
-            if (taggedEvent is Tagged a)
-            {
-                a.Tags.Should().Contain(typeof(TestAggregateId).GetAggregateName().Value);
-            }
-            else
-            {
-                false.Should().BeTrue();
-            }
+            if (taggedEvent is Tagged a) a.Tags.Should().Contain(typeof(TestAggregateId).GetAggregateName().Value);
+            else false.Should().BeTrue();
         }
 
         [Fact]
@@ -96,9 +85,7 @@ namespace EventFly.Tests.UnitTests.Mapping
             var entity = new Test(entityId);
             var aggregateEvent = new TestAddedEvent(entity);
             var now = DateTimeOffset.UtcNow;
-            var eventId = EventId.NewDeterministic(
-                GuidFactories.Deterministic.Namespaces.Events,
-                $"{aggregateId.Value}-v{3}");
+            var eventId = EventId.NewDeterministic(GuidFactories.Deterministic.Namespaces.Events, $"{aggregateId.Value}-v{3}");
             var eventMetadata = new EventMetadata
             {
                 Timestamp = now,
@@ -107,24 +94,17 @@ namespace EventFly.Tests.UnitTests.Mapping
                 AggregateId = aggregateId.Value,
                 EventId = eventId
             };
-            var committedEvent =
-                new CommittedEvent<TestAggregateId, TestAddedEvent>(
-                    aggregateId,
-                    aggregateEvent,
-                    eventMetadata,
-                    now,
-                    aggregateSequenceNumber);
+            var committedEvent = new CommittedEvent<TestAggregateId, TestAddedEvent>(
+                aggregateId,
+                aggregateEvent,
+                eventMetadata,
+                now,
+                aggregateSequenceNumber);
 
             var taggedEvent = aggregateEventTagger.ToJournal(committedEvent);
 
-            if (taggedEvent is Tagged a)
-            {
-                a.Tags.Should().Contain("TestAdded");
-            }
-            else
-            {
-                false.Should().BeTrue();
-            }
+            if (taggedEvent is Tagged a) a.Tags.Should().Contain("TestAdded");
+            else false.Should().BeTrue();
         }
 
         [Fact]
@@ -147,5 +127,7 @@ namespace EventFly.Tests.UnitTests.Mapping
 
             command.Should().Be(untagged);
         }
+
+        private const String Category = "Mapping";
     }
 }

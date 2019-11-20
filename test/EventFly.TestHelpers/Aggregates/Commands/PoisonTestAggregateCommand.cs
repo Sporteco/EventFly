@@ -1,4 +1,4 @@
-﻿// The MIT License (MIT)
+// The MIT License (MIT)
 //
 // Copyright (c) 2018 - 2019 Lutando Ngqakaza
 // https://github.com/Lutando/EventFly 
@@ -27,10 +27,6 @@ namespace EventFly.TestHelpers.Aggregates.Commands
 {
     public class PoisonTestAggregateCommand : Command<TestAggregateId>
     {
-        public PoisonTestAggregateCommand(TestAggregateId aggregateId)
-            : base(aggregateId)
-        {
-
-        }
+        public PoisonTestAggregateCommand(TestAggregateId aggregateId) : base(aggregateId) { }
     }
 }

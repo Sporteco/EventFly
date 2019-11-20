@@ -39,8 +39,7 @@ namespace EventFly.Tests.UnitTests.ValueObjects
     {
         public class StringSingleValue : SingleValueObject<String>
         {
-            public StringSingleValue(String value)
-                : base(value) { }
+            public StringSingleValue(String value) : base(value) { }
         }
 
         public enum MagicEnum
@@ -53,8 +52,7 @@ namespace EventFly.Tests.UnitTests.ValueObjects
 
         public class MagicEnumSingleValue : SingleValueObject<MagicEnum>
         {
-            public MagicEnumSingleValue(MagicEnum value)
-                : base(value) { }
+            public MagicEnumSingleValue(MagicEnum value) : base(value) { }
         }
 
         [Fact]
@@ -64,12 +62,9 @@ namespace EventFly.Tests.UnitTests.ValueObjects
             var orderedValues = values.OrderBy(s => s).ToList();
             values.Should().NotEqual(orderedValues); // Data test
             var singleValueObjects = values.Select(s => new StringSingleValue(s)).ToList();
-
             var orderedSingleValueObjects = singleValueObjects.OrderBy(v => v).ToList();
 
-            orderedSingleValueObjects.Select(v => v.Value).Should().BeEquivalentTo(
-                orderedValues,
-                o => o.WithStrictOrdering());
+            orderedSingleValueObjects.Select(v => v.Value).Should().BeEquivalentTo(orderedValues, o => o.WithStrictOrdering());
         }
 
         [Fact]
@@ -84,18 +79,15 @@ namespace EventFly.Tests.UnitTests.ValueObjects
             var orderedValues = values.OrderBy(s => s).ToList();
             values.Should().NotEqual(orderedValues);
             var singleValueObjects = values.Select(s => new MagicEnumSingleValue(s)).ToList();
-
             var orderedSingleValueObjects = singleValueObjects.OrderBy(v => v).ToList();
 
-            orderedSingleValueObjects.Select(v => v.Value).Should().BeEquivalentTo(
-                orderedValues,
-                o => o.WithStrictOrdering());
+            orderedSingleValueObjects.Select(v => v.Value).Should().BeEquivalentTo(orderedValues, o => o.WithStrictOrdering());
         }
 
         [Fact]
         public void SVOWithEnum_WhenInstantiated_ProtectsAgainsInvalidEnumValues()
         {
-            this.Invoking(test => new MagicEnumSingleValue((MagicEnum)42))
+            this.Invoking(_ => new MagicEnumSingleValue((MagicEnum)42))
                 .Should().Throw<ArgumentException>().And.Message.Should()
                 .Be("The value '42' isn't defined in enum 'MagicEnum'");
         }
@@ -110,11 +102,7 @@ namespace EventFly.Tests.UnitTests.ValueObjects
                     new MagicEnumSingleValue(MagicEnum.One),
                     new MagicEnumSingleValue(MagicEnum.Two)
                 };
-
-            var orderedValues = values
-                .OrderBy(v => v)
-                .Select(v => v.Value)
-                .ToList();
+            var orderedValues = values.OrderBy(v => v).Select(v => v.Value).ToList();
 
             orderedValues.Should().BeEquivalentTo(
                 new[]
@@ -133,7 +121,6 @@ namespace EventFly.Tests.UnitTests.ValueObjects
             var svo = new StringSingleValue(TestId.New.Value);
             var null_ = null as StringSingleValue;
 
-            // ReSharper disable once ExpressionIsAlwaysNull
             svo.Equals(null_).Should().BeFalse();
         }
 
@@ -166,7 +153,7 @@ namespace EventFly.Tests.UnitTests.ValueObjects
             var value = TestId.New.Value;
             var svo = new StringSingleValue(value);
 
-            this.Invoking(test => svo.CompareTo(null)).Should().Throw<ArgumentNullException>();
+            this.Invoking(_ => svo.CompareTo(null)).Should().Throw<ArgumentNullException>();
         }
 
         [Fact]
@@ -176,7 +163,7 @@ namespace EventFly.Tests.UnitTests.ValueObjects
             var svo = new StringSingleValue(value);
             var invalidSvo = new MagicEnumSingleValue(MagicEnum.Two);
 
-            this.Invoking(test => svo.CompareTo(invalidSvo)).Should().Throw<ArgumentException>();
+            this.Invoking(_ => svo.CompareTo(invalidSvo)).Should().Throw<ArgumentException>();
         }
 
         [Fact]

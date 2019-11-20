@@ -1,4 +1,4 @@
-﻿// The MIT License (MIT)
+// The MIT License (MIT)
 //
 // Copyright (c) 2018 - 2019 Lutando Ngqakaza
 // https://github.com/Lutando/EventFly 
@@ -26,6 +26,7 @@ using EventFly.Aggregates.Snapshot;
 using EventFly.TestHelpers.Aggregates.Entities;
 using EventFly.TestHelpers.Aggregates.Events;
 using EventFly.TestHelpers.Aggregates.Snapshots;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -39,7 +40,7 @@ namespace EventFly.TestHelpers.Aggregates
         IHydrate<TestAggregateSnapshot>
     {
         public List<Test> TestCollection { get; private set; }
-        public System.Boolean FromHydration { get; private set; }
+        public Boolean FromHydration { get; private set; }
 
         public void Apply(TestCreatedEvent aggregateEvent)
         {

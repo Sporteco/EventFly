@@ -1,4 +1,4 @@
-﻿// The MIT License (MIT)
+// The MIT License (MIT)
 //
 // Copyright (c) 2018 - 2019 Lutando Ngqakaza
 // https://github.com/Lutando/EventFly 
@@ -27,11 +27,6 @@ namespace EventFly.TestHelpers.Aggregates.Commands
 {
     public class TestDomainErrorCommand : Command<TestAggregateId>
     {
-        public TestDomainErrorCommand(TestAggregateId aggregateId)
-            : base(aggregateId)
-        {
-
-        }
-
+        public TestDomainErrorCommand(TestAggregateId aggregateId) : base(aggregateId) { }
     }
 }

@@ -71,18 +71,14 @@ namespace EventFly.Tests.IntegrationTests.Aggregates.Sagas
             var sagaStartingCommand = new GiveTestCommand(senderAggregateId, CommandId.New, receiverAggregateId, senderTest);
             bus.Publish(sagaStartingCommand).GetAwaiter().GetResult();
 
-            eventProbe.
-                ExpectMsg<DomainEvent<TestSagaId, TestSagaStartedEvent>>(
-                    x =>
-                    x.AggregateEvent.Sender.Equals(senderAggregateId)
-                         && x.AggregateEvent.Receiver.Equals(receiverAggregateId)
-                         && x.AggregateEvent.SentTest.Equals(senderTest));
+            eventProbe.ExpectMsg<DomainEvent<TestSagaId, TestSagaStartedEvent>>(
+                x => x.AggregateEvent.Sender.Equals(senderAggregateId)
+                && x.AggregateEvent.Receiver.Equals(receiverAggregateId)
+                && x.AggregateEvent.SentTest.Equals(senderTest));
 
-            eventProbe.
-                ExpectMsg<DomainEvent<TestSagaId, TestSagaTransactionCompletedEvent>>();
+            eventProbe.ExpectMsg<DomainEvent<TestSagaId, TestSagaTransactionCompletedEvent>>();
 
-            eventProbe.
-                ExpectMsg<DomainEvent<TestSagaId, TestSagaCompletedEvent>>();
+            eventProbe.ExpectMsg<DomainEvent<TestSagaId, TestSagaCompletedEvent>>();
         }
 
         private const System.String Category = "Sagas";

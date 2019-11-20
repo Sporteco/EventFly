@@ -1,4 +1,4 @@
-﻿// The MIT License (MIT)
+// The MIT License (MIT)
 //
 // Copyright (c) 2018 - 2019 Lutando Ngqakaza
 // https://github.com/Lutando/EventFly 
@@ -43,11 +43,9 @@ namespace EventFly.TestHelpers.Subscribers
         {
             var handled = new TestSubscribedEventHandled<TestAddedEvent>(domainEvent.AggregateEvent);
             Context.System.EventStream.Publish(handled);
-
             return true;
         }
     }
-
 
     public class TestSubscribedEventHandled<TAggregateEvent>
     {

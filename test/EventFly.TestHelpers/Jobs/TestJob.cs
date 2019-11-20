@@ -22,16 +22,16 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using EventFly.Jobs;
+using System;
 
 namespace EventFly.TestHelpers.Jobs
 {
     [JobName("test-job")]
     public class TestJob : Job<TestJobId>
     {
-        public System.String Greeting { get; }
+        public String Greeting { get; }
 
-        public TestJob(TestJobId jobId, System.String greeting)
-            : base(jobId)
+        public TestJob(TestJobId jobId, String greeting) : base(jobId)
         {
             Greeting = greeting;
         }
@@ -40,10 +40,9 @@ namespace EventFly.TestHelpers.Jobs
     [JobName("async-test-job")]
     public class AsyncTestJob : Job<AsyncTestJobId>
     {
-        public System.String Greeting { get; }
+        public String Greeting { get; }
 
-        public AsyncTestJob(AsyncTestJobId jobId, System.String greeting)
-            : base(jobId)
+        public AsyncTestJob(AsyncTestJobId jobId, String greeting) : base(jobId)
         {
             Greeting = greeting;
         }

@@ -22,22 +22,17 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using EventFly.Core;
+using System;
 
 namespace EventFly.TestHelpers.Jobs
 {
     public class TestJobId : Identity<TestJobId>, EventFly.Jobs.IJobId
     {
-        public TestJobId(System.String value)
-            : base(value)
-        {
-        }
+        public TestJobId(String value) : base(value) { }
     }
 
     public class AsyncTestJobId : Identity<AsyncTestJobId>, EventFly.Jobs.IJobId
     {
-        public AsyncTestJobId(System.String value)
-            : base(value)
-        {
-        }
+        public AsyncTestJobId(String value) : base(value) { }
     }
 }

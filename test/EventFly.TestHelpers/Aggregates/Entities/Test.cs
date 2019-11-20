@@ -1,4 +1,4 @@
-﻿// The MIT License (MIT)
+// The MIT License (MIT)
 //
 // Copyright (c) 2018 - 2019 Lutando Ngqakaza
 // https://github.com/Lutando/EventFly 
@@ -28,11 +28,7 @@ namespace EventFly.TestHelpers.Aggregates.Entities
     public class Test : Entity<TestId>
     {
         public static Test New => new Test(TestId.New);
-        public Test(TestId id)
-            : base(id)
-        {
 
-        }
-
+        public Test(TestId id) : base(id) { }
     }
 }

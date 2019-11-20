@@ -26,6 +26,5 @@ namespace EventFly.Tests.UnitTests.Commands
             this.Invoking(test => new CreateTestCommand(null, CommandId.New))
                 .Should().Throw<ArgumentNullException>().And.Message.Contains("aggregateId").Should().BeTrue();
         }
-
     }
 }

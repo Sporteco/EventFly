@@ -44,8 +44,6 @@ namespace EventFly.Tests.UnitTests.Serialization
 {
     public class SerializationTests
     {
-        private const String Category = "Serialization";
-
         [Fact]
         [Category(Category)]
         public void CommittedEvent_AfterSerialization_IsValidAfterDeserialization()
@@ -56,9 +54,7 @@ namespace EventFly.Tests.UnitTests.Serialization
             var entity = new Test(entityId);
             var aggregateEvent = new TestAddedEvent(entity);
             var now = DateTimeOffset.UtcNow;
-            var eventId = EventId.NewDeterministic(
-                GuidFactories.Deterministic.Namespaces.Events,
-                $"{aggregateId.Value}-v{aggregateSequenceNumber}");
+            var eventId = EventId.NewDeterministic(GuidFactories.Deterministic.Namespaces.Events, $"{aggregateId.Value}-v{aggregateSequenceNumber}");
             var eventMetadata = new EventMetadata
             {
                 Timestamp = now,
@@ -67,8 +63,8 @@ namespace EventFly.Tests.UnitTests.Serialization
                 AggregateId = aggregateId.Value,
                 EventId = eventId
             };
-            var committedEvent =
-                new CommittedEvent<TestAggregateId, TestAddedEvent>(
+
+            var committedEvent = new CommittedEvent<TestAggregateId, TestAddedEvent>(
                     aggregateId,
                     aggregateEvent,
                     eventMetadata,
@@ -88,9 +84,7 @@ namespace EventFly.Tests.UnitTests.Serialization
             var entity = new Test(entityId);
             var aggregateEvent = new TestAddedEvent(entity);
             var now = DateTimeOffset.UtcNow;
-            var eventId = EventId.NewDeterministic(
-                GuidFactories.Deterministic.Namespaces.Events,
-                $"{aggregateId.Value}-v{aggregateSequenceNumber}");
+            var eventId = EventId.NewDeterministic(GuidFactories.Deterministic.Namespaces.Events, $"{aggregateId.Value}-v{aggregateSequenceNumber}");
             var eventMetadata = new EventMetadata
             {
                 Timestamp = now,
@@ -99,13 +93,13 @@ namespace EventFly.Tests.UnitTests.Serialization
                 AggregateId = aggregateId.Value,
                 EventId = eventId
             };
-            var domainEvent =
-                new DomainEvent<TestAggregateId, TestAddedEvent>(
-                    aggregateId,
-                    aggregateEvent,
-                    eventMetadata,
-                    now,
-                    aggregateSequenceNumber);
+
+            var domainEvent = new DomainEvent<TestAggregateId, TestAddedEvent>(
+                aggregateId,
+                aggregateEvent,
+                eventMetadata,
+                now,
+                aggregateSequenceNumber);
 
             domainEvent.SerializeDeserialize().Should().BeEquivalentTo(domainEvent);
         }
@@ -118,9 +112,7 @@ namespace EventFly.Tests.UnitTests.Serialization
             var aggregateId = TestAggregateId.New;
             var aggregateSnapshot = new TestAggregateSnapshot(Enumerable.Range(0, aggregateSequenceNumber - 1).Select(x => new TestAggregateSnapshot.TestModel(Guid.NewGuid())).ToList());
             var now = DateTimeOffset.UtcNow;
-            var snapshotId = SnapshotId.NewDeterministic(
-                GuidFactories.Deterministic.Namespaces.Snapshots,
-                $"{aggregateId.Value}-v{aggregateSequenceNumber}");
+            var snapshotId = SnapshotId.NewDeterministic(GuidFactories.Deterministic.Namespaces.Snapshots, $"{aggregateId.Value}-v{aggregateSequenceNumber}");
             var snapshotMetadata = new SnapshotMetadata
             {
                 SnapshotId = snapshotId,
@@ -128,13 +120,13 @@ namespace EventFly.Tests.UnitTests.Serialization
                 AggregateName = typeof(TestAggregate).GetAggregateName().Value,
                 AggregateId = aggregateId.Value
             };
-            var committedEvent =
-                new CommittedSnapshot<TestAggregate, TestAggregateId, TestAggregateSnapshot>(
-                    aggregateId,
-                    aggregateSnapshot,
-                    snapshotMetadata,
-                    now,
-                    aggregateSequenceNumber);
+
+            var committedEvent = new CommittedSnapshot<TestAggregate, TestAggregateId, TestAggregateSnapshot>(
+                aggregateId,
+                aggregateSnapshot,
+                snapshotMetadata,
+                now,
+                aggregateSequenceNumber);
 
             committedEvent.SerializeDeserialize().Should().BeEquivalentTo(committedEvent);
         }
@@ -157,6 +149,7 @@ namespace EventFly.Tests.UnitTests.Serialization
         {
             var aggregateId = TestAggregateId.New;
             var commandId = CommandId.New;
+
             var command = new AddFourTestsCommand(aggregateId, commandId, new Test(TestId.New));
 
             command.SerializeDeserialize().Should().BeEquivalentTo(command);
@@ -186,6 +179,6 @@ namespace EventFly.Tests.UnitTests.Serialization
             result.Should().BeEquivalentTo(executionResult);
         }
 
+        private const String Category = "Serialization";
     }
-
 }

@@ -1,8 +1,10 @@
+using System;
+
 namespace EventFly.TestHelpers
 {
     public static class Configuration
     {
-        public static System.String Default =
+        public static String Default =
             @"  akka.loglevel = ""INFO""
                 akka.stdout-loglevel = ""INFO""
                 akka.actor.serialize-messages = on
