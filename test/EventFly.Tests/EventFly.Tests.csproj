@@ -1,37 +1,37 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <ProjectGuid>{FE32A6E6-7356-43DE-996B-122878AD4FD9}</ProjectGuid>
-    <SonarQubeExclude>true</SonarQubeExclude>
-    <LangVersion>latest</LangVersion>
-  </PropertyGroup>
+    <PropertyGroup>
+        <ProjectGuid>{FE32A6E6-7356-43DE-996B-122878AD4FD9}</ProjectGuid>
+        <SonarQubeExclude>true</SonarQubeExclude>
+        <LangVersion>latest</LangVersion>
+    </PropertyGroup>
 
-  <PropertyGroup>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
-    <IsPackable>false</IsPackable>
-    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
-    <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
-    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
-    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-    <Title>EventFly.Tests</Title>
-    <Description>
-      EventFly's unit and integration test project.
-    </Description>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.0</TargetFramework>
+        <IsPackable>false</IsPackable>
+        <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+        <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
+        <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+        <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+        <Title>EventFly.Tests</Title>
+        <Description>
+            EventFly's unit and integration test project.
+        </Description>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Akka.Cluster.TestKit" Version="$(AkkaClusterTestKitVersion)" />
-    <PackageReference Include="coverlet.msbuild" Version="$(CoverletMSBuildVersion)" />
-    <PackageReference Include="FluentAssertions" Version="$(FluentAssertionsVersion)" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="$(TestSdkVersion)" />
-    <PackageReference Include="xunit" Version="$(XunitVersion)" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="$(XunitRunnerVSVersion)" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Akka.Cluster.TestKit" Version="$(AkkaClusterTestKitVersion)" />
+        <PackageReference Include="coverlet.msbuild" Version="$(CoverletMSBuildVersion)" />
+        <PackageReference Include="FluentAssertions" Version="$(FluentAssertionsVersion)" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="$(TestSdkVersion)" />
+        <PackageReference Include="xunit" Version="$(XunitVersion)" />
+        <PackageReference Include="xunit.runner.visualstudio" Version="$(XunitRunnerVSVersion)" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\EventFly.Abstractions\EventFly.Abstractions.csproj" />
-    <ProjectReference Include="..\..\src\EventFly.Infrastructure\EventFly.Infrastructure.csproj" />
-    <ProjectReference Include="..\EventFly.TestHelpers\EventFly.TestHelpers.csproj" />
-  </ItemGroup>
-  
+    <ItemGroup>
+        <ProjectReference Include="..\..\src\EventFly.Abstractions\EventFly.Abstractions.csproj" />
+        <ProjectReference Include="..\..\src\EventFly.Infrastructure\EventFly.Infrastructure.csproj" />
+        <ProjectReference Include="..\EventFly.TestHelpers\EventFly.TestHelpers.csproj" />
+    </ItemGroup>
+
 </Project>
