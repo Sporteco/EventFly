@@ -10,6 +10,7 @@ using Xunit.Abstractions;
 namespace EventFly.Tests.Domain
 {
     [Category(Categories.Domain)]
+    [Collection(Collections.Only)]
     public class DomainServiceTests : TestKit
     {
         public DomainServiceTests(ITestOutputHelper testOutputHelper) : base(Configuration.Default, "DomainServiceTests", testOutputHelper)

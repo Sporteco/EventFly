@@ -7,6 +7,7 @@ using Xunit;
 namespace EventFly.Tests.Abstractions
 {
     [Category(Categories.Abstractions)]
+    [Collection(Collections.Only)]
     public class SourceIdTests
     {
         [Fact]

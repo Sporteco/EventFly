@@ -36,7 +36,7 @@ using Xunit.Abstractions;
 namespace EventFly.Tests.Application
 {
     [Category(Categories.Application)]
-    [Collection("ScheduledJobsTests")]
+    [Collection(Collections.Only)]
     public class ScheduledJobsTests : TestKit
     {
         public ScheduledJobsTests(ITestOutputHelper testOutputHelper) : base(Configuration.WithTestScheduler, "jobs-tests", testOutputHelper)

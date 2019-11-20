@@ -35,7 +35,7 @@ using Xunit.Abstractions;
 namespace EventFly.Tests.Application
 {
     [Category(Categories.Application)]
-    [Collection("AggregateSagaTests")]
+    [Collection(Collections.Only)]
     public class AggregateSagaTests : AggregateTestKit<TestContext>
     {
         public AggregateSagaTests(ITestOutputHelper testOutputHelper) : base(testOutputHelper) { }

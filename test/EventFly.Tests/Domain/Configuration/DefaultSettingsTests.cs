@@ -30,6 +30,7 @@ using Xunit;
 namespace EventFly.Tests.Domain
 {
     [Category(Categories.Domain)]
+    [Collection(Collections.Only)]
     public class DefaultSettingsTests
     {
         [Fact]

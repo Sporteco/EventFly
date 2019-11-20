@@ -19,7 +19,7 @@ using Xunit;
 namespace EventFly.Tests.TestFixture
 {
     [Category(Categories.TestFixture)]
-    [Collection("FixtureTests")]
+    [Collection(Collections.Only)]
     public class AggregateFixtureTests
     {
         [Fact]

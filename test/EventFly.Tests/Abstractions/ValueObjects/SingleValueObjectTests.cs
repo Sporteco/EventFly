@@ -36,6 +36,7 @@ using Xunit;
 namespace EventFly.Tests.Abstractions
 {
     [Category(Categories.Abstractions)]
+    [Collection(Collections.Only)]
     public class SingleValueObjectTests
     {
         public class StringSingleValue : SingleValueObject<String>

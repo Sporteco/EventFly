@@ -35,7 +35,7 @@ using Xunit.Abstractions;
 namespace EventFly.Tests.Domain
 {
     [Category(Categories.Domain)]
-    [Collection("SubsriberTests")]
+    [Collection(Collections.Only)]
     public class SubscriberTests : TestKit
     {
         public SubscriberTests(ITestOutputHelper testOutputHelper) : base(Configuration.Default, "subscriber-tests", testOutputHelper)

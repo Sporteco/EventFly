@@ -32,4 +32,9 @@ namespace EventFly.Tests
         public const String Domain = "Domain";
         public const String TestFixture = "TestFixture";
     }
+
+    public static class Collections
+    {
+        public const String Only = "Only";
+    }
 }

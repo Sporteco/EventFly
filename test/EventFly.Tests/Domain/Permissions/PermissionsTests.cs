@@ -11,7 +11,7 @@ using Xunit.Abstractions;
 namespace EventFly.Tests.Domain
 {
     [Category(Categories.Domain)]
-    [Collection("PermissionsTests")]
+    [Collection(Collections.Only)]
     public class PermissionsTests : AggregateTestKit<TestPermissionsContext>
     {
         public PermissionsTests(ITestOutputHelper testOutputHelper) : base(testOutputHelper) { }
