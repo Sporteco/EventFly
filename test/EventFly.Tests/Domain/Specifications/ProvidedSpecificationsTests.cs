@@ -28,10 +28,12 @@
 using EventFly.Extensions;
 using FluentAssertions;
 using System;
+using System.ComponentModel;
 using Xunit;
 
 namespace EventFly.Tests.Domain
 {
+    [Category(Categories.Domain)]
     public class ProvidedSpecificationsTests
     {
         [Theory]

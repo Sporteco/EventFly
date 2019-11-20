@@ -36,10 +36,10 @@ using Xunit;
 
 namespace EventFly.Tests.Domain
 {
+    [Category(Categories.Domain)]
     public class AggregateEventTaggerTests
     {
         [Fact]
-        [Category(Category)]
         public void CommittedEvent_WhenTagged_ContainsAggregateNameAsTaggedElement()
         {
             var aggregateEventTagger = new AggregateEventTagger(new EventDefinitions());
@@ -72,7 +72,6 @@ namespace EventFly.Tests.Domain
         }
 
         [Fact]
-        [Category(Category)]
         public void CommittedEvent_WhenTagged_ContainsAggregateEventAsTaggedElement()
         {
             var aggregateEventTagger = new AggregateEventTagger(new EventDefinitions());
@@ -105,7 +104,6 @@ namespace EventFly.Tests.Domain
         }
 
         [Fact]
-        [Category(Category)]
         public void AggregateEventTagger_Manifest_ShouldBeEmpty()
         {
             var aggregateEventTagger = new AggregateEventTagger(new EventDefinitions());
@@ -114,7 +112,6 @@ namespace EventFly.Tests.Domain
         }
 
         [Fact]
-        [Category(Category)]
         public void AggregateEventTagger_TaggingNonEvent_ShouldBeLeftAlone()
         {
             var aggregateEventTagger = new AggregateEventTagger(new EventDefinitions());
@@ -124,7 +121,5 @@ namespace EventFly.Tests.Domain
 
             command.Should().Be(untagged);
         }
-
-        private const String Category = "Mapping";
     }
 }

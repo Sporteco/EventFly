@@ -34,10 +34,10 @@ using Xunit;
 
 namespace EventFly.Tests.Domain
 {
+    [Category(Categories.Domain)]
     public class AggregateEventUpcasterTests
     {
         [Fact]
-        [Category(Category)]
         public void CommittedEvent_WithUpgradableEvent_GetsUpgrades()
         {
             var aggregateEventUpcaster = new TestAggregateEventUpcaster();
@@ -71,7 +71,6 @@ namespace EventFly.Tests.Domain
         }
 
         [Fact]
-        [Category(Category)]
         public void Upcasting_UnsupportedEvent_ThrowsException()
         {
             var aggregateEventUpcaster = new TestAggregateEventUpcaster();
@@ -82,7 +81,6 @@ namespace EventFly.Tests.Domain
         }
 
         [Fact]
-        [Category(Category)]
         public void Instantiating_UnInstantiableUpcaster_ThrowsException()
         {
             this.Invoking(test => new UnInstantiableAggregateEventUpcaster())
@@ -90,7 +88,6 @@ namespace EventFly.Tests.Domain
         }
 
         [Fact]
-        [Category(Category)]
         public void NonCommittedEvent_WhenRead_IsReturnedUnchanged()
         {
             var message = new CreateTestCommand(TestAggregateId.New, CommandId.New);
@@ -101,7 +98,5 @@ namespace EventFly.Tests.Domain
             unchanged.Events.Single().As<CreateTestCommand>().Metadata.SourceId.Should().Be(message.Metadata.SourceId);
             unchanged.Events.Single().As<CreateTestCommand>().AggregateId.Should().Be(message.AggregateId);
         }
-
-        private const String Category = "Mapping";
     }
 }

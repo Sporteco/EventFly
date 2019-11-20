@@ -27,10 +27,12 @@ using EventFly.Extensions;
 using EventFly.Tests.Abstractions;
 using FluentAssertions;
 using System;
+using System.ComponentModel;
 using Xunit;
 
 namespace EventFly.Tests.Domain
 {
+    [Category(Categories.Domain)]
     public class ComittedEventTests
     {
         [Fact]

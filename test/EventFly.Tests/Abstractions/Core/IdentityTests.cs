@@ -32,7 +32,7 @@ using Xunit;
 
 namespace EventFly.Tests.Abstractions
 {
-    [Category(Categories.Unit)]
+    [Category(Categories.Abstractions)]
     public class IdentityTests
     {
         [Fact]

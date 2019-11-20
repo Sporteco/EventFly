@@ -29,11 +29,13 @@ using EventFly.ValueObjects;
 using FluentAssertions;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using Xunit;
 
 namespace EventFly.Tests.Abstractions
 {
+    [Category(Categories.Abstractions)]
     public class SingleValueObjectTests
     {
         public class StringSingleValue : SingleValueObject<String>

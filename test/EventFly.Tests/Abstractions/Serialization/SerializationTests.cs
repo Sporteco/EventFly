@@ -37,10 +37,10 @@ using Xunit;
 
 namespace EventFly.Tests.Abstractions
 {
+    [Category(Categories.Abstractions)]
     public class SerializationTests
     {
         [Fact]
-        [Category(Category)]
         public void CommittedEvent_AfterSerialization_IsValidAfterDeserialization()
         {
             var aggregateSequenceNumber = 3;
@@ -70,7 +70,6 @@ namespace EventFly.Tests.Abstractions
         }
 
         [Fact]
-        [Category(Category)]
         public void DomainEvent_AfterSerialization_IsValidAfterDeserialization()
         {
             var aggregateSequenceNumber = 3;
@@ -100,7 +99,6 @@ namespace EventFly.Tests.Abstractions
         }
 
         [Fact]
-        [Category(Category)]
         public void CommittedSnapshot_AfterSerialization_IsValidAfterDeserialization()
         {
             var aggregateSequenceNumber = 3;
@@ -127,8 +125,7 @@ namespace EventFly.Tests.Abstractions
         }
 
         //TODO : Work Item - https://dev.azure.com/lutando/EventFly/_workitems/edit/25/
-        /*[Fact] 
-        [Category(Category)]
+        /*[Fact]
         public void DistinctCommand_AfterSerialization_IsValidAfterDeserialization()
         {
             var aggregateId = TestAggregateId.New;
@@ -139,7 +136,6 @@ namespace EventFly.Tests.Abstractions
         }*/
 
         [Fact]
-        [Category(Category)]
         public void AddFourTestsCommand_AfterSerialization_IsValidAfterDeserialization()
         {
             var aggregateId = TestAggregateId.New;
@@ -151,7 +147,6 @@ namespace EventFly.Tests.Abstractions
         }
 
         [Fact]
-        [Category(Category)]
         public void FailedExecutionResult_AfterSerialization_IsValidAfterDeserialization()
         {
             var failureString = "this is a failed execution";
@@ -164,7 +159,6 @@ namespace EventFly.Tests.Abstractions
         }
 
         [Fact]
-        [Category(Category)]
         public void SuccessfulExecutionResult_AfterSerialization_IsValidAfterDeserialization()
         {
             var executionResult = new SuccessExecutionResult();
@@ -173,7 +167,5 @@ namespace EventFly.Tests.Abstractions
 
             result.Should().BeEquivalentTo(executionResult);
         }
-
-        private const String Category = "Serialization";
     }
 }

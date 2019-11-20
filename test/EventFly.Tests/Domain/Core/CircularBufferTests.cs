@@ -28,11 +28,13 @@
 using EventFly.Core;
 using FluentAssertions;
 using System;
+using System.ComponentModel;
 using System.Linq;
 using Xunit;
 
 namespace EventFly.Tests.Domain
 {
+    [Category(Categories.Domain)]
     public class CircularBufferTests
     {
         [Theory]

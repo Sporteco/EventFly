@@ -1,9 +1,11 @@
 using FluentAssertions;
 using System;
+using System.ComponentModel;
 using Xunit;
 
 namespace EventFly.Tests.Abstractions
 {
+    [Category(Categories.Abstractions)]
     public class EntityTests
     {
         [Fact]

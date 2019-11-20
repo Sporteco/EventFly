@@ -33,7 +33,7 @@ using Xunit;
 
 namespace EventFly.Tests.Domain
 {
-    [Category(Categories.Unit)]
+    [Category(Categories.Domain)]
     public class ExpressionSpecificationTests
     {
         [Fact]

@@ -1,3 +1,4 @@
+
 // The MIT License (MIT)
 //
 // Copyright (c) 2018 - 2019 Lutando Ngqakaza
@@ -23,10 +24,12 @@
 
 using EventFly.Configuration;
 using FluentAssertions;
+using System.ComponentModel;
 using Xunit;
 
 namespace EventFly.Tests.Domain
 {
+    [Category(Categories.Domain)]
     public class DefaultSettingsTests
     {
         [Fact]

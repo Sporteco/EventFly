@@ -34,13 +34,13 @@ using Xunit.Abstractions;
 
 namespace EventFly.Tests.Application
 {
+    [Category(Categories.Application)]
     [Collection("AggregateSagaTests")]
     public class AggregateSagaTests : AggregateTestKit<TestContext>
     {
         public AggregateSagaTests(ITestOutputHelper testOutputHelper) : base(testOutputHelper) { }
 
         [Fact]
-        [Category(Category)]
         public void SendingTest_FromTestAggregate_CompletesSaga()
         {
             var eventProbe = CreateTestProbe("event-probe");
@@ -76,7 +76,5 @@ namespace EventFly.Tests.Application
 
             eventProbe.ExpectMsg<DomainEvent<TestSagaId, TestSagaCompletedEvent>>();
         }
-
-        private const System.String Category = "Sagas";
     }
 }

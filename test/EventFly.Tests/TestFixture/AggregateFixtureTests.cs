@@ -18,11 +18,11 @@ using Xunit;
 
 namespace EventFly.Tests.TestFixture
 {
+    [Category(Categories.TestFixture)]
     [Collection("FixtureTests")]
     public class AggregateFixtureTests
     {
         [Fact]
-        [Category(Category)]
         public void FixtureArrangerWithIdentity_CreatesAggregateRef()
         {
             //TODO - https://dev.azure.com/lutando/EventFly/_workitems/edit/23/
@@ -38,7 +38,6 @@ namespace EventFly.Tests.TestFixture
         }
 
         [Fact]
-        [Category(Category)]
         public void FixtureArrangerWithAggregateManager_CreatesAggregateManagerRef()
         {
             using var testKit = new TestKit(Configuration.Default, "fixture-tests-2");
@@ -61,7 +60,6 @@ namespace EventFly.Tests.TestFixture
         }
 
         [Fact]
-        [Category(Category)]
         public void FixtureArrangerWithEvents_CanBeReplayed()
         {
             using var testKit = new TestKit(Configuration.Default, "fixture-tests-3");
@@ -92,7 +90,6 @@ namespace EventFly.Tests.TestFixture
         }
 
         [Fact]
-        [Category(Category)]
         public void FixtureArrangerWithSnapshot_CanBeLoaded()
         {
             using var testKit = new TestKit(Configuration.Default, "fixture-tests-4");
@@ -117,7 +114,5 @@ namespace EventFly.Tests.TestFixture
                     .As<TestAggregateSnapshot>().Tests.Count == snapshot.Tests.Count &&
                 x.ToSequenceNr == Int64.MaxValue);
         }
-
-        private const String Category = "AggregateFixture";
     }
 }

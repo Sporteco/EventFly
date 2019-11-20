@@ -35,10 +35,10 @@ using Xunit;
 
 namespace EventFly.Tests.Domain
 {
+    [Category(Categories.Domain)]
     public class DomainEventMapperTests
     {
         [Fact]
-        [Category(Category)]
         public void CommittedEvent_MappedToDomainEvent_IsValid()
         {
             var domainEventReadAdapter = new DomainEventReadAdapter();
@@ -73,7 +73,6 @@ namespace EventFly.Tests.Domain
         }
 
         [Fact]
-        [Category(Category)]
         public void NonCommittedEvent_WhenRead_IsReturnedUnchanged()
         {
             var message = new CreateTestCommand(TestAggregateId.New, CommandId.New);
@@ -84,7 +83,5 @@ namespace EventFly.Tests.Domain
             unchanged.Events.Single().As<CreateTestCommand>().Metadata.SourceId.Should().Be(message.Metadata.SourceId);
             unchanged.Events.Single().As<CreateTestCommand>().AggregateId.Should().Be(message.AggregateId);
         }
-
-        private const String Category = "Mapping";
     }
 }

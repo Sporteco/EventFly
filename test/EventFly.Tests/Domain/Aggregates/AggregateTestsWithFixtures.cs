@@ -35,13 +35,13 @@ using Xunit.Abstractions;
 
 namespace EventFly.Tests.Domain
 {
+    [Category(Categories.Domain)]
     [Collection("AggregateTests")]
     public class AggregateTestsWithFixtures : AggregateTestKit<TestContext>
     {
         public AggregateTestsWithFixtures(ITestOutputHelper testOutputHelper) : base(testOutputHelper) { }
 
         [Fact]
-        [Category(Category)]
         public void InitialEvent_AfterAggregateCreation_TestCreatedEventEmitted()
         {
             var aggregateId = TestAggregateId.New;
@@ -56,7 +56,6 @@ namespace EventFly.Tests.Domain
         }
 
         [Fact]
-        [Category(Category)]
         public void InitialEvent_AfterAggregateCreationWithNoTestPredicate_TestCreatedEventEmitted()
         {
             var aggregateId = TestAggregateId.New;
@@ -70,7 +69,6 @@ namespace EventFly.Tests.Domain
         }
 
         [Fact]
-        [Category(Category)]
         public void InitialEvent_AfterAggregateCreation_TestCreatedDomainEventEmitted()
         {
             var aggregateId = TestAggregateId.New;
@@ -84,7 +82,6 @@ namespace EventFly.Tests.Domain
         }
 
         [Fact]
-        [Category(Category)]
         public void InitialCommand_AfterAggregateCreation_TestCreatedEventEmitted()
         {
             var aggregateId = TestAggregateId.New;
@@ -98,7 +95,6 @@ namespace EventFly.Tests.Domain
         }
 
         [Fact]
-        [Category(Category)]
         public void NullInitialCommand_AfterAggregateCreation_ExceptionThrown()
         {
             var aggregateId = TestAggregateId.New;
@@ -108,7 +104,6 @@ namespace EventFly.Tests.Domain
         }
 
         [Fact]
-        [Category(Category)]
         public void NullInInitialCommands_AfterAggregateCreation_ExceptionThrown()
         {
             var aggregateId = TestAggregateId.New;
@@ -119,7 +114,6 @@ namespace EventFly.Tests.Domain
         }
 
         [Fact]
-        [Category(Category)]
         public void BadGivenCommands_AfterAggregateCreation_ExceptionThrown()
         {
             var aggregateId = TestAggregateId.New;
@@ -130,7 +124,6 @@ namespace EventFly.Tests.Domain
         }
 
         [Fact]
-        [Category(Category)]
         public void FailedCommands_AfterAggregateCreation_ExpectFailedTestExecutionResult()
         {
             var aggregateId = TestAggregateId.New;
@@ -143,7 +136,6 @@ namespace EventFly.Tests.Domain
         }
 
         [Fact]
-        [Category(Category)]
         public void InvalidCommands_AfterAggregateCreation_ExpectFailedValidationExecutionResult()
         {
             var aggregateId = TestAggregateId.New;
@@ -156,7 +148,6 @@ namespace EventFly.Tests.Domain
         }
 
         [Fact]
-        [Category(Category)]
         public void InitialSnapshot_After_TestCreatedEventEmitted()
         {
             var aggregateId = TestAggregateId.New;
@@ -168,7 +159,6 @@ namespace EventFly.Tests.Domain
         }
 
         [Fact]
-        [Category(Category)]
         public void InitialState_AfterAggregateCreation_TestCreatedEventEmitted()
         {
             var aggregateId = TestAggregateId.New;
@@ -181,7 +171,6 @@ namespace EventFly.Tests.Domain
         }
 
         [Fact]
-        [Category(Category)]
         public void EventContainerMetadata_AfterAggregateCreation_TestCreatedEventEmitted()
         {
             var aggregateId = TestAggregateId.New;
@@ -201,7 +190,6 @@ namespace EventFly.Tests.Domain
         }
 
         [Fact]
-        [Category(Category)]
         public void InitialState_AfterAggregateCreation_TestStateSignalled()
         {
             var fixture = new AggregateFixture<TestAggregate, TestAggregateId>(this);
@@ -219,7 +207,6 @@ namespace EventFly.Tests.Domain
         }
 
         [Fact]
-        [Category(Category)]
         public void TestCommand_AfterAggregateCreation_TestEventEmitted()
         {
             var aggregateId = TestAggregateId.New;
@@ -235,7 +222,6 @@ namespace EventFly.Tests.Domain
         }
 
         [Fact]
-        [Category(Category)]
         public void TestCommandTwice_AfterAggregateCreation_TestEventEmitted()
         {
             var fixture = new AggregateFixture<TestAggregate, TestAggregateId>(this);
@@ -257,7 +243,6 @@ namespace EventFly.Tests.Domain
         }
 
         [Fact]
-        [Category(Category)]
         public void TestEventSourcing_AfterManyTests_TestStateSignalled()
         {
             var aggregateId = TestAggregateId.New;
@@ -276,7 +261,6 @@ namespace EventFly.Tests.Domain
         }
 
         [Fact]
-        [Category(Category)]
         public void TestEventMultipleEmitSourcing_AfterManyMultiCreateCommand_EventsEmitted()
         {
             var aggregateId = TestAggregateId.New;
@@ -293,7 +277,6 @@ namespace EventFly.Tests.Domain
         }
 
         [Fact]
-        [Category(Category)]
         public void TestEventMultipleEmitSourcing_AfterManyMultiCommand_TestStateSignalled()
         {
             var aggregateId = TestAggregateId.New;
@@ -310,7 +293,6 @@ namespace EventFly.Tests.Domain
         }
 
         [Fact]
-        [Category(Category)]
         public void TestSnapShotting_AfterManyTests_TestStateSignalled()
         {
             var aggregateId = TestAggregateId.New;
@@ -328,7 +310,5 @@ namespace EventFly.Tests.Domain
                     && x.AggregateEvent.AggregateState.TestCollection.Count == 10
                     && x.AggregateEvent.AggregateState.FromHydration);
         }
-
-        private const String Category = "AggregatesWithFixtures";
     }
 }

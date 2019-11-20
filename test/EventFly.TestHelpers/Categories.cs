@@ -27,7 +27,9 @@ namespace EventFly.Tests
 {
     public static class Categories
     {
-        public const String Integration = "integration";
-        public const String Unit = "unit";
+        public const String Abstractions = "Abstractions";
+        public const String Application = "Application";
+        public const String Domain = "Domain";
+        public const String TestFixture = "TestFixture";
     }
 }

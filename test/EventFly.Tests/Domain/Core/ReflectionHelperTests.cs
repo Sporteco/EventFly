@@ -28,10 +28,12 @@
 using EventFly.Core;
 using FluentAssertions;
 using System;
+using System.ComponentModel;
 using Xunit;
 
 namespace EventFly.Tests.Domain
 {
+    [Category(Categories.Domain)]
     public class ReflectionHelperTests
     {
         [Fact]

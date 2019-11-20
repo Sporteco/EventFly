@@ -28,13 +28,13 @@ using EventFly.DependencyInjection;
 using EventFly.Tests.Abstractions;
 using EventFly.Tests.Application;
 using Microsoft.Extensions.DependencyInjection;
-using System;
 using System.ComponentModel;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace EventFly.Tests.Domain
 {
+    [Category(Categories.Domain)]
     [Collection("SubsriberTests")]
     public class SubscriberTests : TestKit
     {
@@ -52,7 +52,6 @@ namespace EventFly.Tests.Domain
         }
 
         [Fact]
-        [Category(Category)]
         public void Subscriber_ReceivedEvent_FromAggregatesEmit()
         {
             var eventProbe = CreateTestProbe("event-probe");
@@ -69,7 +68,6 @@ namespace EventFly.Tests.Domain
         }
 
         [Fact]
-        [Category(Category)]
         public void Subscriber_ReceivedAsyncEvent_FromAggregatesEmit()
         {
             var eventProbe = CreateTestProbe("event-probe");
@@ -84,7 +82,5 @@ namespace EventFly.Tests.Domain
 
             eventProbe.ExpectMsg<TestAsyncSubscribedEventHandled<TestCreatedEvent>>(x => x.AggregateEvent.TestAggregateId == command.AggregateId);
         }
-
-        private const String Category = "Subscribers";
     }
 }

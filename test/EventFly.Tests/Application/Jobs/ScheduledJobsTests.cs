@@ -28,12 +28,14 @@ using EventFly.Jobs;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace EventFly.Tests.Application
 {
+    [Category(Categories.Application)]
     [Collection("ScheduledJobsTests")]
     public class ScheduledJobsTests : TestKit
     {
@@ -52,7 +54,6 @@ namespace EventFly.Tests.Application
         }
 
         //[Fact]
-        //[Category(Category)]
         private async Task SchedulingJob_For5minutes_DispatchesJobMessage()
         {
             var probe = CreateTestProbe("job-probe");
@@ -89,7 +90,6 @@ namespace EventFly.Tests.Application
         }
 
         //[Fact]
-        //[Category(Category)]
         private async Task SchedulingJob_For5minutes_DispatchesJobMessageFromAsynRunner()
         {
             var probe = CreateTestProbe("job-probe");
@@ -126,7 +126,6 @@ namespace EventFly.Tests.Application
         }
 
         //[Fact]
-        //[Category(Category)]
         private async Task SchedulingJob_ForEvery5minutes_DispatchesJobMessage()
         {
             var probe = CreateTestProbe("job-probe");
@@ -167,7 +166,6 @@ namespace EventFly.Tests.Application
         }
 
         //[Fact]
-        //[Category(Category)]
         private async Task SchedulingJob_ForEveryCronTrigger_DispatchesJobMessage()
         {
             var probe = CreateTestProbe("job-probe");
@@ -210,7 +208,6 @@ namespace EventFly.Tests.Application
         }
 
         //[Fact]
-        //[Category(Category)]
         private async Task SchedulingJob_AndThenCancellingJob_CeasesDispatching()
         {
             var probe = CreateTestProbe("job-probe");

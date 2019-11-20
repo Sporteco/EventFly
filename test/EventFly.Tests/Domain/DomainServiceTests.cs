@@ -1,16 +1,15 @@
 using Akka.TestKit.Xunit2;
 using EventFly.DependencyInjection;
-using EventFly.DomainService;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.ComponentModel;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace EventFly.Tests.Domain
 {
-    public class Service : AsynchronousDomainService<Service> { }
-
+    [Category(Categories.Domain)]
     public class DomainServiceTests : TestKit
     {
         public DomainServiceTests(ITestOutputHelper testOutputHelper) : base(Configuration.Default, "DomainServiceTests", testOutputHelper)
@@ -21,7 +20,7 @@ namespace EventFly.Tests.Domain
         [Fact]
         public void SuccessfulConstruction()
         {
-            Action act = () => new Service();
+            Action act = () => new DomainService();
             act.Should().NotThrow();
         }
     }
