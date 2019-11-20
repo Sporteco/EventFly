@@ -1,4 +1,4 @@
-﻿using EventFly.Aggregates;
+using EventFly.Aggregates;
 using EventFly.Core;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -16,16 +16,16 @@ namespace EventFly.Storages.EntityFramework
             DbContext = null;
         }
 
-        protected override async Task PostApplyAction(IAggregateEvent<TIdentity> @event)
-        {
-            await DbContext.SaveChangesAsync();
-        }
-
         protected TDbContext DbContext;
 
         protected EntityFrameworkAggregateState(TDbContext dbContext)
         {
             DbContext = dbContext;
+        }
+
+        protected override async Task PostApplyAction(IAggregateEvent<TIdentity> @event)
+        {
+            await DbContext.SaveChangesAsync();
         }
     }
 }

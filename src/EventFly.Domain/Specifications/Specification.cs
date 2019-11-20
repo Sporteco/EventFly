@@ -1,4 +1,4 @@
-﻿// The MIT License (MIT)
+// The MIT License (MIT)
 //
 // Copyright (c) 2015-2019 Rasmus Mikkelsen
 // Copyright (c) 2015-2019 eBay Software Foundation
@@ -25,6 +25,7 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -32,16 +33,10 @@ namespace EventFly.Specifications
 {
     public abstract class Specification<T> : ISpecification<T>
     {
-        public System.Boolean IsSatisfiedBy(T obj)
-        {
-            return !IsNotSatisfiedBecause(obj).Any();
-        }
+        public Boolean IsSatisfiedBy(T obj) => !IsNotSatisfiedBecause(obj).Any();
 
-        public IEnumerable<System.String> WhyIsNotSatisfiedBy(T obj)
-        {
-            return IsNotSatisfiedBecause(obj);
-        }
+        public IEnumerable<String> WhyIsNotSatisfiedBy(T obj) => IsNotSatisfiedBecause(obj);
 
-        protected abstract IEnumerable<System.String> IsNotSatisfiedBecause(T obj);
+        protected abstract IEnumerable<String> IsNotSatisfiedBecause(T obj);
     }
 }

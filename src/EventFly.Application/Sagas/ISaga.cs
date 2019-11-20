@@ -1,4 +1,4 @@
-﻿// The MIT License (MIT)
+// The MIT License (MIT)
 //
 // Copyright (c) 2015-2019 Rasmus Mikkelsen
 // Copyright (c) 2015-2019 eBay Software Foundation
@@ -30,14 +30,9 @@ using EventFly.Core;
 
 namespace EventFly.Sagas
 {
-    public interface ISaga
-    {
-
-    }
+    public interface ISaga { }
 
     public interface ISaga<TSagaId> : ISaga
         where TSagaId : IIdentity
-    {
-
-    }
+    { }
 }

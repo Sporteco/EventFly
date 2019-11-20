@@ -1,4 +1,4 @@
-﻿using EventFly.ValueObjects;
+using EventFly.ValueObjects;
 using System;
 
 namespace EventFly.Localization
@@ -9,13 +9,15 @@ namespace EventFly.Localization
         public LocalizedLink() : this(null) { }
 
         public LocalizedLink(params LinkLocalization[] locs) : base(locs) { }
-
     }
-
 
     [Serializable]
     public class LinkLocalization : ValueObject, ILocalizedValue
     {
+        public String Href { get; }
+        public String Alt { get; }
+        public LanguageCode Lang { get; }
+
         public LinkLocalization(String href, LanguageCode lang, String alt = null)
         {
             Href = href;
@@ -23,13 +25,6 @@ namespace EventFly.Localization
             Alt = alt;
         }
 
-        public String Href { get; }
-        public String Alt { get; }
-        public LanguageCode Lang { get; }
-
-        public override String ToString()
-        {
-            return $"{Href} {Lang}";
-        }
+        public override String ToString() => $"{Href} {Lang}";
     }
 }

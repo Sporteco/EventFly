@@ -1,4 +1,4 @@
-﻿// The MIT License (MIT)
+// The MIT License (MIT)
 //
 // Copyright (c) 2018 - 2019 Lutando Ngqakaza
 // https://github.com/Lutando/EventFly 
@@ -39,29 +39,18 @@ namespace EventFly.Subscribers
         protected ILoggingAdapter Logger { get; }
         public DomainEventSubscriberSettings Settings { get; }
 
-        protected DomainEventSubscriber(
-            DomainEventSubscriberSettings settings = null)
+        protected DomainEventSubscriber(DomainEventSubscriberSettings settings = null)
         {
             Logger = Context.GetLogger();
-            if (settings == null)
-                Settings = new DomainEventSubscriberSettings(Context.System.Settings.Config);
-            else
-                Settings = settings;
+            if (settings == null) Settings = new DomainEventSubscriberSettings(Context.System.Settings.Config);
+            else Settings = settings;
 
             SubscriptionTypes = new List<Type>();
-
             if (Settings.AutoSubscribe)
             {
                 var type = GetType();
-
-                var asyncDomainEventSubscriptionTypes =
-                    type
-                        .GetAsyncDomainEventSubscriberSubscriptionTypes();
-
-                var domainEventsubscriptionTypes =
-                    type
-                        .GetDomainEventSubscriberSubscriptionTypes();
-
+                var asyncDomainEventSubscriptionTypes = type.GetAsyncDomainEventSubscriberSubscriptionTypes();
+                var domainEventsubscriptionTypes = type.GetDomainEventSubscriberSubscriptionTypes();
                 var subscriptionTypes = new List<Type>();
 
                 subscriptionTypes.AddRange(asyncDomainEventSubscriptionTypes);
@@ -87,10 +76,7 @@ namespace EventFly.Subscribers
         public void InitReceives()
         {
             var type = GetType();
-
-            var subscriptionTypes =
-                type
-                    .GetDomainEventSubscriberSubscriptionTypes();
+            var subscriptionTypes = type.GetDomainEventSubscriberSubscriptionTypes();
 
             var methods = type
                 .GetTypeInfo()
@@ -99,12 +85,9 @@ namespace EventFly.Subscribers
                 {
                     if (mi.Name != "Handle") return false;
                     var parameters = mi.GetParameters();
-                    return
-                        parameters.Length == 1;
+                    return parameters.Length == 1;
                 })
-                .ToDictionary(
-                    mi => mi.GetParameters()[0].ParameterType,
-                    mi => mi);
+                .ToDictionary(mi => mi.GetParameters()[0].ParameterType, mi => mi);
 
             var method = type
                 .GetBaseType("ReceiveActor")
@@ -113,9 +96,7 @@ namespace EventFly.Subscribers
                 {
                     if (mi.Name != "Receive") return false;
                     var parameters = mi.GetParameters();
-                    return
-                        parameters.Length == 1
-                        && parameters[0].ParameterType.Name.Contains("Func");
+                    return parameters.Length == 1 && parameters[0].ParameterType.Name.Contains("Func");
                 })
                 .First();
 
@@ -132,10 +113,7 @@ namespace EventFly.Subscribers
         public void InitAsyncReceives()
         {
             var type = GetType();
-
-            var subscriptionTypes =
-                type
-                    .GetAsyncDomainEventSubscriberSubscriptionTypes();
+            var subscriptionTypes = type.GetAsyncDomainEventSubscriberSubscriptionTypes();
 
             var methods = type
                 .GetTypeInfo()
@@ -144,13 +122,9 @@ namespace EventFly.Subscribers
                 {
                     if (mi.Name != "HandleAsync") return false;
                     var parameters = mi.GetParameters();
-                    return
-                        parameters.Length == 1;
+                    return parameters.Length == 1;
                 })
-                .ToDictionary(
-                    mi => mi.GetParameters()[0].ParameterType,
-                    mi => mi);
-
+                .ToDictionary(mi => mi.GetParameters()[0].ParameterType, mi => mi);
 
             var method = type
                 .GetBaseType("ReceiveActor")
@@ -159,9 +133,7 @@ namespace EventFly.Subscribers
                 {
                     if (mi.Name != "ReceiveAsync") return false;
                     var parameters = mi.GetParameters();
-                    return
-                        parameters.Length == 2
-                        && parameters[0].ParameterType.Name.Contains("Func");
+                    return parameters.Length == 2 && parameters[0].ParameterType.Name.Contains("Func");
                 })
                 .First();
 
@@ -178,7 +150,6 @@ namespace EventFly.Subscribers
         protected virtual Boolean Handle(UnsubscribeFromAll command)
         {
             UnsubscribeFromAllTopics();
-
             return true;
         }
 
@@ -189,6 +160,5 @@ namespace EventFly.Subscribers
                 Context.System.EventStream.Unsubscribe(Self, type);
             }
         }
-
     }
 }

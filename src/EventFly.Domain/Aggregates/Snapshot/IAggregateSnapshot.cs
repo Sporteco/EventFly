@@ -26,13 +26,10 @@ using EventFly.Core.VersionedTypes;
 
 namespace EventFly.Aggregates.Snapshot
 {
-    public interface IAggregateSnapshot : IVersionedType
-    {
-    }
+    public interface IAggregateSnapshot : IVersionedType { }
 
     public interface IAggregateSnapshot<TAggregate, TIdentity> : IAggregateSnapshot
         where TAggregate : IAggregateRoot<TIdentity>
         where TIdentity : IIdentity
-    {
-    }
+    { }
 }

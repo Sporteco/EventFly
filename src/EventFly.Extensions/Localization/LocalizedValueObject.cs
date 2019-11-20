@@ -1,4 +1,4 @@
-﻿using EventFly.ValueObjects;
+using EventFly.ValueObjects;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -10,21 +10,19 @@ namespace EventFly.Localization
     public class LocalizedValueObject<T> : ValueObject
         where T : ILocalizedValue
     {
-        protected readonly List<T> _locs = new List<T>();
-
         public T[] Locs => _locs.ToArray();
 
         [JsonConstructor]
         public LocalizedValueObject(params T[] locs)
         {
-            if (locs != null)
-                _locs.AddRange(locs);
+            if (locs != null) _locs.AddRange(locs);
         }
+
+        protected readonly List<T> _locs = new List<T>();
 
         protected override IEnumerable<Object> GetEqualityComponents()
         {
             return _locs.Select(i => (Object)i);
         }
-
     }
 }

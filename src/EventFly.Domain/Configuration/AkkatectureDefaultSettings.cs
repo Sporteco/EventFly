@@ -1,4 +1,4 @@
-﻿// The MIT License (MIT)
+// The MIT License (MIT)
 //
 // Copyright (c) 2018 - 2019 Lutando Ngqakaza
 // https://github.com/Lutando/EventFly 
@@ -31,6 +31,5 @@ namespace EventFly.Configuration
         {
             return ConfigurationFactory.FromResource<EventFlyDefaultSettings>("EventFly.Configuration.reference.conf");
         }
-
     }
 }

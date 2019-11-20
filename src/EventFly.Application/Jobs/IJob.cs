@@ -25,9 +25,7 @@ using EventFly.Core.VersionedTypes;
 
 namespace EventFly.Jobs
 {
-    public interface IJob : IVersionedType
-    {
-    }
+    public interface IJob : IVersionedType { }
 
     public interface IJob<out TIdentity> : IJob
         where TIdentity : IJobId
