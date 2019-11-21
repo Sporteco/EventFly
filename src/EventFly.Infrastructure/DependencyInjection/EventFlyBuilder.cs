@@ -1,4 +1,4 @@
-﻿using EventFly.Definitions;
+using EventFly.Definitions;
 using EventFly.Validation;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,15 +12,14 @@ namespace EventFly.DependencyInjection
     public sealed class EventFlyBuilder
     {
         public IServiceCollection Services { get; }
-        private readonly ApplicationDefinition _applicationDefinition;
-        public IApplicationDefinition ApplicationDefinition => _applicationDefinition;
+        public IApplicationDefinition ApplicationDefinition { get; private set; }
 
         public EventFlyBuilder(IServiceCollection services)
         {
             Services = services;
-            _applicationDefinition = new ApplicationDefinition();
+            ApplicationDefinition = new ApplicationDefinition();
             Services
-                .AddSingleton<IApplicationDefinition>(_applicationDefinition)
+                .AddSingleton(ApplicationDefinition)
                 .AddSingleton<IDefinitionToManagerRegistry, DefinitionToManagerRegistry>();
         }
 
@@ -29,28 +28,27 @@ namespace EventFly.DependencyInjection
         {
             var context = new TContext();
             context.DI(Services);
-
-
-            _applicationDefinition.RegisterContext(context);
-
+            ((ApplicationDefinition)ApplicationDefinition).RegisterContext(context);
             RegisterValidators(Services);
             return this;
         }
 
-        private void RegisterValidators(IServiceCollection services)
+        private static void RegisterValidators(IServiceCollection services)
         {
-            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
-            {
-                RegisterValidatorsInAssembly(assembly, services);
-            }
+            //bug workaround, see: https://developercommunity.visualstudio.com/content/problem/738856/could-not-load-file-or-assembly-microsoftintellitr.html
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies().Where(x => !x.FullName.StartsWith("Microsoft."));
+            foreach (var assembly in assemblies) RegisterValidatorsInAssembly(assembly, services);
         }
 
-        private void RegisterValidatorsInAssembly(Assembly assembly, IServiceCollection services)
+        private static void RegisterValidatorsInAssembly(Assembly assembly, IServiceCollection services)
         {
             try
             {
-                var validatorTypes = assembly.GetTypes().SelectMany(i => i.GetCustomAttributes<ValidatorAttribute>()
-                    .Select(j => new { Type = i, j.ValidatorType })).Distinct();
+                var validatorTypes = assembly
+                    .GetTypes()
+                    .SelectMany(i => i.GetCustomAttributes<ValidatorAttribute>()
+                    .Select(j => new { Type = i, j.ValidatorType }))
+                    .Distinct();
                 foreach (var item in validatorTypes)
                 {
                     services.TryAddSingleton(typeof(IValidator<>).MakeGenericType(item.Type), item.ValidatorType);
