@@ -3,6 +3,7 @@ using EventFly.Exceptions;
 using EventFly.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace EventFly.Aggregates
@@ -51,7 +52,23 @@ namespace EventFly.Aggregates
         }
 
         protected virtual Task PreApplyAction(IAggregateEvent<TIdentity> @event) => Task.CompletedTask;
-        protected virtual Task PostApplyAction(IAggregateEvent<TIdentity> @event) => Task.CompletedTask;
+
+        private readonly ICollection<Func<IAggregateEvent<TIdentity>, Task>> _postApplyActions = new List<Func<IAggregateEvent<TIdentity>, Task>>();
+        protected void AddPostApplyAction(Func<IAggregateEvent<TIdentity>, Task> action)
+        {
+            _postApplyActions.Add(action);
+        }
+
+        protected virtual async Task PostApplyAction(IAggregateEvent<TIdentity> @event)
+        {
+            if (_postApplyActions.Any())
+            {
+                foreach (var action in _postApplyActions)
+                    await action(@event);
+
+                _postApplyActions.Clear();
+            }
+        }
 
         private static readonly IReadOnlyDictionary<Type, Action<TMessageApplier, IAggregateEvent>> ApplyMethods =
             typeof(TMessageApplier).GetAggregateEventApplyMethods<TIdentity, TMessageApplier>();
@@ -60,6 +77,8 @@ namespace EventFly.Aggregates
         {
             return !ApplyMethods.TryGetValue(eventType, out var applier) ? null : applier;
         }
+
+
     }
 
     public abstract class AggregateState<TAggregateState, TIdentity> : AggregateState<TAggregateState, TIdentity, TAggregateState>

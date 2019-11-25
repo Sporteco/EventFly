@@ -23,6 +23,7 @@ namespace EventFly.Infrastructure.Storage
         protected override async Task PostApplyAction(IAggregateEvent<TIdentity> @event)
         {
             await Db.Put(Id, @event);
+            await base.PostApplyAction(@event);
         }
 
         protected readonly IAggregateStateEventStore Db;

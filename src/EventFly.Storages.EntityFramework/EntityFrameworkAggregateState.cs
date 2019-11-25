@@ -26,6 +26,8 @@ namespace EventFly.Storages.EntityFramework
         protected override async Task PostApplyAction(IAggregateEvent<TIdentity> @event)
         {
             await DbContext.SaveChangesAsync();
+
+            await base.PostApplyAction(@event);
         }
     }
 }
