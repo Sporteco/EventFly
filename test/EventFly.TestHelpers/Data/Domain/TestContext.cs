@@ -24,7 +24,7 @@ namespace EventFly.Tests.Domain
                 typeof(TestFailedExecutionResultCommand),
                 typeof(PublishTestStateCommand));
 
-            RegisterEvents(
+            RegisterPublicEvents(
                 typeof(TestedErrorEvent),
                 typeof(TestSagaStartedEvent),
                 typeof(TestStateSignalEvent),

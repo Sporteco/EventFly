@@ -82,5 +82,23 @@ namespace EventFly.Tests.Domain
 
             eventProbe.ExpectMsg<TestAsyncSubscribedEventHandled<TestCreatedEvent>>(x => x.AggregateEvent.TestAggregateId == command.AggregateId);
         }
+
+        [Fact]
+        public void Subscriber_ReceivedAsyncAggregateEvent_FromAggregatesEmit()
+        {
+            var eventProbe = CreateTestProbe("event-probe");
+            Sys.EventStream.Subscribe(eventProbe, typeof(TestManySubscribedEventHandled));
+            Sys.ActorOf(Props.Create(() => new TestAsyncManyEventSubscriber()), "test-subscriber");
+            var bus = Sys.GetExtension<ServiceProviderHolder>().ServiceProvider.GetRequiredService<ICommandBus>();
+
+            var aggregateId = TestAggregateId.New;
+            var commandId = CommandId.New;
+            var command = new CreateTestCommand(aggregateId, commandId);
+            bus.Publish(command).GetAwaiter().GetResult();
+
+            eventProbe.ExpectMsg<TestManySubscribedEventHandled>(x =>
+                x.DomainEvent.GetIdentity().Value == aggregateId && x.DomainEvent.EventType == typeof(TestCreatedEvent)
+            );
+        }
     }
 }

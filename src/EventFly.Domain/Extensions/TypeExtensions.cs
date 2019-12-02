@@ -126,6 +126,21 @@ namespace EventFly.Extensions
                     mi => ReflectionHelper.CompileMethodInvocation<Action<TAggregateState, IAggregateEvent>>(type, "Apply", mi.GetParameters()[0].ParameterType));
         }
 
+        internal static IReadOnlyList<Type> GetDomainEventSubscriberSubscriptionTypes(this Type type)
+        {
+            var interfaces = type
+                .GetTypeInfo()
+                .GetInterfaces()
+                .Select(i => i.GetTypeInfo())
+                .ToList();
+            var domainEventTypes = interfaces
+                .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ISubscribeTo<,>))
+                .Select(i => typeof(IDomainEvent<,>).MakeGenericType(i.GetGenericArguments()[0], i.GetGenericArguments()[1]))
+                .ToList();
+
+            return domainEventTypes;
+        }
+
         internal static IReadOnlyList<Type> GetAsyncDomainEventSubscriberSubscriptionTypes(this Type type)
         {
             var interfaces = type
@@ -141,6 +156,21 @@ namespace EventFly.Extensions
             return domainEventTypes;
         }
 
+        internal static Boolean IsAsyncManyDomainEventSubscriber(this Type type)
+            => type
+                .GetTypeInfo()
+                .GetInterfaces()
+                .Select(i => i.GetTypeInfo())
+                .Any(i => i == typeof(ISubscribeToManyAsync));
+
+        internal static IEnumerable<Type> AggregateEventTypeToDomainEventType(this IEnumerable<Type> types)
+        {
+            return types
+                .SelectMany(t => t.GetTypeInfo().GetInterfaces().Select(i => (Type: t, Interface: i.GetTypeInfo())))
+                .Where(ti => ti.Interface.IsGenericType && ti.Interface.GetGenericTypeDefinition() == typeof(IAggregateEvent<>))
+                .Select(ti => typeof(IDomainEvent<,>).MakeGenericType(ti.Interface.GetGenericArguments()[0], ti.Type));
+        }
+
         internal static IReadOnlyList<Tuple<Type, Type>> GetAggregateExecuteTypes(this Type type)
         {
             var interfaces = type
@@ -151,21 +181,6 @@ namespace EventFly.Extensions
             var domainEventTypes = interfaces
                 .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IExecute<,>))
                 .Select(i => new Tuple<Type, Type>(i.GetGenericArguments()[0], i.GetGenericArguments()[1]))
-                .ToList();
-
-            return domainEventTypes;
-        }
-
-        internal static IReadOnlyList<Type> GetDomainEventSubscriberSubscriptionTypes(this Type type)
-        {
-            var interfaces = type
-                .GetTypeInfo()
-                .GetInterfaces()
-                .Select(i => i.GetTypeInfo())
-                .ToList();
-            var domainEventTypes = interfaces
-                .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ISubscribeTo<,>))
-                .Select(i => typeof(IDomainEvent<,>).MakeGenericType(i.GetGenericArguments()[0], i.GetGenericArguments()[1]))
                 .ToList();
 
             return domainEventTypes;

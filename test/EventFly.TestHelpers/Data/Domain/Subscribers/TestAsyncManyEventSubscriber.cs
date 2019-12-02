@@ -1,9 +1,5 @@
 // The MIT License (MIT)
 //
-// Copyright (c) 2015-2019 Rasmus Mikkelsen
-// Copyright (c) 2015-2019 eBay Software Foundation
-// Modified from original source https://github.com/eventflow/EventFlow
-//
 // Copyright (c) 2018 - 2019 Lutando Ngqakaza
 // https://github.com/Lutando/EventFly 
 // 
@@ -25,30 +21,42 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-
 using EventFly.Aggregates;
-using EventFly.Core;
+using EventFly.Subscribers;
+using EventFly.Tests.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace EventFly.Subscribers
+namespace EventFly.Tests.Domain
 {
-    public interface ISubscribeToAsync<in TIdentity, in TAggregateEvent> where TIdentity : IIdentity
-        where TAggregateEvent : class, IAggregateEvent<TIdentity>
+    public class TestAsyncManyEventSubscriber : DomainEventSubscriber,
+        ISubscribeToManyAsync
     {
-        Task HandleAsync(IDomainEvent<TIdentity, TAggregateEvent> domainEvent);
+        public Task HandleAsync(IDomainEvent domainEvent)
+        {
+            var handled = new TestManySubscribedEventHandled(domainEvent);
+            Context.System.EventStream.Publish(handled);
+            return Task.CompletedTask;
+        }
+
+        public IEnumerable<Type> GetEventTypes()
+        {
+            return new[]
+            {
+                typeof(TestCreatedEvent),
+                typeof(TestAddedEvent)
+            };
+        }
     }
 
-    public interface ISubscribeTo<in TIdentity, in TAggregateEvent> where TIdentity : IIdentity
-        where TAggregateEvent : class, IAggregateEvent<TIdentity>
+    public class TestManySubscribedEventHandled
     {
-        System.Boolean Handle(IDomainEvent<TIdentity, TAggregateEvent> domainEvent);
-    }
+        public IDomainEvent DomainEvent { get; }
 
-    public interface ISubscribeToManyAsync
-    {
-        Task HandleAsync(IDomainEvent domainEvent);
-        IEnumerable<Type> GetEventTypes();
+        public TestManySubscribedEventHandled(IDomainEvent domainEvent)
+        {
+            DomainEvent = domainEvent;
+        }
     }
 }

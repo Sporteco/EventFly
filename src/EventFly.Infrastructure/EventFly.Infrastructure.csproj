@@ -18,6 +18,7 @@
   <ItemGroup>
     <ProjectReference Include="..\EventFly.Abstractions\EventFly.Abstractions.csproj" />
     <ProjectReference Include="..\EventFly.Application\EventFly.Application.csproj" />
+    <ProjectReference Include="..\EventFly.ExternalEventPublisher\EventFly.ExternalEventPublisher.csproj" />
   </ItemGroup>
 
 </Project>

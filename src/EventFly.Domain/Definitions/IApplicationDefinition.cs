@@ -1,4 +1,4 @@
-﻿// Decompiled with JetBrains decompiler
+// Decompiled with JetBrains decompiler
 // Type: EventFly.Definitions.IApplicationDefinition
 // Assembly: EventFly, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
 // MVID: 61DF059E-E5F5-4992-B320-644C3E4F5C82
@@ -24,10 +24,14 @@ namespace EventFly.Definitions
         IReadOnlyCollection<IJobDefinition> Jobs { get; }
         IReadOnlyCollection<IDomainServiceDefinition> DomainServices { get; }
         IReadOnlyCollection<IPermissionDefinition> Permissions { get; }
+        IReadOnlyCollection<IDomainEventSubscriberDefinition> DomainEventSubscribers { get; }
 
         ICommandDefinitions Commands { get; }
 
         IEventDefinitions Events { get; }
+        IEventDefinitions PublicEvents { get; }
+        IEventDefinitions PrivateEvents { get; }
+        IEventDefinitions ExternalEvents { get; }
 
         ISnapshotDefinitions Snapshots { get; }
     }

@@ -1,4 +1,5 @@
-﻿using Akka.Actor;
+using Akka.Actor;
+using Akka.DI.Core;
 using EventFly.Aggregates;
 using EventFly.DomainService;
 using EventFly.Extensions;
@@ -7,6 +8,7 @@ using EventFly.Queries;
 using EventFly.Sagas.AggregateSaga;
 using EventFly.Schedulers.Commands;
 using EventFly.Schedulers.Events;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -37,9 +39,10 @@ namespace EventFly.Definitions
 
             RegisterCommandsScheduler();
             RegisterEventsScheduler();
+            RegisterDomainEventSubscribers(applicationDefinition.DomainEventSubscribers);
         }
 
-        public IReadOnlyDictionary<IJobManagerDefinition, IActorRef> RegisterJobManagers(IReadOnlyCollection<IJobManagerDefinition> definitions, System.String contextName)
+        private IReadOnlyDictionary<IJobManagerDefinition, IActorRef> RegisterJobManagers(IReadOnlyCollection<IJobManagerDefinition> definitions, System.String contextName)
         {
             var dictionaryJob = new Dictionary<IJobManagerDefinition, IActorRef>();
             foreach (var managerDef in definitions)
@@ -52,14 +55,32 @@ namespace EventFly.Definitions
             return dictionaryJob;
         }
 
-        public void RegisterCommandsScheduler()
+        private void RegisterCommandsScheduler()
         {
             _system.ActorOf(Props.Create(typeof(JobManager<PublishCommandJobScheduler, PublishCommandJobRunner, PublishCommandJob, PublishCommandJobId>)), $"job-commands-publisher-manager");
         }
 
-        public void RegisterEventsScheduler()
+        private void RegisterEventsScheduler()
         {
             _system.ActorOf(Props.Create(typeof(JobManager<PublishEventJobScheduler, PublishEventJobRunner, PublishEventJob, PublishEventJobId>)), $"job-events-publisher-manager");
+        }
+
+        private void RegisterDomainEventSubscribers(IReadOnlyCollection<IDomainEventSubscriberDefinition> domainEventSubscriberDefinitions)
+        {
+            foreach (var subscriberDefinition in domainEventSubscriberDefinitions)
+            {
+                Props subscriberProps = null;
+                try
+                {
+                    subscriberProps = _system.DI().Props(subscriberDefinition.Type);
+                }
+                catch (Exception ex)
+                {
+                    _system.Log.Error(ex, "No DI available at the moment, falling back to default props creation.");
+                    subscriberProps = Props.Create(subscriberDefinition.Type);
+                }
+                _system.ActorOf(subscriberProps);
+            }
         }
 
         private readonly ActorSystem _system;

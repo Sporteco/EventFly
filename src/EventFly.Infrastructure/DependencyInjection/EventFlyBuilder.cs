@@ -1,4 +1,5 @@
 using EventFly.Definitions;
+using EventFly.ExternalEventPublisher;
 using EventFly.Validation;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,6 +31,20 @@ namespace EventFly.DependencyInjection
             context.DI(Services);
             ((ApplicationDefinition)ApplicationDefinition).RegisterContext(context);
             RegisterValidators(Services);
+            return this;
+        }
+
+        public EventFlyBuilder AddExternalEventPublisher<TContext>(Func<IServiceProvider, IExternalEventPublisher> externalEventResolver)
+            where TContext : IContextDefinition
+        {
+            Services.AddScoped(sp =>
+            {
+                var appDefinition = sp.GetService<IApplicationDefinition>();
+                var contextDefinition = (TContext)appDefinition.Contexts.First(ctx => ctx.GetType() == typeof(TContext));
+
+                return new Infrastructure.Subscribers.ExternalEventPublisher<TContext>(contextDefinition, externalEventResolver(sp));
+            });
+            ((ApplicationDefinition)ApplicationDefinition).RegisterDomainEventSubscriber<Infrastructure.Subscribers.ExternalEventPublisher<TContext>>();
             return this;
         }
 
