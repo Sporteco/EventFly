@@ -89,7 +89,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demo.Tests", "examples\demo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventFly.RabbitMqEventPublisher", "src\EventFly.RabbitMqEventPublisher\EventFly.RabbitMqEventPublisher.csproj", "{83473C4B-9C9A-4BA1-93C4-13C10C1E0D1B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventFly.RabbitMqEventProvider", "EventFly.RabbitMqEventProvider\EventFly.RabbitMqEventProvider.csproj", "{6DEF17D8-05DA-4A7A-B64D-75A94727B387}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventFly.RabbitMqEventProvider", "src\EventFly.RabbitMqEventProvider\EventFly.RabbitMqEventProvider.csproj", "{6DEF17D8-05DA-4A7A-B64D-75A94727B387}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
