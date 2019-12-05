@@ -30,12 +30,13 @@ using System;
 
 namespace EventFly.Aggregates
 {
+    //TODO: перенести в abstractions
     public interface IDomainEvent
     {
         Type IdentityType { get; }
         Type EventType { get; }
         Int64 AggregateSequenceNumber { get; }
-        EventMetadata Metadata { get; }
+        IEventMetadata Metadata { get; }
         DateTimeOffset Timestamp { get; }
 
         IIdentity GetIdentity();

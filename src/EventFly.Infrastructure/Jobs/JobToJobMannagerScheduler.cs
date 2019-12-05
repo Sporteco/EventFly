@@ -1,4 +1,4 @@
-﻿// The MIT License (MIT)
+// The MIT License (MIT)
 //
 // Copyright (c) 2018 - 2019 Lutando Ngqakaza
 // https://github.com/Lutando/EventFly 
@@ -23,7 +23,7 @@
 
 using Akka.Actor;
 using EventFly.Definitions;
-using EventFly.Exceptions;
+using EventFly.Extensions;
 using EventFly.Jobs.Commands;
 using System;
 using System.Linq;

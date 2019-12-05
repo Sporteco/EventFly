@@ -25,7 +25,7 @@ using Akka.Actor;
 using Akka.Event;
 using EventFly.Commands;
 using EventFly.Core;
-using EventFly.Exceptions;
+using EventFly.Extensions;
 using System;
 using System.Linq;
 

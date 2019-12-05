@@ -9,7 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EventFly.ExternalEventPublisher\EventFly.ExternalEventPublisher.csproj" />
+    <ProjectReference Include="..\EventFly.Abstractions\EventFly.Abstractions.csproj" />
   </ItemGroup>
 
 </Project>

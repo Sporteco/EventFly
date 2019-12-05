@@ -29,7 +29,7 @@ using EventFly.Aggregates.Snapshot;
 using EventFly.Commands;
 using EventFly.Core;
 using EventFly.DependencyInjection;
-using EventFly.Exceptions;
+using EventFly.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using AkkaSnapshotMetadata = Akka.Persistence.SnapshotMetadata;
