@@ -34,11 +34,12 @@ namespace EventFly.Definitions
                 DefinitionToReadModelManager = DefinitionToReadModelManager.Union(RegisterReadModelManagers(context.ReadModels.Select(a => a.ManagerDefinition).ToList(), context.Name)).ToDictionary(k => k.Key, v => v.Value);
                 DefinitionToSagaManager = DefinitionToSagaManager.Union(RegisterSagaManagers(context.Sagas.Select(a => a.ManagerDefinition).ToList(), context.Name)).ToDictionary(k => k.Key, v => v.Value);
                 DefinitionToDomainServiceManager = DefinitionToDomainServiceManager.Union(RegisterDomainServiceManagers(context.DomainServices.Select(a => a.ManagerDefinition).ToList(), context.Name)).ToDictionary(k => k.Key, v => v.Value);
-                DefinitionToJobManager = DefinitionToJobManager.Union(RegisterJobManagers(context.Jobs.Select(a => a.ManagerDefinition).ToList(), context.Name)).ToDictionary(k => k.Key, v => v.Value);
+                DefinitionToJobManager = DefinitionToJobManager
+                    .Union(RegisterJobManagers(context.Jobs.Select(a => a.ManagerDefinition).ToList(), context.Name))
+                    .Union(RegisterCommandsScheduler("common"))
+                    .Union(RegisterEventsScheduler("common"))
+                    .ToDictionary(k => k.Key, v => v.Value);
             }
-
-            RegisterCommandsScheduler();
-            RegisterEventsScheduler();
             RegisterDomainEventSubscribers(applicationDefinition.DomainEventSubscribers);
         }
 
@@ -55,14 +56,18 @@ namespace EventFly.Definitions
             return dictionaryJob;
         }
 
-        private void RegisterCommandsScheduler()
+        public IReadOnlyDictionary<IJobManagerDefinition, IActorRef> RegisterCommandsScheduler(System.String contextName)
         {
-            _system.ActorOf(Props.Create(typeof(JobManager<PublishCommandJobScheduler, PublishCommandJobRunner, PublishCommandJob, PublishCommandJobId>)), $"job-commands-publisher-manager");
+            var def = new JobManagerDefinition(typeof(PublishCommandJobRunner), typeof(PublishCommandJobScheduler), typeof(PublishCommandJob), typeof(PublishCommandJobId));
+
+            return RegisterJobManagers(new[] { def }, contextName);
         }
 
-        private void RegisterEventsScheduler()
+        public IReadOnlyDictionary<IJobManagerDefinition, IActorRef> RegisterEventsScheduler(System.String contextName)
         {
-            _system.ActorOf(Props.Create(typeof(JobManager<PublishEventJobScheduler, PublishEventJobRunner, PublishEventJob, PublishEventJobId>)), $"job-events-publisher-manager");
+            var def = new JobManagerDefinition(typeof(PublishEventJobRunner), typeof(PublishEventJobScheduler), typeof(PublishEventJob), typeof(PublishEventJobId));
+
+            return RegisterJobManagers(new[] { def }, contextName);
         }
 
         private void RegisterDomainEventSubscribers(IReadOnlyCollection<IDomainEventSubscriberDefinition> domainEventSubscriberDefinitions)
