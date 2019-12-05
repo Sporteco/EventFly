@@ -1,7 +1,7 @@
-﻿using Akka.Actor;
+using Akka.Actor;
 using Akka.DI.Core;
 using Akka.Event;
-using EventFly.Exceptions;
+using EventFly.Extensions;
 using Newtonsoft.Json;
 using System;
 using System.Security.Cryptography;

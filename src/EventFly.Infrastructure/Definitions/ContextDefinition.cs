@@ -1,4 +1,4 @@
-﻿using Akka.Actor;
+using Akka.Actor;
 using EventFly.Aggregates;
 using EventFly.Aggregates.Snapshot;
 using EventFly.Commands;
@@ -10,6 +10,7 @@ using EventFly.Queries;
 using EventFly.ReadModels;
 using EventFly.Sagas;
 using EventFly.Sagas.AggregateSaga;
+using EventFly.Subscribers;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -26,7 +27,11 @@ namespace EventFly.Definitions
         public IReadOnlyCollection<IQueryDefinition> Queries => _queries;
         public IReadOnlyCollection<IJobDefinition> Jobs => _jobs;
         public IReadOnlyCollection<IPermissionDefinition> Permissions => _permissions;
+        public IReadOnlyCollection<IDomainEventSubscriberDefinition> DomainEventSubscribers => _domainEventSubscribers;
         public EventDefinitions Events { get; } = new EventDefinitions();
+        public EventDefinitions PublicEvents { get; } = new EventDefinitions();
+        public EventDefinitions PrivateEvents { get; } = new EventDefinitions();
+        public EventDefinitions ExternalEvents { get; } = new EventDefinitions();
         public CommandDefinitions Commands { get; } = new CommandDefinitions();
         public SnapshotDefinitions Snapshots { get; } = new SnapshotDefinitions();
 
@@ -130,15 +135,45 @@ namespace EventFly.Definitions
             return this;
         }
 
-        protected IContextDefinition RegisterEvent<TEvent>() where TEvent : IAggregateEvent
+        protected IContextDefinition RegisterPublicEvent<TEvent>() where TEvent : IAggregateEvent
         {
             Events.Load(typeof(TEvent));
+            PublicEvents.Load(typeof(TEvent));
             return this;
         }
 
-        protected IContextDefinition RegisterEvents(params Type[] types)
+        protected IContextDefinition RegisterPublicEvents(params Type[] types)
         {
             Events.Load(types);
+            PublicEvents.Load(types);
+            return this;
+        }
+
+        protected IContextDefinition RegisterPrivateEvent<TEvent>() where TEvent : IAggregateEvent
+        {
+            Events.Load(typeof(TEvent));
+            PrivateEvents.Load(typeof(TEvent));
+            return this;
+        }
+
+        protected IContextDefinition RegisterPrivateEvents(params Type[] types)
+        {
+            Events.Load(types);
+            PrivateEvents.Load(types);
+            return this;
+        }
+
+        protected IContextDefinition RegisterExternalEvent<TEvent>() where TEvent : IAggregateEvent
+        {
+            Events.Load(typeof(TEvent));
+            ExternalEvents.Load(typeof(TEvent));
+            return this;
+        }
+
+        protected IContextDefinition RegisterExternalEvents(params Type[] types)
+        {
+            Events.Load(types);
+            ExternalEvents.Load(types);
             return this;
         }
 
@@ -154,6 +189,13 @@ namespace EventFly.Definitions
             return this;
         }
 
+        protected IContextDefinition RegisterDomainEventSubscriber<TDomainEventSubscriber>()
+            where TDomainEventSubscriber : DomainEventSubscriber
+        {
+            _domainEventSubscribers.Add(new DomainEventSubscriberDefinition(typeof(TDomainEventSubscriber)));
+            return this;
+        }
+
         private readonly List<IAggregateDefinition> _aggregates = new List<IAggregateDefinition>();
         private readonly List<IDomainServiceDefinition> _services = new List<IDomainServiceDefinition>();
         private readonly List<ISagaDefinition> _sagas = new List<ISagaDefinition>();
@@ -161,5 +203,6 @@ namespace EventFly.Definitions
         private readonly List<IQueryDefinition> _queries = new List<IQueryDefinition>();
         private readonly List<IJobDefinition> _jobs = new List<IJobDefinition>();
         private readonly List<IPermissionDefinition> _permissions = new List<IPermissionDefinition>();
+        private readonly List<IDomainEventSubscriberDefinition> _domainEventSubscribers = new List<IDomainEventSubscriberDefinition>();
     }
 }

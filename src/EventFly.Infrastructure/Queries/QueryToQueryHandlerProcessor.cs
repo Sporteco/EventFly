@@ -1,6 +1,6 @@
-﻿using Akka.Actor;
+using Akka.Actor;
 using EventFly.Definitions;
-using EventFly.Exceptions;
+using EventFly.Extensions;
 using System;
 using System.Linq;
 using System.Threading.Tasks;

@@ -1,9 +1,5 @@
 // The MIT License (MIT)
 //
-// Copyright (c) 2015-2019 Rasmus Mikkelsen
-// Copyright (c) 2015-2019 eBay Software Foundation
-// Modified from original source https://github.com/eventflow/EventFlow
-//
 // Copyright (c) 2018 - 2019 Lutando Ngqakaza
 // https://github.com/Lutando/EventFly 
 // 
@@ -25,31 +21,42 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using EventFly.Core;
+using EventFly.Aggregates;
+using EventFly.Subscribers;
+using EventFly.Tests.Abstractions;
 using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-namespace EventFly.Aggregates
+namespace EventFly.Tests.Domain
 {
-    public interface IDomainEvent
+    public class TestAsyncManyEventSubscriber : DomainEventSubscriber,
+        ISubscribeToManyAsync
     {
-        Type IdentityType { get; }
-        Type EventType { get; }
-        Int64 AggregateSequenceNumber { get; }
-        EventMetadata Metadata { get; }
-        DateTimeOffset Timestamp { get; }
+        public Task HandleAsync(IDomainEvent domainEvent)
+        {
+            var handled = new TestManySubscribedEventHandled(domainEvent);
+            Context.System.EventStream.Publish(handled);
+            return Task.CompletedTask;
+        }
 
-        IIdentity GetIdentity();
-        IAggregateEvent GetAggregateEvent();
+        public IEnumerable<Type> GetEventTypes()
+        {
+            return new[]
+            {
+                typeof(TestCreatedEvent),
+                typeof(TestAddedEvent)
+            };
+        }
     }
 
-    public interface IDomainEvent<out TIdentity> : IDomainEvent where TIdentity : IIdentity
+    public class TestManySubscribedEventHandled
     {
-        TIdentity AggregateIdentity { get; }
-    }
+        public IDomainEvent DomainEvent { get; }
 
-    public interface IDomainEvent<out TIdentity, out TAggregateEvent> : IDomainEvent<TIdentity> where TIdentity : IIdentity
-        where TAggregateEvent : class, IAggregateEvent<TIdentity>
-    {
-        TAggregateEvent AggregateEvent { get; }
+        public TestManySubscribedEventHandled(IDomainEvent domainEvent)
+        {
+            DomainEvent = domainEvent;
+        }
     }
 }

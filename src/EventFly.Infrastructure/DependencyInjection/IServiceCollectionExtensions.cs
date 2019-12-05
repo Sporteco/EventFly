@@ -3,6 +3,8 @@ using EventFly.Aggregates;
 using EventFly.Commands;
 using EventFly.Core;
 using EventFly.Definitions;
+using EventFly.Events;
+using EventFly.Infrastructure.Events;
 using EventFly.Jobs;
 using EventFly.Permissions;
 using EventFly.Queries;
@@ -47,6 +49,9 @@ namespace EventFly.DependencyInjection
             services.AddSingleton<ICommandValidator, DefaultCommandValidator>();
             services.AddSingleton<ICommandValidator, PermissionCommandValidator>();
             services.AddSingleton<ISecurityService, SecurityService>();
+
+            services.AddSingleton<IDomainEventBus, EventStreamDomainEventBus>();
+            services.AddSingleton<IDomainEventFactory, DomainEventFactory>();
 
             return new EventFlyBuilder(services);
         }

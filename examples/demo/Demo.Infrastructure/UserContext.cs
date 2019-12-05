@@ -43,7 +43,7 @@ namespace Demo.Infrastructure
             RegisterAggregate<UserAggregate, UserId>();
             RegisterAggregate<ProjectAggregate, ProjectId>();
 
-            RegisterEvents(
+            RegisterPublicEvents(
                 typeof(UserCreatedEvent),
                 typeof(UserRenamedEvent),
                 typeof(UserNotesChangedEvent),

@@ -1,4 +1,4 @@
-﻿// The MIT License (MIT)
+// The MIT License (MIT)
 //
 // Copyright (c) 2015-2019 Rasmus Mikkelsen
 // Copyright (c) 2015-2019 eBay Software Foundation
@@ -28,6 +28,8 @@
 
 using EventFly.Aggregates;
 using EventFly.Core;
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace EventFly.Subscribers
@@ -42,5 +44,11 @@ namespace EventFly.Subscribers
         where TAggregateEvent : class, IAggregateEvent<TIdentity>
     {
         System.Boolean Handle(IDomainEvent<TIdentity, TAggregateEvent> domainEvent);
+    }
+
+    public interface ISubscribeToManyAsync
+    {
+        Task HandleAsync(IDomainEvent domainEvent);
+        IEnumerable<Type> GetEventTypes();
     }
 }

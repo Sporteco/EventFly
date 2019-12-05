@@ -26,7 +26,7 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using EventFly.Core;
-using EventFly.Exceptions;
+using EventFly.Extensions;
 using System;
 
 namespace EventFly.Aggregates

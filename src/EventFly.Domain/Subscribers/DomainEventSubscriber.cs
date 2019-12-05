@@ -23,6 +23,7 @@
 
 using Akka.Actor;
 using Akka.Event;
+using EventFly.Aggregates;
 using EventFly.Extensions;
 using EventFly.Messages;
 using System;
@@ -49,12 +50,21 @@ namespace EventFly.Subscribers
             if (Settings.AutoSubscribe)
             {
                 var type = GetType();
-                var asyncDomainEventSubscriptionTypes = type.GetAsyncDomainEventSubscriberSubscriptionTypes();
-                var domainEventsubscriptionTypes = type.GetDomainEventSubscriberSubscriptionTypes();
+
                 var subscriptionTypes = new List<Type>();
 
-                subscriptionTypes.AddRange(asyncDomainEventSubscriptionTypes);
+                var domainEventsubscriptionTypes = type.GetDomainEventSubscriberSubscriptionTypes();
                 subscriptionTypes.AddRange(domainEventsubscriptionTypes);
+
+                var asyncDomainEventSubscriptionTypes = type.GetAsyncDomainEventSubscriberSubscriptionTypes();
+                subscriptionTypes.AddRange(asyncDomainEventSubscriptionTypes);
+
+                if (type.IsAsyncManyDomainEventSubscriber())
+                {
+                    var eventTypes = ((ISubscribeToManyAsync)this).GetEventTypes();
+                    var domainEventTypes = eventTypes.AggregateEventTypeToDomainEventType();
+                    subscriptionTypes.AddRange(domainEventTypes);
+                }
 
                 SubscriptionTypes = subscriptionTypes;
 
@@ -68,12 +78,13 @@ namespace EventFly.Subscribers
             {
                 InitReceives();
                 InitAsyncReceives();
+                InitAsyncManyReceiver();
             }
 
             Receive<UnsubscribeFromAll>(Handle);
         }
 
-        public void InitReceives()
+        protected void InitReceives()
         {
             var type = GetType();
             var subscriptionTypes = type.GetDomainEventSubscriberSubscriptionTypes();
@@ -110,7 +121,7 @@ namespace EventFly.Subscribers
             }
         }
 
-        public void InitAsyncReceives()
+        protected void InitAsyncReceives()
         {
             var type = GetType();
             var subscriptionTypes = type.GetAsyncDomainEventSubscriberSubscriptionTypes();
@@ -145,6 +156,41 @@ namespace EventFly.Subscribers
 
                 actorReceiveMethod.Invoke(this, new[] { subscriptionFunction, (Object)null });
             }
+        }
+
+        protected void InitAsyncManyReceiver()
+        {
+            var type = GetType();
+            if (type.IsAsyncManyDomainEventSubscriber() == false)
+                return;
+
+            var handleMethod = type
+                .GetTypeInfo()
+                .GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
+                .Where(mi =>
+                {
+                    if (mi.Name != "HandleAsync") return false;
+                    var parameters = mi.GetParameters();
+                    return parameters.Length == 1 && parameters[0].ParameterType == typeof(IDomainEvent);
+                })
+                .First();
+
+            var receiveMethod = type
+                .GetBaseType("ReceiveActor")
+                .GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
+                .Where(mi =>
+                {
+                    if (mi.Name != "ReceiveAsync") return false;
+                    var parameters = mi.GetParameters();
+                    return parameters.Length == 2 && parameters[0].ParameterType.Name.Contains("Func");
+                })
+                .First();
+
+            var funcType = typeof(Func<,>).MakeGenericType(typeof(IDomainEvent), typeof(Task));
+            var subscriptionFunction = Delegate.CreateDelegate(funcType, this, handleMethod);
+            var actorReceiveMethod = receiveMethod.MakeGenericMethod(typeof(IDomainEvent));
+
+            actorReceiveMethod.Invoke(this, new[] { subscriptionFunction, (Object)null });
         }
 
         protected virtual Boolean Handle(UnsubscribeFromAll command)

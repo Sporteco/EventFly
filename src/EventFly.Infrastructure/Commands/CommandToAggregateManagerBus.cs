@@ -1,8 +1,8 @@
-﻿using Akka.Actor;
+using Akka.Actor;
 using EventFly.Commands.ExecutionResults;
 using EventFly.Core;
 using EventFly.Definitions;
-using EventFly.Exceptions;
+using EventFly.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;

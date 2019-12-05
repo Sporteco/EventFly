@@ -1,4 +1,4 @@
-﻿// The MIT License (MIT)
+// The MIT License (MIT)
 //
 // Copyright (c) 2015-2019 Rasmus Mikkelsen
 // Copyright (c) 2015-2019 eBay Software Foundation
@@ -27,7 +27,7 @@
 
 using EventFly.Aggregates;
 using EventFly.Core;
-using EventFly.Exceptions;
+using EventFly.Extensions;
 using System;
 
 namespace EventFly.Sagas

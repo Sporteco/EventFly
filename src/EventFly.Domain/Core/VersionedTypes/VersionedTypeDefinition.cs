@@ -1,10 +1,10 @@
-﻿// Decompiled with JetBrains decompiler
+// Decompiled with JetBrains decompiler
 // Type: EventFly.Core.VersionedTypes.VersionedTypeDefinition
 // Assembly: EventFly, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
 // MVID: 61DF059E-E5F5-4992-B320-644C3E4F5C82
 // Assembly location: C:\Users\naych\source\repos\!!!!!\netcoreapp2.2\EventFly.dll
 
-using EventFly.Exceptions;
+using EventFly.Extensions;
 using EventFly.ValueObjects;
 using System;
 using System.Collections.Generic;

@@ -1,4 +1,4 @@
-﻿using Demo.Infrastructure;
+using Demo.Infrastructure;
 using Demo.User.Commands;
 using Demo.ValueObjects;
 using EventFly.Commands;

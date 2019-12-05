@@ -1,4 +1,5 @@
 using Akka.Actor;
+using Akka.DI.Core;
 using EventFly.Aggregates;
 using EventFly.DomainService;
 using EventFly.Extensions;
@@ -7,6 +8,7 @@ using EventFly.Queries;
 using EventFly.Sagas.AggregateSaga;
 using EventFly.Schedulers.Commands;
 using EventFly.Schedulers.Events;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -38,9 +40,10 @@ namespace EventFly.Definitions
                     .Union(RegisterEventsScheduler("common"))
                     .ToDictionary(k => k.Key, v => v.Value);
             }
+            RegisterDomainEventSubscribers(applicationDefinition.DomainEventSubscribers);
         }
 
-        public IReadOnlyDictionary<IJobManagerDefinition, IActorRef> RegisterJobManagers(IReadOnlyCollection<IJobManagerDefinition> definitions, System.String contextName)
+        private IReadOnlyDictionary<IJobManagerDefinition, IActorRef> RegisterJobManagers(IReadOnlyCollection<IJobManagerDefinition> definitions, System.String contextName)
         {
             var dictionaryJob = new Dictionary<IJobManagerDefinition, IActorRef>();
             foreach (var managerDef in definitions)
@@ -65,6 +68,24 @@ namespace EventFly.Definitions
             var def = new JobManagerDefinition(typeof(PublishEventJobRunner), typeof(PublishEventJobScheduler), typeof(PublishEventJob), typeof(PublishEventJobId));
 
             return RegisterJobManagers(new[] { def }, contextName);
+        }
+
+        private void RegisterDomainEventSubscribers(IReadOnlyCollection<IDomainEventSubscriberDefinition> domainEventSubscriberDefinitions)
+        {
+            foreach (var subscriberDefinition in domainEventSubscriberDefinitions)
+            {
+                Props subscriberProps = null;
+                try
+                {
+                    subscriberProps = _system.DI().Props(subscriberDefinition.Type);
+                }
+                catch (Exception ex)
+                {
+                    _system.Log.Error(ex, "No DI available at the moment, falling back to default props creation.");
+                    subscriberProps = Props.Create(subscriberDefinition.Type);
+                }
+                _system.ActorOf(subscriberProps);
+            }
         }
 
         private readonly ActorSystem _system;
