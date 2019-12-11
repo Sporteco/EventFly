@@ -36,10 +36,14 @@ namespace EventFly.Definitions
                 DefinitionToDomainServiceManager = DefinitionToDomainServiceManager.Union(RegisterDomainServiceManagers(context.DomainServices.Select(a => a.ManagerDefinition).ToList(), context.Name)).ToDictionary(k => k.Key, v => v.Value);
                 DefinitionToJobManager = DefinitionToJobManager
                     .Union(RegisterJobManagers(context.Jobs.Select(a => a.ManagerDefinition).ToList(), context.Name))
-                    .Union(RegisterCommandsScheduler("common"))
-                    .Union(RegisterEventsScheduler("common"))
                     .ToDictionary(k => k.Key, v => v.Value);
             }
+
+            DefinitionToJobManager = DefinitionToJobManager
+                .Union(RegisterCommandsScheduler("common"))
+                .Union(RegisterEventsScheduler("common"))
+                .ToDictionary(k => k.Key, v => v.Value);
+
             RegisterDomainEventSubscribers(applicationDefinition.DomainEventSubscribers);
         }
 
