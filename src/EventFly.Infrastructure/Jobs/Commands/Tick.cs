@@ -21,7 +21,9 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-namespace EventFly.Jobs.Commands
+using EventFly.Jobs;
+
+namespace EventFly.Infrastructure.Jobs.Commands
 {
     internal sealed class Tick<TJob, TIdentity> : SchedulerMessage<TJob, TIdentity>
         where TJob : IJob<TIdentity>

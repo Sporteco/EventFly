@@ -21,15 +21,16 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using System;
 using Akka.Actor;
 using Akka.DI.Core;
 using Akka.Event;
 using Akka.Pattern;
-using EventFly.Exceptions;
 using EventFly.Extensions;
-using System;
+using EventFly.Infrastructure.Extensions;
+using EventFly.Jobs;
 
-namespace EventFly.Jobs
+namespace EventFly.Infrastructure.Jobs
 {
     public class JobManager<TJobScheduler, TJobRunner, TJob, TIdentity> : ReceiveActor, IJobManager<TJob, TIdentity>
         where TJobScheduler : JobScheduler<TJobScheduler, TJob, TIdentity>

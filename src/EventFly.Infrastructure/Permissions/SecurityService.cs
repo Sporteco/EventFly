@@ -1,10 +1,11 @@
-﻿using EventFly.Core;
-using EventFly.Definitions;
-using Microsoft.Extensions.DependencyInjection;
-using System;
+﻿using System;
 using System.Linq;
+using EventFly.Core;
+using EventFly.Definitions;
+using EventFly.Permissions;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace EventFly.Permissions
+namespace EventFly.Infrastructure.Permissions
 {
     internal sealed class SecurityService : ISecurityService
     {

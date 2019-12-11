@@ -21,10 +21,10 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using EventFly.Aggregates;
 using System;
+using EventFly.Aggregates;
 
-namespace EventFly.Tests.Abstractions
+namespace EventFly.Tests.Data.Abstractions.Events
 {
     [EventVersion("TestCreated", 1)]
     public class TestCreatedEvent : AggregateEvent<TestAggregateId>

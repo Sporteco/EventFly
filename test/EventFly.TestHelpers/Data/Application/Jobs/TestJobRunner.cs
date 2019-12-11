@@ -21,13 +21,14 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using Akka.Actor;
-using Akka.Event;
-using EventFly.Jobs;
 using System;
 using System.Threading.Tasks;
+using Akka.Actor;
+using Akka.Event;
+using EventFly.Infrastructure.Jobs;
+using EventFly.Jobs;
 
-namespace EventFly.Tests.Application
+namespace EventFly.Tests.Data.Application.Jobs
 {
     public class TestJobRunner : JobRunner<TestJob, TestJobId>, IRun<TestJob, TestJobId>
     {

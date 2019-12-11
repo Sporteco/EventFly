@@ -23,7 +23,7 @@
 
 using EventFly.Commands;
 
-namespace EventFly.Tests.Abstractions
+namespace EventFly.Tests.Data.Abstractions.Commands
 {
     public class CreateTestCommand : Command<TestAggregateId>
     {

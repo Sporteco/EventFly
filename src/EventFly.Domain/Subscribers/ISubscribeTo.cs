@@ -43,7 +43,7 @@ namespace EventFly.Subscribers
     public interface ISubscribeTo<in TIdentity, in TAggregateEvent> where TIdentity : IIdentity
         where TAggregateEvent : class, IAggregateEvent<TIdentity>
     {
-        System.Boolean Handle(IDomainEvent<TIdentity, TAggregateEvent> domainEvent);
+        Boolean Handle(IDomainEvent<TIdentity, TAggregateEvent> domainEvent);
     }
 
     public interface ISubscribeToManyAsync

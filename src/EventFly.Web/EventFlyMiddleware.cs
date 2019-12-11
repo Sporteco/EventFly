@@ -1,6 +1,5 @@
 ﻿using EventFly.Commands;
 using EventFly.Definitions;
-using EventFly.DependencyInjection;
 using EventFly.Queries;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,6 +11,7 @@ using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using EventFly.Infrastructure.DependencyInjection;
 
 namespace EventFly
 {

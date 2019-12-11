@@ -1,10 +1,11 @@
-﻿using EventFly.Commands;
+﻿using System;
+using System.Reflection;
+using EventFly.Commands;
+using EventFly.Permissions;
 using EventFly.Security;
 using FluentValidation.Results;
-using System;
-using System.Reflection;
 
-namespace EventFly.Permissions
+namespace EventFly.Infrastructure.Permissions
 {
     internal class PermissionCommandValidator : ICommandValidator
     {

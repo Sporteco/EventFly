@@ -22,8 +22,9 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
+using EventFly.Jobs;
 
-namespace EventFly.Jobs.Events
+namespace EventFly.Infrastructure.Jobs.Events
 {
     public class Cancelled<TJob, TIdentity> : SchedulerEvent<TJob, TIdentity>
         where TJob : IJob<TIdentity>

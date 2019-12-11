@@ -1,11 +1,12 @@
-using Akka.Actor;
-using EventFly.Definitions;
-using EventFly.Extensions;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Akka.Actor;
+using EventFly.Extensions;
+using EventFly.Infrastructure.Definitions;
+using EventFly.Queries;
 
-namespace EventFly.Queries
+namespace EventFly.Infrastructure.Queries
 {
     public sealed class QueryToQueryHandlerProcessor : IQueryProcessor
     {

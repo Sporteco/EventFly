@@ -1,14 +1,15 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using EventFly.Commands;
 using EventFly.Commands.ExecutionResults;
 using EventFly.Metadata;
 using EventFly.TestFixture;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+using EventFly.Tests.Data.Domain;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace EventFly.Tests.Domain
+namespace EventFly.Tests.Domain.Permissions
 {
     [Category(Categories.Domain)]
     [Collection(Collections.Only)]

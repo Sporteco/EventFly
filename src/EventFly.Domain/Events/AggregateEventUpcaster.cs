@@ -24,7 +24,6 @@
 using Akka.Persistence.Journal;
 using EventFly.Aggregates;
 using EventFly.Core;
-using EventFly.Exceptions;
 using EventFly.Extensions;
 using System;
 using System.Collections.Concurrent;

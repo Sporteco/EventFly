@@ -1,6 +1,7 @@
-﻿using System;
+using System;
+using EventFly.Definitions;
 
-namespace EventFly.Definitions
+namespace EventFly.Infrastructure.Definitions
 {
     internal sealed class JobManagerDefinition : IJobManagerDefinition
     {

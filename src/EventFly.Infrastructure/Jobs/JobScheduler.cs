@@ -24,16 +24,17 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using Akka.Actor;
-using Akka.Persistence;
-using EventFly.Exceptions;
-using EventFly.Extensions;
-using EventFly.Jobs.Commands;
-using EventFly.Jobs.Events;
 using System;
 using System.Linq;
+using Akka.Actor;
+using Akka.Persistence;
+using EventFly.Extensions;
+using EventFly.Infrastructure.Extensions;
+using EventFly.Infrastructure.Jobs.Commands;
+using EventFly.Infrastructure.Jobs.Events;
+using EventFly.Jobs;
 
-namespace EventFly.Jobs
+namespace EventFly.Infrastructure.Jobs
 {
     public class JobScheduler<TJobScheduler, TJob, TIdentity> : ReceivePersistentActor, IJobScheduler<TIdentity>
         where TJobScheduler : JobScheduler<TJobScheduler, TJob, TIdentity>

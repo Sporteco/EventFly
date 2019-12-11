@@ -3,17 +3,20 @@ using Akka.Persistence;
 using Akka.TestKit.Xunit2;
 using EventFly.Aggregates;
 using EventFly.Aggregates.Snapshot;
-using EventFly.DependencyInjection;
-using EventFly.TestFixture;
-using EventFly.Tests.Abstractions;
-using EventFly.Tests.Application;
-using EventFly.Tests.Domain;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using EventFly.Infrastructure.DependencyInjection;
+using EventFly.TestFixture.Internals.AggregateFixture;
+using EventFly.Tests.Data.Abstractions;
+using EventFly.Tests.Data.Abstractions.Entities;
+using EventFly.Tests.Data.Abstractions.Events;
+using EventFly.Tests.Data.Application.Sagas.Test;
+using EventFly.Tests.Data.Domain;
+using EventFly.Tests.Data.Domain.Snapshots;
 using Xunit;
 
 namespace EventFly.Tests.TestFixture

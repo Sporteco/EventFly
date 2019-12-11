@@ -1,14 +1,15 @@
+using System;
+using System.Linq;
+using System.Reflection;
 using EventFly.Definitions;
 using EventFly.ExternalEventPublisher;
+using EventFly.Infrastructure.Definitions;
 using EventFly.Validation;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using System;
-using System.Linq;
-using System.Reflection;
 
-namespace EventFly.DependencyInjection
+namespace EventFly.Infrastructure.DependencyInjection
 {
     public sealed class EventFlyBuilder
     {
@@ -42,9 +43,9 @@ namespace EventFly.DependencyInjection
                 var appDefinition = sp.GetService<IApplicationDefinition>();
                 var contextDefinition = (TContext)appDefinition.Contexts.First(ctx => ctx.GetType() == typeof(TContext));
 
-                return new Infrastructure.Subscribers.ExternalEventPublisher<TContext>(contextDefinition, externalEventResolver(sp));
+                return new Subscribers.ExternalEventPublisher<TContext>(contextDefinition, externalEventResolver(sp));
             });
-            ((ApplicationDefinition)ApplicationDefinition).RegisterDomainEventSubscriber<Infrastructure.Subscribers.ExternalEventPublisher<TContext>>();
+            ((ApplicationDefinition)ApplicationDefinition).RegisterDomainEventSubscriber<Subscribers.ExternalEventPublisher<TContext>>();
             return this;
         }
 

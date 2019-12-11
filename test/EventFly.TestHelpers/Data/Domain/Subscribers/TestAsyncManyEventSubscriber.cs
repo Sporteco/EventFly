@@ -21,14 +21,14 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using EventFly.Aggregates;
-using EventFly.Subscribers;
-using EventFly.Tests.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using EventFly.Aggregates;
+using EventFly.Subscribers;
+using EventFly.Tests.Data.Abstractions.Events;
 
-namespace EventFly.Tests.Domain
+namespace EventFly.Tests.Data.Domain.Subscribers
 {
     public class TestAsyncManyEventSubscriber : DomainEventSubscriber,
         ISubscribeToManyAsync

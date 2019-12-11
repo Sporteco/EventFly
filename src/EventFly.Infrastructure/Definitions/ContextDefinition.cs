@@ -1,9 +1,13 @@
+using System;
+using System.Collections.Generic;
 using Akka.Actor;
 using EventFly.Aggregates;
 using EventFly.Aggregates.Snapshot;
 using EventFly.Commands;
 using EventFly.Core;
+using EventFly.Definitions;
 using EventFly.DomainService;
+using EventFly.Infrastructure.Jobs;
 using EventFly.Jobs;
 using EventFly.Permissions;
 using EventFly.Queries;
@@ -12,10 +16,8 @@ using EventFly.Sagas;
 using EventFly.Sagas.AggregateSaga;
 using EventFly.Subscribers;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
 
-namespace EventFly.Definitions
+namespace EventFly.Infrastructure.Definitions
 {
     public abstract class ContextDefinition : IContextDefinition
     {

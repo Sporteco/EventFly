@@ -1,18 +1,21 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using Akka.Actor;
 using Akka.DI.Core;
 using EventFly.Aggregates;
+using EventFly.Definitions;
 using EventFly.DomainService;
 using EventFly.Extensions;
-using EventFly.Jobs;
+using EventFly.Infrastructure.Jobs;
+using EventFly.Infrastructure.Schedulers.Commands;
+using EventFly.Infrastructure.Schedulers.Events;
 using EventFly.Queries;
 using EventFly.Sagas.AggregateSaga;
 using EventFly.Schedulers.Commands;
 using EventFly.Schedulers.Events;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
-namespace EventFly.Definitions
+namespace EventFly.Infrastructure.Definitions
 {
     internal sealed class DefinitionToManagerRegistry : IDefinitionToManagerRegistry
     {
@@ -43,7 +46,7 @@ namespace EventFly.Definitions
             RegisterDomainEventSubscribers(applicationDefinition.DomainEventSubscribers);
         }
 
-        private IReadOnlyDictionary<IJobManagerDefinition, IActorRef> RegisterJobManagers(IReadOnlyCollection<IJobManagerDefinition> definitions, System.String contextName)
+        private IReadOnlyDictionary<IJobManagerDefinition, IActorRef> RegisterJobManagers(IReadOnlyCollection<IJobManagerDefinition> definitions, String contextName)
         {
             var dictionaryJob = new Dictionary<IJobManagerDefinition, IActorRef>();
             foreach (var managerDef in definitions)
@@ -56,14 +59,14 @@ namespace EventFly.Definitions
             return dictionaryJob;
         }
 
-        public IReadOnlyDictionary<IJobManagerDefinition, IActorRef> RegisterCommandsScheduler(System.String contextName)
+        public IReadOnlyDictionary<IJobManagerDefinition, IActorRef> RegisterCommandsScheduler(String contextName)
         {
             var def = new JobManagerDefinition(typeof(PublishCommandJobRunner), typeof(PublishCommandJobScheduler), typeof(PublishCommandJob), typeof(PublishCommandJobId));
 
             return RegisterJobManagers(new[] { def }, contextName);
         }
 
-        public IReadOnlyDictionary<IJobManagerDefinition, IActorRef> RegisterEventsScheduler(System.String contextName)
+        public IReadOnlyDictionary<IJobManagerDefinition, IActorRef> RegisterEventsScheduler(String contextName)
         {
             var def = new JobManagerDefinition(typeof(PublishEventJobRunner), typeof(PublishEventJobScheduler), typeof(PublishEventJob), typeof(PublishEventJobId));
 
@@ -74,7 +77,7 @@ namespace EventFly.Definitions
         {
             foreach (var subscriberDefinition in domainEventSubscriberDefinitions)
             {
-                Props subscriberProps = null;
+                Props subscriberProps;
                 try
                 {
                     subscriberProps = _system.DI().Props(subscriberDefinition.Type);
@@ -90,7 +93,7 @@ namespace EventFly.Definitions
 
         private readonly ActorSystem _system;
 
-        private IReadOnlyDictionary<IAggregateManagerDefinition, IActorRef> RegisterAggregateManagers(IReadOnlyCollection<IAggregateManagerDefinition> definitions, System.String contextName)
+        private IReadOnlyDictionary<IAggregateManagerDefinition, IActorRef> RegisterAggregateManagers(IReadOnlyCollection<IAggregateManagerDefinition> definitions, String contextName)
         {
             var dictionaryAggregate = new Dictionary<IAggregateManagerDefinition, IActorRef>();
             foreach (var managerDef in definitions)
@@ -103,7 +106,7 @@ namespace EventFly.Definitions
             return dictionaryAggregate;
         }
 
-        private IReadOnlyDictionary<IQueryManagerDefinition, IActorRef> RegisterQueryManagers(IReadOnlyCollection<IQueryManagerDefinition> definitions, System.String contextName)
+        private IReadOnlyDictionary<IQueryManagerDefinition, IActorRef> RegisterQueryManagers(IReadOnlyCollection<IQueryManagerDefinition> definitions, String contextName)
         {
             var dictionaryQuery = new Dictionary<IQueryManagerDefinition, IActorRef>();
             foreach (var managerDef in definitions)
@@ -116,7 +119,7 @@ namespace EventFly.Definitions
             return dictionaryQuery;
         }
 
-        private IReadOnlyDictionary<ISagaManagerDefinition, IActorRef> RegisterSagaManagers(IReadOnlyCollection<ISagaManagerDefinition> definitions, System.String contextName)
+        private IReadOnlyDictionary<ISagaManagerDefinition, IActorRef> RegisterSagaManagers(IReadOnlyCollection<ISagaManagerDefinition> definitions, String contextName)
         {
             var dictionarySaga = new Dictionary<ISagaManagerDefinition, IActorRef>();
             foreach (var managerDef in definitions)
@@ -129,7 +132,7 @@ namespace EventFly.Definitions
             return dictionarySaga;
         }
 
-        private IReadOnlyDictionary<IDomainServiceManagerDefinition, IActorRef> RegisterDomainServiceManagers(IReadOnlyCollection<IDomainServiceManagerDefinition> definitions, System.String contextName)
+        private IReadOnlyDictionary<IDomainServiceManagerDefinition, IActorRef> RegisterDomainServiceManagers(IReadOnlyCollection<IDomainServiceManagerDefinition> definitions, String contextName)
         {
             var dictionary = new Dictionary<IDomainServiceManagerDefinition, IActorRef>();
             foreach (var definition in definitions)
@@ -141,7 +144,7 @@ namespace EventFly.Definitions
             return dictionary;
         }
 
-        private IReadOnlyDictionary<IReadModelManagerDefinition, IActorRef> RegisterReadModelManagers(IReadOnlyCollection<IReadModelManagerDefinition> definitions, System.String contextName)
+        private IReadOnlyDictionary<IReadModelManagerDefinition, IActorRef> RegisterReadModelManagers(IReadOnlyCollection<IReadModelManagerDefinition> definitions, String contextName)
         {
             var dictionaryReadModel = new Dictionary<IReadModelManagerDefinition, IActorRef>();
             foreach (var managerDef in definitions)

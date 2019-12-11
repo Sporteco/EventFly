@@ -21,6 +21,10 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Akka.Persistence;
 using EventFly.Aggregates;
 using EventFly.Aggregates.Snapshot;
@@ -29,13 +33,14 @@ using EventFly.Commands.ExecutionResults;
 using EventFly.Core;
 using EventFly.Extensions;
 using EventFly.Metadata;
-using EventFly.Tests.Abstractions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using EventFly.Tests.Data.Abstractions;
+using EventFly.Tests.Data.Abstractions.Commands;
+using EventFly.Tests.Data.Abstractions.Events;
+using EventFly.Tests.Data.Abstractions.Events.Errors;
+using EventFly.Tests.Data.Abstractions.Events.Signals;
+using EventFly.Tests.Data.Domain.Snapshots;
 
-namespace EventFly.Tests.Domain
+namespace EventFly.Tests.Data.Domain
 {
     public sealed class TestAggregate : EventSourcedAggregateRoot<TestAggregate, TestAggregateId, TestAggregateState>,
         IExecute<CreateTestCommand, TestAggregateId>,
@@ -120,6 +125,7 @@ namespace EventFly.Tests.Domain
             {
                 var events = Enumerable.Range(0, 4).Select(x => new TestAddedEvent(command.Test));
 
+                // ReSharper disable once CoVariantArrayConversion
                 EmitAll(events.ToArray());
                 Reply(TestExecutionResult.SucceededWith(command.Metadata.SourceId));
             }

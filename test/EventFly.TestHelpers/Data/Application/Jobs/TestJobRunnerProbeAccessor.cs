@@ -21,12 +21,12 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using Akka.Actor;
-using EventFly.Jobs;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using Akka.Actor;
+using EventFly.Jobs;
 
-namespace EventFly.Tests.Application
+namespace EventFly.Tests.Data.Application.Jobs
 {
     public sealed class TestJobRunnerProbeAccessor
     {

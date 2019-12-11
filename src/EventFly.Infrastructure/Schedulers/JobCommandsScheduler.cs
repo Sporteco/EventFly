@@ -1,10 +1,11 @@
-﻿using EventFly.Commands;
-using EventFly.Jobs;
-using EventFly.Schedulers.Commands;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using EventFly.Commands;
+using EventFly.Jobs;
+using EventFly.Schedulers;
+using EventFly.Schedulers.Commands;
 
-namespace EventFly.Schedulers
+namespace EventFly.Infrastructure.Schedulers
 {
     internal sealed class JobCommandsScheduler : ICommandsScheduler
     {

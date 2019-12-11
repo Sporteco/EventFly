@@ -1,9 +1,10 @@
+using System.Threading.Tasks;
 using EventFly.Aggregates;
 using EventFly.Subscribers;
-using EventFly.Tests.Abstractions;
-using System.Threading.Tasks;
+using EventFly.Tests.Data.Abstractions;
+using EventFly.Tests.Data.Abstractions.Events;
 
-namespace EventFly.Tests.Domain
+namespace EventFly.Tests.Data.Domain.Subscribers
 {
     public class TestAsyncAggregateSubscriber : DomainEventSubscriber,
         ISubscribeToAsync<TestAggregateId, TestCreatedEvent>,

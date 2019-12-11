@@ -21,11 +21,11 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using EventFly.Specifications;
 using System;
 using System.Collections.Generic;
+using EventFly.Specifications;
 
-namespace EventFly.Tests.Domain
+namespace EventFly.Tests.Data.Domain.Specifications
 {
     public static class TestSpecifications
     {

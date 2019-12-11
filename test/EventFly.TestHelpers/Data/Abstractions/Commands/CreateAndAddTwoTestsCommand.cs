@@ -1,6 +1,7 @@
 using EventFly.Commands;
+using EventFly.Tests.Data.Abstractions.Entities;
 
-namespace EventFly.Tests.Abstractions
+namespace EventFly.Tests.Data.Abstractions.Commands
 {
     public class CreateAndAddTwoTestsCommand : Command<TestAggregateId>
     {

@@ -1,7 +1,8 @@
-﻿using Akka.Actor;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Akka.Actor;
+using EventFly.Definitions;
 
-namespace EventFly.Definitions
+namespace EventFly.Infrastructure.Definitions
 {
     public interface IDefinitionToManagerRegistry
     {

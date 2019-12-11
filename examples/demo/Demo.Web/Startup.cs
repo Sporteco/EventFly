@@ -1,7 +1,7 @@
 ﻿using Demo.Infrastructure;
 using EventFly;
-using EventFly.DependencyInjection;
 using EventFly.GraphQL;
+using EventFly.Infrastructure.DependencyInjection;
 using EventFly.Swagger;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;

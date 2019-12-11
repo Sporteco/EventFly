@@ -23,7 +23,7 @@
 
 using EventFly.Entities;
 
-namespace EventFly.Tests.Abstractions
+namespace EventFly.Tests.Data.Abstractions.Entities
 {
     public class Test : Entity<TestId>
     {

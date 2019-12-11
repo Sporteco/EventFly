@@ -1,9 +1,9 @@
-using EventFly.Aggregates.Snapshot;
-using EventFly.Tests.Abstractions;
 using System;
 using System.Collections.Generic;
+using EventFly.Aggregates.Snapshot;
+using EventFly.Tests.Data.Abstractions;
 
-namespace EventFly.Tests.Domain
+namespace EventFly.Tests.Data.Domain.Snapshots
 {
     public class TestAggregateSnapshot : IAggregateSnapshot<TestAggregate, TestAggregateId>
     {

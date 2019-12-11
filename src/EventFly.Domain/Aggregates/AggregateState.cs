@@ -1,5 +1,4 @@
 using EventFly.Core;
-using EventFly.Exceptions;
 using EventFly.Extensions;
 using System;
 using System.Collections.Generic;

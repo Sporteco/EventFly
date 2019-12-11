@@ -21,24 +21,29 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using System.ComponentModel;
 using Akka.Actor;
 using Akka.TestKit.Xunit2;
 using EventFly.Commands;
 using EventFly.DependencyInjection;
-using EventFly.Tests.Abstractions;
-using EventFly.Tests.Application;
+using EventFly.Infrastructure.DependencyInjection;
+using EventFly.Tests.Data.Abstractions;
+using EventFly.Tests.Data.Abstractions.Commands;
+using EventFly.Tests.Data.Abstractions.Events;
+using EventFly.Tests.Data.Application.Sagas.Test;
+using EventFly.Tests.Data.Domain;
+using EventFly.Tests.Data.Domain.Subscribers;
 using Microsoft.Extensions.DependencyInjection;
-using System.ComponentModel;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace EventFly.Tests.Domain
+namespace EventFly.Tests.Domain.Subscribers
 {
     [Category(Categories.Domain)]
     [Collection(Collections.Only)]
     public class SubscriberTests : TestKit
     {
-        public SubscriberTests(ITestOutputHelper testOutputHelper) : base(Configuration.Default, "subscriber-tests", testOutputHelper)
+        public SubscriberTests(ITestOutputHelper testOutputHelper) : base(Tests.Configuration.Default, "subscriber-tests", testOutputHelper)
         {
             Sys.RegisterDependencyResolver(
                 new ServiceCollection()

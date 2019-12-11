@@ -1,5 +1,5 @@
-﻿using EventFly.DependencyInjection;
-using EventFly.GraphQL;
+﻿using EventFly.GraphQL;
+using EventFly.Infrastructure.DependencyInjection;
 using EventFly.Swagger;
 using GraphQL.Server;
 using GraphQL.Server.Ui.Playground;

@@ -1,9 +1,9 @@
-using EventFly.Commands.ExecutionResults;
-using EventFly.Core;
 using System;
 using System.Collections.Generic;
+using EventFly.Commands.ExecutionResults;
+using EventFly.Core;
 
-namespace EventFly.Tests.Abstractions
+namespace EventFly.Tests.Data.Abstractions
 {
     public interface ITestExecutionResult : IExecutionResult
     {

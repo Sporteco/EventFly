@@ -1,10 +1,12 @@
-using EventFly.Commands;
-using FluentAssertions;
 using System;
 using System.ComponentModel;
+using EventFly.Commands;
+using EventFly.Tests.Data.Abstractions;
+using EventFly.Tests.Data.Abstractions.Commands;
+using FluentAssertions;
 using Xunit;
 
-namespace EventFly.Tests.Abstractions
+namespace EventFly.Tests.Abstractions.Commands
 {
     [Category(Categories.Abstractions)]
     [Collection(Collections.Only)]

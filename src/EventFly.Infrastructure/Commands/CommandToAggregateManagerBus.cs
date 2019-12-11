@@ -1,14 +1,15 @@
-using Akka.Actor;
-using EventFly.Commands.ExecutionResults;
-using EventFly.Core;
-using EventFly.Definitions;
-using EventFly.Extensions;
-using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Akka.Actor;
+using EventFly.Commands;
+using EventFly.Commands.ExecutionResults;
+using EventFly.Core;
+using EventFly.Extensions;
+using EventFly.Infrastructure.Definitions;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace EventFly.Commands
+namespace EventFly.Infrastructure.Commands
 {
     public class CommandToAggregateManagerBus : ICommandBus
     {

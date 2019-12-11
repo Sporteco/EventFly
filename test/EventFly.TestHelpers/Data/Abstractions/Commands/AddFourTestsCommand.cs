@@ -22,8 +22,9 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using EventFly.Commands;
+using EventFly.Tests.Data.Abstractions.Entities;
 
-namespace EventFly.Tests.Abstractions
+namespace EventFly.Tests.Data.Abstractions.Commands
 {
     public class AddFourTestsCommand : Command<TestAggregateId>
     {

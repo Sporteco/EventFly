@@ -1,11 +1,13 @@
-﻿using EventFly.Commands;
-using EventFly.DependencyInjection;
-using EventFly.Jobs;
-using Microsoft.Extensions.DependencyInjection;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using EventFly.Commands;
+using EventFly.DependencyInjection;
+using EventFly.Infrastructure.Jobs;
+using EventFly.Jobs;
+using EventFly.Schedulers.Commands;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace EventFly.Schedulers.Commands
+namespace EventFly.Infrastructure.Schedulers.Commands
 {
     public sealed class PublishCommandJobRunner : JobRunner<PublishCommandJob, PublishCommandJobId>,
         IRunAsync<PublishCommandJob, PublishCommandJobId>

@@ -22,6 +22,7 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using Akka.Event;
+using EventFly.Infrastructure.Jobs;
 using EventFly.Jobs;
 
 namespace EventFly.Examples.Jobs

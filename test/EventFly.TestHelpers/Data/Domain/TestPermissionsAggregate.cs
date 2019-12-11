@@ -1,16 +1,16 @@
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using EventFly.Aggregates;
 using EventFly.Commands;
 using EventFly.Commands.ExecutionResults;
 using EventFly.Core;
-using EventFly.Definitions;
+using EventFly.Infrastructure.Definitions;
 using EventFly.Permissions;
 using EventFly.Security;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
-namespace EventFly.Tests.Domain
+namespace EventFly.Tests.Data.Domain
 {
     public class TestPermissionsId : Identity<TestPermissionsId>
     {

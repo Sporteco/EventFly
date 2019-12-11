@@ -21,14 +21,16 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using Akka.Actor;
-using EventFly.Extensions;
 using System;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Akka.Actor;
+using EventFly.Extensions;
+using EventFly.Infrastructure.Extensions;
+using EventFly.Jobs;
 
-namespace EventFly.Jobs
+namespace EventFly.Infrastructure.Jobs
 {
     public abstract class JobRunner : ReceiveActor
     {

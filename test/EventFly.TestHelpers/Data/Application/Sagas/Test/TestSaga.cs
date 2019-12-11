@@ -21,16 +21,19 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using System;
+using System.Threading.Tasks;
 using Akka.Actor;
 using EventFly.Aggregates;
 using EventFly.Commands;
 using EventFly.Sagas;
 using EventFly.Sagas.AggregateSaga;
-using EventFly.Tests.Abstractions;
-using System;
-using System.Threading.Tasks;
+using EventFly.Tests.Data.Abstractions;
+using EventFly.Tests.Data.Abstractions.Commands;
+using EventFly.Tests.Data.Abstractions.Events;
+using EventFly.Tests.Data.Application.Sagas.Test.Events;
 
-namespace EventFly.Tests.Application
+namespace EventFly.Tests.Data.Application.Sagas.Test
 {
     public class TestSaga : AggregateSaga<TestSaga, TestSagaId, TestSagaState>,
         ISagaIsStartedBy<TestAggregateId, TestSentEvent>,
