@@ -21,14 +21,17 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using EventFly.Aggregates;
-using EventFly.Aggregates.Snapshot;
-using EventFly.Tests.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using EventFly.Aggregates;
+using EventFly.Aggregates.Snapshot;
+using EventFly.Tests.Data.Abstractions;
+using EventFly.Tests.Data.Abstractions.Entities;
+using EventFly.Tests.Data.Abstractions.Events;
+using EventFly.Tests.Data.Domain.Snapshots;
 
-namespace EventFly.Tests.Domain
+namespace EventFly.Tests.Data.Domain
 {
     public class TestAggregateState : AggregateState<TestAggregateState, TestAggregateId>,
         IApply<TestAddedEvent>,

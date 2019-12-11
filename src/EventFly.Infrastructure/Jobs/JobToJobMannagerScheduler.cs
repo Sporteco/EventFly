@@ -21,15 +21,17 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using Akka.Actor;
-using EventFly.Definitions;
-using EventFly.Extensions;
-using EventFly.Jobs.Commands;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Akka.Actor;
+using EventFly.Extensions;
+using EventFly.Infrastructure.Definitions;
+using EventFly.Infrastructure.Jobs.Commands;
+using EventFly.Jobs;
+using IScheduler = EventFly.Jobs.IScheduler;
 
-namespace EventFly.Jobs
+namespace EventFly.Infrastructure.Jobs
 {
     internal sealed class JobToJobMannagerScheduler : IScheduler
     {

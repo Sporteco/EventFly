@@ -1,6 +1,8 @@
-﻿using EventFly.Jobs;
+﻿using EventFly.Infrastructure.Jobs;
+using EventFly.Jobs;
+using EventFly.Schedulers.Events;
 
-namespace EventFly.Schedulers.Events
+namespace EventFly.Infrastructure.Schedulers.Events
 {
     public sealed class PublishEventJobRunner : JobRunner<PublishEventJob, PublishEventJobId>,
         IRun<PublishEventJob, PublishEventJobId>

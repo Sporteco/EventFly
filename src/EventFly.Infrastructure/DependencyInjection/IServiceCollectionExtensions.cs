@@ -1,18 +1,22 @@
+using System;
 using Akka.Actor;
 using EventFly.Aggregates;
 using EventFly.Commands;
 using EventFly.Core;
-using EventFly.Definitions;
 using EventFly.Events;
+using EventFly.Infrastructure.Commands;
+using EventFly.Infrastructure.Definitions;
 using EventFly.Infrastructure.Events;
-using EventFly.Jobs;
+using EventFly.Infrastructure.Jobs;
+using EventFly.Infrastructure.Permissions;
+using EventFly.Infrastructure.Queries;
+using EventFly.Infrastructure.Schedulers;
 using EventFly.Permissions;
 using EventFly.Queries;
 using EventFly.Schedulers;
 using Microsoft.Extensions.DependencyInjection;
-using System;
 
-namespace EventFly.DependencyInjection
+namespace EventFly.Infrastructure.DependencyInjection
 {
     public static class IServiceCollectionExtensions
     {
@@ -42,7 +46,7 @@ namespace EventFly.DependencyInjection
 
             services.AddTransient<ICommandBus, CommandToAggregateManagerBus>();
             services.AddTransient<IQueryProcessor, QueryToQueryHandlerProcessor>();
-            services.AddTransient<Jobs.IScheduler, JobToJobMannagerScheduler>();
+            services.AddTransient<EventFly.Jobs.IScheduler, JobToJobMannagerScheduler>();
             services.AddTransient<ICommandsScheduler, JobCommandsScheduler>();
             services.AddTransient<IEventsScheduler, JobEventsScheduler>();
 

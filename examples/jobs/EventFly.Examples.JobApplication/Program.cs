@@ -22,12 +22,12 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using Akka.Actor;
-using EventFly.Definitions;
-using EventFly.DependencyInjection;
 using EventFly.Examples.Jobs;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
+using EventFly.Infrastructure.Definitions;
+using EventFly.Infrastructure.DependencyInjection;
 
 namespace EventFly.Examples.JobApplication
 {

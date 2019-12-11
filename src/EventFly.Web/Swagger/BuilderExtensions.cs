@@ -1,6 +1,5 @@
 ﻿using Akka.Util;
 using EventFly.Commands;
-using EventFly.DependencyInjection;
 using EventFly.Queries;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Controllers;
@@ -12,6 +11,7 @@ using System;
 using System.ComponentModel;
 using System.IO;
 using System.Reflection;
+using EventFly.Infrastructure.DependencyInjection;
 
 namespace EventFly.Swagger
 {

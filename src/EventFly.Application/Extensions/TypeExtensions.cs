@@ -1,6 +1,5 @@
 ﻿using EventFly.Aggregates;
 using EventFly.Core;
-using EventFly.Exceptions;
 using EventFly.ReadModels;
 using EventFly.Sagas;
 using System;

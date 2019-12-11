@@ -15,13 +15,13 @@ using Demo.Queries;
 using Demo.User.Commands;
 using Demo.User.Events;
 using EventFly.Aggregates;
-using EventFly.Definitions;
-using EventFly.DependencyInjection;
 using EventFly.Permissions;
 using EventFly.Queries;
 using EventFly.ReadModels;
 using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;
+using EventFly.Infrastructure.Definitions;
+using EventFly.Infrastructure.DependencyInjection;
 
 namespace Demo.Infrastructure
 {

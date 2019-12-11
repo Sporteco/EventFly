@@ -1,11 +1,11 @@
-﻿using Akka.Actor;
-using Akka.DI.Core;
-using Microsoft.Extensions.DependencyInjection;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Runtime.CompilerServices;
+using Akka.Actor;
+using Akka.DI.Core;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace EventFly.DependencyInjection
+namespace EventFly.Infrastructure.DependencyInjection
 {
     /// <summary>
     /// Defines services used by the Akka.Actor.ActorSystem extension system to create actors using Microsoft.Extensions.DependencyInjection

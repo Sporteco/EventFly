@@ -1,5 +1,4 @@
 ﻿using EventFly.Definitions;
-using EventFly.DependencyInjection;
 using GraphQL;
 using GraphQL.Http;
 using GraphQL.Server;
@@ -7,6 +6,7 @@ using GraphQL.Types;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Concurrent;
+using EventFly.Infrastructure.DependencyInjection;
 
 namespace EventFly.GraphQL
 {

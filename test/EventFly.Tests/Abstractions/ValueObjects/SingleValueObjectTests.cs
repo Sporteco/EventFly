@@ -25,15 +25,16 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using EventFly.ValueObjects;
-using FluentAssertions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using EventFly.Tests.Data.Abstractions.Entities;
+using EventFly.ValueObjects;
+using FluentAssertions;
 using Xunit;
 
-namespace EventFly.Tests.Abstractions
+namespace EventFly.Tests.Abstractions.ValueObjects
 {
     [Category(Categories.Abstractions)]
     [Collection(Collections.Only)]
@@ -121,9 +122,7 @@ namespace EventFly.Tests.Abstractions
         public void SVO_WhenComparedWithNull_DoesNotEquals()
         {
             var svo = new StringSingleValue(TestId.New.Value);
-            var null_ = null as StringSingleValue;
-
-            svo.Equals(null_).Should().BeFalse();
+            svo.Equals(null).Should().BeFalse();
         }
 
         [Fact]

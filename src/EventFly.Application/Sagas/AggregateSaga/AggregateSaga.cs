@@ -35,7 +35,6 @@ using EventFly.Commands.ExecutionResults;
 using EventFly.Core;
 using EventFly.Definitions;
 using EventFly.DependencyInjection;
-using EventFly.Exceptions;
 using EventFly.Extensions;
 using EventFly.Metadata;
 using Microsoft.Extensions.DependencyInjection;
@@ -120,7 +119,7 @@ namespace EventFly.Sagas.AggregateSaga
             if (Id == null)
             {
                 throw new InvalidOperationException(
-                    $"Identity for Saga '{Id.GetType().PrettyPrint()}' could not be activated.");
+                    $"Identity for Saga '{Id?.GetType().PrettyPrint()}' could not be activated.");
             }
 
             if ((this as TAggregateSaga) == null)

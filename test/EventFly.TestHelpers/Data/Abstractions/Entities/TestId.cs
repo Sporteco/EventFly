@@ -21,12 +21,12 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using System;
 using EventFly.Core;
 using EventFly.ValueObjects;
 using Newtonsoft.Json;
-using System;
 
-namespace EventFly.Tests.Abstractions
+namespace EventFly.Tests.Data.Abstractions.Entities
 {
     [JsonConverter(typeof(SingleValueObjectConverter))]
     public class TestId : Identity<TestId>

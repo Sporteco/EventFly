@@ -30,7 +30,6 @@ using EventFly.Aggregates.Snapshot;
 using EventFly.Core;
 using EventFly.DomainService;
 using EventFly.Events;
-using EventFly.Exceptions;
 using EventFly.Subscribers;
 using System;
 using System.Collections.Concurrent;

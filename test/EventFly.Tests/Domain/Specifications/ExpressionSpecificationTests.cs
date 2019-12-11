@@ -25,13 +25,13 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using EventFly.Specifications.Provided;
-using FluentAssertions;
 using System;
 using System.ComponentModel;
+using EventFly.Specifications.Provided;
+using FluentAssertions;
 using Xunit;
 
-namespace EventFly.Tests.Domain
+namespace EventFly.Tests.Domain.Specifications
 {
     [Category(Categories.Domain)]
     [Collection(Collections.Only)]

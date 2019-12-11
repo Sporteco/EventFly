@@ -1,10 +1,11 @@
-﻿using EventFly.Aggregates;
-using EventFly.Jobs;
-using EventFly.Schedulers.Events;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using EventFly.Aggregates;
+using EventFly.Jobs;
+using EventFly.Schedulers;
+using EventFly.Schedulers.Events;
 
-namespace EventFly.Schedulers
+namespace EventFly.Infrastructure.Schedulers
 {
     internal sealed class JobEventsScheduler : IEventsScheduler
     {

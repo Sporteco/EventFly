@@ -1,8 +1,9 @@
-﻿using EventFly.Extensions;
+﻿using System;
+using EventFly.Definitions;
+using EventFly.Infrastructure.Extensions;
 using EventFly.Jobs;
-using System;
 
-namespace EventFly.Definitions
+namespace EventFly.Infrastructure.Definitions
 {
     internal class JobDefinition : IJobDefinition
     {

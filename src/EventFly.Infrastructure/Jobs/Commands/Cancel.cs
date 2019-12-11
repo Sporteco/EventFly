@@ -21,7 +21,9 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-namespace EventFly.Jobs.Commands
+using EventFly.Jobs;
+
+namespace EventFly.Infrastructure.Jobs.Commands
 {
     public class Cancel<TJob, TIdentity> : SchedulerCommand<TJob, TIdentity>
         where TJob : IJob<TIdentity>

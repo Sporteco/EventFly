@@ -23,9 +23,10 @@
 
 using EventFly.Aggregates;
 using EventFly.Sagas;
-using EventFly.Tests.Abstractions;
+using EventFly.Tests.Data.Abstractions;
+using EventFly.Tests.Data.Application.Sagas.Test.Events;
 
-namespace EventFly.Tests.Application
+namespace EventFly.Tests.Data.Application.Sagas.Test
 {
     public class TestSagaState : SagaState<TestSaga, TestSagaId, IMessageApplier<TestSagaId>>,
         ISagaApply<TestSagaStartedEvent>,
@@ -34,7 +35,7 @@ namespace EventFly.Tests.Application
     {
         public TestAggregateId Sender { get; set; }
         public TestAggregateId Receiver { get; set; }
-        public Test Test { get; set; }
+        public Abstractions.Entities.Test Test { get; set; }
 
         public void Apply(TestSagaStartedEvent e)
         {

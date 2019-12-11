@@ -22,8 +22,9 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using EventFly.Extensions;
+using EventFly.Jobs;
 
-namespace EventFly.Jobs
+namespace EventFly.Infrastructure.Jobs
 {
     public abstract class SchedulerEvent<TJob, TIdentity> : ISchedulerEvent<TJob, TIdentity>
         where TJob : IJob<TIdentity>

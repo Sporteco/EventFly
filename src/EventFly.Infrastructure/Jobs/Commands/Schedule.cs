@@ -22,8 +22,9 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
+using EventFly.Jobs;
 
-namespace EventFly.Jobs.Commands
+namespace EventFly.Infrastructure.Jobs.Commands
 {
     public class Schedule<TJob, TIdentity> : SchedulerCommand<TJob, TIdentity>
         where TJob : IJob<TIdentity>

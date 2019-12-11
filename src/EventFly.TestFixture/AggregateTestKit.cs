@@ -1,7 +1,9 @@
 using Akka.Actor;
 using EventFly.Aggregates;
 using EventFly.Core;
-using EventFly.Definitions;
+using EventFly.Infrastructure.Definitions;
+using EventFly.TestFixture.Internals;
+using EventFly.TestFixture.Internals.AggregateFixture;
 using Xunit.Abstractions;
 
 namespace EventFly.TestFixture

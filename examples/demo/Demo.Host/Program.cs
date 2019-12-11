@@ -2,10 +2,10 @@ using Demo.Infrastructure;
 using Demo.User.Commands;
 using Demo.ValueObjects;
 using EventFly.Commands;
-using EventFly.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
+using EventFly.Infrastructure.DependencyInjection;
 
 namespace Demo.Host
 {

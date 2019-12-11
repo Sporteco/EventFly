@@ -22,17 +22,17 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using EventFly.Aggregates;
-using EventFly.Tests.Abstractions;
+using EventFly.Tests.Data.Abstractions;
 
-namespace EventFly.Tests.Application
+namespace EventFly.Tests.Data.Application.Sagas.Test.Events
 {
     public class TestSagaStartedEvent : AggregateEvent<TestSagaId>
     {
         public TestAggregateId Sender { get; }
         public TestAggregateId Receiver { get; }
-        public Test SentTest { get; }
+        public Abstractions.Entities.Test SentTest { get; }
 
-        public TestSagaStartedEvent(TestAggregateId sender, TestAggregateId receiver, Test sentTest)
+        public TestSagaStartedEvent(TestAggregateId sender, TestAggregateId receiver, Abstractions.Entities.Test sentTest)
         {
             Sender = sender;
             Receiver = receiver;

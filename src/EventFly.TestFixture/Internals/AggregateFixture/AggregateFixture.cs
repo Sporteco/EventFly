@@ -21,6 +21,7 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using System;
 using Akka.Actor;
 using Akka.Persistence;
 using Akka.TestKit;
@@ -31,11 +32,10 @@ using EventFly.Core;
 using EventFly.DependencyInjection;
 using EventFly.Extensions;
 using Microsoft.Extensions.DependencyInjection;
-using System;
 using AkkaSnapshotMetadata = Akka.Persistence.SnapshotMetadata;
 using SnapshotMetadata = EventFly.Aggregates.Snapshot.SnapshotMetadata;
 
-namespace EventFly.TestFixture
+namespace EventFly.TestFixture.Internals.AggregateFixture
 {
     public class AggregateFixture<TAggregate, TIdentity> : IFixtureArranger<TAggregate, TIdentity>, IFixtureExecutor<TAggregate, TIdentity>, IFixtureAsserter<TAggregate, TIdentity>
         where TAggregate : ActorBase, IAggregateRoot<TIdentity>

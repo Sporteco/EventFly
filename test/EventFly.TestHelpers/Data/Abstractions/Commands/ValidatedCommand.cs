@@ -1,9 +1,9 @@
+using System;
 using EventFly.Commands;
 using EventFly.Validation;
 using FluentValidation;
-using System;
 
-namespace EventFly.Tests.Abstractions
+namespace EventFly.Tests.Data.Abstractions.Commands
 {
     [Validator(typeof(ValidatedCommandValidator))]
     public sealed class ValidatedCommand : Command<TestAggregateId>

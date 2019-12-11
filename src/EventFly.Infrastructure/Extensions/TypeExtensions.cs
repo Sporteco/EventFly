@@ -1,12 +1,12 @@
-﻿using EventFly.Exceptions;
-using EventFly.Jobs;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using EventFly.Extensions;
+using EventFly.Jobs;
 
-namespace EventFly.Extensions
+namespace EventFly.Infrastructure.Extensions
 {
     public static class TypeExtensions
     {

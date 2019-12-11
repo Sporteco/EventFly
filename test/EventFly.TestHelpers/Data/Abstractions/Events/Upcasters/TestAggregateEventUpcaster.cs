@@ -22,9 +22,9 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using EventFly.Events;
-using EventFly.Tests.Domain;
+using EventFly.Tests.Data.Domain;
 
-namespace EventFly.Tests.Abstractions
+namespace EventFly.Tests.Data.Abstractions.Events.Upcasters
 {
     public class UnInstantiableAggregateEventUpcaster : AggregateEventUpcaster<TestAggregate, TestAggregateId, TestAggregateEventUpcaster>, IUpcast<TestAddedEvent, TestAddedEventV2>
     {

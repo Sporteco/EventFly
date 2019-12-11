@@ -27,7 +27,7 @@ namespace EventFly.RabbitMqEventProvider
         private IModel _channel;
         private EventingBasicConsumer _consumer;
 
-        private Boolean _isRunnig = false;
+        private Boolean _isRunnig;
 
         public RabbitMqEventProvider(IRabbitMqEventProviderConfiguration configuration, IApplicationDefinition applicationDefinition, IDomainEventFactory domainEventFactory, IDomainEventBus domainEventBus)
         {

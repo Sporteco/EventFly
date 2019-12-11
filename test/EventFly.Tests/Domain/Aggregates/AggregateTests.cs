@@ -21,19 +21,24 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using System.ComponentModel;
+using System.Threading.Tasks;
 using EventFly.Aggregates;
 using EventFly.Commands;
 using EventFly.DependencyInjection;
 using EventFly.TestFixture;
-using EventFly.Tests.Abstractions;
+using EventFly.Tests.Data.Abstractions;
+using EventFly.Tests.Data.Abstractions.Commands;
+using EventFly.Tests.Data.Abstractions.Entities;
+using EventFly.Tests.Data.Abstractions.Events;
+using EventFly.Tests.Data.Abstractions.Events.Signals;
+using EventFly.Tests.Data.Domain;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
-using System.ComponentModel;
-using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace EventFly.Tests.Domain
+namespace EventFly.Tests.Domain.Aggregates
 {
     [Category(Categories.Domain)]
     [Collection(Collections.Only)]

@@ -21,10 +21,11 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using EventFly.ValueObjects;
 using System;
+using EventFly.Jobs;
+using EventFly.ValueObjects;
 
-namespace EventFly.Jobs
+namespace EventFly.Infrastructure.Jobs
 {
     public abstract class SchedulerMessage<TJob, TIdentity> : ValueObject
         where TJob : IJob<TIdentity>

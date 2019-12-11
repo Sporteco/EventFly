@@ -1,3 +1,9 @@
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Reflection;
+using System.Threading;
 using Akka.Event;
 using Akka.TestKit;
 using Akka.TestKit.Xunit2;
@@ -6,14 +12,8 @@ using EventFly.Commands;
 using EventFly.Core;
 using EventFly.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Reflection;
-using System.Threading;
 
-namespace EventFly.TestFixture
+namespace EventFly.TestFixture.Internals
 {
     public static class BddTestHelper
     {
@@ -103,34 +103,38 @@ namespace EventFly.TestFixture
 
         private static Type GetDomainEventType(Type aggregateEventType)
         {
-            var idType = aggregateEventType.BaseType.GenericTypeArguments.Single();
+            var idType = aggregateEventType.BaseType?.GenericTypeArguments.Single();
             return typeof(DomainEvent<,>).MakeGenericType(idType, aggregateEventType);
         }
 
         private static void CallAkkaExpect(Type domainEventType)
         {
             var assertType = typeof(Action<>).MakeGenericType(domainEventType);
-            var signalMethodDef = typeof(BddTestHelper).GetMethod(nameof(BddTestHelper.Signal), BindingFlags.Static | BindingFlags.NonPublic);
-            var signalMethod = signalMethodDef.MakeGenericMethod(domainEventType);
-            var expectMethodParams = new[] { typeof(Action<>), typeof(TimeSpan?), typeof(String) };
-            var expectMethodDef = typeof(TestProbe).GetMethods().Single(x =>
-                x.Name == nameof(TestProbe.ExpectMsg) &&
-                x.IsGenericMethodDefinition &&
-                x.GetParameters().Length == 3 &&
-                x.GetParameters()[0].ParameterType.IsGenericType &&
-                x.GetParameters()[0].ParameterType.GetGenericTypeDefinition() == typeof(Action<>) &&
-                x.GetParameters()[1].ParameterType == typeof(TimeSpan?) &&
-                x.GetParameters()[2].ParameterType == typeof(String));
-            var expectMethod = expectMethodDef.MakeGenericMethod(domainEventType);
-            var timeout = Debugger.IsAttached ? TimeSpan.FromSeconds(120) : (TimeSpan?)null;
-
-            using (_wait = new AutoResetEvent(true))
+            var signalMethodDef = typeof(BddTestHelper).GetMethod(nameof(Signal), BindingFlags.Static | BindingFlags.NonPublic);
+            if (signalMethodDef != null)
             {
-                var assert = Delegate.CreateDelegate(assertType, signalMethod);
-                expectMethod.Invoke(_testProbe, new Object[] { assert, timeout, null });
+                var signalMethod = signalMethodDef.MakeGenericMethod(domainEventType);
+                //var expectMethodParams = new[] { typeof(Action<>), typeof(TimeSpan?), typeof(String) };
+                var expectMethodDef = typeof(TestProbe).GetMethods().Single(x =>
+                    x.Name == nameof(TestProbe.ExpectMsg) &&
+                    x.IsGenericMethodDefinition &&
+                    x.GetParameters().Length == 3 &&
+                    x.GetParameters()[0].ParameterType.IsGenericType &&
+                    x.GetParameters()[0].ParameterType.GetGenericTypeDefinition() == typeof(Action<>) &&
+                    x.GetParameters()[1].ParameterType == typeof(TimeSpan?) &&
+                    x.GetParameters()[2].ParameterType == typeof(String));
+                var expectMethod = expectMethodDef.MakeGenericMethod(domainEventType);
+                var timeout = Debugger.IsAttached ? TimeSpan.FromSeconds(120) : (TimeSpan?)null;
+
+                using (_wait = new AutoResetEvent(true))
+                {
+                    var assert = Delegate.CreateDelegate(assertType, signalMethod);
+                    expectMethod.Invoke(_testProbe, new Object[] { assert, timeout, null });
+                }
             }
         }
 
+        // ReSharper disable once UnusedParameter.Local
         private static void Signal<T>(T _)
         {
             _eventStream.Unsubscribe(_testProbe, typeof(T));

@@ -1,9 +1,10 @@
-﻿using Akka.Actor;
+﻿using System;
+using Akka.Actor;
 using Akka.DI.Core;
+using EventFly.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
-using System;
 
-namespace EventFly.DependencyInjection
+namespace EventFly.Infrastructure.DependencyInjection
 {
     public static class ActorSystemExtensions
     {

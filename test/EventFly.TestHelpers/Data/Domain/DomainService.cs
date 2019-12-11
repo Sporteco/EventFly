@@ -1,6 +1,6 @@
 using EventFly.DomainService;
 
-namespace EventFly.Tests.Domain
+namespace EventFly.Tests.Data.Domain
 {
     public class DomainService : AsynchronousDomainService<DomainService> { }
 }

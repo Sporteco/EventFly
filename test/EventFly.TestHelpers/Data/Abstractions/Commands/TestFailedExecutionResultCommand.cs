@@ -1,6 +1,6 @@
 using EventFly.Commands;
 
-namespace EventFly.Tests.Abstractions
+namespace EventFly.Tests.Data.Abstractions.Commands
 {
     public class TestFailedExecutionResultCommand : Command<TestAggregateId>
     {

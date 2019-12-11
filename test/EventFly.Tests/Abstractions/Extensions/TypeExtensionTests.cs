@@ -25,17 +25,16 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using EventFly.Aggregates;
-using EventFly.Core;
-using EventFly.Exceptions;
-using EventFly.Extensions;
-using FluentAssertions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using EventFly.Aggregates;
+using EventFly.Core;
+using EventFly.Extensions;
+using FluentAssertions;
 using Xunit;
 
-namespace EventFly.Tests.Abstractions
+namespace EventFly.Tests.Abstractions.Extensions
 {
     [Category(Categories.Abstractions)]
     [Collection(Collections.Only)]

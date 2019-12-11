@@ -1,11 +1,11 @@
-using Akka.TestKit.Xunit2;
-using EventFly.Definitions;
-using EventFly.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection;
 using System;
+using Akka.TestKit.Xunit2;
+using EventFly.Infrastructure.Definitions;
+using EventFly.Infrastructure.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using Xunit.Abstractions;
 
-namespace EventFly.TestFixture
+namespace EventFly.TestFixture.Internals
 {
     public abstract class EventFlyTestKit : TestKit
     {

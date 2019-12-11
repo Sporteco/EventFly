@@ -1,4 +1,5 @@
-using EventFly.Definitions;
+using EventFly.Infrastructure.Definitions;
+using EventFly.TestFixture.Internals;
 using Xunit.Abstractions;
 
 namespace EventFly.TestFixture

@@ -22,8 +22,9 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using EventFly.Aggregates;
+using EventFly.Tests.Data.Abstractions.Entities;
 
-namespace EventFly.Tests.Abstractions
+namespace EventFly.Tests.Data.Abstractions.Events
 {
     [EventVersion("TestReceived", 1)]
     public class TestReceivedEvent : AggregateEvent<TestAggregateId>

@@ -97,7 +97,7 @@ namespace EventFly.RabbitMqEventPublisher
             }
         }
 
-        Boolean _disposed = false;
+        Boolean _disposed;
 
         public void Dispose()
         {
@@ -117,6 +117,10 @@ namespace EventFly.RabbitMqEventPublisher
             }
 
             _disposed = true;
+        }
+        ~RabbitMqEventPublisher()
+        {
+            Dispose(false);
         }
     }
 }

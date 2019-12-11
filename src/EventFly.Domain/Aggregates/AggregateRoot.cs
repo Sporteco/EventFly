@@ -5,7 +5,6 @@ using EventFly.Commands.ExecutionResults;
 using EventFly.Core;
 using EventFly.Definitions;
 using EventFly.DependencyInjection;
-using EventFly.Exceptions;
 using EventFly.Extensions;
 using EventFly.Metadata;
 using EventFly.Permissions;

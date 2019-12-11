@@ -1,8 +1,8 @@
 using EventFly.Definitions;
-using EventFly.DependencyInjection;
 using EventFly.Events;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using EventFly.Infrastructure.DependencyInjection;
 
 namespace EventFly.RabbitMqEventProvider
 {

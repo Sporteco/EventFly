@@ -21,10 +21,11 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using Cronos;
 using System;
+using Cronos;
+using EventFly.Jobs;
 
-namespace EventFly.Jobs.Commands
+namespace EventFly.Infrastructure.Jobs.Commands
 {
 
     public sealed class ScheduleCron<TJob, TIdentity> : Schedule<TJob, TIdentity>

@@ -23,7 +23,7 @@
 
 using EventFly.Aggregates;
 
-namespace EventFly.Tests.Application
+namespace EventFly.Tests.Data.Application.Sagas.Test.Events
 {
     public class TestSagaTransactionCompletedEvent : AggregateEvent<TestSagaId> { }
 }

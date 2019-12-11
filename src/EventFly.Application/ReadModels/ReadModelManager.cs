@@ -2,7 +2,6 @@
 using Akka.DI.Core;
 using Akka.Event;
 using EventFly.Aggregates;
-using EventFly.Exceptions;
 using EventFly.Extensions;
 using System;
 

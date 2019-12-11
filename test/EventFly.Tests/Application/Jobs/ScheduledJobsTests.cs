@@ -21,19 +21,20 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using System;
+using System.ComponentModel;
+using System.Threading.Tasks;
 using Akka.TestKit;
 using Akka.TestKit.Xunit2;
 using EventFly.DependencyInjection;
 using EventFly.Jobs;
+using EventFly.Tests.Data.Application.Jobs;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.ComponentModel;
-using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace EventFly.Tests.Application
+namespace EventFly.Tests.Application.Jobs
 {
     [Category(Categories.Application)]
     [Collection(Collections.Only)]
