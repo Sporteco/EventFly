@@ -119,34 +119,34 @@ namespace EventFly.TestFixture.Internals.AggregateFixture
 
         public IFixtureAsserter<TAggregate, TIdentity> AndWhen(params ICommand[] commands) => When(commands);
 
-        public IFixtureAsserter<TAggregate, TIdentity> ThenExpect<TAggregateEvent>(Predicate<TAggregateEvent> aggregateEventPredicate = null)
+        public IFixtureAsserter<TAggregate, TIdentity> ThenExpect<TAggregateEvent>(Predicate<TAggregateEvent> aggregateEventPredicate = null, TimeSpan? timeout = null)
             where TAggregateEvent : class, IAggregateEvent<TIdentity>
         {
             _testKit.Sys.EventStream.Subscribe(AggregateEventTestProbe, typeof(IDomainEvent<TIdentity, TAggregateEvent>));
 
             if (aggregateEventPredicate == null)
-                AggregateEventTestProbe.ExpectMsg<DomainEvent<TIdentity, TAggregateEvent>>();
+                AggregateEventTestProbe.ExpectMsg<DomainEvent<TIdentity, TAggregateEvent>>(duration: timeout);
             else
-                AggregateEventTestProbe.ExpectMsg<DomainEvent<TIdentity, TAggregateEvent>>(x => aggregateEventPredicate(x.AggregateEvent));
+                AggregateEventTestProbe.ExpectMsg<DomainEvent<TIdentity, TAggregateEvent>>(x => aggregateEventPredicate(x.AggregateEvent), timeout: timeout);
 
             return this;
         }
 
-        public IFixtureAsserter<TAggregate, TIdentity> ThenExpectReply<TReply>(Predicate<TReply> aggregateReplyPredicate = null)
+        public IFixtureAsserter<TAggregate, TIdentity> ThenExpectReply<TReply>(Predicate<TReply> aggregateReplyPredicate = null, TimeSpan? timeout = null)
         {
-            AggregateReplyTestProbe.ExpectMsg(aggregateReplyPredicate);
+            AggregateReplyTestProbe.ExpectMsg(aggregateReplyPredicate, timeout);
             return this;
         }
 
-        public IFixtureAsserter<TAggregate, TIdentity> ThenExpectDomainEvent<TAggregateEvent>(Predicate<IDomainEvent<TIdentity, TAggregateEvent>> domainEventPredicate = null)
+        public IFixtureAsserter<TAggregate, TIdentity> ThenExpectDomainEvent<TAggregateEvent>(Predicate<IDomainEvent<TIdentity, TAggregateEvent>> domainEventPredicate = null, TimeSpan? timeout = null)
             where TAggregateEvent : class, IAggregateEvent<TIdentity>
         {
             _testKit.Sys.EventStream.Subscribe(AggregateEventTestProbe, typeof(IDomainEvent<TIdentity, TAggregateEvent>));
 
             if (domainEventPredicate == null)
-                AggregateEventTestProbe.ExpectMsg<DomainEvent<TIdentity, TAggregateEvent>>();
+                AggregateEventTestProbe.ExpectMsg<DomainEvent<TIdentity, TAggregateEvent>>(duration: timeout);
             else
-                AggregateEventTestProbe.ExpectMsg<DomainEvent<TIdentity, TAggregateEvent>>(domainEventPredicate);
+                AggregateEventTestProbe.ExpectMsg<DomainEvent<TIdentity, TAggregateEvent>>(domainEventPredicate, timeout: timeout);
 
             return this;
         }

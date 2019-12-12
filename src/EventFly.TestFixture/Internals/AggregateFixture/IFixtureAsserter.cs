@@ -35,12 +35,12 @@ namespace EventFly.TestFixture.Internals.AggregateFixture
     {
         IFixtureAsserter<TAggregate, TIdentity> AndWhen(params ICommand[] commands);
 
-        IFixtureAsserter<TAggregate, TIdentity> ThenExpect<TAggregateEvent>(Predicate<TAggregateEvent> aggregateEventPredicate = null)
+        IFixtureAsserter<TAggregate, TIdentity> ThenExpect<TAggregateEvent>(Predicate<TAggregateEvent> aggregateEventPredicate = null, TimeSpan? timeout = null)
             where TAggregateEvent : class, IAggregateEvent<TIdentity>;
 
-        IFixtureAsserter<TAggregate, TIdentity> ThenExpectReply<TReply>(Predicate<TReply> aggregateReply = null);
+        IFixtureAsserter<TAggregate, TIdentity> ThenExpectReply<TReply>(Predicate<TReply> aggregateReply = null, TimeSpan? timeout = null);
 
-        IFixtureAsserter<TAggregate, TIdentity> ThenExpectDomainEvent<TAggregateEvent>(Predicate<IDomainEvent<TIdentity, TAggregateEvent>> domainEventPredicate = null)
+        IFixtureAsserter<TAggregate, TIdentity> ThenExpectDomainEvent<TAggregateEvent>(Predicate<IDomainEvent<TIdentity, TAggregateEvent>> domainEventPredicate = null, TimeSpan? timeout = null)
             where TAggregateEvent : class, IAggregateEvent<TIdentity>;
     }
 }

@@ -60,23 +60,23 @@ namespace EventFly.TestFixture.Internals
             return stepName;
         }
 
-        public static String Expect<TAggregateEvent>(this String stepName)
+        public static String Expect<TAggregateEvent>(this String stepName, TimeSpan? timeout = null)
             where TAggregateEvent : IAggregateEvent
         {
             var domainEventType = GetDomainEventType(typeof(TAggregateEvent));
             _eventStream.Subscribe(_testProbe, domainEventType);
-            CallAkkaExpect(domainEventType);
+            CallAkkaExpect(domainEventType, timeout);
 
             return stepName;
         }
 
-        public static String DoAndExpect<TAggregateEvent>(this String stepName, ICommand command)
+        public static String DoAndExpect<TAggregateEvent>(this String stepName, ICommand command, TimeSpan? timeout = null)
             where TAggregateEvent : IAggregateEvent
         {
             var domainEventType = GetDomainEventType(typeof(TAggregateEvent));
             _eventStream.Subscribe(_testProbe, domainEventType);
             _commandBus.Publish(command);
-            CallAkkaExpect(domainEventType);
+            CallAkkaExpect(domainEventType, timeout);
 
             return stepName;
         }
@@ -107,7 +107,7 @@ namespace EventFly.TestFixture.Internals
             return typeof(DomainEvent<,>).MakeGenericType(idType, aggregateEventType);
         }
 
-        private static void CallAkkaExpect(Type domainEventType)
+        private static void CallAkkaExpect(Type domainEventType, TimeSpan? timeout = null)
         {
             var assertType = typeof(Action<>).MakeGenericType(domainEventType);
             var signalMethodDef = typeof(BddTestHelper).GetMethod(nameof(Signal), BindingFlags.Static | BindingFlags.NonPublic);
@@ -124,12 +124,11 @@ namespace EventFly.TestFixture.Internals
                     x.GetParameters()[1].ParameterType == typeof(TimeSpan?) &&
                     x.GetParameters()[2].ParameterType == typeof(String));
                 var expectMethod = expectMethodDef.MakeGenericMethod(domainEventType);
-                var timeout = Debugger.IsAttached ? TimeSpan.FromSeconds(120) : (TimeSpan?)null;
 
                 using (_wait = new AutoResetEvent(true))
                 {
                     var assert = Delegate.CreateDelegate(assertType, signalMethod);
-                    expectMethod.Invoke(_testProbe, new Object[] { assert, timeout, null });
+                    expectMethod.Invoke(_testProbe, new Object[] { assert, Debugger.IsAttached ? TimeSpan.FromSeconds(120) : timeout, null });
                 }
             }
         }
