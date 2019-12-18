@@ -29,6 +29,7 @@ namespace EventFly.Tests
     {
         public const String Abstractions = "Abstractions";
         public const String Application = "Application";
+        public const String Infrastructure = "Infrastructure";
         public const String Domain = "Domain";
         public const String TestFixture = "TestFixture";
     }
