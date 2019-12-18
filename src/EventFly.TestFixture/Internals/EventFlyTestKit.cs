@@ -28,16 +28,17 @@ namespace EventFly.TestFixture.Internals
             ";
 
         protected EventFlyTestKit(ITestOutputHelper testOutputHelper) : base(_config, testOutputHelper) { }
+
     }
 
     public class EventFlyTestKit<T> : EventFlyTestKit
         where T : ContextDefinition, new()
     {
-        public EventFlyTestKit(ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public EventFlyTestKit(ITestOutputHelper testOutputHelper, Func<IServiceCollection, IServiceCollection> myDependencies = null) : base(testOutputHelper)
         {
             new ServiceCollection()
                 .AddEventFly(Sys)
-                .WithContext<T>()
+                .WithContext<T>(myDependencies)
                 .Services
                 .BuildServiceProvider()
                 .UseEventFly();
@@ -48,12 +49,16 @@ namespace EventFly.TestFixture.Internals
         where T1 : ContextDefinition, new()
         where T2 : ContextDefinition, new()
     {
-        public EventFlyTestKit(ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public EventFlyTestKit(
+            ITestOutputHelper testOutputHelper,
+            Func<IServiceCollection, IServiceCollection> myDependencies1 = null,
+            Func<IServiceCollection, IServiceCollection> myDependencies2 = null
+        ) : base(testOutputHelper)
         {
             new ServiceCollection()
                 .AddEventFly(Sys)
-                .WithContext<T1>()
-                .WithContext<T2>()
+                .WithContext<T1>(myDependencies1)
+                .WithContext<T2>(myDependencies2)
                 .Services
                 .BuildServiceProvider()
                 .UseEventFly();
@@ -65,13 +70,18 @@ namespace EventFly.TestFixture.Internals
         where T2 : ContextDefinition, new()
         where T3 : ContextDefinition, new()
     {
-        public EventFlyTestKit(ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public EventFlyTestKit(
+            ITestOutputHelper testOutputHelper,
+            Func<IServiceCollection, IServiceCollection> myDependencies1 = null,
+            Func<IServiceCollection, IServiceCollection> myDependencies2 = null,
+            Func<IServiceCollection, IServiceCollection> myDependencies3 = null
+        ) : base(testOutputHelper)
         {
             new ServiceCollection()
                 .AddEventFly(Sys)
-                .WithContext<T1>()
-                .WithContext<T2>()
-                .WithContext<T3>()
+                .WithContext<T1>(myDependencies1)
+                .WithContext<T2>(myDependencies2)
+                .WithContext<T3>(myDependencies3)
                 .Services
                 .BuildServiceProvider()
                 .UseEventFly();

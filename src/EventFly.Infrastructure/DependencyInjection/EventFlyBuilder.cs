@@ -25,11 +25,16 @@ namespace EventFly.Infrastructure.DependencyInjection
                 .AddSingleton<IDefinitionToManagerRegistry, DefinitionToManagerRegistry>();
         }
 
-        public EventFlyBuilder WithContext<TContext>()
+        public EventFlyBuilder WithContext<TContext>(Func<IServiceCollection, IServiceCollection> myDependencies = null)
             where TContext : ContextDefinition, new()
         {
             var context = new TContext();
-            context.DI(Services);
+
+            if (myDependencies == null)
+                context.DI(Services);
+            else
+                myDependencies(Services);
+
             ((ApplicationDefinition)ApplicationDefinition).RegisterContext(context);
             RegisterValidators(Services);
             return this;
