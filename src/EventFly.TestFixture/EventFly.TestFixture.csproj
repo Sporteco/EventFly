@@ -7,7 +7,7 @@
     <PackageTags>
       tdd;bdd;testing;akka;cqrs;es;eventsourcing;actors;actor-model
     </PackageTags>
-    <Version>0.8.16</Version>
+    <Version>0.8.17</Version>
     <Authors>Sporteco</Authors>
     <Company>Sporteco</Company>
     <RepositoryUrl>https://github.com/Sporteco/EventFly</RepositoryUrl>
