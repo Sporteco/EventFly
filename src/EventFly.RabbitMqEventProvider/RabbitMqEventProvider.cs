@@ -75,7 +75,7 @@ namespace EventFly.RabbitMqEventProvider
             _consumer.Received -= OnReceived;
 
             if (_connection.IsOpen)
-                _channel.BasicCancel(_consumer.ConsumerTag);
+                _channel.BasicCancel(_consumer.ConsumerTags.FirstOrDefault());
 
             _channel.Dispose();
 

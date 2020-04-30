@@ -1,17 +1,17 @@
-﻿using Akka.Util;
+using Akka.Util;
 using EventFly.Commands;
 using EventFly.Queries;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System;
 using System.ComponentModel;
 using System.IO;
 using System.Reflection;
 using EventFly.Infrastructure.DependencyInjection;
+using Microsoft.OpenApi.Models;
 
 namespace EventFly.Swagger
 {
@@ -51,7 +51,7 @@ namespace EventFly.Swagger
             });
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new Info { Title = options.Name + " API", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = options.Name + " API", Version = "v1" });
 
 
                 c.OperationFilter<DescriptionFilter>();
@@ -94,7 +94,7 @@ namespace EventFly.Swagger
 
     public class DescriptionFilter : IOperationFilter
     {
-        public void Apply(Operation operation, OperationFilterContext context)
+        public void Apply(OpenApiOperation operation, OperationFilterContext context)
         {
             if (context.ApiDescription.ActionDescriptor is ControllerActionDescriptor desc)
             {
@@ -108,7 +108,8 @@ namespace EventFly.Swagger
     }
     public class ReadOnlyFilter : ISchemaFilter
     {
-        public void Apply(Schema model, SchemaFilterContext context)
+
+        public void Apply(OpenApiSchema model, SchemaFilterContext context)
         {
             if (model.Properties == null)
             {
@@ -117,7 +118,7 @@ namespace EventFly.Swagger
 
             foreach (var schemaProperty in model.Properties)
             {
-                var property = context.SystemType.GetProperty(schemaProperty.Key, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
+                var property = context.Type.GetProperty(schemaProperty.Key, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
 
                 if (property != null)
                 {

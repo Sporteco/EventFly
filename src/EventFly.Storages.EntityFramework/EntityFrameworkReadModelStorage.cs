@@ -1,4 +1,4 @@
-﻿using EventFly.ReadModels;
+using EventFly.ReadModels;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
@@ -47,6 +47,6 @@ namespace EventFly.Storages.EntityFramework
         {
         }
 
-        public IQueryable<TReadModel> Items => _dbContext.Query<TReadModel>();
+        public IQueryable<TReadModel> Items => _dbContext.Set<TReadModel>();
     }
 }

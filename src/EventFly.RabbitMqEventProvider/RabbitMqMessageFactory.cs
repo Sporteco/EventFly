@@ -1,4 +1,4 @@
-﻿using RabbitMQ.Client.Events;
+using RabbitMQ.Client.Events;
 using System.Linq;
 using System.Text;
 
@@ -9,7 +9,7 @@ namespace EventFly.RabbitMqEventProvider
         public RabbitMqMessage Create(BasicDeliverEventArgs basicDeliverEventArgs)
         {
             var messageId = basicDeliverEventArgs.BasicProperties.MessageId;
-            var message = Encoding.UTF8.GetString(basicDeliverEventArgs.Body);
+            var message = Encoding.UTF8.GetString(basicDeliverEventArgs.Body.ToArray());
             var headers = basicDeliverEventArgs.BasicProperties.Headers.ToDictionary(kv => kv.Key, kv => kv.Value);
 
             return new RabbitMqMessage(

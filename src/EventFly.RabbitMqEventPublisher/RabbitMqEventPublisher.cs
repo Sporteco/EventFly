@@ -112,7 +112,7 @@ namespace EventFly.RabbitMqEventPublisher
 
             if (disposing)
             {
-                _connection.Close(3000);
+                _connection.Close(TimeSpan.FromSeconds(3));
                 _connection?.Dispose();
             }
 
